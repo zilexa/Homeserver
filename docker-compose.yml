@@ -59,7 +59,7 @@ services:
       - ovpn-data:/app/ovpn/config
     environment:
       - USERNAME=zilexa@gmx.com
-      - PASSWORD=TVflix!56
+      - PASSWORD=
       - LOCAL_NETWORK=192.168.88.0/24
       - COUNTRY=NL
       - PROTOCOL=udp
@@ -85,7 +85,7 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - FLOOD_SECRET:TVflix!56
+      - FLOOD_SECRET:
     volumes:
       - ${USERDIR}/docker/rtorrent-flood/config:/flood-db
       - ${USERDIR}/Downloads/incoming:/data
