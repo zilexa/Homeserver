@@ -58,8 +58,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ovpn-data:/app/ovpn/config
     environment:
-      - USERNAME=zilexa@gmx.com
-      - PASSWORD=
+      - USERNAME= #REMOVED
+      - PASSWORD= #REMOVED
       - LOCAL_NETWORK=192.168.88.0/24
       - COUNTRY=NL
       - PROTOCOL=udp
@@ -85,7 +85,7 @@ services:
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - FLOOD_SECRET:
+      - FLOOD_SECRET: #REMOVED
     volumes:
       - ${USERDIR}/docker/rtorrent-flood/config:/flood-db
       - ${USERDIR}/Downloads/incoming:/data
