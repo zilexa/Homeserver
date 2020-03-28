@@ -1,0 +1,155 @@
+version: "3.6"
+services:
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: always
+    environment:
+      - TZ=${TZ}
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${USERDIR}/docker/portainer/data:/data
+      - ${USERDIR}/docker/shared:/shared
+  organizr:
+    container_name: organizr
+    image: lsiocommunity/organizr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${USERDIR}/docker/organizr:/config
+      - ${USERDIR}/docker/shared:/shared
+    ports:
+      - "80:80"
+  jellyfin:
+    container_name: jellyfin
+    image: linuxserver/jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - UMASK_SET=022 #optional
+    volumes:
+      - ${USERDIR}/docker/jellyfin/config:/config
+      - ${USERDIR}/Videos/TVshows:/data/tvshows
+      - ${USERDIR}/Videos/Movies:/data/movies
+      - ${USERDIR}/Videos/Music:/data/music
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+    devices:
+      - /dev/dri:/dev/dri #optional
+  vpn:
+    image: jeroenslot/nordvpn-proxy:latest
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    dns:
+      - 103.86.96.100
+      - 103.86.99.100
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ovpn-data:/app/ovpn/config
+    environment:
+      - USERNAME=zilexa@gmx.com
+      - PASSWORD=TVflix!56
+      - LOCAL_NETWORK=192.168.88.0/24
+      - COUNTRY=NL
+      - PROTOCOL=udp
+    networks:
+      - default
+    ports:
+      - 8118:8118 #Privoxy
+#      - 8080:8080 #ruTorrent UI
+#      - 5000:5000 #ruTorrent
+#      - 51413:51413 #ruTorrent
+#      - 6881:6881/udp #ruTorrent
+#      - 8989:8989 #Sonarr
+#      - 7878:7878 #Radarr
+#      - 9117:9117 #Jackett
+#      - 49184:49184 #rtorrent-flood
+#      - 3000:3000 #rtorrent-flood
+    restart: always
+  rtorrent-flood:
+    container_name: rtorrent-flood
+    image: wonderfall/rtorrent-flood:new
+#    network_mode: service:vpn
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - FLOOD_SECRET:TVflix!56
+    volumes:
+      - ${USERDIR}/docker/rtorrent-flood/config:/flood-db
+      - ${USERDIR}/Downloads/incoming:/data
+    ports:
+      - 49184:49184
+      - 3000:3000
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr:latest
+#    network_mode: service:vpn
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - ${USERDIR}/docker/sonarr/config:/config
+      - ${USERDIR}/Downloads/incoming:/downloads
+      - ${USERDIR}/Videos/TVshows:/tv
+    ports:
+      - 8989:8989
+  jackett:
+    container_name: jackett
+    image: linuxserver/jackett:latest
+#    network_mode: service:vpn
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${USERDIR}/docker/jackett/config:/config # config files
+      - /etc/localtime:/etc/localtime:ro
+      - ${USERDIR}/Downloads/incoming:/downloads # place where to put .torrent files for manual download
+    ports:
+      - 9117:9117
+  radarr:
+    container_name: radarr
+    image: linuxserver/radarr:latest
+#    network_mode: service:vpn
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - ${USERDIR}/docker/radarr:/config
+      - ${USERDIR}/Downloads/incoming:/downloads
+      - ${USERDIR}/Videos/Movies:/movies
+    ports:
+      - 7878:7878
+  nzbget:
+    container_name: nzbget
+    image: linuxserver/nzbget:latest
+    restart: unless-stopped
+    network_mode: service:vpn
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${USERDIR}/docker/nzbget/config:/config # config files
+      - ${USERDIR}/Downloads/incoming:/downloads
+volumes:
+  ovpn-data:
