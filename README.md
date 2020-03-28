@@ -1,0 +1,2 @@
+# Mediaserver
+Docker based server 
