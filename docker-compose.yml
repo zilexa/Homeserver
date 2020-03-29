@@ -68,9 +68,9 @@ services:
       - UMASK_SET=022 #optional
     volumes:
       - ${USERDIR}/docker/jellyfin/config:/config
-      - ${USERDIR}/Videos/TVshows:/data/tvshows
-      - ${USERDIR}/Videos/Movies:/data/movies
-      - ${USERDIR}/Videos/Music:/data/music
+      - ${USERDIR}/Media/TVshows:/data/tvshows
+      - ${USERDIR}/Media/Movies:/data/movies
+      - ${USERDIR}/Music:/data/music
     ports:
       - 8096:8096
       - 8920:8920 #optional
@@ -108,7 +108,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - ${USERDIR}/docker/sonarr/config:/config
       - ${USERDIR}/Downloads/incoming:/downloads
-      - ${USERDIR}/Videos/TVshows:/tv
+      - ${USERDIR}/Media/TVshows:/tv
 #    ports:
 #      - 8989:8989
   jackett:
@@ -143,7 +143,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - ${USERDIR}/docker/radarr:/config
       - ${USERDIR}/Downloads/incoming:/downloads
-      - ${USERDIR}/Videos/Movies:/movies
+      - ${USERDIR}/Media/Movies:/movies
 #    ports:
 #      - 7878:7878
   nzbget:
