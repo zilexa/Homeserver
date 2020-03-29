@@ -1,5 +1,36 @@
 version: "3.6"
 services:
+  vpn-proxy:
+    container_name: vpn-proxy
+    image: jeroenslot/nordvpn-proxy:latest
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    dns:
+      - 103.86.96.100
+      - 103.86.99.100
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ovpn-data:/app/ovpn/config
+    environment:
+      - USERNAME= #REMOVED
+      - PASSWORD= #REMOVED
+      - LOCAL_NETWORK=192.168.88.0/24
+      - COUNTRY=NL
+      - PROTOCOL=udp
+    networks:
+      - default
+    ports:
+      - 8118:8118 #Privoxy PROXY
+      - 8989:8989 #Sonarr PVR tvshows
+      - 7878:7878 #Radarr PVR movies
+      - 9117:9117 #Jackett SEARCHPROVIDER
+      - 6789:6789 #NZBget DOWNLOADER
+      - 9091:9091 #Transmission DOWNLOADER
+      - 51413:51413 #p2p
+      - 51413:51413/udp #p2p DHT
+    restart: always
   portainer:
     image: portainer/portainer
     container_name: portainer
@@ -44,59 +75,30 @@ services:
       - 8096:8096
       - 8920:8920 #optional
     devices:
-      - /dev/dri:/dev/dri #optional
-  vpn:
-    image: jeroenslot/nordvpn-proxy:latest
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun
-    dns:
-      - 103.86.96.100
-      - 103.86.99.100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ovpn-data:/app/ovpn/config
-    environment:
-      - USERNAME= #REMOVED
-      - PASSWORD= #REMOVED
-      - LOCAL_NETWORK=192.168.88.0/24
-      - COUNTRY=NL
-      - PROTOCOL=udp
-    networks:
-      - default
-    ports:
-      - 8118:8118 #Privoxy
-      - 8989:8989 #Sonarr
-      - 7878:7878 #Radarr
-      - 9117:9117 #Jackett
-      - 6789:6789 #NZBget
-      - 49184:49184 #rtorrent-flood
-      - 3000:3000 #rtorrent-flood
-#      - 8080:8080 #ruTorrent UI
-#      - 5000:5000 #ruTorrent
-#      - 51413:51413 #ruTorrent
-#      - 6881:6881/udp #ruTorrent
-    restart: always
-  rtorrent-flood:
-    container_name: rtorrent-flood
-    image: wonderfall/rtorrent-flood:new
-    network_mode: service:vpn
+      - /dev/dri:/dev/dri #intel Hardware Acceleration
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
     restart: unless-stopped
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
-      - FLOOD_SECRET: #REMOVED
+      - TZ=Europe/Amsterdam
+      - TRANSMISSION_WEB_HOME=/combustion-release/
+      - USER=admin
+      - PASS= #REMOVED
     volumes:
-      - ${USERDIR}/docker/rtorrent-flood/config:/flood-db
-      - ${USERDIR}/Downloads/incoming:/data
-#    ports:
-#      - 49184:49184
-#      - 3000:3000
+      - ${USERDIR}/docker/transmission/config:/config
+      - ${USERDIR}/Downloads/incoming:/downloads
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:latest
-    network_mode: service:vpn
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
     restart: unless-stopped
     environment:
       - PUID=${PUID}
@@ -112,22 +114,26 @@ services:
   jackett:
     container_name: jackett
     image: linuxserver/jackett:latest
-    network_mode: service:vpn
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
     restart: unless-stopped
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${USERDIR}/docker/jackett/config:/config # config files
+      - ${USERDIR}/docker/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - ${USERDIR}/Downloads/incoming:/downloads # place where to put .torrent files for manual download
+      - ${USERDIR}/Downloads/incoming:/downloads 
 #    ports:
 #      - 9117:9117
   radarr:
     container_name: radarr
     image: linuxserver/radarr:latest
-    network_mode: service:vpn
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
     restart: unless-stopped
     environment:
       - PUID=${PUID}
@@ -144,13 +150,15 @@ services:
     container_name: nzbget
     image: linuxserver/nzbget:latest
     restart: unless-stopped
-    network_mode: service:vpn
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${USERDIR}/docker/nzbget/config:/config # config files
+      - ${USERDIR}/docker/nzbget/config:/config
       - ${USERDIR}/Downloads/incoming:/downloads
 #    ports:
 #      - 6789:6789
