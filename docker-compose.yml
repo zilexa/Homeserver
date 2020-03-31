@@ -1,5 +1,6 @@
 version: "3.6"
 services:
+# ____________________ vpn-proxy (media/vpn-client for media)
   vpn-proxy:
     container_name: vpn-proxy
     image: jeroenslot/nordvpn-proxy:latest
@@ -14,8 +15,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ovpn-data:/app/ovpn/config
     environment:
-      - USERNAME= #REMOVED
-      - PASSWORD= #REMOVED
+      - USERNAME=zilexa@gmx.com
+      - PASSWORD=TVflix!56
       - LOCAL_NETWORK=192.168.88.0/24
       - COUNTRY=NL
       - PROTOCOL=udp
@@ -31,6 +32,70 @@ services:
       - 51413:51413 #p2p
       - 51413:51413/udp #p2p DHT
     restart: always
+# ____________________ Unbound (security/DNS-recursive)
+  unbound:
+    image: mvance/unbound
+    container_name: unbound
+    network_mode: bridge
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${USERDIR}/docker/unbound/config:/opt/unbound/etc/unbound/
+    ports:
+      - "54:53/tcp"
+# ____________________ PiHole (security/DNS-server)
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    network_mode: bridge
+    restart: unless-stopped
+    # Recommended but not required (only for DHCP)
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+#    cap_add:
+#      - NET_ADMIN
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      WEBPASSWORD: #removed
+    # Volumes store your data between container upgrades
+    volumes:
+       - './etc-pihole/:/etc/pihole/'
+       - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+# ____________________ Unifi Controller (home/Wifi)
+  unifi:
+    image: goofball222/unifi
+    container_name: unifi
+    network_mode: bridge
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${USERDIR}/docker/unifi/cert:/usr/lib/unifi/cert
+      - ${USERDIR}/docker/unifi/data:/usr/lib/unifi/data
+      - ${USERDIR}/docker/unifi/logs:/usr/lib/unifi/logs
+    ports:
+      - 3478:3478/udp
+      - 8080:8080
+      - 8443:8443
+      - 8880:8880
+      - 8843:8843
+# ____________________ Portainer (server/docker management)
   portainer:
     image: portainer/portainer
     container_name: portainer
@@ -44,22 +109,25 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${USERDIR}/docker/portainer/data:/data
       - ${USERDIR}/docker/shared:/shared
+# ____________________ Organizr (server/homepage)
   organizr:
     container_name: organizr
-    image: lsiocommunity/organizr
+    image: organizrtools/organizr-v2:php-fpm
+    network_mode: bridge
     restart: unless-stopped
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
-      - ${USERDIR}/docker/organizr:/config
-      - ${USERDIR}/docker/shared:/shared
+       - ${USERDIR}/docker/organizr:/config
     ports:
-      - "80:80"
+      - "8080:80"
+# ____________________ Jellyfin (media/library)
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin
+    network_mode: bridge
     restart: unless-stopped
     environment:
       - PUID=1000
@@ -75,7 +143,8 @@ services:
       - 8096:8096
       - 8920:8920 #optional
     devices:
-      - /dev/dri:/dev/dri #intel Hardware Acceleration
+      - /dev/dri:/dev/dri
+# ____________________ Transmission (media/download-client)
   transmission:
     image: linuxserver/transmission
     container_name: transmission
@@ -89,10 +158,11 @@ services:
       - TZ=Europe/Amsterdam
       - TRANSMISSION_WEB_HOME=/combustion-release/
       - USER=admin
-      - PASS= #REMOVED
+      - PASS=TVflix!56
     volumes:
       - ${USERDIR}/docker/transmission/config:/config
       - ${USERDIR}/Downloads/incoming:/downloads
+# ____________________ Sonarr (media/PVR-TVshows)
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:latest
@@ -111,6 +181,7 @@ services:
       - ${USERDIR}/Media/TVshows:/tv
 #    ports:
 #      - 8989:8989
+# ____________________ Jackett (media/torrent-proxy for Sonarr&Radarr)
   jackett:
     container_name: jackett
     image: linuxserver/jackett:latest
@@ -128,6 +199,7 @@ services:
       - ${USERDIR}/Downloads/incoming:/downloads 
 #    ports:
 #      - 9117:9117
+# ____________________ Radarr (media/PVR-Novies)
   radarr:
     container_name: radarr
     image: linuxserver/radarr:latest
@@ -146,6 +218,24 @@ services:
       - ${USERDIR}/Media/Movies:/movies
 #    ports:
 #      - 7878:7878
+# ____________________ Bazarr (media/subtitle-proxy for Sonarr&Radarr)
+  bazarr:
+    container_name: bazarr
+    image: linuxserver/bazarr
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK_SET=022 #optional
+    volumes:
+      - ${USERDIR}/docker/config:/config
+      - ${USERDIR}/Media/Movies:/movies
+      - ${USERDIR}/Media/TVshows:/tv
+    restart: unless-stopped
+# ____________________ NZBget (media/download-client)
   nzbget:
     container_name: nzbget
     image: linuxserver/nzbget:latest
@@ -162,5 +252,27 @@ services:
       - ${USERDIR}/Downloads/incoming:/downloads
 #    ports:
 #      - 6789:6789
+# ____________________ SyncThing (privatecloud/filesync)
+  syncthing:
+    image: linuxserver/syncthing
+    container_name: syncthing
+    network_mode: bridge
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK_SET=022
+    volumes:
+      - ${USERDIR}/docker/syncthing/config:/config
+      - ${USERDIR}/Documents:/documents:rw
+      - ${USERDIR}/Pictures:/photos:rw
+      - /mnt/pool/backups:/backups:rw
+    ports:
+      - '8384:8384'
+      - '21027:21027/udp'
+      - '22000:22000'
+# ___________TBA_________ NextCloud (privatecloud/privatecloud)
+# ___________TBA_________ Piwigo or OwnPhotos (privatecloud/photo-library)
 volumes:
   ovpn-data:
