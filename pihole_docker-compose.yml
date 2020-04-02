@@ -1,0 +1,48 @@
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    restart: always
+    hostname: pihole
+    domainname: localhost               
+    mac_address: d0:ca:ab:cd:ef:01       # <-- choose a random mac address or use this one. 
+    cap_add:
+      - NET_ADMIN
+    networks:
+      MikroTik:
+        ipv4_address: 192.168.88.5       # <-- choose an IP, outside the range mentioned in macvlan network.
+    environment:
+      ServerIP: 192.168.88.5             # <-- match chosen IP.
+      VIRTUAL_HOST: pihole.localhost  
+      WEBPASSWORD: "removed"             # <-- choose a password.
+      PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
+      TZ: ${TZ}
+    volumes:
+      - ${USERDIR}/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
+      - ${USERDIR}/docker/pihole:/etc/pihole:rw
+      - /etc/localtime:/etc/localtime:ro
+      - ${USERDIR}/docker/pihole/var-log/pihole.log:/var/log/pihole.log
+    ports:
+      - 443/tcp
+      - 53/tcp
+      - 53/udp
+      - 67/udp
+      - 80/tcp
+    dns:
+      - 127.0.0.1
+      - 8.8.8.8
+      networks:
+  MikroTik:                                  # <-- I chose the name of the network as in my router.
+    driver: macvlan
+    driver_opts:
+      parent: eno1
+    ipam:
+      config:
+        - subnet: 192.168.88.0/24            # <-- find via your router
+          gateway: 192.168.88.1              # <-- your router addres
+          ip_range: 192.168.88.192/28        # <-- range for this network, don't change too much
+          
+# To be able to access Pihole webUI on the host machine itself, a macvlan on the host must be created as wel.
+# Open terminal on your host pc (not Docker) and run the following commands:
+# sudo ip link add mynet-shim link eno1 type macvlan  mode bridge
+# sudo ip addr add 192.168.88.10/24 dev mynet-shim      #ip address of the Host PC running docker, CIDR of my router
+# sudo ip route add 192.168.88.5 dev mynet-shim         #ip adres as chosen for PiHole
