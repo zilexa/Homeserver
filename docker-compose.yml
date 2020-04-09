@@ -99,6 +99,8 @@ services:
 # ____________________ 
 # _________TBA________ Piwigo or OwnPhotos [CLOUD/photo-library]
 # ____________________ 
+# _________TBA________ Firefox Sync [CLOUD/browser]
+# ____________________ 
 # _________TBA________ Organizr [MEDIA/homepage]
 # ____________________ 
 # ____________________ Jellyfin [MEDIA/library]
