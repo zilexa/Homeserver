@@ -1,9 +1,9 @@
-version: "3.6"
+version: "2.0"
 services:
 # ____________________ Portainer [SERVER/docker-management]
   portainer:
-    image: portainer/portainer
     container_name: portainer
+    image: portainer/portainer
     restart: always
     environment:
       - TZ=${TZ}
@@ -15,52 +15,56 @@ services:
       - ${USERDIR}/docker/portainer/data:/data
       - ${USERDIR}/docker/shared:/shared
 # ____________________ Unbound [SECURITY/recursive-DNS]
-  unbound:
-    image: mvance/unbound
-    container_name: unbound
-    network_mode: bridge
-    restart: unless-stopped
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${USERDIR}/docker/unbound/config:/opt/unbound/etc/unbound/
-    ports:
-      - "54:53/tcp"
+#  unbound:
+#    container_name: unbound
+#    image: mvance/unbound
+#    restart: unless-stopped
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#    volumes:
+#      - ${USERDIR}/docker/unbound/config:/opt/unbound/etc/unbound/
+#    ports:
+#      - "5053:53/tcp"
 # ____________________ PiHole [SECURITY/ads-aware-dns-server]
   pihole:
-    image: pihole/pihole:latest
     container_name: pihole
-    network_mode: bridge
-    restart: unless-stopped
-    # Recommended but not required, only for DHCP
-    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
-#    cap_add:
-#      - NET_ADMIN
+    image: pihole/pihole:latest
+    restart: always
+    hostname: pihole
+    domainname: localhost            # <-- Update
+    mac_address: d0:ca:ab:cd:ef:01
+    cap_add:
+      - NET_ADMIN
+    networks:
+      MikroTik:
+        ipv4_address: 192.168.88.5   # <-- Update
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      WEBPASSWORD: TVflix!56
-    # Volumes store your data between container upgrades
+      ServerIP: 192.168.88.5         # <-- Update (match ipv4_address)
+      VIRTUAL_HOST: pihole.localhost  # <-- Update (match hostname + domainname)
+      WEBPASSWORD: "TVflix!56"                   # <-- Add password (if required)
+      PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
+      TZ: ${TZ}
     volumes:
-       - './etc-pihole/:/etc/pihole/'
-       - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+      - ${USERDIR}/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
+      - ${USERDIR}/docker/pihole:/etc/pihole:rw
+      - /etc/localtime:/etc/localtime:ro
+      - ${USERDIR}/docker/pihole/var-log/pihole.log:/var/log/pihole.log
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "67:67/udp"
-      - "80:80/tcp"
-      - "443:443/tcp"
+      - 443/tcp
+      - 53/tcp
+      - 53/udp
+      - 67/udp
+      - 80/tcp
     dns:
       - 127.0.0.1
-      - 1.1.1.1
+      - 8.8.8.8
 # ____________________ Unifi Controller [HOME/Wifi]
   unifi:
-    image: goofball222/unifi
     container_name: unifi
-    network_mode: bridge
+    image: goofball222/unifi
+    network_mode: host
     restart: unless-stopped
     environment:
       - PUID=${PUID}
@@ -71,17 +75,10 @@ services:
       - ${USERDIR}/docker/unifi/cert:/usr/lib/unifi/cert
       - ${USERDIR}/docker/unifi/data:/usr/lib/unifi/data
       - ${USERDIR}/docker/unifi/logs:/usr/lib/unifi/logs
-    ports:
-      - 3478:3478/udp
-      - 8888:8080
-      - 8443:8443
-      - 8880:8880
-      - 8843:8843
 # ____________________ SyncThing [CLOUD/filesync]
   syncthing:
-    image: linuxserver/syncthing
     container_name: syncthing
-    network_mode: bridge
+    image: linuxserver/syncthing
     restart: unless-stopped
     environment:
       - PUID=${PUID}
@@ -103,24 +100,10 @@ services:
 # _________TBA________ Piwigo or OwnPhotos [CLOUD/photo-library]
 # ____________________ 
 # ____________________ Organizr [MEDIA/homepage]
-  organizr:
-    container_name: organizr
-    image: organizrtools/organizr-v2:php-fpm
-    network_mode: bridge
-    restart: unless-stopped
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-       - ${USERDIR}/docker/organizr:/config
-    ports:
-      - "8080:80"
 # ____________________ Jellyfin [MEDIA/library]
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin
-    network_mode: bridge
     restart: unless-stopped
     environment:
       - PUID=1000
@@ -160,12 +143,13 @@ services:
     networks:
       - default
     ports:
-      - 8118:8118 #Privoxy PROXY
-      - 8989:8989 #Sonarr PVR tvshows
-      - 7878:7878 #Radarr PVR movies
-      - 9117:9117 #Jackett SEARCHPROVIDER
-      - 6789:6789 #NZBget DOWNLOADER
-      - 9091:9091 #Transmission DOWNLOADER
+      - 8118:8118 #Privoxy
+      - 8989:8989 #Sonarr
+      - 7878:7878 #Radarr
+      - 9117:9117 #Jackett
+      - 6789:6789 #NZBget
+      - 9091:9091 #Transmission
+      - 6767:6767 #Subtitles
       - 51413:51413 #p2p
       - 51413:51413/udp #p2p DHT
     restart: always
@@ -181,27 +165,27 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=Europe/Amsterdam
-      - TRANSMISSION_WEB_HOME=/combustion-release/
+      - TRANSMISSION_WEB_HOME=/transmission-web-control/
       - USER=admin
       - PASS=TVflix!56
     volumes:
       - ${USERDIR}/docker/transmission/config:/config
-      - ${USERDIR}/Downloads/incoming:/downloads
+      - ${USERDIR}/Media:/media
 # ____________________ NZBget [MEDIA/download-client]
   nzbget:
     container_name: nzbget
     image: linuxserver/nzbget:latest
-    restart: unless-stopped
     network_mode: service:vpn-proxy
     depends_on:
       - vpn-proxy
+    restart: unless-stopped
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
     volumes:
       - ${USERDIR}/docker/nzbget/config:/config
-      - ${USERDIR}/Downloads/incoming:/downloads
+      - ${USERDIR}/Media:/media
 #    ports:
 #      - 6789:6789
 # ____________________ Sonarr [MEDIA/PVR-TVshows]
@@ -219,8 +203,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - ${USERDIR}/docker/sonarr/config:/config
-      - ${USERDIR}/Downloads/incoming:/downloads
-      - ${USERDIR}/Media/TVshows:/tv
+      - ${USERDIR}/Media:/media
 #    ports:
 #      - 8989:8989
 # ____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
@@ -238,7 +221,7 @@ services:
     volumes:
       - ${USERDIR}/docker/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - ${USERDIR}/Downloads/incoming:/downloads 
+      - ${USERDIR}/Media:/media 
 #    ports:
 #      - 9117:9117
 # ____________________ Radarr [MEDIA/PVR-Movies]
@@ -255,9 +238,8 @@ services:
       - TZ=${TZ}
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - ${USERDIR}/docker/radarr:/config
-      - ${USERDIR}/Downloads/incoming:/downloads
-      - ${USERDIR}/Media/Movies:/movies
+      - ${USERDIR}/docker/radarr/config:/config
+      - ${USERDIR}/Media:/media
 #    ports:
 #      - 7878:7878
 # ____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
@@ -267,15 +249,24 @@ services:
     network_mode: service:vpn-proxy
     depends_on:
       - vpn-proxy
+    restart: unless-stopped
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
       - UMASK_SET=022 #optional
     volumes:
-      - ${USERDIR}/docker/config:/config
-      - ${USERDIR}/Media/Movies:/movies
-      - ${USERDIR}/Media/TVshows:/tv
-    restart: unless-stopped
+      - ${USERDIR}/docker/bazarr/config:/config
+      - ${USERDIR}/Media:/media
 volumes:
   ovpn-data:
+networks:
+  MikroTik:
+    driver: macvlan
+    driver_opts:
+      parent: eno1
+    ipam:
+      config:
+        - subnet: 192.168.88.0/24            # <-- Update
+          gateway: 192.168.88.1              # <-- Update
+          ip_range: 192.168.88.192/28        # <-- Update
