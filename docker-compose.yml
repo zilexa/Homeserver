@@ -14,7 +14,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${USERDIR}/docker/portainer/data:/data
       - ${USERDIR}/docker/shared:/shared
-# ____________________ Unbound [SECURITY/recursive-DNS]
+# _________TBA________ Unbound [SECURITY/recursive-DNS]
 #  unbound:
 #    container_name: unbound
 #    image: mvance/unbound
@@ -99,7 +99,8 @@ services:
 # ____________________ 
 # _________TBA________ Piwigo or OwnPhotos [CLOUD/photo-library]
 # ____________________ 
-# ____________________ Organizr [MEDIA/homepage]
+# _________TBA________ Organizr [MEDIA/homepage]
+# ____________________ 
 # ____________________ Jellyfin [MEDIA/library]
   jellyfin:
     container_name: jellyfin
