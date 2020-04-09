@@ -21,9 +21,9 @@ services:
     mac_address: d0:ca:ab:cd:ef:01       # <-- choose a random mac address or use this one. 
     cap_add:
       - NET_ADMIN
-    networks:
-      MikroTik:
-        ipv4_address: 192.168.88.11       # <-- choose an IP, outside the range mentioned in macvlan network.
+    networks:             
+      MikroTik:                           # <-- the macvlan network name, see below.. 
+        ipv4_address: 192.168.88.11       # <-- choose an IP, outside the range mentioned in macvlan network below.
     environment:
       ServerIP: 192.168.88.11             # <-- match chosen IP.
       VIRTUAL_HOST: pihole.localhost  
