@@ -1,0 +1,5 @@
+How to change the DNS server in your MikroTik router, to use PiHole DNS instead of your ISP DNS.
+
+    IP > DNS > Servers: fill in PiHole IP.
+    DHCP Server > Networks > (click the address) > DNS Servers:  fill in PiHole IP.
+    DHCP Client > (click the interface): remove checkbox "Use Peer DNS".
