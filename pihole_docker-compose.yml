@@ -13,24 +13,44 @@
 # sudo ip addr add 192.168.88.10/24 dev mynet-shim      #ip address of the Host PC running docker, CIDR of your router.
 # sudo ip link set mynet-shim up
 # sudo ip route add 192.168.88.11 dev mynet-shim         #ip adres as chosen for PiHole (see below).
-
+version: "2.0"
 services:  
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    restart: always
+    hostname: unbound
+    domainname: ServerPC
+    mac_address: 5a:58:dd:5c:f1:d5
+    networks:
+      MikroTik:
+        ipv4_address: 192.168.88.3
+    environment:
+      ServerIP: 192.168.88.3       
+      VIRTUAL_HOST: unbound.ServerPC  
+      TZ: ${TZ}
+    volumes:
+      - ${USERDIR}/docker/unbound/config:/opt/unbound/etc/unbound/
+    ports:
+      - 53/tcp
+      - 53/udp
+# ____________________ PiHole [SECURITY/ads-aware-dns-server]
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
     restart: always
     hostname: pihole
-    domainname: localhost               
-    mac_address: d0:ca:ab:cd:ef:01       # <-- choose a random mac address or use this one. 
+    domainname: ServerPC            
+    mac_address: d0:ca:ab:cd:ef:01
     cap_add:
       - NET_ADMIN
-    networks:             
-      MikroTik:                           # <-- the macvlan network name, see below.. 
-        ipv4_address: 192.168.88.11       # <-- choose an IP, outside the range mentioned in macvlan network below.
+    networks:
+      MikroTik:
+        ipv4_address: 192.168.88.2  
     environment:
-      ServerIP: 192.168.88.11             # <-- match chosen IP.
-      VIRTUAL_HOST: pihole.localhost  
-      WEBPASSWORD: "removed"             # <-- choose a password.
+      ServerIP: 192.168.88.2         
+      VIRTUAL_HOST: pihole.ServerPC  
+      WEBPASSWORD: "removed"                 
       PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
       TZ: ${TZ}
     volumes:
@@ -48,13 +68,12 @@ services:
       - 127.0.0.1
       - 8.8.8.8
 networks:
-  MikroTik:                                  # <-- Anything, I chose the name of the network as in my router.
+  MikroTik:
     driver: macvlan
     driver_opts:
       parent: eno1
     ipam:
       config:
-        - subnet: 192.168.88.0/24            # <-- find via your router
-          gateway: 192.168.88.1              # <-- your router address
-          ip_range: 192.168.88.192/28        # <-- range for this network, only change "192.168.88" to match your situation.
-          
+        - subnet: 192.168.88.0/24          # <-- Update
+          gateway: 192.168.88.1            # <-- Update
+          ip_range: 192.168.88.192/28        # <-- Update
