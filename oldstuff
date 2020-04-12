@@ -1,0 +1,15 @@
+### This will install PiHole via docker and create the macvlan required to get PiHole its own IP address via your router.
+### This is the default, recommended and only correct method when installing via Docker. 
+###
+# Keep your compose file clean by using environment variables: 
+# https://github.com/zilexa/Mediaserver/blob/master/environment
+###
+### With the below, all devices in your network will be able to use PiHole as DNS and access the webUI.
+### If the host PC needs to be able to access PiHole, you need to create a macvlan on the hostpc
+### connecting the two IP addresses (of PiHole and HostPC).
+### Open terminal on your host pc (not Docker) and run the following commands:
+###
+# sudo ip link add mynet-shim link eno1 type macvlan mode bridge
+# sudo ip addr add 192.168.88.10/24 dev mynet-shim      #ip address of the Host PC running docker, CIDR of your router.
+# sudo ip link set mynet-shim up
+# sudo ip route add 192.168.88.11 dev mynet-shim         #ip adres as chosen for PiHole (see below).
