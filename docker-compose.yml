@@ -14,38 +14,24 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${USERDIR}/docker/portainer/data:/data
       - ${USERDIR}/docker/shared:/shared
-# _________TBA________ Unbound [SECURITY/recursive-DNS]
-#  unbound:
-#    container_name: unbound
-#    image: mvance/unbound
-#    restart: unless-stopped
-#    environment:
-#      - PUID=${PUID}
-#      - PGID=${PGID}
-#      - TZ=${TZ}
-#    volumes:
-#      - ${USERDIR}/docker/unbound/config:/opt/unbound/etc/unbound/
-#    ports:
-#      - "5053:53/tcp"
-# ____________________ PiHole [SECURITY/ads-aware-dns-server]
+# ____________________ PiHole [SECURITY/recursive-DNS]
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
     restart: always
-    hostname: pihole
-    domainname: localhost            # <-- Update
     mac_address: d0:ca:ab:cd:ef:01
     cap_add:
       - NET_ADMIN
     networks:
-      MikroTik:
-        ipv4_address: 192.168.88.5   # <-- Update
+      DNS-network:
+        ipv4_address: 192.168.88.2
     environment:
-      ServerIP: 192.168.88.5         # <-- Update (match ipv4_address)
-      VIRTUAL_HOST: pihole.localhost  # <-- Update (match hostname + domainname)
-      WEBPASSWORD: "TVflix!56"                   # <-- Add password (if required)
+      ServerIP: 192.168.88.2
+      WEBPASSWORD: "TVflix!56"
       PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
       TZ: ${TZ}
+      DNS1: 192.168.88.3#53
+      DNS2: 1.1.1.1
     volumes:
       - ${USERDIR}/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
       - ${USERDIR}/docker/pihole:/etc/pihole:rw
@@ -59,7 +45,21 @@ services:
       - 80/tcp
     dns:
       - 127.0.0.1
-      - 8.8.8.8
+      - 192.168.88.3#53
+# ____________________ Unbound [SECURITY/ads-aware-dns-server]
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    restart: always
+    mac_address: d0:ca:ab:cd:ef:02
+    networks:
+      DNS-network:
+        ipv4_address: 192.168.88.3
+#    volumes:
+#      - ${USERDIR}/docker/unbound:/opt/unbound/etc/unbound/
+    ports:
+      - 53/tcp
+      - 53/udp
 # ____________________ Unifi Controller [HOME/Wifi]
   unifi:
     container_name: unifi
@@ -95,13 +95,9 @@ services:
       - '21027:21027/udp'
       - '22000:22000'
 # ____________________ 
-# _________TBA________ NextCloud [CLOUD/privatecloud]
-# ____________________ 
+# _________TBA________ SeaFile [CLOUD/SeaFile]
+# _________TBA________ Firefox [CLOUD/SeaFile]
 # _________TBA________ Piwigo or OwnPhotos [CLOUD/photo-library]
-# ____________________ 
-# _________TBA________ Firefox Sync [CLOUD/browser]
-# ____________________ 
-# _________TBA________ Organizr [MEDIA/homepage]
 # ____________________ 
 # ____________________ Jellyfin [MEDIA/library]
   jellyfin:
@@ -174,6 +170,7 @@ services:
     volumes:
       - ${USERDIR}/docker/transmission/config:/config
       - ${USERDIR}/Media:/media
+      - ${USERDIR}/Media/incoming/blackhole:/watch
 # ____________________ NZBget [MEDIA/download-client]
   nzbget:
     container_name: nzbget
@@ -257,19 +254,19 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
-      - UMASK_SET=022 #optional
+      - UMASK_SET=022
     volumes:
       - ${USERDIR}/docker/bazarr/config:/config
       - ${USERDIR}/Media:/media
 volumes:
   ovpn-data:
 networks:
-  MikroTik:
+  DNS-network:
     driver: macvlan
     driver_opts:
       parent: eno1
     ipam:
       config:
-        - subnet: 192.168.88.0/24            # <-- Update
-          gateway: 192.168.88.1              # <-- Update
-          ip_range: 192.168.88.192/28        # <-- Update
+        - subnet: 192.168.88.0/24
+          gateway: 192.168.88.1
+          ip_range: 192.168.88.2/31
