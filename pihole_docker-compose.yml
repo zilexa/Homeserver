@@ -43,3 +43,13 @@
     ports:
       - 53/tcp
       - 53/udp
+networks:
+  DNS-network:
+    driver: macvlan
+    driver_opts:
+      parent: eno1
+    ipam:
+      config:
+        - subnet: 192.168.88.0/24
+          gateway: 192.168.88.1
+          ip_range: 192.168.88.2/31
