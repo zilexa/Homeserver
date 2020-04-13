@@ -1,4 +1,4 @@
-# ____________________ PiHole [SECURITY/ad-filter]
+# ____________________ PiHole [SECURITY/recursive-DNS]
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
@@ -11,9 +11,11 @@
         ipv4_address: 192.168.88.2
     environment:
       ServerIP: 192.168.88.2
-      WEBPASSWORD: "R E M O V E D"
+      WEBPASSWORD: "TVflix!56"
       PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
       TZ: ${TZ}
+      DNS1: 192.168.88.3#53
+      DNS2: 1.1.1.1
     volumes:
       - ${USERDIR}/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
       - ${USERDIR}/docker/pihole:/etc/pihole:rw
@@ -27,8 +29,8 @@
       - 80/tcp
     dns:
       - 127.0.0.1
-      - 192.168.88.3
-# ____________________ Unbound [SECURITY/dns-server]
+      - 192.168.88.3#53
+# ____________________ Unbound [SECURITY/ads-aware-dns-server]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
@@ -37,7 +39,6 @@
     networks:
       DNS-network:
         ipv4_address: 192.168.88.3
-#                                   ISSUE: it does not work when mounting:
 #    volumes:
 #      - ${USERDIR}/docker/unbound:/opt/unbound/etc/unbound/
     ports:
