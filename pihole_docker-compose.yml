@@ -1,4 +1,4 @@
-# ____________________ PiHole [SECURITY/recursive-DNS]
+# ____________________ PiHole [SECURITY/ad-filter]
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
@@ -28,7 +28,7 @@
     dns:
       - 127.0.0.1
       - 192.168.88.3
-# ____________________ Unbound [SECURITY/ads-aware-dns-server]
+# ____________________ Unbound [SECURITY/dns-server]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
