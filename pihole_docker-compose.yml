@@ -1,41 +1,17 @@
-version: "2.0"
-services:  
-  unbound:
-    container_name: unbound
-    image: mvance/unbound:latest
-    restart: always
-    hostname: unbound
-    domainname: ServerPC
-    mac_address: 5a:58:dd:5c:f1:d5
-    networks:
-      MikroTik:
-        ipv4_address: 192.168.88.3
-    environment:
-      ServerIP: 192.168.88.3       
-      VIRTUAL_HOST: unbound.ServerPC  
-      TZ: ${TZ}
-    volumes:
-      - ${USERDIR}/docker/unbound/config:/opt/unbound/etc/unbound/
-    ports:
-      - 53/tcp
-      - 53/udp
-# ____________________ PiHole [SECURITY/ads-aware-dns-server]
+# ____________________ PiHole [SECURITY/recursive-DNS]
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
     restart: always
-    hostname: pihole
-    domainname: ServerPC            
     mac_address: d0:ca:ab:cd:ef:01
     cap_add:
       - NET_ADMIN
     networks:
-      MikroTik:
-        ipv4_address: 192.168.88.2  
+      DNS-network:
+        ipv4_address: 192.168.88.2
     environment:
-      ServerIP: 192.168.88.2         
-      VIRTUAL_HOST: pihole.ServerPC  
-      WEBPASSWORD: "removed"                 
+      ServerIP: 192.168.88.2
+      WEBPASSWORD: "R E M O V E D"
       PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
       TZ: ${TZ}
     volumes:
@@ -51,14 +27,19 @@ services:
       - 80/tcp
     dns:
       - 127.0.0.1
-      - 8.8.8.8
-networks:
-  MikroTik:
-    driver: macvlan
-    driver_opts:
-      parent: eno1
-    ipam:
-      config:
-        - subnet: 192.168.88.0/24          # <-- Update
-          gateway: 192.168.88.1            # <-- Update
-          ip_range: 192.168.88.192/28        # <-- Update
+      - 192.168.88.3
+# ____________________ Unbound [SECURITY/ads-aware-dns-server]
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    restart: always
+    mac_address: d0:ca:ab:cd:ef:02
+    networks:
+      DNS-network:
+        ipv4_address: 192.168.88.3
+#                                   ISSUE: it does not work when mounting:
+#    volumes:
+#      - ${USERDIR}/docker/unbound:/opt/unbound/etc/unbound/
+    ports:
+      - 53/tcp
+      - 53/udp
