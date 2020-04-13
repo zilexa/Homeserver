@@ -31,7 +31,6 @@ services:
       PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
       TZ: ${TZ}
       DNS1: 192.168.88.3#53
-      DNS2: 1.1.1.1
     volumes:
       - ${USERDIR}/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
       - ${USERDIR}/docker/pihole:/etc/pihole:rw
