@@ -27,7 +27,7 @@ services:
         ipv4_address: 192.168.88.2
     environment:
       ServerIP: 192.168.88.2
-      WEBPASSWORD: "TVflix!56"
+      WEBPASSWORD: "REMOVED"
       PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
       TZ: ${TZ}
       DNS1: 192.168.88.3#53
@@ -133,8 +133,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ovpn-data:/app/ovpn/config
     environment:
-      - USERNAME=zilexa@gmx.com
-      - PASSWORD=TVflix!56
+      - USERNAME=
+      - PASSWORD=
       - LOCAL_NETWORK=192.168.88.0/24
       - COUNTRY=NL
       - PROTOCOL=udp
@@ -165,7 +165,7 @@ services:
       - TZ=Europe/Amsterdam
       - TRANSMISSION_WEB_HOME=/transmission-web-control/
       - USER=admin
-      - PASS=TVflix!56
+      - PASS=
     volumes:
       - ${USERDIR}/docker/transmission/config:/config
       - ${USERDIR}/Media:/media
