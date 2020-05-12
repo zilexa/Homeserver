@@ -14,5 +14,5 @@ wget -P $USERDIR/docker/traefik https://raw.githubusercontent.com/zilexa/Mediase
 # Create Firefox-Syncserver file & generate secret
 mkdir -p ${USERDIR}/docker/firefox-syncserver/secret
 touch $USERDIR/docker/firefox-syncserver/secret/secret.txt
-cho "[syncserver]" >> $USERDIR/docker/firefox-syncserver/secret/secret.txt
+echo "[syncserver]" >> $USERDIR/docker/firefox-syncserver/secret/secret.txt
 head -c 20 /dev/urandom | sha1sum | awk '{print $1}' >> $USERDIR/docker/firefox-syncserver/secret/secret.txt
