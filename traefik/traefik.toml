@@ -1,0 +1,21 @@
+[api]
+  dashboard = true
+  insecure = true
+
+[providers]
+  [providers.docker]
+    endpoint = "unix:///var/run/docker.sock"
+    watch = true
+    exposedbydefault = false
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+  [entryPoints.websecure]
+    address = ":443"
+
+[certificatesResolvers.letsencrypt.acme]
+  email = "admin@address"
+  storage = "acme.json"
+  [certificatesResolvers.letsencrypt.acme.httpChallenge]
+    entryPoint = "web"
