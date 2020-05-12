@@ -15,7 +15,7 @@
     address = ":443"
 
 [certificatesResolvers.letsencrypt.acme]
-  email = "admin@address"
+  email = "admin@address.com"
   storage = "acme.json"
   [certificatesResolvers.letsencrypt.acme.httpChallenge]
     entryPoint = "web"
