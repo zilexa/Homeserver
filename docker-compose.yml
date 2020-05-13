@@ -1,0 +1,432 @@
+version: "2.0"
+services:
+##
+##______MANAGEMENT_____
+##_____________________ Portainer [SERVER/Management]
+  portainer:
+    container_name: portainer
+    image: portainer/portainer
+    restart: always
+    environment:
+      - TZ=${TZ}
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${USERDIR}/docker/portainer/data:/data
+      - ${USERDIR}/docker/shared:/shared
+##
+##______NETWORK_______
+##____________________ PiHole 2 (1st PiHole runs off-server) [NETWORK/recursive-dnsserver]
+# create empty files first see docker-config.sh
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    restart: always
+    mac_address: d0:ca:ab:cd:ef:01
+    cap_add:
+      - NET_ADMIN
+    networks:
+      DNS-network:
+        ipv4_address: 192.168.88.3
+    environment:
+      ServerIP: 192.168.88.3
+      WEBPASSWORD: $PIHOLEPW
+      PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
+      TZ: ${TZ}
+      DNS1: 192.168.88.4#53
+      DNS2: 1.1.1.1
+    volumes:
+      - ${USERDIR}/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
+      - ${USERDIR}/docker/pihole:/etc/pihole:rw
+      - /etc/localtime:/etc/localtime:ro
+      - ${USERDIR}/docker/pihole/var-log/pihole.log:/var/log/pihole.log
+    ports:
+      - 443/tcp
+      - 53/tcp
+      - 53/udp
+      - 67/udp
+      - 80/tcp
+    dns:
+      - 127.0.0.1
+      - 192.168.88.4#53
+##____________________ Unbound [NETWORK/noads-dnsserver]
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    restart: always
+    mac_address: d0:ca:ab:cd:ef:02
+    networks:
+      DNS-network:
+        ipv4_address: 192.168.88.4
+#    volumes:
+#      - ${USERDIR}/docker/unbound:/opt/unbound/etc/unbound/
+    ports:
+      - 53/tcp
+      - 53/udp
+##
+##____________________ Unifi Controller [NETWORK/Wifi]
+  unifi:
+    container_name: unifi
+    image: goofball222/unifi
+    mac_address: d0:ca:ab:cd:ef:03
+    networks:
+      DNS-network:
+        ipv4_address: 192.168.88.5
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${USERDIR}/docker/unifi/cert:/usr/lib/unifi/cert
+      - ${USERDIR}/docker/unifi/data:/usr/lib/unifi/data
+      - ${USERDIR}/docker/unifi/logs:/usr/lib/unifi/logs
+    ports:
+      - 3478:3478/udp
+      - 8080:8080
+      - 8443:8443
+      - 8880:8880
+      - 8843:8843
+##
+##________CLOUD________
+##_____________________ Traefik [CLOUD/reverse-proxy
+# create empty files and set permissions first see docker-config.sh
+  traefik:
+    image: traefik:v2.0
+    container_name: traefik
+    ports:
+      - 8880:8080
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${USERDIR}/docker/traefik/acme.json:/acme.json
+      - ${USERDIR}/docker/traefik/traefik.toml:/etc/traefik/traefik.toml
+    restart: unless-stopped
+##
+##____________________ SyncThing [CLOUD/Sync]
+  syncthing:
+    container_name: syncthing
+    image: linuxserver/syncthing
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK_SET=022
+    volumes:
+      - ${USERDIR}/docker/syncthing/config:/config
+      - ${USERDIR}/Documents:/documents:rw
+      - ${USERDIR}/Pictures:/photos:rw
+      - /mnt/pool/backups:/backups:rw
+    ports:
+      - '8384:8384'
+      - '21027:21027/udp'
+      - '22000:22000'
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.syncthing-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.syncthing-redirect.entrypoints=web
+      - traefik.http.routers.syncthing-redirect.middlewares=syncthing-redirect
+      - traefik.http.routers.syncthing-redirect.rule=Host(`sync.$MYDOMAIN`)
+      - traefik.http.routers.syncthing.entrypoints=websecure
+      - traefik.http.routers.syncthing.rule=Host(`sync.$MYDOMAIN`)
+      - traefik.http.routers.syncthing.tls.certresolver=letsencrypt
+      - traefik.http.services.syncthing.loadbalancer.server.port=8384
+#      - traefik.http.routers.syncthing-listen.rule=Host(`sync.$MYDOMAIN`) && Path(`/listen`)
+#      - traefik.http.services.syncthing-listen.loadbalancer.server.port=22000
+##
+##____________________ MariaDB MySQL [CLOUD/Database]
+  mariadb:
+    image: mariadb:10.1
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQLROOTPW
+      MYSQL_USER: $MYSQLUSER
+      MYSQL_PASSWORD: $MYSQLPW
+      MYSQL_DATABASE: filerundb
+    volumes:
+      - ${USERDIR}/docker/filerun/db:/var/lib/mysql
+##
+##____________________ FileRun [CLOUD/Files]
+  filerun:
+    image: afian/filerun
+    container_name: filerun
+    environment:
+      FR_DB_HOST: mariadb
+      FR_DB_PORT: 3306
+      FR_DB_NAME: filerundb
+      FR_DB_USER: $MYSQLUSER
+      FR_DB_PASS: $MYSQLPW
+      APACHE_RUN_USER: www-data
+      APACHE_RUN_USER_ID: 33
+      APACHE_RUN_GROUP: www-data
+      APACHE_RUN_GROUP_ID: 33
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+#      - filerun-tika
+#      - filerun-elasticsearch
+    ports:
+      - "8000:80"
+    volumes:
+      - ${USERDIR}/docker/filerun/html:/var/www/html
+      - ${USERDIR}/docker/filerun/user-files:/user-files
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.filerun-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.filerun-redirect.entrypoints=web
+      - traefik.http.routers.filerun-redirect.middlewares=filerun-redirect
+      - traefik.http.routers.filerun-redirect.rule=Host(`files.$MYDOMAIN`)
+      - traefik.http.routers.filerun.entrypoints=websecure
+      - traefik.http.routers.filerun.rule=Host(`files.$MYDOMAIN`)
+      - traefik.http.routers.filerun.tls.certresolver=letsencrypt
+      - traefik.http.services.filerun.loadbalancer.server.port=80
+##____________________ FileRun Full-Text Search [CLOUD/Files search]
+#  filerun-tika:
+#    image: logicalspark/docker-tikaserver
+#    container_name: filerun-tika
+#  filerun-elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+#    container_name: filerun-elasticsearch
+#    environment:
+#      - cluster.name=docker-cluster
+#      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    mem_limit: 1g
+#    volumes:
+#      - ${USERDIR}/docker/filerun/esearch:/usr/share/elasticsearch/data
+##
+##_____________________ Firefox Sync [CLOUD/Browser] 
+# generate secret.txt first see docker-config.sh
+  firefox-syncserver:
+    image: crazymax/firefox-syncserver:latest
+    container_name: firefox_syncserver
+    restart: always
+    environment: 
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - FF_SYNCSERVER_PUBLIC_URL=https://firefox.$MYDOMAIN
+      - FF_SYNCSERVER_SECRET_FILE=/data/secret/secret.txt
+      - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
+      - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=true
+    volumes:
+      - "${USERDIR}/docker/firefox-syncserver:/data"
+      - "${USERDIR}/docker/firefox-syncserver/secret:/data/secret/"
+    ports:
+      - 5000:5000
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.firefox-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.firefox-redirect.entrypoints=web
+      - traefik.http.routers.firefox-redirect.middlewares=firefox-redirect
+      - traefik.http.routers.firefox-redirect.rule=Host(`firefox.$MYDOMAIN`)
+      - traefik.http.routers.firefox.entrypoints=websecure
+      - traefik.http.routers.firefox.rule=Host(`firefox.$MYDOMAIN`)
+      - traefik.http.routers.firefox.tls.certresolver=letsencrypt
+      - traefik.http.services.firefox.loadbalancer.server.port=5000
+##
+##________MEDIA________
+  heimdall:
+    container_name: heimdall
+    image: linuxserver/heimdall:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+     - "8080:80"
+    volumes:
+      - $USERDIR/docker/heimdall:/config
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+##_____________________ Jellyfin [MEDIA/Library] 
+  jellyfin:
+    container_name: jellyfin
+    image: linuxserver/jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - UMASK_SET=022 #optional
+    volumes:
+      - ${USERDIR}/docker/jellyfin/config:/config
+      - ${USERDIR}/Media/TVshows:/data/tvshows
+      - ${USERDIR}/Media/Movies:/data/movies
+      - ${USERDIR}/Music:/data/music
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+    devices:
+      - /dev/dri:/dev/dri
+#
+#____________________ vpn-proxy [MEDIA/vpn-client-for-media]
+  vpn-proxy:
+    container_name: vpn-proxy
+    image: jeroenslot/nordvpn-proxy:latest
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    dns:
+      - 103.86.96.100
+      - 103.86.99.100
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ovpn-data:/app/ovpn/config
+    environment:
+      - USERNAME=$VPNUSER
+      - PASSWORD=$VPNPW
+      - LOCAL_NETWORK=192.168.88.0/24
+      - COUNTRY=NL
+      - PROTOCOL=udp
+    networks:
+      - default
+    ports:
+      - 8118:8118 #Privoxy
+      - 8989:8989 #Sonarr
+      - 7878:7878 #Radarr
+      - 9117:9117 #Jackett
+      - 6789:6789 #NZBget
+      - 9091:9091 #Transmission
+      - 6767:6767 #Subtitles
+      - 51413:51413 #p2p
+      - 51413:51413/udp #p2p DHT
+    restart: always
+#
+#____________________ Transmission [MEDIA/download-client]
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=Europe/Amsterdam
+      - TRANSMISSION_WEB_HOME=/transmission-web-control/
+      - USER=$TORRENTUSER
+      - PASS=$TORRENTPW
+    volumes:
+      - ${USERDIR}/docker/transmission/config:/config
+      - ${USERDIR}/Media:/media
+      - ${USERDIR}/Media/incoming/blackhole:/watch
+#
+#____________________ NZBget [MEDIA/download-client]
+  nzbget:
+    container_name: nzbget
+    image: linuxserver/nzbget:latest
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${USERDIR}/docker/nzbget/config:/config
+      - ${USERDIR}/Media:/media
+#
+#____________________ Sonarr [MEDIA/PVR-TVshows]
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr:latest
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - ${USERDIR}/docker/sonarr/config:/config
+      - ${USERDIR}/Media:/media
+#
+#____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
+  jackett:
+    container_name: jackett
+    image: linuxserver/jackett:latest
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${USERDIR}/docker/jackett/config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - ${USERDIR}/Media:/media 
+#
+#____________________ Radarr [MEDIA/PVR-Movies]
+  radarr:
+    container_name: radarr
+    image: linuxserver/radarr:latest
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - ${USERDIR}/docker/radarr/config:/config
+      - ${USERDIR}/Media:/media
+#
+#____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
+  bazarr:
+    container_name: bazarr
+    image: linuxserver/bazarr
+    network_mode: service:vpn-proxy
+    depends_on:
+      - vpn-proxy
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - UMASK_SET=022 #optional
+    volumes:
+      - ${USERDIR}/docker/bazarr/config:/config
+      - ${USERDIR}/Media:/media
+#
+#
+#
+volumes:
+  ovpn-data:
+  firefox-syncserver:
+#
+#
+#
+networks:
+  DNS-network:
+    driver: macvlan
+    driver_opts:
+      parent: eno1
+    ipam:
+      config:
+        - subnet: 192.168.88.0/24
+          gateway: 192.168.88.1
+          ip_range: 192.168.88.0/29
+          aux_addresses:
+            router: 192.168.88.1
+            PiHole-1: 192.168.88.2
