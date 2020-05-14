@@ -1,7 +1,7 @@
-echo "Enter the name of the first workstation user (Monkey), followed by [ENTER]:"
+echo "Enter the name of the first workstation user (example: Monkey), followed by [ENTER]:"
 read USERNAME1
 echo USER1='"'$USERNAME1'"' >> /etc/environment
-echo "Enter the name of the second workstation user (Fish), followed by [ENTER]:"
+echo "Enter the name of the second workstation user (example: Fish), followed by [ENTER]:"
 read USERNAME2
 echo USER2='"'$USERNAME2'"' >> /etc/environment
 
