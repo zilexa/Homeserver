@@ -24,6 +24,13 @@ sudo wget -P /etc https://raw.githubusercontent.com/zilexa/Mediaserver/master/sn
 # SnapRAID create path for local content file
 mkdir -p /var/snapraid/
 
+# Create the required folders for MergerFS pool
+mkdir -p /mnt/archive
+mkdir -p /mnt/pool
+mkdir -p /mnt/data/cache
+mkdir -p /mnt/data/{disk1,disk2}
+mkdir -p /mnt/parity/pardisk1
+
 # Configure etc/fstab FIRST (open new terminal for the user, pause the current)
 x-terminal-emulator -e sudo nano /etc/fstab
 read -p "Add the required content to etc/fstab in a seperate terminal BEFORE continuing, press enter to continue"
