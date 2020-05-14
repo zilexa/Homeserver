@@ -16,4 +16,13 @@ ln -s /mnt/pool/Music /mnt/pool/Users/$USERNAME1/Homefolders/Music
 ln -s /mnt/pool/Music /mnt/pool/Users/$USERNAME2/Homefolders/Music
 
 # Replace home folder items for symlinks
-TODO
+rm -rf $USERDIR/Downloads
+ln -s /mnt/pool/Downloads $USERDIR/Downloads
+rm -rf $USERDIR/Documents
+ln -s /mnt/pool/Documents $USERDIR/Documents
+rm -rf $USERDIR/Pictures
+ln -s /mnt/pool/Pictures $USERDIR/Pictures
+rm -rf $USERDIR/Music
+ln -s /mnt/pool/Music $USERDIR/Music
+rm -rf $USERDIR/Media
+ln -s /mnt/pool/Music $USERDIR/Music
