@@ -1,6 +1,6 @@
 # sudo nano /etc/environment
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
-PUID=1000                        # find your PUID via the command: id $user
-PGID=1000                        # find your GUID via the command: id $user
-TZ="Europe/Amsterdam"            # naming scheme of timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-USERDIR="/home/USERACCOUNTNAME"  # Your userdir, usually a subfolder in /home with your accountname
+PUID=1000              # find your PUID via the command: id $user
+PGID=1000              # find your GUID via the command: id $user
+TZ="Europe/Amsterdam"  # naming scheme of timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+USERDIR="/home/$USER"  # Your userdir, usually a subfolder in /home with your accountname
