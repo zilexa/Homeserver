@@ -1,5 +1,5 @@
 ## Required actions before running docker-compose.yml
-#!/bin/bash
+!/bin/bash
 # Create PiHole log file
 mkdir -p ${USERDIR}/docker/pihole/var-log
 touch ${USERDIR}/docker/pihole/var-log/pihole.log
