@@ -1,5 +1,12 @@
 ## Required actions before running docker-compose.yml
-!/bin/bash
+# See https://github.com/zilexa/Homeserver
+#!/bin/bash
+#Set environment variables to be used by Docker (i.e. requires TZ in quotes)
+echo PUID=1000 >> /etc/environment
+echo PGID=1000 >> /etc/environment
+echo TZ='"'$TZ'"' >> /etc/environment
+echo USERDIR='"'/home/$USER'"'
+
 # Create PiHole log file
 mkdir -p ${USERDIR}/docker/pihole/var-log
 touch ${USERDIR}/docker/pihole/var-log/pihole.log
