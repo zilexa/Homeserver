@@ -1,3 +1,5 @@
+# My folder structure might not be yours. 
+
 echo "Enter the name of the first workstation user (example: Monkey), followed by [ENTER]:"
 read USERNAME1
 echo USER1='"'$USERNAME1'"' >> /etc/environment
