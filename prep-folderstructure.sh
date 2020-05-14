@@ -6,14 +6,14 @@ read USERNAME2
 echo USER2='"'$USERNAME2'"' >> /etc/environment
 
 # symlinks folder structure
-ln -s /mnt/pool/Downloads /mnt/pool/Users/Rudhra/Homefolders/Downloads
-ln -s /mnt/pool/Downloads /mnt/pool/Users/Shanti/Homefolders/Downloads
-ln -s /mnt/pool/Documents /mnt/pool/Users/Rudhra/Homefolders/Documents
-ln -s /mnt/pool/Documents /mnt/pool/Users/Shanti/Homefolders/Documents
-ln -s /mnt/pool/Pictures /mnt/pool/Users/Rudhra/Homefolders/Pictures
-ln -s /mnt/pool/Pictures /mnt/pool/Users/Shanti/Homefolders/Pictures
-ln -s /mnt/pool/Music /mnt/pool/Users/Rudhra/Homefolders/Music
-ln -s /mnt/pool/Music /mnt/pool/Users/Shanti/Homefolders/Music
+ln -s /mnt/pool/Downloads /mnt/pool/Users/$USERNAME1/Homefolders/Downloads
+ln -s /mnt/pool/Downloads /mnt/pool/Users/$USERNAME2/Homefolders/Downloads
+ln -s /mnt/pool/Documents /mnt/pool/Users/$USERNAME1/Homefolders/Documents
+ln -s /mnt/pool/Documents /mnt/pool/Users/$USERNAME2/Homefolders/Documents
+ln -s /mnt/pool/Pictures /mnt/pool/Users/$USERNAME1/Homefolders/Pictures
+ln -s /mnt/pool/Pictures /mnt/pool/Users/$USERNAME2/Homefolders/Pictures
+ln -s /mnt/pool/Music /mnt/pool/Users/$USERNAME1/Homefolders/Music
+ln -s /mnt/pool/Music /mnt/pool/Users/$USERNAME2/Homefolders/Music
 
 # Replace home folder items for symlinks
 TODO
