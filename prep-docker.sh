@@ -3,22 +3,22 @@
 #!/bin/bash
 #Set environment variables to be used by Docker (i.e. requires TZ in quotes)
 #Also used for secrets to be filled in by the user (required vars created without value)
-echo PUID=1000 >> $HOME/docker/vars.env
-echo PGID=1000 >> $HOME/docker/vars.env
-echo TZ='"'$TZ'"' >> $HOME/docker/vars.env
-echo >> $HOME/docker/vars.env
-echo PW_PIHOLE= >> $HOME/docker/vars.env
-echo >> $HOME/docker/vars.env
-PW_ROOT_MYSQL= >> $HOME/docker/vars.env
-USER_MYSQL= >> $HOME/docker/vars.env
-PW_MYSQL= >> $HOME/docker/vars.env
-echo >> $HOME/docker/vars.env
-DOMAIN= >> $HOME/docker/vars.env
-echo >> $HOME/docker/vars.env
-$USER_VPN= >> $HOME/docker/vars.env
-$PW_VPN= >> $HOME/docker/vars.env
-echo >> $HOME/docker/vars.env
-PW_MEDIA= >> $HOME/docker/vars.env
+echo PUID=1000 >> $HOME/docker/.env
+echo PGID=1000 >> $HOME/docker/.env
+echo TZ='"'$TZ'"' >> $HOME/docker/.env
+echo >> $HOME/docker/.env
+echo PW_PIHOLE= >> $HOME/docker/.env
+echo >> $HOME/docker/.env
+PW_ROOT_MYSQL= >> $HOME/docker/.env
+USER_MYSQL= >> $HOME/docker/.env
+PW_MYSQL= >> $HOME/docker/.env
+echo >> $HOME/docker/.env
+DOMAIN= >> $HOME/docker/.env
+echo >> $HOME/docker/.env
+$USER_VPN= >> $HOME/docker/.env
+$PW_VPN= >> $HOME/docker/.env
+echo >> $HOME/docker/.env
+PW_MEDIA= >> $HOME/docker/.env
 
 # Create PiHole log file
 mkdir -p ${USERDIR}/docker/pihole/var-log
