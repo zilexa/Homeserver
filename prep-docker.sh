@@ -2,6 +2,7 @@
 # See https://github.com/zilexa/Homeserver
 #!/bin/bash
 #Set environment variables to be used by Docker (i.e. requires TZ in quotes)
+#Also used for secrets to be filled in by the user (required vars created without value)
 echo PUID=1000 >> $HOME/docker/vars.env
 echo PGID=1000 >> $HOME/docker/vars.env
 echo TZ='"'$TZ'"' >> $HOME/docker/vars.env
