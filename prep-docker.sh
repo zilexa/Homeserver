@@ -39,7 +39,7 @@ mkdir -p ${USERDIR}/docker/firefox-syncserver/secret
 touch $USERDIR/docker/firefox-syncserver/secret/secret.txt
 head -c 20 /dev/urandom | sha1sum | awk '{print $1}' >> $USERDIR/docker/firefox-syncserver/secret/secret.txt
 
-# Requirement for ElasticSearch (= additional container required by FileRun to search by text within files)
+# Requirement for FileRun, ElasticSearch (= additional container required by FileRun to search by text within files)
 # Create folder and set permissions
 mkdir -p ${USERDIR}/docker/filerun/esearch
 sudo chown -R $USER:$USER ${USERDIR}/docker/filerun/esearch
