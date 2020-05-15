@@ -8,14 +8,14 @@ services:
     image: portainer/portainer
     restart: always
     environment:
-      - TZ=${TZ}
+      - TZ=$TZ
     command: -H unix:///var/run/docker.sock
     ports:
       - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${USERDIR}/docker/portainer/data:/data
-      - ${USERDIR}/docker/shared:/shared
+      - $HOME/docker/portainer/data:/data
+      - $HOME/docker/shared:/shared
 ##
 ##______NETWORK_______
 ##____________________ PiHole 2 (1st PiHole runs off-server) [NETWORK/recursive-dnsserver]
@@ -32,16 +32,16 @@ services:
         ipv4_address: 192.168.88.3
     environment:
       ServerIP: 192.168.88.3
-      WEBPASSWORD: $PIHOLEPW
+      WEBPASSWORD: $PW_PIHOLE
       PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
-      TZ: ${TZ}
+      TZ: $TZ
       DNS1: 192.168.88.4#53
       DNS2: 1.1.1.1
     volumes:
-      - ${USERDIR}/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
-      - ${USERDIR}/docker/pihole:/etc/pihole:rw
+      - $HOME/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
+      - $HOME/docker/pihole:/etc/pihole:rw
       - /etc/localtime:/etc/localtime:ro
-      - ${USERDIR}/docker/pihole/var-log/pihole.log:/var/log/pihole.log
+      - $HOME/docker/pihole/var-log/pihole.log:/var/log/pihole.log
     ports:
       - 443/tcp
       - 53/tcp
@@ -49,7 +49,7 @@ services:
       - 67/udp
       - 80/tcp
     dns:
-      - 127.0.0.1
+#      - 127.0.0.1
       - 192.168.88.4#53
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
@@ -61,7 +61,7 @@ services:
       DNS-network:
         ipv4_address: 192.168.88.4
 #    volumes:
-#      - ${USERDIR}/docker/unbound:/opt/unbound/etc/unbound/
+#      - $HOME/docker/unbound:/opt/unbound/etc/unbound/
     ports:
       - 53/tcp
       - 53/udp
@@ -76,14 +76,14 @@ services:
         ipv4_address: 192.168.88.5
     restart: unless-stopped
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${USERDIR}/docker/unifi/cert:/usr/lib/unifi/cert
-      - ${USERDIR}/docker/unifi/data:/usr/lib/unifi/data
-      - ${USERDIR}/docker/unifi/logs:/usr/lib/unifi/logs
+      - $HOME/docker/unifi/cert:/usr/lib/unifi/cert
+      - $HOME/docker/unifi/data:/usr/lib/unifi/data
+      - $HOME/docker/unifi/logs:/usr/lib/unifi/logs
     ports:
       - 3478:3478/udp
       - 8080:8080
@@ -103,8 +103,8 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${USERDIR}/docker/traefik/acme.json:/acme.json
-      - ${USERDIR}/docker/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - $HOME/docker/traefik/acme.json:/acme.json
+      - $HOME/docker/traefik/traefik.toml:/etc/traefik/traefik.toml
     restart: unless-stopped
 ##
 ##____________________ SyncThing [CLOUD/Sync]
@@ -113,15 +113,16 @@ services:
     image: linuxserver/syncthing
     restart: unless-stopped
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
       - UMASK_SET=022
     volumes:
-      - ${USERDIR}/docker/syncthing/config:/config
-      - ${USERDIR}/Documents:/documents:rw
-      - ${USERDIR}/Pictures:/photos:rw
-      - /mnt/pool/backups:/backups:rw
+      - $HOME/docker/syncthing/config:/config
+      - /mnt/pool/Desktop:/desktop:rw
+      - /mnt/pool/Downloads:/downloads:rw
+      - /mnt/pool/Documents:/documents:rw
+      - /mnt/pool/Users:/users:rw
     ports:
       - '8384:8384'
       - '21027:21027/udp'
@@ -131,12 +132,12 @@ services:
       - traefik.http.middlewares.syncthing-redirect.redirectscheme.scheme=https
       - traefik.http.routers.syncthing-redirect.entrypoints=web
       - traefik.http.routers.syncthing-redirect.middlewares=syncthing-redirect
-      - traefik.http.routers.syncthing-redirect.rule=Host(`sync.$MYDOMAIN`)
+      - traefik.http.routers.syncthing-redirect.rule=Host(`sync.$DOMAIN`)
       - traefik.http.routers.syncthing.entrypoints=websecure
-      - traefik.http.routers.syncthing.rule=Host(`sync.$MYDOMAIN`)
+      - traefik.http.routers.syncthing.rule=Host(`sync.obelix.xyz`)
       - traefik.http.routers.syncthing.tls.certresolver=letsencrypt
       - traefik.http.services.syncthing.loadbalancer.server.port=8384
-#      - traefik.http.routers.syncthing-listen.rule=Host(`sync.$MYDOMAIN`) && Path(`/listen`)
+#      - traefik.http.routers.syncthing-listen.rule=Host(`sync.$DOMAIN`) && Path(`/listen`)
 #      - traefik.http.services.syncthing-listen.loadbalancer.server.port=22000
 ##
 ##____________________ MariaDB MySQL [CLOUD/Database]
@@ -144,23 +145,26 @@ services:
     image: mariadb:10.1
     container_name: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: $MYSQLROOTPW
-      MYSQL_USER: $MYSQLUSER
-      MYSQL_PASSWORD: $MYSQLPW
+      MYSQL_ROOT_PASSWORD: $PW_ROOT_MYSQL
+      MYSQL_USER: $USER_MYSQL
+      MYSQL_PASSWORD: $PW_MYSQL
       MYSQL_DATABASE: filerundb
     volumes:
-      - ${USERDIR}/docker/filerun/db:/var/lib/mysql
+      - $HOME/docker/filerun/db:/var/lib/mysql
 ##
 ##____________________ FileRun [CLOUD/Files]
   filerun:
     image: afian/filerun
     container_name: filerun
     environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
       FR_DB_HOST: mariadb
       FR_DB_PORT: 3306
       FR_DB_NAME: filerundb
-      FR_DB_USER: $MYSQLUSER
-      FR_DB_PASS: $MYSQLPW
+      FR_DB_USER: $USER_MYSQL
+      FR_DB_PASS: $PW_MYSQL
       APACHE_RUN_USER: www-data
       APACHE_RUN_USER_ID: 33
       APACHE_RUN_GROUP: www-data
@@ -169,41 +173,44 @@ services:
       - mariadb
     links:
       - mariadb
-#      - filerun-tika
-#      - filerun-elasticsearch
+      - filerun-tika
+      - filerun-elasticsearch
     ports:
       - "8000:80"
     volumes:
-      - ${USERDIR}/docker/filerun/html:/var/www/html
-      - ${USERDIR}/docker/filerun/user-files:/user-files
+      - $HOME/docker/filerun/html:/var/www/html
+      - /mnt/pool/Users:/user-files:rw
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.filerun-redirect.redirectscheme.scheme=https
       - traefik.http.routers.filerun-redirect.entrypoints=web
       - traefik.http.routers.filerun-redirect.middlewares=filerun-redirect
-      - traefik.http.routers.filerun-redirect.rule=Host(`files.$MYDOMAIN`)
+      - traefik.http.routers.filerun-redirect.rule=Host(`files.$DOMAIN`)
       - traefik.http.routers.filerun.entrypoints=websecure
-      - traefik.http.routers.filerun.rule=Host(`files.$MYDOMAIN`)
+      - traefik.http.routers.filerun.rule=Host(`files.$DOMAIN`)
       - traefik.http.routers.filerun.tls.certresolver=letsencrypt
       - traefik.http.services.filerun.loadbalancer.server.port=80
 ##____________________ FileRun Full-Text Search [CLOUD/Files search]
-#  filerun-tika:
-#    image: logicalspark/docker-tikaserver
-#    container_name: filerun-tika
-#  filerun-elasticsearch:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-#    container_name: filerun-elasticsearch
-#    environment:
-#      - cluster.name=docker-cluster
-#      - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-#    mem_limit: 1g
-#    volumes:
-#      - ${USERDIR}/docker/filerun/esearch:/usr/share/elasticsearch/data
+  filerun-tika:
+    image: logicalspark/docker-tikaserver
+    container_name: filerun-tika
+  filerun-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: filerun-elasticsearch
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - $HOME/docker/filerun/esearch:/usr/share/elasticsearch/data
 ##
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
@@ -212,16 +219,16 @@ services:
     container_name: firefox_syncserver
     restart: always
     environment: 
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - FF_SYNCSERVER_PUBLIC_URL=https://firefox.$MYDOMAIN
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - FF_SYNCSERVER_PUBLIC_URL=https://firefox.$DOMAIN
       - FF_SYNCSERVER_SECRET_FILE=/data/secret/secret.txt
       - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
       - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=true
     volumes:
-      - "${USERDIR}/docker/firefox-syncserver:/data"
-      - "${USERDIR}/docker/firefox-syncserver/secret:/data/secret/"
+      - "$HOME/docker/firefox-syncserver:/data"
+      - "$HOME/docker/firefox-syncserver/secret:/data/secret/"
     ports:
       - 5000:5000
     labels:
@@ -229,9 +236,9 @@ services:
       - traefik.http.middlewares.firefox-redirect.redirectscheme.scheme=https
       - traefik.http.routers.firefox-redirect.entrypoints=web
       - traefik.http.routers.firefox-redirect.middlewares=firefox-redirect
-      - traefik.http.routers.firefox-redirect.rule=Host(`firefox.$MYDOMAIN`)
+      - traefik.http.routers.firefox-redirect.rule=Host(`firefox.$DOMAIN`)
       - traefik.http.routers.firefox.entrypoints=websecure
-      - traefik.http.routers.firefox.rule=Host(`firefox.$MYDOMAIN`)
+      - traefik.http.routers.firefox.rule=Host(`firefox.$DOMAIN`)
       - traefik.http.routers.firefox.tls.certresolver=letsencrypt
       - traefik.http.services.firefox.loadbalancer.server.port=5000
 ##
@@ -245,7 +252,7 @@ services:
     ports:
      - "8080:80"
     volumes:
-      - $USERDIR/docker/heimdall:/config
+      - $HOME/docker/heimdall:/config
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -256,15 +263,15 @@ services:
     image: linuxserver/jellyfin
     restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Amsterdam
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
       - UMASK_SET=022 #optional
     volumes:
-      - ${USERDIR}/docker/jellyfin/config:/config
-      - ${USERDIR}/Media/TVshows:/data/tvshows
-      - ${USERDIR}/Media/Movies:/data/movies
-      - ${USERDIR}/Music:/data/music
+      - $HOME/docker/jellyfin/config:/config
+      - /mnt/pool/Media/TVshows:/data/tvshows
+      - /mnt/pool/Media/Movies:/data/movies
+      - /mnt/pool/Music:/data/music
     ports:
       - 8096:8096
       - 8920:8920 #optional
@@ -286,8 +293,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ovpn-data:/app/ovpn/config
     environment:
-      - USERNAME=$VPNUSER
-      - PASSWORD=$VPNPW
+      - USERNAME=$USER_VPN
+      - PASSWORD=$PW_VPN
       - LOCAL_NETWORK=192.168.88.0/24
       - COUNTRY=NL
       - PROTOCOL=udp
@@ -314,16 +321,16 @@ services:
       - vpn-proxy
     restart: unless-stopped
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=Europe/Amsterdam
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
       - TRANSMISSION_WEB_HOME=/transmission-web-control/
-      - USER=$TORRENTUSER
-      - PASS=$TORRENTPW
+      - USER=admin
+      - PASS=$PW_MEDIA
     volumes:
-      - ${USERDIR}/docker/transmission/config:/config
-      - ${USERDIR}/Media:/media
-      - ${USERDIR}/Media/incoming/blackhole:/watch
+      - $HOME/docker/transmission/config:/config
+      - /mnt/pool/Media:/media
+      - /mnt/pool/Media/incoming/blackhole:/watch
 #
 #____________________ NZBget [MEDIA/download-client]
   nzbget:
@@ -334,12 +341,12 @@ services:
       - vpn-proxy
     restart: unless-stopped
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
     volumes:
-      - ${USERDIR}/docker/nzbget/config:/config
-      - ${USERDIR}/Media:/media
+      - $HOME/docker/nzbget/config:/config
+      - /mnt/pool/Media:/media
 #
 #____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
@@ -350,13 +357,13 @@ services:
       - vpn-proxy
     restart: unless-stopped
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - ${USERDIR}/docker/sonarr/config:/config
-      - ${USERDIR}/Media:/media
+      - $HOME/docker/sonarr/config:/config
+      - /mnt/pool/Media:/media
 #
 #____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
@@ -367,13 +374,13 @@ services:
       - vpn-proxy
     restart: unless-stopped
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
     volumes:
-      - ${USERDIR}/docker/jackett/config:/config
+      - $HOME/docker/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - ${USERDIR}/Media:/media 
+      - /mnt/pool/Media:/media 
 #
 #____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
@@ -384,13 +391,13 @@ services:
       - vpn-proxy
     restart: unless-stopped
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - ${USERDIR}/docker/radarr/config:/config
-      - ${USERDIR}/Media:/media
+      - $HOME/docker/radarr/config:/config
+      - /mnt/pool/Media:/media
 #
 #____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
   bazarr:
@@ -401,13 +408,13 @@ services:
       - vpn-proxy
     restart: unless-stopped
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
       - UMASK_SET=022 #optional
     volumes:
-      - ${USERDIR}/docker/bazarr/config:/config
-      - ${USERDIR}/Media:/media
+      - $HOME/docker/bazarr/config:/config
+      - /mnt/pool/Media:/media
 #
 #
 #
