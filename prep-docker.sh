@@ -6,9 +6,8 @@
 echo PUID=1000 >> $HOME/docker/vars.env
 echo PGID=1000 >> $HOME/docker/vars.env
 echo TZ='"'$TZ'"' >> $HOME/docker/vars.env
-echo USERDIR='"'/home/$USER'"' >> $HOME/docker/vars.env
 echo >> $HOME/docker/vars.env
-echo PW-PIHOLE= >> $HOME/docker/vars.env
+echo PW_PIHOLE= >> $HOME/docker/vars.env
 echo >> $HOME/docker/vars.env
 PW_ROOT_MYSQL= >> $HOME/docker/vars.env
 USER_MYSQL= >> $HOME/docker/vars.env
