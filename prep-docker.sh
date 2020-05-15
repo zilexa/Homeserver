@@ -37,7 +37,6 @@ wget -P $USERDIR/docker/traefik https://raw.githubusercontent.com/zilexa/Mediase
 # Create Firefox-Syncserver file & generate secret
 mkdir -p ${USERDIR}/docker/firefox-syncserver/secret
 touch $USERDIR/docker/firefox-syncserver/secret/secret.txt
-# echo "[syncserver]" >> $USERDIR/docker/firefox-syncserver/secret/secret.txt # file should only contain secret contrary to mozilla doc
 head -c 20 /dev/urandom | sha1sum | awk '{print $1}' >> $USERDIR/docker/firefox-syncserver/secret/secret.txt
 
 # Requirement for ElasticSearch (= additional container required by FileRun to search by text within files)
