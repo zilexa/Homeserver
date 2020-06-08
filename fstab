@@ -7,9 +7,3 @@ UUID="YOUR 3rd HDD UUID" /mnt/parity/pardisk1 ext4 defaults 0 2
 /mnt/data/cache:/mnt/data/disk1:/mnt/data/disk2 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,use_ino,category.create=lfs,moveonenospc=true,minfreespace=350G,fsname=mergerfsPool 0 0
 # DATA-ONLY POOL (MergerFS)
 /mnt/data/disk1:/mnt/data/disk2 /mnt/archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool 0 0
-# bind-mount to enable sharing of the pool via NFS (local network)
-/mnt/pool/Media /srv/nfs/Media            nfs4   bind   0   0
-/mnt/pool/Downloads /srv/nfs/Downloads    nfs4   bind   0   0
-/mnt/pool/Pictures /srv/nfs/Pictures      nfs4   bind   0   0
-/mnt/pool/Documents /srv/nfs/Documents    nfs4   bind   0   0
-/mnt/pool/Music /srv/nfs/Music            nfs4   bind   0   0
