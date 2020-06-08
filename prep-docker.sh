@@ -2,47 +2,31 @@
 # See https://github.com/zilexa/Homeserver
 #!/bin/bash
 #Set environment variables to be used by Docker (i.e. requires TZ in quotes)
-#Also used for secrets to be filled in by the user (required vars created without value)
-echo PUID=1000 >> $HOME/docker/.env
-echo PGID=1000 >> $HOME/docker/.env
-echo TZ='"'$TZ'"' >> $HOME/docker/.env
-echo >> $HOME/docker/.env
-echo PW_PIHOLE= >> $HOME/docker/.env
-echo >> $HOME/docker/.env
-PW_ROOT_MYSQL= >> $HOME/docker/.env
-USER_MYSQL= >> $HOME/docker/.env
-PW_MYSQL= >> $HOME/docker/.env
-echo >> $HOME/docker/.env
-DOMAIN= >> $HOME/docker/.env
-echo >> $HOME/docker/.env
-$USER_VPN= >> $HOME/docker/.env
-$PW_VPN= >> $HOME/docker/.env
-echo >> $HOME/docker/.env
-PW_MEDIA= >> $HOME/docker/.env
+wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/.env
 
 # Create PiHole log file
-mkdir -p ${USERDIR}/docker/pihole/var-log
-touch ${USERDIR}/docker/pihole/var-log/pihole.log
+mkdir -p $HOME/docker/pihole/var-log
+touch $HOME/docker/pihole/var-log/pihole.log
 
 # Create Traefik files and set permissions
-mkdir -p ${USERDIR}/docker/traefik
-touch $USERDIR/docker/traefik/traefik.log
-chmod 600 $USERDIR/docker/traefik/traefik.log
-touch ${USERDIR}/docker/traefik/acme.json
-chmod 600 $USERDIR/docker/traefik/acme.json
+mkdir -p $HOME/docker/traefik
+touch $HOME/docker/traefik/traefik.log
+chmod 600 $HOME/docker/traefik/traefik.log
+touch $HOME/docker/traefik/acme.json
+chmod 600 $HOME/docker/traefik/acme.json
 # Download Traefik settings
-wget -P $USERDIR/docker/traefik https://raw.githubusercontent.com/zilexa/Mediaserver/master/traefik/traefik.toml
+wget -P $HOME/docker/traefik https://raw.githubusercontent.com/zilexa/Mediaserver/master/traefik/traefik.toml
 
 # Create Firefox-Syncserver file & generate secret
-mkdir -p ${USERDIR}/docker/firefox-syncserver/secret
-touch $USERDIR/docker/firefox-syncserver/secret/secret.txt
-head -c 20 /dev/urandom | sha1sum | awk '{print $1}' >> $USERDIR/docker/firefox-syncserver/secret/secret.txt
+mkdir -p $HOME/docker/firefox-syncserver/secret
+touch $HOME/docker/firefox-syncserver/secret/secret.txt
+head -c 20 /dev/urandom | sha1sum | awk '{print $1}' >> $HOME/docker/firefox-syncserver/secret/secret.txt
 
 # Requirement for FileRun, ElasticSearch (= additional container required by FileRun to search by text within files)
 # Create folder and set permissions
-mkdir -p ${USERDIR}/docker/filerun/esearch
-sudo chown -R $USER:$USER ${USERDIR}/docker/filerun/esearch
-sudo chmod 777 ${USERDIR}/docker/filerun/esearch
+mkdir -p $HOME/docker/filerun/esearch
+sudo chown -R $USER:$USER $HOME/docker/filerun/esearch
+sudo chmod 777 $HOME/docker/filerun/esearch
 # Change OS virtual mem allocation as it is too low by default for ElasticSearch
 sudo sysctl -w vm.max_map_count=262144
 # Make this change permanent
