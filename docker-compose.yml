@@ -1,10 +1,8 @@
-# $HOME/docker
-#
 version: "2.0"
 services:
 ##
-##______MANAGEMENT_____
-##_____________________ Portainer [SERVER/Management]
+##_____MANAGEMENT_____
+##____________________ Portainer [Management/Docker]
   portainer:
     container_name: portainer
     image: portainer/portainer
@@ -16,8 +14,8 @@ services:
       - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $HOME/docker/portainer/data:/data
-      - $HOME/docker/shared:/shared
+      - $USERHOME/docker/portainer/data:/data
+      - $USERHOME/docker/shared:/shared
 ##
 ##______NETWORK_______
 ##____________________ PiHole 2 (1st PiHole runs off-server) [NETWORK/recursive-dnsserver]
@@ -34,16 +32,16 @@ services:
         ipv4_address: 192.168.88.3
     environment:
       ServerIP: 192.168.88.3
-      WEBPASSWORD: $PW_PIHOLE
+      WEBPASSWORD: $PW_INT
       PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
       TZ: $TZ
       DNS1: 192.168.88.4#53
-      DNS2: 1.1.1.1
+      DNS2: 127.0.0.1
     volumes:
-      - $HOME/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
-      - $HOME/docker/pihole:/etc/pihole:rw
+      - $USERHOME/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
+      - $USERHOME/docker/pihole:/etc/pihole:rw
       - /etc/localtime:/etc/localtime:ro
-      - $HOME/docker/pihole/var-log/pihole.log:/var/log/pihole.log
+      - $USERHOME/docker/pihole/var-log/pihole.log:/var/log/pihole.log
     ports:
       - 443/tcp
       - 53/tcp
@@ -51,7 +49,7 @@ services:
       - 67/udp
       - 80/tcp
     dns:
-#      - 127.0.0.1
+      - 127.0.0.1
       - 192.168.88.4#53
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
@@ -63,7 +61,7 @@ services:
       DNS-network:
         ipv4_address: 192.168.88.4
 #    volumes:
-#      - $HOME/docker/unbound:/opt/unbound/etc/unbound/
+#      - $USERHOME/docker/unbound:/opt/unbound/etc/unbound/
     ports:
       - 53/tcp
       - 53/udp
@@ -83,9 +81,9 @@ services:
       - TZ=$TZ
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $HOME/docker/unifi/cert:/usr/lib/unifi/cert
-      - $HOME/docker/unifi/data:/usr/lib/unifi/data
-      - $HOME/docker/unifi/logs:/usr/lib/unifi/logs
+      - $USERHOME/docker/unifi/cert:/usr/lib/unifi/cert
+      - $USERHOME/docker/unifi/data:/usr/lib/unifi/data
+      - $USERHOME/docker/unifi/logs:/usr/lib/unifi/logs
     ports:
       - 3478:3478/udp
       - 8080:8080
@@ -105,8 +103,8 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $HOME/docker/traefik/acme.json:/acme.json
-      - $HOME/docker/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - $USERHOME/docker/traefik/acme.json:/acme.json
+      - $USERHOME/docker/traefik/traefik.toml:/etc/traefik/traefik.toml
     restart: unless-stopped
 ##
 ##____________________ SyncThing [CLOUD/Sync]
@@ -120,7 +118,7 @@ services:
       - TZ=$TZ
       - UMASK_SET=022
     volumes:
-      - $HOME/docker/syncthing/config:/config
+      - $USERHOME/docker/syncthing/config:/config
       - /mnt/pool/Desktop:/desktop:rw
       - /mnt/pool/Downloads:/downloads:rw
       - /mnt/pool/Documents:/documents:rw
@@ -142,17 +140,34 @@ services:
 #      - traefik.http.routers.syncthing-listen.rule=Host(`sync.$DOMAIN`) && Path(`/listen`)
 #      - traefik.http.services.syncthing-listen.loadbalancer.server.port=22000
 ##
+##____________________ Duplicati [CLOUD/Backup]
+  duplicati:
+    image: linuxserver/duplicati
+    container_name: duplicati
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+#      - CLI_ARGS= #optional
+    volumes:
+      - $USERHOME/docker/duplicati/config:/config
+      - /mnt/pool/Backups:/backups
+      - /mnt/pool/Users:/source
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+##
 ##____________________ MariaDB MySQL [CLOUD/Database]
   mariadb:
     image: mariadb:10.1
     container_name: mariadb
     environment:
-      MYSQL_ROOT_PASSWORD: $PW_ROOT_MYSQL
-      MYSQL_USER: $USER_MYSQL
-      MYSQL_PASSWORD: $PW_MYSQL
+      MYSQL_ROOT_PASSWORD: $PW_INT
+      MYSQL_USER: $USER
+      MYSQL_PASSWORD: $PW_INT
       MYSQL_DATABASE: filerundb
     volumes:
-      - $HOME/docker/filerun/db:/var/lib/mysql
+      - $USERHOME/docker/filerun/db:/var/lib/mysql
 ##
 ##____________________ FileRun [CLOUD/Files]
   filerun:
@@ -165,8 +180,8 @@ services:
       FR_DB_HOST: mariadb
       FR_DB_PORT: 3306
       FR_DB_NAME: filerundb
-      FR_DB_USER: $USER_MYSQL
-      FR_DB_PASS: $PW_MYSQL
+      FR_DB_USER: $USER
+      FR_DB_PASS: $PW_INT
       APACHE_RUN_USER: www-data
       APACHE_RUN_USER_ID: 33
       APACHE_RUN_GROUP: www-data
@@ -180,8 +195,9 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - $HOME/docker/filerun/html:/var/www/html
+      - $USERHOME/docker/filerun/html:/var/www/html
       - /mnt/pool/Users:/user-files:rw
+      - /mnt/pool/Local:/local-files:rw
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.filerun-redirect.redirectscheme.scheme=https
@@ -212,7 +228,7 @@ services:
         hard: -1
     mem_limit: 1g
     volumes:
-      - $HOME/docker/filerun/esearch:/usr/share/elasticsearch/data
+      - $USERHOME/docker/filerun/esearch:/usr/share/elasticsearch/data
 ##
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
@@ -229,8 +245,8 @@ services:
       - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
       - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=true
     volumes:
-      - "$HOME/docker/firefox-syncserver:/data"
-      - "$HOME/docker/firefox-syncserver/secret:/data/secret/"
+      - "$USERHOME/docker/firefox-syncserver:/data"
+      - "$USERHOME/docker/firefox-syncserver/secret:/data/secret/"
     ports:
       - 5000:5000
     labels:
@@ -243,22 +259,8 @@ services:
       - traefik.http.routers.firefox.rule=Host(`firefox.$DOMAIN`)
       - traefik.http.routers.firefox.tls.certresolver=letsencrypt
       - traefik.http.services.firefox.loadbalancer.server.port=5000
-##
 ##________MEDIA________
-  heimdall:
-    container_name: heimdall
-    image: linuxserver/heimdall:latest
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    ports:
-     - "8080:80"
-    volumes:
-      - $HOME/docker/heimdall:/config
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
+##
 ##_____________________ Jellyfin [MEDIA/Library] 
   jellyfin:
     container_name: jellyfin
@@ -270,7 +272,7 @@ services:
       - TZ=$TZ
       - UMASK_SET=022 #optional
     volumes:
-      - $HOME/docker/jellyfin/config:/config
+      - $USERHOME/docker/jellyfin/config:/config
       - /mnt/pool/Media/TVshows:/data/tvshows
       - /mnt/pool/Media/Movies:/data/movies
       - /mnt/pool/Music:/data/music
@@ -279,8 +281,8 @@ services:
       - 8920:8920 #optional
     devices:
       - /dev/dri:/dev/dri
-#
-#____________________ vpn-proxy [MEDIA/vpn-client-for-media]
+##
+##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
   vpn-proxy:
     container_name: vpn-proxy
     image: jeroenslot/nordvpn-proxy:latest
@@ -296,7 +298,7 @@ services:
       - ovpn-data:/app/ovpn/config
     environment:
       - USERNAME=$USER_VPN
-      - PASSWORD=$PW_VPN
+      - PASSWORD=$PW_MEDIA
       - LOCAL_NETWORK=192.168.88.0/24
       - COUNTRY=NL
       - PROTOCOL=udp
@@ -313,8 +315,8 @@ services:
       - 51413:51413 #p2p
       - 51413:51413/udp #p2p DHT
     restart: always
-#
-#____________________ Transmission [MEDIA/download-client]
+##
+##____________________ Transmission [MEDIA/download-client]
   transmission:
     image: linuxserver/transmission
     container_name: transmission
@@ -330,11 +332,11 @@ services:
       - USER=admin
       - PASS=$PW_MEDIA
     volumes:
-      - $HOME/docker/transmission/config:/config
+      - $USERHOME/docker/transmission/config:/config
       - /mnt/pool/Media:/media
       - /mnt/pool/Media/incoming/blackhole:/watch
-#
-#____________________ NZBget [MEDIA/download-client]
+##
+##____________________ NZBget [MEDIA/download-client]
   nzbget:
     container_name: nzbget
     image: linuxserver/nzbget:latest
@@ -347,10 +349,10 @@ services:
       - PGID=$PGID
       - TZ=$TZ
     volumes:
-      - $HOME/docker/nzbget/config:/config
+      - $USERHOME/docker/nzbget/config:/config
       - /mnt/pool/Media:/media
-#
-#____________________ Sonarr [MEDIA/PVR-TVshows]
+##
+##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:latest
@@ -364,10 +366,10 @@ services:
       - TZ=$TZ
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - $HOME/docker/sonarr/config:/config
+      - $USERHOME/docker/sonarr/config:/config
       - /mnt/pool/Media:/media
-#
-#____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
+##
+##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
     container_name: jackett
     image: linuxserver/jackett:latest
@@ -380,11 +382,11 @@ services:
       - PGID=$PGID
       - TZ=$TZ
     volumes:
-      - $HOME/docker/jackett/config:/config
+      - $USERHOME/docker/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
       - /mnt/pool/Media:/media 
-#
-#____________________ Radarr [MEDIA/PVR-Movies]
+##
+##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
     container_name: radarr
     image: linuxserver/radarr:latest
@@ -398,10 +400,10 @@ services:
       - TZ=$TZ
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - $HOME/docker/radarr/config:/config
+      - $USERHOME/docker/radarr/config:/config
       - /mnt/pool/Media:/media
-#
-#____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
+##
+##____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
   bazarr:
     container_name: bazarr
     image: linuxserver/bazarr
@@ -415,14 +417,159 @@ services:
       - TZ=$TZ
       - UMASK_SET=022 #optional
     volumes:
-      - $HOME/docker/bazarr/config:/config
+      - $USERHOME/docker/bazarr/config:/config
       - /mnt/pool/Media:/media
+##
+##______MANAGEMENT_____
+##_____________________ Heimdall [Management/HOMEPAGE] 
+  heimdall:
+    container_name: heimdall
+    image: linuxserver/heimdall:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+     - "8080:80"
+    volumes:
+      - $USERHOME/docker/heimdall:/config
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+##
+##____________________ Prometheus [Monitoring/Logging]
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.18.1
+    restart: always
+    environment:
+      - TZ=$TZ
+    volumes:
+      - $USERHOME/docker/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    networks:
+      - monitor-net
+##____________________ Alertmanager [Monitoring/Alerts]
+  prometheus-alertmanager:
+    container_name: prometheus-alertmanager
+    image: prom/alertmanager:v0.20.0
+    restart: always
+    environment:
+      - TZ=$TZ
+    volumes:
+      - $USERHOME/docker/prometheus/alertmanager:/etc/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    ports:
+      - "9093:9093"
+    networks:
+      - monitor-net
+##____________________ Nodes [Monitoring/]
+  nodeexporter:
+    image: prom/node-exporter:v0.18.1
+    container_name: nodeexporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    networks:
+      - monitor-net
+##____________________ Cadvisor [Monitoring/Docker]
+  cadvisor:
+    image: gcr.io/google-containers/cadvisor:v0.36.0
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /cgroup:/cgroup:ro 
+    restart: unless-stopped
+    ports:
+      - "9180:8080"
+    networks:
+      - monitor-net
+##____________________ Pushgateway [Monitoring/Pushgateway]
+  pushgateway:
+    image: prom/pushgateway:v1.2.0
+    container_name: pushgateway
+    restart: unless-stopped
+    ports:
+      - 9191:9091
+    networks:
+      - monitor-net
+##____________________ Grafana [Monitoring/Dashboard]
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:7.0.3
+    restart: always
+    environment:
+      - TZ=${TZ}
+      - GF_SECURITY_ADMIN_USER=${USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${PW_EXT}
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp_relay:25
+      - GF_SMTP_FROM_ADDRESS=${EMAIL}
+#      - GF_SERVER_DOMAIN=grafana.$DOMAIN
+#      - GF_SERVER_ROOT_URL=https://grafana.$DOMAIN
+#      - VIRTUAL_HOST=grafana.$DOMAIN
+#      - VIRTUAL_PORT=3000
+#      - VIRTUAL_PROTO=http
+#      - LETSENCRYPT_HOST=grafana.$DOMAIN
+#      - LETSENCRYPT_EMAIL=${EMAIL}
+    volumes:
+#      - grafana_data:/var/lib/grafana
+      - $USERHOME/docker/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    networks:
+      - monitor-net
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.grafana-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.grafana-redirect.entrypoints=web
+      - traefik.http.routers.grafana-redirect.middlewares=grafana-redirect
+      - traefik.http.routers.grafana-redirect.rule=Host(`grafana.$DOMAIN`)
+      - traefik.http.routers.grafana.entrypoints=websecure
+      - traefik.http.routers.grafana.rule=Host(`grafana.$DOMAIN`)
+      - traefik.http.routers.grafana.tls.certresolver=letsencrypt
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+##
+##____________________ SMTP-relay [Management/email]
+  smtp:
+    image: namshi/smtp
+    container_name: smtp_relay
+    restart: always
+    ports:
+      - "25:25"
+    environment:
+      - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
 #
 #
 #
 volumes:
   ovpn-data:
   firefox-syncserver:
+  prometheus_data: {}
+  grafana_data: {}
 #
 #
 #
@@ -439,3 +586,5 @@ networks:
           aux_addresses:
             router: 192.168.88.1
             PiHole-1: 192.168.88.2
+  monitor-net:
+    driver: bridge
