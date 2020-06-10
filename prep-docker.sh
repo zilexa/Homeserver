@@ -1,7 +1,8 @@
+#!/bin/bash
 ## Required actions before running docker-compose.yml
 # See https://github.com/zilexa/Homeserver
 # Run this script with sudo -i to inherit the correct env variables ($HOME should be home/user instead of home/root)
-#!/bin/bash
+
 #Set environment variables to be used by Docker (i.e. requires TZ in quotes)
 wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/.env
 
