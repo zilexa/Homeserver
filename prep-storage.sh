@@ -1,7 +1,7 @@
 # Storage setup
 # install MergerFS
-wget https://github.com/trapexit/mergerfs/releases/download/2.29.0/mergerfs_2.29.0.ubuntu-xenial_amd64.deb
-sudo dpkg -i mergerfs_2.29.0.ubuntu-xenial_amd64.deb
+wget https://github.com/trapexit/mergerfs/releases/download/2.30.0/mergerfs_2.30.0.ubuntu-xenial_amd64.deb
+sudo apt -y install ./mergerfs_2.30.0.ubuntu-xenial_amd64.deb
 rm mergerfs*.deb
 
 # install SnapRAID
