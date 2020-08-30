@@ -3,6 +3,8 @@
 # See https://github.com/zilexa/Homeserver
 # Run this script with sudo -E to make sure $HOME points to /home/username instead of /root
 #
+# Create the docker folder
+mkdir -p $HOME/docker
 # Get environment variables to be used by Docker (i.e. requires TZ in quotes)
 wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/.env
 
@@ -35,11 +37,11 @@ sysctl -w vm.max_map_count=262144
 sh -c "echo 'vm.max_map_count=262144' >> /etc/sysctl.conf"
 
 # Get config files for monitoring via Prometheus and Grafana
-cd $HOME/docker
-wget https://github.com/stefanprodan/dockprom/archive/master.zip
-unzip master.zip
-mv dockprom-master/grafana $HOME/docker
-mv dockprom-master/prometheus $HOME/docker
-rm -r dockprom-master
-rm -r master.zip
+# cd $HOME/docker
+# wget https://github.com/stefanprodan/dockprom/archive/master.zip
+# unzip master.zip
+# mv dockprom-master/grafana $HOME/docker
+# mv dockprom-master/prometheus $HOME/docker
+# rm -r dockprom-master
+# rm -r master.zip
 
