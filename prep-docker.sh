@@ -15,6 +15,16 @@ wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/
 mkdir -p $HOME/docker/pihole/var-log
 touch $HOME/docker/pihole/var-log/pihole.log
 
+# Requirements to run PiHole docker on Ubuntu
+sudo systemctl disable systemd-resolved.service
+sudo systemctl stop systemd-resolved.service
+echo "add dns=default under [main] then hit CTRL+O (to save) and CTRL+X (to exit file editor)"
+read -p "remember the above and hit a key when you are ready to do it..."
+sudo nano /etc/NetworkManager/NetworkManager.conf
+# if you still have issues, remove /etc/resolv.conf (auto-generated), the backup file is still available.
+sudo mv /etc/resolv.conf /etc/resolv.conf.bak
+sudo service network-manager restart
+
 # Create Traefik files and set permissions
 mkdir -p $HOME/docker/traefik
 touch $HOME/docker/traefik/traefik.log
