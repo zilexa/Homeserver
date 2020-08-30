@@ -8,6 +8,9 @@ mkdir -p $HOME/docker
 # Get environment variables to be used by Docker (i.e. requires TZ in quotes)
 wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/.env
 
+# Get docker compose file
+wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/docker-compose.yml
+
 # Create PiHole log file
 mkdir -p $HOME/docker/pihole/var-log
 touch $HOME/docker/pihole/var-log/pihole.log
