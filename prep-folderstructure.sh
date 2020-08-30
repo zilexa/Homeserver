@@ -7,24 +7,28 @@ echo "Enter the name of the second workstation user (example: Fish), followed by
 read NAME2
 echo USER2='"'$NAME2'"' >> /etc/environment
 
-# symlinks folder structure, note the origin folders were created during MergerFS setup
-ln -s /mnt/pool/Downloads /mnt/pool/Users/$NAME1/Homefolders/Downloads
-ln -s /mnt/pool/Downloads /mnt/pool/Users/$NAME2/Homefolders/Downloads
-ln -s /mnt/pool/Documents /mnt/pool/Users/$NAME1/Homefolders/Documents
-ln -s /mnt/pool/Documents /mnt/pool/Users/$NAME2/Homefolders/Documents
-ln -s /mnt/pool/Pictures /mnt/pool/Users/$NAME1/Homefolders/Pictures
-ln -s /mnt/pool/Pictures /mnt/pool/Users/$NAME2/Homefolders/Pictures
-ln -s /mnt/pool/Music /mnt/pool/Users/$NAME1/Homefolders/Music
-ln -s /mnt/pool/Music /mnt/pool/Users/$NAME2/Homefolders/Music
-
-# Replace home folder items for symlinks
+# Prepare replacing home folders for symlinks to the MergerFS Pool.
 rm -rf $HOME/Downloads
-ln -s /mnt/pool/Downloads $HOME/Downloads
 rm -rf $HOME/Documents
-ln -s /mnt/pool/Documents $HOME/Documents
 rm -rf $HOME/Pictures
-ln -s /mnt/pool/Pictures $HOME/Pictures
 rm -rf $HOME/Music
-ln -s /mnt/pool/Music $HOME/Music
 rm -rf $HOME/Media
-ln -s /mnt/pool/Music $HOME/Music
+
+Use the MergerFS Pool to store the Home folders of this local PC, by creating symbolic links from Pool to $HOME. 
+ln -s /mnt/pool/Local/Documents $HOME/
+ln -s /mnt/pool/Local/Downloads $HOME/
+ln -s /mnt/pool/Local/Music $HOME/
+ln -s /mnt/pool/Local/Pictures $HOME/
+ln -s /mnt/pool/Media $HOME/
+
+Allow Home folders of this local PC to appear in cloud user folders for each PC user.
+ln -s /mnt/pool/Local/Downloads /mnt/pool/Users/$NAME1/Home/
+ln -s /mnt/pool/Local/Pictures /mnt/pool/Users/$NAME1/Home/
+ln -s /mnt/pool/Local/Documents /mnt/pool/Users/$NAME1/Home/
+ln -s /mnt/pool/Local/Music /mnt/pool/Users/$NAME1/Home/
+ln -s /mnt/pool/Local/Desktop /mnt/pool/Users/$NAME1/Home/
+ln -s /mnt/pool/Local/Desktop /mnt/pool/Users/$NAME2/Home/
+ln -s /mnt/pool/Local/Music /mnt/pool/Users/$NAME2/Home/
+ln -s /mnt/pool/Local/Documents /mnt/pool/Users/$NAME2/Home/
+ln -s /mnt/pool/Local/Pictures /mnt/pool/Users/$NAME2/Home/
+ln -s /mnt/pool/Local/Downloads /mnt/pool/Users/$NAME2/Home/
