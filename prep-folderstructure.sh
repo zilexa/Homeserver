@@ -1,5 +1,13 @@
-# My folder structure might not be yours. 
+#!/bin/bash
+#
 
+echo "My folder structure might not be yours. 
+echo "I use my Ubuntu Budgie server also as home PC/workstation, together with my partner (1 user account)."
+echo "I want all local folders (Documents, Downloads, Desktop, Music, Pictures) to be stored on the drive Pool."
+echo "To do that, I replace the folders in $HOME for symbolic links."
+echo "I also want them to be accessible via the personal cloud accounts of each PC user."
+echo "To do that, I create a /Home in each personal cloud folder of each PC user (/mnt/pool/Users/USERNAME/Home) with symbolic links to the folders."
+echo ".."
 echo "Enter the name of the first workstation user (example: Monkey), followed by [ENTER]:"
 read NAME1
 echo USER1='"'$NAME1'"' >> /etc/environment
