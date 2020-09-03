@@ -1,3 +1,16 @@
+# How-To get NFSv4.2 up and running
+Linux users can use NFS protocol to share files within their network. 
+As there is zero overhead, this is extremely fast, only limited by your hardware and cables. 
+Unfortunately, most if not all Linux systems by default use NFSv3.0 which comes with limitations. NFSv4.2 was released in 2015 but requires a different configuration than 99% of the online guides will show you.
+I have spend lots of long nights figuring this out over the past few years and tonight I gave it another try and managed to get it working. 
+
+#### Biggest benefit of NFSv4.2
+Server-side file copy: if you are on your client device, and you move a 2GB file within the shared folder to a different location in the shared folder (e.g. subfolder), with NFSv3 and NFSv4.1 the file would first be copied (downloaded) to your client device and then copied to the subfolder (uploaded). Server-side-copy was introduced in NFSv4.2 among other useful features. 
+
+The following has been tested on a clean Ubuntu Budgie 20.04.1 system and should work for Debian without modifications.
+
+# Setup NFS v4.2 for your server and client devices
+
 notes: you will need to do this via terminal. 
 You will edit a few text files in terminal via the nano text editor.
 Saving your changes and exiting the text editor is done via 
@@ -62,7 +75,7 @@ sudo nano /proc/fs/nfsd/versions`
 should show:
 -2 -3 +4 -4.1 +4.2
 
-Congrats! Clients will now only be able to connect via v4.2
+#### Congrats! Clients will now only be able to connect via v4.2
 
 
 ## Client: 
@@ -76,6 +89,6 @@ Congrats! Clients will now only be able to connect via v4.2
 ### Now mount the server folder (as listed on the server in /etc/exports) to the local folder I just created.
 `sudo mount -t nfs -o nfsvers=4,minorversion=2,proto=tcp,fsc,nocto 192.168.88.10: /mnt/Obelix/Media`
 
-Note
+Note:
 Note you should NOT fill in the entire path of your servers etc/exports. That is a major difference compared to NFSv3. 
 That is why in my example you see only the IP address: without the '/mnt/pool/Media'. 
