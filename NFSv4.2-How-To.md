@@ -16,8 +16,8 @@ For example I want to share the folder /mnt/pool/Media via NFSv4.2 to client dev
 /mnt/pool/Media    192.168.88.0/24(rw,async,fsid=0,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)`
 
 ### Now do the following to get this change activated:
-`sudo exportfs -a
-sudo systemctl restart nfs-server`
+```sudo exportfs -a
+sudo systemctl restart nfs-server```
 
 
 ### Enforcing NFSv4.2 over v3, v4.1
