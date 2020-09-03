@@ -1,0 +1,6 @@
+Server:
+
+
+Client: 
+sudo apt -y install nfs-common
+sudo mount -t nfs -o nfsvers=4,minorversion=2,proto=tcp,fsc,nocto 192.168.88.10: /mnt/Obelix/Media
