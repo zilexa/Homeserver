@@ -3,9 +3,9 @@ You will edit a few text files in terminal via the nano text editor.
 Saving your changes and exiting the text editor is done via 
 CTRL+O (to save) and CTRL+X (to exit).
 
-##Server:
+## Server:
 
-###Install NFS server
+### Install NFS server
 `sudo apt -y install nfs-server`
 
 ###Register the folders to share via NFS
