@@ -12,12 +12,16 @@ CTRL+O (to save) and CTRL+X (to exit).
 /etc/exports is 'the register' for shared folders. Only stuff listed in this file will be shared.
 For example I want to share the folder /mnt/pool/Media via NFSv4.2 to client devices:
 
-`sudo nano /etc/exports
-/mnt/pool/Media    192.168.88.0/24(rw,async,fsid=0,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)`
+```
+sudo nano /etc/exports
+/mnt/pool/Media    192.168.88.0/24(rw,async,fsid=0,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
+```
 
 ### Now do the following to get this change activated:
-```sudo exportfs -a
-sudo systemctl restart nfs-server```
+```
+sudo exportfs -a
+sudo systemctl restart nfs-server
+```
 
 
 ### Enforcing NFSv4.2 over v3, v4.1
