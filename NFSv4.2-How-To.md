@@ -65,17 +65,19 @@ sudo cat /proc/fs/nfsd/versions`
 should show: `-2 -3 +4 +4.1 +4.2` this means -2 and -3 are disabled
 
 - Now you can disable NFSv4.1
- `sudo systemctl stop nfs-server
-sudo nano /proc/fs/nfsd/versions`
+```
+sudo systemctl stop nfs-server
+sudo nano /proc/fs/nfsd/versions
+```
+Change +4.1 to `-4.1`, save and close the file.
 
-- Change +4.1 to -4.1, save and close the file.
-
-- `sudo systemctl start nfs-server`
+- Start the server again `sudo systemctl start nfs-server`
 
 - Check that 4.1 is disabled:
-`sudo cat /proc/fs/nfsd/versions`
-should show:
--2 -3 +4 -4.1 +4.2
+```
+sudo cat /proc/fs/nfsd/versions` 
+```
+should show: `-2 -3 +4 -4.1 +4.2`
 
 #### Congrats! Clients will now only be able to connect via v4.2
 
