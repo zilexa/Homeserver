@@ -59,10 +59,10 @@ NEED_GSSD="no"
 `sudo systemctl start nfs-server`
 
 - Check if NFSv3.0 is disabled:
-`sudo cat /proc/fs/nfsd/versions`
-should show:
--2 -3 +4 +4.1 +4.2
-Means -2 and -3 are disabled
+```
+sudo cat /proc/fs/nfsd/versions`
+```
+should show: `-2 -3 +4 +4.1 +4.2` this means -2 and -3 are disabled
 
 - Now you can disable NFSv4.1
 `sudo systemctl stop nfs-server
