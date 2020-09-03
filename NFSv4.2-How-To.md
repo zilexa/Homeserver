@@ -65,7 +65,7 @@ sudo cat /proc/fs/nfsd/versions`
 should show: `-2 -3 +4 +4.1 +4.2` this means -2 and -3 are disabled
 
 - Now you can disable NFSv4.1
-`sudo systemctl stop nfs-server
+ `sudo systemctl stop nfs-server
 sudo nano /proc/fs/nfsd/versions`
 
 - Change +4.1 to -4.1, save and close the file.
