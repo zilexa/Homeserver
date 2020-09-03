@@ -3,6 +3,12 @@
 # See https://github.com/zilexa/Homeserver
 # Run this script with sudo -E to make sure $HOME points to /home/username instead of /root
 #
+# Install SSH
+sudo apt -y install ssh
+sudo systemctl enable --now ssh
+# firewall of Ubuntu is disabled by default, I keep it like that but do add the rule in case fw is activated in the future.
+sudo ufw allow ssh 
+
 # Install Docker, Docker-Compose and bash completion for Compose
 wget -qO - https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
