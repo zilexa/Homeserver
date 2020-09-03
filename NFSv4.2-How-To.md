@@ -3,24 +3,25 @@ You will edit a few text files in terminal via the nano text editor.
 Saving your changes and exiting the text editor is done via 
 CTRL+O (to save) and CTRL+X (to exit).
 
-Server:
+##Server:
 
-Install NFS server
-sudo apt -y install nfs-server
+###Install NFS server
+`sudo apt -y install nfs-server`
 
-Register the folders to share via NFS
+###Register the folders to share via NFS
 /etc/exports is 'the register' for shared folders. Only stuff listed in this file will be shared.
 For example I want to share the folder /mnt/pool/Media via NFSv4.2 to client devices:
-sudo nano /etc/exports
-/mnt/pool/Media    192.168.88.0/24(rw,async,fsid=0,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
+`sudo nano /etc/exports`
+`/mnt/pool/Media    192.168.88.0/24(rw,async,fsid=0,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)`
 
-Now do the following to get this change activated:
-sudo exportfs -a
-sudo systemctl restart nfs-server
+###Now do the following to get this change activated:
+`sudo exportfs -a
+sudo systemctl restart nfs-server`
 
 
-Enforcing NFSv4.2 over v3, v4.1
-sudo systemctl stop nfs-server
+###Enforcing NFSv4.2 over v3, v4.1
+Stop the nfs-server
+`sudo systemctl stop nfs-server`
 
 edit 2 files 
 sudo nano /etc/default/nfs-kernel-server
@@ -57,15 +58,15 @@ should show:
 Congrats! Clients will now only be able to connect via v4.2
 
 
-Client: 
+##Client: 
 
-Install NFS (not NFS-server)
+###Install NFS (not NFS-server)
 sudo apt -y install nfs-common
 
-Create a local folder, this folder will contain the shared folder of the server, you choose where.
+###Create a local folder, this folder will contain the shared folder of the server, you choose where.
 sudo mkdir -p /mnt/Obelix/Media
 
-Now mount the server folder (as listed on the server in /etc/exports) to the local folder I just created.
+###Now mount the server folder (as listed on the server in /etc/exports) to the local folder I just created.
 sudo mount -t nfs -o nfsvers=4,minorversion=2,proto=tcp,fsc,nocto 192.168.88.10: /mnt/Obelix/Media
 
 Note
