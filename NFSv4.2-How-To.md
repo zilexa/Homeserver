@@ -33,10 +33,8 @@ Add the following (single!) line:
 Each folder you want to share is a seperate line.
 
 #### Now do the following to get this change activated:
-```
-sudo exportfs -a
-sudo systemctl restart nfs-server
-```
+`sudo exportfs -a`  
+`sudo systemctl restart nfs-server`
 
 
 ### Enforcing NFSv4.2 over v3, v4.1
