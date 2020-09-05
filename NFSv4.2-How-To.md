@@ -41,7 +41,7 @@ Each folder you want to share is a seperate line.
 - Stop the nfs-server
 `sudo systemctl stop nfs-server`
 
-- edit 2 files 
+- edit 2 files one by one:  
 `sudo nano /etc/default/nfs-kernel-server`  
 `sudo nano /etc/default/nfs-common`
 
@@ -62,7 +62,7 @@ sudo cat /proc/fs/nfsd/versions`
 ```
 should show: `-2 -3 +4 +4.1 +4.2` this means -2 and -3 are disabled
 
-- Now you can disable NFSv4.1
+- Now you can disable NFSv4.1  
 `sudo systemctl stop nfs-server`  
 `sudo nano /proc/fs/nfsd/versions`
 
