@@ -78,10 +78,10 @@ This is NOT necessary if you will never share more than a single folder via NFS.
 `sudo nano /etc/fstab`
 
 - ..and create the mounts by copy pasting the following, then save and close the file:
-``
+```
 /mnt/pool/Local /srv/nfs/Local none rbind 0 0
 /mnt/pool/Media /srv/nfs/Media none rbind 0 0
-``
+```
 
 - now activate the mounts (note everything in /etc/fstab will be automatically mounted at boot):
 `sudo mount -a`
