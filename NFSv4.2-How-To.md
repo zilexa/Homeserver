@@ -66,12 +66,12 @@ Imagine folder /mnt with 6 subfolders. You might only want to share 2 of the sub
 NFSv4 requires you to share a root folder. This is different from older versions. To solve this, you are forced to create a root folder and 'link' your subfolders to that folder. 
 This is NOT necessary if you will never share more than a single folder via NFS. 
 
-- create /srv/nfs folder
-`sudo mkdir -p /srv`
+- create /srv/nfs folder  
+`sudo mkdir -p /srv`  
 `sudo mkdir -p /srv/nfs`
 
-- Create a folder for each subfolder you want to share. We will 'link' those folders to this location. In this example I want to share 2 folders: /mnt/pool/Local and /mnt/pool/Media. 
-`sudo mkdir -p /srv/nfs/Local`
+- Create a folder for each subfolder you want to share. We will 'link' those folders to this location. In this example I want to share 2 folders: /mnt/pool/Local and /mnt/pool/Media.  
+`sudo mkdir -p /srv/nfs/Local`  
 `sudo mkdir -p /srv/nfs/Media`
 
 - Now edit your fstab file..
@@ -91,8 +91,7 @@ This is NOT necessary if you will never share more than a single folder via NFS.
 ### Register the folders to share via NFS
 /etc/exports is 'the register' for shared folders. Only stuff listed in this file will be shared.
 For example I want to share the folder /mnt/pool/Media via NFSv4.2 to client devices:
-
-`sudo nano /etc/exports`
+`sudo nano /etc/exports`  
 Add the following line, note the IP address range might be different depending on your router configuration!:
 ```
 /srv/nfs    192.168.88.0/24(rw,async,fsid=0,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
@@ -102,10 +101,10 @@ Add the following line, note the IP address range might be different depending o
 
 #### Now do the following to get this change activated:
 `sudo exportfs -a`  
-`sudo systemctl restart nfs-server`
+`sudo systemctl restart nfs-server`  
 
 
-#### Congrats! You have now disabled all versions of NFS except v4.2, you have linked your shared folders to a seperate folder and you have now shared them
+#### Congrats! You have now disabled all versions of NFS except v4.2, you have linked your shared folders to a seperate folder and you have now shared them.
 
 
 ## Client: 
@@ -123,16 +122,16 @@ Here we go.
 Now go to that folder and see if you can access it, see your files. 
 
 ### make this mount permanent
-Add the following line to fstab to mount the server add boot. 
-`sudo nano /etc/fstab`
-Copy the following line, save and exit: 
-`192.168.88.10:  /mnt/Obelix  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0`
+Add the following line to fstab to mount the server add boot.  
+`sudo nano /etc/fstab`  
+Copy the following line, save and exit:  
+`192.168.88.10:  /mnt/Obelix  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0`  
 
 ### test the permanent mount: 
-First unmount, as the folder was already mounted 2 steps ago:
-`sudo umount /mnt/Obelix`
-Now mount the folder via fstab:
-`sudo mount -a --verbose`
+First unmount, as the folder was already mounted 2 steps ago:  
+`sudo umount /mnt/Obelix`  
+Now mount the folder via fstab:  
+`sudo mount -a --verbose`  
 
 You should see something like this at the end: 
 ```
