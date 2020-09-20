@@ -15,3 +15,6 @@ echo Assumes you will create 2 pools, 1 with only the HDDs "ARCHIVE", one with H
 echo 2 overlapping pools are required for caching, see MergerFS readme. 
 echo By default data is written to POOL, which allows writing to SSD if plenty of free space otherwise to disks. 
 echo Via a scheduled script, data from POOL/cache will be moved to ARCHIVE to keep SSD clean. 
+
+docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose.yml config
