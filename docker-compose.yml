@@ -1,3 +1,8 @@
+# After modifying to your needs, use this command to check the file especially the values set in the .env file
+# cd docker (you must run it from the dir containing the .env file)
+# docker-compose -f docker-compose.yml config
+# Then run it via:
+# docker-compose -f docker-compose.yml up -d
 version: "2.0"
 services:
 ##
