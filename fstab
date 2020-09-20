@@ -1,9 +1,0 @@
-# Drives for DATA (SnapRAID)
-UUID="YOUR HDD UUID" /mnt/data/disk1 ext4 defaults 0 2
-UUID="YOUR 2nd HDD UUD" /mnt/data/disk2 ext4 defaults 0 2
-# Drives for PARITY (SnapRAID)
-UUID="YOUR 3rd HDD UUID" /mnt/parity/pardisk1 ext4 defaults 0 2
-# CACHE+DATA POOL (MergerFS)
-/mnt/data/cache:/mnt/data/disk1:/mnt/data/disk2 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,use_ino,category.create=lfs,moveonenospc=true,minfreespace=350G,fsname=mergerfsPool 0 0
-# DATA-ONLY POOL (MergerFS)
-/mnt/data/disk1:/mnt/data/disk2 /mnt/archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool 0 0
