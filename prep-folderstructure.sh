@@ -28,9 +28,10 @@ mkdir -p /mnt/pool/Collections/Photos
 
 # This folder will contain files of all users. Each folder is the private cloud of each user. These folders can be synced and/or easily accessed via apps. 
 # Collections can be made available as subdirs within each User folder, via symlink (we will get there). 
-mkdir -p /mnt/pool/Users
-mkdir -p /mnt/pool/Users/$NAME1
-mkdir -p /mnt/pool/Users/$NAME2
+mkdir -p /mnt/pool/Users/Local
+mkdir -p /mnt/pool/Users/External
+mkdir -p /mnt/pool/Users/Local/$NAME1
+mkdir -p /mnt/pool/Users/Local/$NAME2
 
 # If you plan to download series/movies, create a seperate folder structure for it as the material is not unique and not bound to a user and does not require extensive backups. 
 # Note the subdirs have been specifically chosen this way to work perfectly with common download tools. Recommend to stick to it exactly.
@@ -46,19 +47,19 @@ mkdir -p /mnt/pool/Media/Movies
 # In this example, our login account name is Asterix so we use that as 3rd virtual user folder. 
 # This is also the laptop account name I use for all our shared devices (desktop, laptop). 
 # This way, you can have those folders like Desktop and Downloads on multiple devices and keep them in sync easily. 
-mkdir -p /mnt/pool/Users/Asterix
-mkdir -p /mnt/pool/Users/Asterix/Desktop
-mkdir -p /mnt/pool/Users/Asterix/Downloads
+mkdir -p /mnt/pool/Local/Users/Asterix
+mkdir -p /mnt/pool/Local/Users/Asterix/Desktop
+mkdir -p /mnt/pool/Local/Users/Asterix/Downloads
 
 # Now make /Asterix available as subdir for the users that use it. 
 # This way, whenever a user accesses her private cloud, her laptop/workstation folders will be accessible easily via this subdir. 
-ln -s /mnt/pool/Users/Asterix /mnt/pool/Users/$NAME1/
-ln -s /mnt/pool/Users/Asterix /mnt/pool/Users/$NAME2/
+ln -s /mnt/pool/Users/Local/Asterix /mnt/pool/Local/Users/$NAME1/
+ln -s /mnt/pool/Users/Local/Asterix /mnt/pool/Local/Users/$NAME2/
 
 # Now make /Collections available as subdir for the users that use it. 
 # This way, whenever a user accesses her private cloud, her Collections folders will be accessible easily via this subdir. 
-ln -s /mnt/pool/Collections /mnt/pool/Users/$NAME1/
-ln -s /mnt/pool/Collections /mnt/pool/Users/$NAME2/
+ln -s /mnt/pool/Collections /mnt/pool/Local/Users/$NAME1/
+ln -s /mnt/pool/Collections /mnt/pool/Local/Users/$NAME2/
 # Don't do this for the virtual 3rd user as that is not an actual person, it will not need to access stuff via personal cloud. 
 # Asterix is a laptop login account and workstation pc login account
 
@@ -76,10 +77,10 @@ rm -rf $HOME/Videos
 ln -s /mnt/pool/Collections/Music $HOME/
 ln -s /mnt/pool/Collections/Photos $HOME/
 ln -s /mnt/pool/Media $HOME/
-ln -s /mnt/pool/Users/$NAME1 $HOME/Documents/
-ln -s /mnt/pool/Users/$NAME2 $HOME/Documents/
-ln -s /mnt/pool/Users/Asterix/Downloads $HOME/
+ln -s /mnt/pool/Local/Users/$NAME1 $HOME/Documents/
+ln -s /mnt/pool/Local/Users/$NAME2 $HOME/Documents/
+ln -s /mnt/pool/Local/Users/Asterix/Downloads $HOME/
 
 # For $HOME/Desktop, you need to log out first, start a terminal session, delete Desktop and then create the link. Good luck. 
 # rm -rf $HOME/Desktop
-# ln -s /mnt/pool/Users/Asterix/Desktop $HOME/
+# ln -s /mnt/pool/Local/Users/Asterix/Desktop $HOME/
