@@ -47,9 +47,9 @@ mkdir -p /mnt/pool/Media/Movies
 # In this example, our login account name is Asterix so we use that as 3rd virtual user folder. 
 # This is also the laptop account name I use for all our shared devices (desktop, laptop). 
 # This way, you can have those folders like Desktop and Downloads on multiple devices and keep them in sync easily. 
-mkdir -p /mnt/pool/Local/Users/Asterix
-mkdir -p /mnt/pool/Local/Users/Asterix/Desktop
-mkdir -p /mnt/pool/Local/Users/Asterix/Downloads
+mkdir -p /mnt/pool/Users/Local/Asterix
+mkdir -p /mnt/pool/Users/Local/Asterix/Desktop
+mkdir -p /mnt/pool/Users/Local/Asterix/Downloads
 
 # (optional) if you plan to use this server as workstation/desktop, you will use the Home/Username/ personal folders. 
 # Use the MergerFS Pool to store the Home folders of this local PC, by creating symbolic links from Pool to $HOME. First delete the folders.
@@ -71,3 +71,9 @@ ln -s /mnt/pool/Users/Local/Asterix/Downloads $HOME/
 # ln -s /mnt/pool/Local/Users/Asterix/Desktop $HOME/
 # For Desktop, you need to log out first, start a terminal session, delete Desktop with "rm -rf $HOME/Desktop" and then create the link.
 
+# Now on a client PC, like a laptop that is shared by NAME1 and NAME2, add symlinks after setting up NFS shares
+mv $HOME/Pictures $HOME/Photos
+mv $HOME/Videos $HOME/Media
+ln -s /mnt/Obelix/Collections/Photos/ $HOME/Photos/Obelix
+ln -s /mnt/Obelix/Collections/Music/ $HOME/Music/Obelix
+ln -s /mnt/Obelix/Media/ $HOME/Media/Obelix
