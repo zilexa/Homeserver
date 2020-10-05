@@ -51,18 +51,6 @@ mkdir -p /mnt/pool/Local/Users/Asterix
 mkdir -p /mnt/pool/Local/Users/Asterix/Desktop
 mkdir -p /mnt/pool/Local/Users/Asterix/Downloads
 
-# Now make /Asterix available as subdir for the users that use it. 
-# This way, whenever a user accesses her private cloud, her laptop/workstation folders will be accessible easily via this subdir. 
-ln -s /mnt/pool/Users/Local/Asterix /mnt/pool/Local/Users/$NAME1/
-ln -s /mnt/pool/Users/Local/Asterix /mnt/pool/Local/Users/$NAME2/
-
-# Now make /Collections available as subdir for the users that use it. 
-# This way, whenever a user accesses her private cloud, her Collections folders will be accessible easily via this subdir. 
-ln -s /mnt/pool/Collections /mnt/pool/Local/Users/$NAME1/
-ln -s /mnt/pool/Collections /mnt/pool/Local/Users/$NAME2/
-# Don't do this for the virtual 3rd user as that is not an actual person, it will not need to access stuff via personal cloud. 
-# Asterix is a laptop login account and workstation pc login account
-
 # (optional) if you plan to use this server as workstation/desktop, you will use the Home/Username/ personal folders. 
 # Use the MergerFS Pool to store the Home folders of this local PC, by creating symbolic links from Pool to $HOME. First delete the folders.
 rm -rf $HOME/Downloads
@@ -77,10 +65,9 @@ rm -rf $HOME/Videos
 ln -s /mnt/pool/Collections/Music $HOME/
 ln -s /mnt/pool/Collections/Photos $HOME/
 ln -s /mnt/pool/Media $HOME/
-ln -s /mnt/pool/Local/Users/$NAME1 $HOME/Documents/
-ln -s /mnt/pool/Local/Users/$NAME2 $HOME/Documents/
-ln -s /mnt/pool/Local/Users/Asterix/Downloads $HOME/
-
-# For $HOME/Desktop, you need to log out first, start a terminal session, delete Desktop and then create the link. Good luck. 
-# rm -rf $HOME/Desktop
+ln -s /mnt/pool/Users/Local/$NAME1 $HOME/Documents/
+ln -s /mnt/pool/Users/Local/$NAME2 $HOME/Documents/
+ln -s /mnt/pool/Users/Local/Asterix/Downloads $HOME/
 # ln -s /mnt/pool/Local/Users/Asterix/Desktop $HOME/
+# For Desktop, you need to log out first, start a terminal session, delete Desktop with "rm -rf $HOME/Desktop" and then create the link.
+
