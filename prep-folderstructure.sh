@@ -1,5 +1,8 @@
 #!/bin/bash
-#
+# Permissions can be fixed as follows (this makes sure the personal folder cannot be deleted by the main user, but gives full access to the main user to the contents of the folder. 
+# sudo chown asterix:asterix $NAME
+# sudo chmod u+rwx -R $NAME
+
 
 echo "My folder structure might not be yours."
 echo "1 drive pool (/mnt/pool) via MergerFS with my system drive (SSD 1TB) as fast cache and 2 HDDs as storage"
