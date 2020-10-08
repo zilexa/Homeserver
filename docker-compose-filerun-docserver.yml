@@ -1,0 +1,138 @@
+##________CLOUD________
+##_____________________ Traefik [CLOUD/reverse-proxy]
+# create empty files and set permissions first see docker-config.sh
+  traefik:
+    image: traefik:v2.0
+    container_name: traefik
+    restart: always
+    ports:
+      - 8880:8080
+      - 80:80
+      - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $USERDIR/docker/traefik/acme.json:/acme.json
+      - $USERDIR/docker/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - $USERDIR/docker/traefik/custom_services:/etc/traefik/custom_services
+    command:
+      - "--certificatesresolvers.dirktls.acme.tlschallenge=true"
+      - "--certificatesresolvers.dirktls.acme.email=rudhra@obelix.cloud"
+      - "--certificatesresolvers.dirktls.acme.storage=/etc/traefik/letsencrypt/acme.json"
+      - "--certificatesResolvers.dirktls.acme.httpChallenge.entryPoint=web"
+##
+##____________________ MariaDB MySQL [CLOUD/Database]
+  mariadb:
+    image: mariadb:10.1
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $PW_INT
+      MYSQL_USER: $USER
+      MYSQL_PASSWORD: $PW_INT
+      MYSQL_DATABASE: filerundb
+    volumes:
+      - $USERHOME/docker/filerun/db:/var/lib/mysql
+##
+##____________________ FileRun [CLOUD/Files]
+  filerun:
+    image: afian/filerun
+    container_name: filerun
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      FR_DB_HOST: mariadb
+      FR_DB_PORT: 3306
+      FR_DB_NAME: filerundb
+      FR_DB_USER: $USER
+      FR_DB_PASS: $PW_INT
+      APACHE_RUN_USER: www-data
+      APACHE_RUN_USER_ID: 33
+      APACHE_RUN_GROUP: www-data
+      APACHE_RUN_GROUP_ID: 33
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+      - filerun-tika
+      - filerun-elasticsearch
+    ports:
+      - "8000:80"
+    volumes:
+      - $USERDIR/docker/filerun/html:/var/www/html
+      - /mnt/pool/Users:/user-files:rw
+      - /mnt/pool/Users/Local/Asterix:/user-files/Local/$USER1/Asterix:rw
+      - /mnt/pool/Users/Local/Asterix:/user-files/Local/$USER2/Asterix:rw
+      - /mnt/pool/Collections:/user-files/Local/$USER1/Collections:rw
+      - /mnt/pool/Collections:/user-files/Local/$USER2/Collections:rw
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.filerun-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.filerun-redirect.entrypoints=web
+      - traefik.http.routers.filerun-redirect.middlewares=filerun-redirect
+      - traefik.http.routers.filerun-redirect.rule=Host(`files.$DOMAIN`)
+      - traefik.http.routers.filerun.entrypoints=websecure
+      - traefik.http.routers.filerun.rule=Host(`files.$DOMAIN`)
+      - traefik.http.routers.filerun.tls.certresolver=letsencrypt
+      - traefik.http.services.filerun.loadbalancer.server.port=80
+      - traefik.http.middlewares.oo-header.headers.referrerPolicy=no-referrer
+      - traefik.http.middlewares.oo-header.headers.stsSeconds=31536000
+      - traefik.http.middlewares.oo-header.headers.forceSTSHeader=true
+      - traefik.http.middlewares.oo-header.headers.stsPreload=true
+      - traefik.http.middlewares.oo-header.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.oo-header.headers.browserXssFilter=true
+      - traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto=https
+##____________________ FileRun Full-Text Search [CLOUD/Files search]
+  filerun-tika:
+    image: logicalspark/docker-tikaserver
+    container_name: filerun-tika
+  filerun-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: filerun-elasticsearch
+    restart: always
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - $USERDIR/docker/filerun/esearch:/usr/share/elasticsearch/data
+##_____________________ OnlyOffice Document Server [Cloud/Office]
+  onlyoffice:
+    image: onlyoffice/documentserver
+    container_name: onlyoffice
+    stdin_open: true
+    tty: true
+    ports:
+      - "8889:80"
+    volumes:
+      - /srv/onlyoffice:/var/www/onlyoffice/Data
+    dns: 172.17.0.1
+    environment:
+      - JWT_ENABLED="true"
+      - JWT_SECRET=$ONLYOFFICEJWT
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.onlyoffice-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.onlyoffice-redirect.entrypoints=web
+      - traefik.http.routers.onlyoffice-redirect.middlewares=onlyoffice-redirect
+      - traefik.http.routers.onlyoffice-redirect.rule=Host(`office.$DOMAIN`)
+      - traefik.http.routers.onlyoffice.entrypoints=websecure
+      - traefik.http.routers.onlyoffice.rule=Host(`office.$DOMAIN`)
+      - traefik.http.routers.onlyoffice.tls.certresolver=letsencrypt
+      - traefik.http.services.onlyoffice.loadbalancer.server.port=80
+      - traefik.http.middlewares.oo-header.headers.referrerPolicy=no-referrer
+      - traefik.http.middlewares.oo-header.headers.stsSeconds=31536000
+      - traefik.http.middlewares.oo-header.headers.forceSTSHeader=true
+      - traefik.http.middlewares.oo-header.headers.stsPreload=true
+      - traefik.http.middlewares.oo-header.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.oo-header.headers.browserXssFilter=true
+      - traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto=https
