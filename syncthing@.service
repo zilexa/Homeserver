@@ -1,8 +1,8 @@
-# Required to autostart at boot, before user login
+# To autostart Syncthing and always run in the background, do the following:
 # sudo nano /etc/systemd/system/syncthing@.service
 # copy paste this script CTRL+O to save, CTRL+X to exit
 # sudo systemctl enable syncthing@myuser.service
-# sudo  systemctl start syncthing@myuser.service
+# sudo systemctl start syncthing@myuser.service
 #
 [Unit]
 Description=Syncthing - Open Source Continuous File Synchronization for %I
