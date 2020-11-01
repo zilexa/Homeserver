@@ -31,11 +31,18 @@ CTRL+O (to save) and CTRL+X (to exit).
 `sudo nano /etc/default/nfs-common`
 
 - In each file, add or if exist change the following lines to look like this, then save and close the file: 
-```RPCNFSDOPTS="-N 2 -N 3"
+```
+RPCNFSDOPTS="-N 2 -N 3"
 RPCMOUNTDOPTS="--manage-gids -N 2 -N 3"
 NEED_STATD="no"
 NEED_IDMAPD="yes"
 NEED_GSSD="no"
+```
+
+Optionally disable RPCbind, because NFSserver will start it, but NFSv4 does not use it:
+```
+sudo systemctl mask rpcbind.service
+sudo systemctl mask rpcbind.socket
 ```
 
 - Now start the service:
