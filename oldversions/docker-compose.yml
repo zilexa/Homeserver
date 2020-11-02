@@ -2,8 +2,10 @@ version: "2.0"
 services:
 # THIS FILE CONTAINS SERVICES THAT I NO LONGER USE:
 # PiHole: switched to AdGuard Home as it is much more clean, lightweight and a single executable, no need to run in Docker.
+# SyncThing: installed directly on host (Docker makes no sense here)
+# Heimdall: Organizr is a much better alternative.
+# Duplicati: too many reports of issues. Never used it. Using LuckyBackup instead (app for Linux).
 # Prometheus, Grafana etc: I use Netdata which gives plenty of monitoring info, enough for me.
-#
 ##____________________ PiHole 2 [NETWORK/recursive-dnsserver]
   pihole:
     container_name: pihole
@@ -36,3 +38,206 @@ services:
     dns:
       - 127.0.0.1
       - 192.168.88.89#53
+##____________________ SyncThing [CLOUD/Sync]
+  syncthing:
+    container_name: syncthing
+    image: linuxserver/syncthing
+    restart: unless-stopped
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - UMASK_SET=022
+    volumes:
+      - $USERHOME/docker/syncthing/config:/config
+      - /mnt/pool/Desktop:/desktop:rw
+      - /mnt/pool/Downloads:/downloads:rw
+      - /mnt/pool/Documents:/documents:rw
+      - /mnt/pool/Users:/users:rw
+    ports:
+      - '8384:8384'
+      - '21027:21027/udp'
+      - '22000:22000'
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.syncthing-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.syncthing-redirect.entrypoints=web
+      - traefik.http.routers.syncthing-redirect.middlewares=syncthing-redirect
+      - traefik.http.routers.syncthing-redirect.rule=Host(`sync.$DOMAIN`)
+      - traefik.http.routers.syncthing.entrypoints=websecure
+      - traefik.http.routers.syncthing.rule=Host(`sync.obelix.xyz`)
+      - traefik.http.routers.syncthing.tls.certresolver=letsencrypt
+      - traefik.http.services.syncthing.loadbalancer.server.port=8384
+#      - traefik.http.routers.syncthing-listen.rule=Host(`sync.$DOMAIN`) && Path(`/listen`)
+#      - traefik.http.services.syncthing-listen.loadbalancer.server.port=22000
+##
+##____________________ Duplicati [CLOUD/Backup]
+  duplicati:
+    image: linuxserver/duplicati
+    container_name: duplicati
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+#      - CLI_ARGS= #optional
+    volumes:
+      - $USERHOME/docker/duplicati/config:/config
+      - /mnt/pool/Backups:/backups
+      - /mnt/pool/Users:/source
+    ports:
+      - 8200:8200
+    restart: unless-stopped
+      
+      
+##_____________________ Heimdall [Management/HOMEPAGE] 
+  heimdall:
+    container_name: heimdall
+    image: linuxserver/heimdall:latest
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+     - "8080:80"
+    volumes:
+      - $USERHOME/docker/heimdall:/config
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+##
+##____________________ Prometheus [Monitoring/Logging]
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.18.1
+    restart: always
+    environment:
+      - TZ=$TZ
+    volumes:
+      - $USERHOME/docker/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    networks:
+      - monitor-net
+##____________________ Alertmanager [Monitoring/Alerts]
+  prometheus-alertmanager:
+    container_name: prometheus-alertmanager
+    image: prom/alertmanager:v0.20.0
+    restart: always
+    environment:
+      - TZ=$TZ
+    volumes:
+      - $USERHOME/docker/prometheus/alertmanager:/etc/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    ports:
+      - "9093:9093"
+    networks:
+      - monitor-net
+##____________________ Nodes [Monitoring/]
+  nodeexporter:
+    image: prom/node-exporter:v0.18.1
+    container_name: nodeexporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    networks:
+      - monitor-net
+##____________________ Cadvisor [Monitoring/Docker]
+  cadvisor:
+    image: gcr.io/google-containers/cadvisor:v0.36.0
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /cgroup:/cgroup:ro 
+    restart: unless-stopped
+    ports:
+      - "9180:8080"
+    networks:
+      - monitor-net
+##____________________ Pushgateway [Monitoring/Pushgateway]
+  pushgateway:
+    image: prom/pushgateway:v1.2.0
+    container_name: pushgateway
+    restart: unless-stopped
+    ports:
+      - 9191:9091
+    networks:
+      - monitor-net
+##____________________ Grafana [Monitoring/Dashboard]
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:7.0.3
+    restart: always
+    environment:
+      - TZ=${TZ}
+      - GF_SECURITY_ADMIN_USER=${USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${PW_EXT}
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp_relay:25
+      - GF_SMTP_FROM_ADDRESS=${EMAIL}
+#      - GF_SERVER_DOMAIN=grafana.$DOMAIN
+#      - GF_SERVER_ROOT_URL=https://grafana.$DOMAIN
+#      - VIRTUAL_HOST=grafana.$DOMAIN
+#      - VIRTUAL_PORT=3000
+#      - VIRTUAL_PROTO=http
+#      - LETSENCRYPT_HOST=grafana.$DOMAIN
+#      - LETSENCRYPT_EMAIL=${EMAIL}
+    volumes:
+#      - grafana_data:/var/lib/grafana
+      - $USERHOME/docker/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    networks:
+      - monitor-net
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.grafana-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.grafana-redirect.entrypoints=web
+      - traefik.http.routers.grafana-redirect.middlewares=grafana-redirect
+      - traefik.http.routers.grafana-redirect.rule=Host(`grafana.$DOMAIN`)
+      - traefik.http.routers.grafana.entrypoints=websecure
+      - traefik.http.routers.grafana.rule=Host(`grafana.$DOMAIN`)
+      - traefik.http.routers.grafana.tls.certresolver=letsencrypt
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+#
+#
+#
+networks:
+  DNS-network:
+    driver: macvlan
+    driver_opts:
+      parent: eno1
+    ipam:
+      config:
+        - subnet: 192.168.88.0/24
+          gateway: 192.168.88.1
+          ip_range: 192.168.88.0/29
+          aux_addresses:
+            router: 192.168.88.1
+            PiHole-1: 192.168.88.2
+  monitor-net:
+    driver: bridge
