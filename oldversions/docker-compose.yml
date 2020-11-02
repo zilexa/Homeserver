@@ -1,0 +1,38 @@
+version: "2.0"
+services:
+# THIS FILE CONTAINS SERVICES THAT I NO LONGER USE:
+# PiHole: switched to AdGuard Home as it is much more clean, lightweight and a single executable, no need to run in Docker.
+# Prometheus, Grafana etc: I use Netdata which gives plenty of monitoring info, enough for me.
+#
+##____________________ PiHole 2 [NETWORK/recursive-dnsserver]
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    restart: always
+    mac_address: d0:ca:ab:cd:ef:01
+    cap_add:
+      - NET_ADMIN
+    networks:
+      DNS-network:
+        ipv4_address: 192.168.88.99
+    environment:
+      ServerIP: 192.168.88.99
+      WEBPASSWORD: $PW_INT
+      PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
+      TZ: $TZ
+      DNS1: 192.168.88.89#53
+      DNS2: 127.0.0.1
+    volumes:
+      - $USERDIR/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
+      - $USERDIR/docker/pihole:/etc/pihole:rw
+      - /etc/localtime:/etc/localtime:ro
+      - $USERDIR/docker/pihole/var-log/pihole.log:/var/log/pihole.log
+    ports:
+      - 443/tcp
+      - 53/tcp
+      - 53/udp
+      - 67/udp
+      - 80/tcp
+    dns:
+      - 127.0.0.1
+      - 192.168.88.89#53
