@@ -1,8 +1,3 @@
-# After modifying to your needs, use this command to check the file especially the values set in the .env file
-# cd docker (you must run it from the dir containing the .env file)
-# docker-compose -f docker-compose.yml config
-# Then run it via:
-# docker-compose -f docker-compose.yml up -d
 version: "2.0"
 services:
 ##
@@ -19,66 +14,26 @@ services:
       - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $USERHOME/docker/portainer/data:/data
-      - $USERHOME/docker/shared:/shared
+      - $USERDIR/docker/portainer/data:/data
+      - $USERDIR/docker/portainer/shared:/shared
 ##
 ##______NETWORK_______
-##____________________ PiHole 2 (1st PiHole runs off-server) [NETWORK/recursive-dnsserver]
-# create empty files first see docker-config.sh
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
-    restart: always
-    mac_address: d0:ca:ab:cd:ef:01
-    cap_add:
-      - NET_ADMIN
-    networks:
-      DNS-network:
-        ipv4_address: 192.168.88.3
-    environment:
-      ServerIP: 192.168.88.3
-      WEBPASSWORD: $PW_INT
-      PHP_ENV_CONFIG: "/etc/lighttpd/conf-enabled/15-fastcgi-php.conf"
-      TZ: $TZ
-      DNS1: 192.168.88.4#53
-      DNS2: 127.0.0.1
-    volumes:
-      - $USERHOME/docker/pihole/dnsmasq.d:/etc/dnsmasq.d:rw
-      - $USERHOME/docker/pihole:/etc/pihole:rw
-      - /etc/localtime:/etc/localtime:ro
-      - $USERHOME/docker/pihole/var-log/pihole.log:/var/log/pihole.log
-    ports:
-      - 443/tcp
-      - 53/tcp
-      - 53/udp
-      - 67/udp
-      - 80/tcp
-    dns:
-      - 127.0.0.1
-      - 192.168.88.4#53
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
     restart: always
-    mac_address: d0:ca:ab:cd:ef:02
-    networks:
-      DNS-network:
-        ipv4_address: 192.168.88.4
 #    volumes:
-#      - $USERHOME/docker/unbound:/opt/unbound/etc/unbound/
+#      - $USERDIR/docker/unbound:/opt/unbound/etc/unbound/
     ports:
-      - 53/tcp
-      - 53/udp
+      - 5335:53/tcp
+      - 5335:53/udp
 ##
 ##____________________ Unifi Controller [NETWORK/Wifi]
   unifi:
     container_name: unifi
     image: goofball222/unifi
     mac_address: d0:ca:ab:cd:ef:03
-    networks:
-      DNS-network:
-        ipv4_address: 192.168.88.5
     restart: unless-stopped
     environment:
       - PUID=$PUID
@@ -86,14 +41,14 @@ services:
       - TZ=$TZ
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - $USERHOME/docker/unifi/cert:/usr/lib/unifi/cert
-      - $USERHOME/docker/unifi/data:/usr/lib/unifi/data
-      - $USERHOME/docker/unifi/logs:/usr/lib/unifi/logs
+      - $USERDIR/docker/unifi/cert:/usr/lib/unifi/cert
+      - $USERDIR/docker/unifi/data:/usr/lib/unifi/data
+      - $USERDIR/docker/unifi/logs:/usr/lib/unifi/logs
     ports:
       - 3478:3478/udp
-      - 8080:8080
+      - 8008:8080
       - 8443:8443
-      - 8880:8880
+      - 8001:8880
       - 8843:8843
 ##
 ##________CLOUD________
@@ -102,70 +57,27 @@ services:
   traefik:
     image: traefik:v2.0
     container_name: traefik
+    restart: always
     ports:
       - 8880:8080
       - 80:80
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $USERHOME/docker/traefik/acme.json:/acme.json
-      - $USERHOME/docker/traefik/traefik.toml:/etc/traefik/traefik.toml
-    restart: unless-stopped
-##
-##____________________ SyncThing [CLOUD/Sync]
-  syncthing:
-    container_name: syncthing
-    image: linuxserver/syncthing
-    restart: unless-stopped
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - UMASK_SET=022
-    volumes:
-      - $USERHOME/docker/syncthing/config:/config
-      - /mnt/pool/Desktop:/desktop:rw
-      - /mnt/pool/Downloads:/downloads:rw
-      - /mnt/pool/Documents:/documents:rw
-      - /mnt/pool/Users:/users:rw
-    ports:
-      - '8384:8384'
-      - '21027:21027/udp'
-      - '22000:22000'
-    labels:
-      - traefik.enable=true
-      - traefik.http.middlewares.syncthing-redirect.redirectscheme.scheme=https
-      - traefik.http.routers.syncthing-redirect.entrypoints=web
-      - traefik.http.routers.syncthing-redirect.middlewares=syncthing-redirect
-      - traefik.http.routers.syncthing-redirect.rule=Host(`sync.$DOMAIN`)
-      - traefik.http.routers.syncthing.entrypoints=websecure
-      - traefik.http.routers.syncthing.rule=Host(`sync.obelix.xyz`)
-      - traefik.http.routers.syncthing.tls.certresolver=letsencrypt
-      - traefik.http.services.syncthing.loadbalancer.server.port=8384
-#      - traefik.http.routers.syncthing-listen.rule=Host(`sync.$DOMAIN`) && Path(`/listen`)
-#      - traefik.http.services.syncthing-listen.loadbalancer.server.port=22000
-##
-##____________________ Duplicati [CLOUD/Backup]
-  duplicati:
-    image: linuxserver/duplicati
-    container_name: duplicati
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-#      - CLI_ARGS= #optional
-    volumes:
-      - $USERHOME/docker/duplicati/config:/config
-      - /mnt/pool/Backups:/backups
-      - /mnt/pool/Users:/source
-    ports:
-      - 8200:8200
-    restart: unless-stopped
+      - $USERDIR/docker/traefik/acme.json:/acme.json
+      - $USERDIR/docker/traefik/traefik.toml:/etc/traefik/traefik.toml
+      - $USERDIR/docker/traefik/custom_services:/etc/traefik/custom_services
+    command:
+      - "--certificatesresolvers.dirktls.acme.tlschallenge=true"
+      - "--certificatesresolvers.dirktls.acme.email=rudhra@obelix.cloud"
+      - "--certificatesresolvers.dirktls.acme.storage=/etc/traefik/letsencrypt/acme.json"
+      - "--certificatesResolvers.dirktls.acme.httpChallenge.entryPoint=web"
 ##
 ##____________________ MariaDB MySQL [CLOUD/Database]
   mariadb:
     image: mariadb:10.1
     container_name: mariadb
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: $PW_INT
       MYSQL_USER: $USER
@@ -178,6 +90,7 @@ services:
   filerun:
     image: afian/filerun
     container_name: filerun
+    restart: always
     environment:
       PUID: $PUID
       PGID: $PGID
@@ -200,9 +113,12 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - $USERHOME/docker/filerun/html:/var/www/html
+      - $USERDIR/docker/filerun/html:/var/www/html
       - /mnt/pool/Users:/user-files:rw
-      - /mnt/pool/Local:/local-files:rw
+      - /mnt/pool/Users/Local/Asterix:/user-files/Local/$USER1/Asterix:rw
+      - /mnt/pool/Users/Local/Asterix:/user-files/Local/$USER2/Asterix:rw
+      - /mnt/pool/Collections:/user-files/Local/$USER1/Collections:rw
+      - /mnt/pool/Collections:/user-files/Local/$USER2/Collections:rw
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.filerun-redirect.redirectscheme.scheme=https
@@ -213,6 +129,13 @@ services:
       - traefik.http.routers.filerun.rule=Host(`files.$DOMAIN`)
       - traefik.http.routers.filerun.tls.certresolver=letsencrypt
       - traefik.http.services.filerun.loadbalancer.server.port=80
+      - traefik.http.middlewares.oo-header.headers.referrerPolicy=no-referrer
+      - traefik.http.middlewares.oo-header.headers.stsSeconds=31536000
+      - traefik.http.middlewares.oo-header.headers.forceSTSHeader=true
+      - traefik.http.middlewares.oo-header.headers.stsPreload=true
+      - traefik.http.middlewares.oo-header.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.oo-header.headers.browserXssFilter=true
+      - traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto=https
 ##____________________ FileRun Full-Text Search [CLOUD/Files search]
   filerun-tika:
     image: logicalspark/docker-tikaserver
@@ -220,6 +143,7 @@ services:
   filerun-elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     container_name: filerun-elasticsearch
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -233,7 +157,73 @@ services:
         hard: -1
     mem_limit: 1g
     volumes:
-      - $USERHOME/docker/filerun/esearch:/usr/share/elasticsearch/data
+      - $USERDIR/docker/filerun/esearch:/usr/share/elasticsearch/data
+##_____________________ OnlyOffice Document Server [Cloud/Office]
+  onlyoffice:
+    image: onlyoffice/documentserver
+    container_name: onlyoffice
+    depends_on:
+      - onlyoffice-postgresql
+      - onlyoffice-rabbitmq
+    stdin_open: true
+    restart: always
+    tty: true
+    ports:
+      - "8889:80"
+    volumes:
+      - /var/www/onlyoffice/Data
+      - /var/log/onlyoffice
+      - /var/lib/onlyoffice/documentserver/App_Data/cache/files
+      - /var/www/onlyoffice/documentserver-example/public/files
+      - /usr/share/fonts
+    dns: 1.1.1.1
+    environment:
+      - JWT_ENABLED="true"
+      - JWT_SECRET=$ONLYOFFICEJWT
+      - DB_TYPE=postgres
+      - DB_HOST=onlyoffice-postgresql
+      - DB_PORT=5432
+      - DB_NAME=onlyoffice
+      - DB_USER=onlyoffice
+      - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.onlyoffice-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.onlyoffice-redirect.entrypoints=web
+      - traefik.http.routers.onlyoffice-redirect.middlewares=onlyoffice-redirect
+      - traefik.http.routers.onlyoffice-redirect.rule=Host(`office.$DOMAIN`)
+      - traefik.http.routers.onlyoffice.entrypoints=websecure
+      - traefik.http.routers.onlyoffice.rule=Host(`office.$DOMAIN`)
+      - traefik.http.routers.onlyoffice.tls.certresolver=letsencrypt
+      - traefik.http.services.onlyoffice.loadbalancer.server.port=80
+      - traefik.http.middlewares.oo-header.headers.referrerPolicy=no-referrer
+      - traefik.http.middlewares.oo-header.headers.stsSeconds=31536000
+      - traefik.http.middlewares.oo-header.headers.forceSTSHeader=true
+      - traefik.http.middlewares.oo-header.headers.stsPreload=true
+      - traefik.http.middlewares.oo-header.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.oo-header.headers.browserXssFilter=true
+      - traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto=https
+##____________________ Onlyoffice rabbitmq [CLOUD/Office]
+  onlyoffice-rabbitmq:
+    container_name: onlyoffice-rabbitmq
+    image: rabbitmq
+    restart: always
+    expose:
+      - '5672'
+##____________________ Onlyoffice database [CLOUD/Office]
+  onlyoffice-postgresql:
+    container_name: onlyoffice-postgresql
+    image: postgres:9.5
+    environment:
+      - POSTGRES_DB=onlyoffice
+      - POSTGRES_USER=onlyoffice
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    restart: always
+    expose:
+      - '5432'
+    volumes:
+      - postgresql_data:/var/lib/postgresql
+##
 ##
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
@@ -246,12 +236,13 @@ services:
       - PGID=$PGID
       - TZ=$TZ
       - FF_SYNCSERVER_PUBLIC_URL=https://firefox.$DOMAIN
-      - FF_SYNCSERVER_SECRET_FILE=/data/secret/secret.txt
-      - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
-      - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=true
+      - FF_SYNCSERVER_SECRET=$FFSYNCSECRET
+#      - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
+      - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=false
+      - FF_SYNCSERVER_ALLOW_NEW_USERS=true
+      - FF_SYNCSERVER_LOGLEVEL=debug
     volumes:
-      - "$USERHOME/docker/firefox-syncserver:/data"
-      - "$USERHOME/docker/firefox-syncserver/secret:/data/secret/"
+      - "$USERDIR/docker/firefox-syncserver:/data"
     ports:
       - 5000:5000
     labels:
@@ -270,14 +261,14 @@ services:
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin
-    restart: unless-stopped
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
       - UMASK_SET=022 #optional
     volumes:
-      - $USERHOME/docker/jellyfin/config:/config
+      - $USERDIR/docker/jellyfin/config:/config
       - /mnt/pool/Media/TVshows:/data/tvshows
       - /mnt/pool/Media/Movies:/data/movies
       - /mnt/pool/Music:/data/music
@@ -293,6 +284,7 @@ services:
     image: jeroenslot/nordvpn-proxy:latest
     cap_add:
       - NET_ADMIN
+    restart: always
     devices:
       - /dev/net/tun
     dns:
@@ -319,13 +311,13 @@ services:
       - 6767:6767 #Subtitles
       - 51413:51413 #p2p
       - 51413:51413/udp #p2p DHT
-    restart: always
 ##
 ##____________________ Transmission [MEDIA/download-client]
   transmission:
     image: linuxserver/transmission
     container_name: transmission
     network_mode: service:vpn-proxy
+    restart: always
     depends_on:
       - vpn-proxy
     restart: unless-stopped
@@ -337,7 +329,7 @@ services:
       - USER=admin
       - PASS=$PW_MEDIA
     volumes:
-      - $USERHOME/docker/transmission/config:/config
+      - $USERDIR/docker/transmission/config:/config
       - /mnt/pool/Media:/media
       - /mnt/pool/Media/incoming/blackhole:/watch
 ##
@@ -354,7 +346,7 @@ services:
       - PGID=$PGID
       - TZ=$TZ
     volumes:
-      - $USERHOME/docker/nzbget/config:/config
+      - $USERDIR/docker/nzbget/config:/config
       - /mnt/pool/Media:/media
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
@@ -364,14 +356,14 @@ services:
     network_mode: service:vpn-proxy
     depends_on:
       - vpn-proxy
-    restart: unless-stopped
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - $USERHOME/docker/sonarr/config:/config
+      - $USERDIR/docker/sonarr/config:/config
       - /mnt/pool/Media:/media
 ##
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
@@ -381,13 +373,13 @@ services:
     network_mode: service:vpn-proxy
     depends_on:
       - vpn-proxy
-    restart: unless-stopped
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
     volumes:
-      - $USERHOME/docker/jackett/config:/config
+      - $USERDIR/docker/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
       - /mnt/pool/Media:/media 
 ##
@@ -398,14 +390,14 @@ services:
     network_mode: service:vpn-proxy
     depends_on:
       - vpn-proxy
-    restart: unless-stopped
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - $USERHOME/docker/radarr/config:/config
+      - $USERDIR/docker/radarr/config:/config
       - /mnt/pool/Media:/media
 ##
 ##____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
@@ -415,148 +407,33 @@ services:
     network_mode: service:vpn-proxy
     depends_on:
       - vpn-proxy
-    restart: unless-stopped
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
       - UMASK_SET=022 #optional
     volumes:
-      - $USERHOME/docker/bazarr/config:/config
+      - $USERDIR/docker/bazarr/config:/config
       - /mnt/pool/Media:/media
 ##
 ##______MANAGEMENT_____
 ##_____________________ Heimdall [Management/HOMEPAGE] 
-  heimdall:
-    container_name: heimdall
-    image: linuxserver/heimdall:latest
-    restart: unless-stopped
+  organizr:
+    container_name: organizr
+    image: organizr/organizr:latest
+    restart: always
     security_opt:
       - no-new-privileges:true
     ports:
      - "8080:80"
     volumes:
-      - $USERHOME/docker/heimdall:/config
+      - $USERDIR/docker/organizr:/config
     environment:
       - PUID=$PUID
       - PGID=$PGID
       - TZ=$TZ
-##
-##____________________ Prometheus [Monitoring/Logging]
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:v2.18.1
-    restart: always
-    environment:
-      - TZ=$TZ
-    volumes:
-      - $USERHOME/docker/prometheus:/etc/prometheus
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
-      - '--web.enable-lifecycle'
-    ports:
-      - "9090:9090"
-    networks:
-      - monitor-net
-##____________________ Alertmanager [Monitoring/Alerts]
-  prometheus-alertmanager:
-    container_name: prometheus-alertmanager
-    image: prom/alertmanager:v0.20.0
-    restart: always
-    environment:
-      - TZ=$TZ
-    volumes:
-      - $USERHOME/docker/prometheus/alertmanager:/etc/alertmanager
-    command:
-      - '--config.file=/etc/alertmanager/config.yml'
-      - '--storage.path=/alertmanager'
-    ports:
-      - "9093:9093"
-    networks:
-      - monitor-net
-##____________________ Nodes [Monitoring/]
-  nodeexporter:
-    image: prom/node-exporter:v0.18.1
-    container_name: nodeexporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: unless-stopped
-    ports:
-      - "9100:9100"
-    networks:
-      - monitor-net
-##____________________ Cadvisor [Monitoring/Docker]
-  cadvisor:
-    image: gcr.io/google-containers/cadvisor:v0.36.0
-    container_name: cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker:/var/lib/docker:ro
-      - /cgroup:/cgroup:ro 
-    restart: unless-stopped
-    ports:
-      - "9180:8080"
-    networks:
-      - monitor-net
-##____________________ Pushgateway [Monitoring/Pushgateway]
-  pushgateway:
-    image: prom/pushgateway:v1.2.0
-    container_name: pushgateway
-    restart: unless-stopped
-    ports:
-      - 9191:9091
-    networks:
-      - monitor-net
-##____________________ Grafana [Monitoring/Dashboard]
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:7.0.3
-    restart: always
-    environment:
-      - TZ=${TZ}
-      - GF_SECURITY_ADMIN_USER=${USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${PW_EXT}
-      - GF_SMTP_ENABLED=true
-      - GF_SMTP_HOST=smtp_relay:25
-      - GF_SMTP_FROM_ADDRESS=${EMAIL}
-#      - GF_SERVER_DOMAIN=grafana.$DOMAIN
-#      - GF_SERVER_ROOT_URL=https://grafana.$DOMAIN
-#      - VIRTUAL_HOST=grafana.$DOMAIN
-#      - VIRTUAL_PORT=3000
-#      - VIRTUAL_PROTO=http
-#      - LETSENCRYPT_HOST=grafana.$DOMAIN
-#      - LETSENCRYPT_EMAIL=${EMAIL}
-    volumes:
-#      - grafana_data:/var/lib/grafana
-      - $USERHOME/docker/grafana/provisioning:/etc/grafana/provisioning
-    ports:
-      - "3000:3000"
-    networks:
-      - monitor-net
-    labels:
-      - traefik.enable=true
-      - traefik.http.middlewares.grafana-redirect.redirectscheme.scheme=https
-      - traefik.http.routers.grafana-redirect.entrypoints=web
-      - traefik.http.routers.grafana-redirect.middlewares=grafana-redirect
-      - traefik.http.routers.grafana-redirect.rule=Host(`grafana.$DOMAIN`)
-      - traefik.http.routers.grafana.entrypoints=websecure
-      - traefik.http.routers.grafana.rule=Host(`grafana.$DOMAIN`)
-      - traefik.http.routers.grafana.tls.certresolver=letsencrypt
-      - traefik.http.services.grafana.loadbalancer.server.port=3000
+      - fpm=true
 ##
 ##____________________ SMTP-relay [Management/email]
   smtp:
@@ -573,23 +450,4 @@ services:
 volumes:
   ovpn-data:
   firefox-syncserver:
-  prometheus_data: {}
-  grafana_data: {}
-#
-#
-#
-networks:
-  DNS-network:
-    driver: macvlan
-    driver_opts:
-      parent: eno1
-    ipam:
-      config:
-        - subnet: 192.168.88.0/24
-          gateway: 192.168.88.1
-          ip_range: 192.168.88.0/29
-          aux_addresses:
-            router: 192.168.88.1
-            PiHole-1: 192.168.88.2
-  monitor-net:
-    driver: bridge
+  postgresql_data:
