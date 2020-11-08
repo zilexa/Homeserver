@@ -122,17 +122,17 @@ Here we go.
 `sudo apt -y install nfs-common`
 
 ### Create a local folder, this folder will contain the shared folder of the server, you choose where.
-`sudo mkdir -p /mnt/Obelix/Media`
+`sudo mkdir -p /mnt/Obelix`
 
 ### Now mount the server folder (as listed on the server in /etc/exports) to the local folder I just created.
-`sudo mount -t nfs -o nfsvers=4,minorversion=2,proto=tcp,fsc,nocto 192.168.88.10: /mnt/Obelix/Media`
+`sudo mount -t nfs -o nfsvers=4,minorversion=2,proto=tcp,fsc,nocto 192.168.88.2: /mnt/Obelix`
 Now go to that folder and see if you can access it, see your files. 
 
 ### make this mount permanent
 Add the following line to fstab to mount the server add boot.  
 `sudo nano /etc/fstab`  
 Copy the following line, save and exit:  
-`192.168.88.10:  /mnt/Obelix  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0`  
+`192.168.88.2:  /mnt/Obelix  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0`  
 
 ### test the permanent mount: 
 First unmount, as the folder was already mounted 2 steps ago:  
@@ -143,7 +143,7 @@ Now mount the folder via fstab:
 You should see something like this at the end: 
 ```
 mount.nfs4: timeout set for Sun Sep 13 00:13:55 2020
-mount.nfs4: trying text-based options 'minorversion=2,proto=tcp,fsc,nocto,vers=4,addr=192.168.88.10,clientaddr=192.168.88.20'
+mount.nfs4: trying text-based options 'minorversion=2,proto=tcp,fsc,nocto,vers=4,addr=192.168.88.2,clientaddr=192.168.88.20'
 /mnt/Obelix              : successfully mounted
 ```
 
