@@ -24,6 +24,9 @@ sudo wget -P /etc https://raw.githubusercontent.com/zilexa/Mediaserver/master/sn
 # SnapRAID create path for local content file
 mkdir -p /var/snapraid/
 
+# install nocache - required to move files from pool to archive with rsync
+sudo apt -y install nocache
+
 # Create the required folders for MergerFS pool
 mkdir -p /mnt/archive
 mkdir -p /mnt/pool
