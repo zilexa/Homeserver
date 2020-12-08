@@ -1,4 +1,4 @@
-version: "2.0"
+version: "2.3"
 services:
 ##
 ##_____MANAGEMENT_____
@@ -23,8 +23,8 @@ services:
     container_name: unbound
     image: mvance/unbound:latest
     restart: always
-#    volumes:
-#      - $USERDIR/docker/unbound:/opt/unbound/etc/unbound/
+    volumes:
+      - $USERDIR/docker/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
     ports:
       - 5335:53/tcp
       - 5335:53/udp
@@ -238,7 +238,7 @@ services:
       - FF_SYNCSERVER_PUBLIC_URL=https://firefox.$DOMAIN
       - FF_SYNCSERVER_SECRET=$FFSYNCSECRET
 #      - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
-      - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=false
+      - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=true
       - FF_SYNCSERVER_ALLOW_NEW_USERS=true
       - FF_SYNCSERVER_LOGLEVEL=debug
     volumes:
@@ -279,47 +279,56 @@ services:
       - /dev/dri:/dev/dri
 ##
 ##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
-  vpn-proxy:
-    container_name: vpn-proxy
-    image: jeroenslot/nordvpn-proxy:latest
-    cap_add:
-      - NET_ADMIN
-    restart: always
-    devices:
-      - /dev/net/tun
-    dns:
-      - 103.86.96.100
-      - 103.86.99.100
+  vpn:
+    container_name: VPN
+    image: thrnz/docker-wireguard-pia
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ovpn-data:/app/ovpn/config
+        # Auth token is stored here
+        - $USERDIR/docker/vpn/pia:/pia
+        # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
+        - $USERDIR/docker/vpn/pia-shared:/pia-shared
+    cap_add:
+        - NET_ADMIN
+        # SYS_MODULE might not be needed with a 5.6+ kernel?
+        #- SYS_MODULE
+    # Mounting the tun device may be necessary for userspace implementations
+    #devices:
+    #  - /dev/net/tun:/dev/net/tun
     environment:
-      - USERNAME=$USER_VPN
-      - PASSWORD=$PW_MEDIA
-      - LOCAL_NETWORK=192.168.88.0/24
-      - COUNTRY=NL
-      - PROTOCOL=udp
-    networks:
-      - default
+        - LOCAL_NETWORK=192.168.1.0/24
+        - LOC=de-frankfurt
+        - USER=$VPN_USER_PIA
+        - PASS=$VPN_PW_PIA
+        #- KEEPALIVE=25
+        #- VPNDNS=8.8.8.8,8.8.4.4
+        - PORT_FORWARDING=1
+        - PORT_PERSIST=1
+        #- WG_USERSPACE=1
+    sysctls:
+        # wg-quick fails to set this without --privileged, so set it here instead if needed
+        - net.ipv4.conf.all.src_valid_mark=1
+        # May as well disable ipv6. Should be blocked anyway.
+        - net.ipv6.conf.default.disable_ipv6=1
+        - net.ipv6.conf.all.disable_ipv6=1
+        - net.ipv6.conf.lo.disable_ipv6=1
+    # The container has no recovery logic. Use a healthcheck to catch disconnects.
+    healthcheck:
+        test: ping -c 1 www.google.com || exit 1
+        interval: 30s
+        timeout: 10s
+        retries: 3
     ports:
-      - 8118:8118 #Privoxy
-      - 8989:8989 #Sonarr
-      - 7878:7878 #Radarr
-      - 9117:9117 #Jackett
-      - 6789:6789 #NZBget
       - 9091:9091 #Transmission
-      - 6767:6767 #Subtitles
-      - 51413:51413 #p2p
-      - 51413:51413/udp #p2p DHT
+      #- 6789:6789 #NZBget
 ##
 ##____________________ Transmission [MEDIA/download-client]
   transmission:
     image: linuxserver/transmission
     container_name: transmission
-    network_mode: service:vpn-proxy
+    network_mode: service:vpn
     restart: always
     depends_on:
-      - vpn-proxy
+      - vpn
     restart: unless-stopped
     environment:
       - PUID=$PUID
@@ -337,9 +346,9 @@ services:
   nzbget:
     container_name: nzbget
     image: linuxserver/nzbget:latest
-    network_mode: service:vpn-proxy
-    depends_on:
-      - vpn-proxy
+#    network_mode: service:vpn
+#    depends_on:
+#      - vpn
     restart: unless-stopped
     environment:
       - PUID=$PUID
@@ -348,14 +357,15 @@ services:
     volumes:
       - $USERDIR/docker/nzbget/config:/config
       - /mnt/pool/Media:/media
+    ports:
+      - 6789:6789
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
-    image: linuxserver/sonarr:latest
-    network_mode: service:vpn-proxy
+    image: linuxserver/sonarr:preview
     depends_on:
-      - vpn-proxy
+      - transmission
     restart: always
     environment:
       - PUID=$PUID
@@ -365,14 +375,15 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - $USERDIR/docker/sonarr/config:/config
       - /mnt/pool/Media:/media
+    ports:
+      - 8989:8989
 ##
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
     container_name: jackett
     image: linuxserver/jackett:latest
-    network_mode: service:vpn-proxy
     depends_on:
-      - vpn-proxy
+      - transmission
     restart: always
     environment:
       - PUID=$PUID
@@ -381,15 +392,16 @@ services:
     volumes:
       - $USERDIR/docker/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - /mnt/pool/Media:/media 
+      - /mnt/pool/Media:/media
+    ports:
+      - 9117:9117
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
     container_name: radarr
     image: linuxserver/radarr:latest
-    network_mode: service:vpn-proxy
     depends_on:
-      - vpn-proxy
+      - transmission
     restart: always
     environment:
       - PUID=$PUID
@@ -399,14 +411,16 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - $USERDIR/docker/radarr/config:/config
       - /mnt/pool/Media:/media
+    ports:
+      - 7878:7878
 ##
 ##____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
   bazarr:
     container_name: bazarr
     image: linuxserver/bazarr
-    network_mode: service:vpn-proxy
     depends_on:
-      - vpn-proxy
+       - sonarr
+       - radarr
     restart: always
     environment:
       - PUID=$PUID
@@ -416,6 +430,8 @@ services:
     volumes:
       - $USERDIR/docker/bazarr/config:/config
       - /mnt/pool/Media:/media
+    ports:
+      - 6767:6767
 ##
 ##______MANAGEMENT_____
 ##_____________________ Heimdall [Management/HOMEPAGE] 
@@ -448,6 +464,4 @@ services:
 #
 #
 volumes:
-  ovpn-data:
-  firefox-syncserver:
   postgresql_data:
