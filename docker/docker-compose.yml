@@ -295,7 +295,7 @@ services:
     #devices:
     #  - /dev/net/tun:/dev/net/tun
     environment:
-        - LOCAL_NETWORK=192.168.1.0/24
+        - LOCAL_NETWORK=$LAN_ADDRESS_RANGES
         - LOC=de-frankfurt
         - USER=$VPN_USER_PIA
         - PASS=$VPN_PW_PIA
