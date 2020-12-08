@@ -18,7 +18,7 @@ services:
       - $USERDIR/docker/portainer/shared:/shared
 ##
 ##______NETWORK_______
-##____________________ Unbound [NETWORK/noads-dnsserver]
+##____________________ Unbound [NETWORK/dnsserver]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
