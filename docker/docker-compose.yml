@@ -283,35 +283,25 @@ services:
     container_name: VPN
     image: thrnz/docker-wireguard-pia
     volumes:
-        # Auth token is stored here
         - $USERDIR/docker/vpn/pia:/pia
-        # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
         - $USERDIR/docker/vpn/pia-shared:/pia-shared
     cap_add:
         - NET_ADMIN
-        # SYS_MODULE might not be needed with a 5.6+ kernel?
-        #- SYS_MODULE
-    # Mounting the tun device may be necessary for userspace implementations
-    #devices:
-    #  - /dev/net/tun:/dev/net/tun
     environment:
         - LOCAL_NETWORK=$LAN_ADDRESS_RANGES
         - LOC=de-frankfurt
         - USER=$VPN_USER_PIA
         - PASS=$VPN_PW_PIA
-        #- KEEPALIVE=25
         #- VPNDNS=8.8.8.8,8.8.4.4
         - PORT_FORWARDING=1
         - PORT_PERSIST=1
-        #- WG_USERSPACE=1
+    privileged: true
     sysctls:
-        # wg-quick fails to set this without --privileged, so set it here instead if needed
+        # wg-quick fails to set this without "privileged: true"
         - net.ipv4.conf.all.src_valid_mark=1
-        # May as well disable ipv6. Should be blocked anyway.
         - net.ipv6.conf.default.disable_ipv6=1
         - net.ipv6.conf.all.disable_ipv6=1
         - net.ipv6.conf.lo.disable_ipv6=1
-    # The container has no recovery logic. Use a healthcheck to catch disconnects.
     healthcheck:
         test: ping -c 1 www.google.com || exit 1
         interval: 30s
