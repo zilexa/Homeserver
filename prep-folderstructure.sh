@@ -56,10 +56,11 @@ mkdir -p /mnt/pool/Users/Local/Asterix/Downloads
 
 # (optional) if you plan to use this server as workstation/desktop, you will use the Home/Username/ personal folders. 
 # Use the MergerFS Pool to store the Home folders of this local PC, by creating symbolic links from Pool to $HOME. First delete the folders.
-rm -rf $HOME/Downloads
-rm -rf $HOME/Pictures
-rm -rf $HOME/Music
-rm -rf $HOME/Videos
+mv $HOME/Downloads/* /mnt/pool/Local/Users/Asterix/Downloads/
+mv $HOME/Pictures/* /mnt/pool/Collections/Photos/
+mv $HOME/Music/* /mnt/pool/Collections/Music/
+mv $HOME/Videos/* /mnt/pool/Media/
+mv $HOME/Desktop/* /mnt/pool/Local/Users/Asterix/Desktop/
 
 # Note I did not delete Documents, because we can use that folder as a 'container' for the 2 (or multiple) users sharing this workstation/desktop. 
 # If you prefer you can delete Documents and replace it with a symbolic link to your user folder. 
@@ -71,12 +72,13 @@ ln -s /mnt/pool/Media $HOME/
 ln -s /mnt/pool/Users/Local/$NAME1 $HOME/Documents/
 ln -s /mnt/pool/Users/Local/$NAME2 $HOME/Documents/
 ln -s /mnt/pool/Users/Local/Asterix/Downloads $HOME/
-# ln -s /mnt/pool/Local/Users/Asterix/Desktop $HOME/
-# For Desktop, you need to log out first, start a terminal session, delete Desktop with "rm -rf $HOME/Desktop" and then create the link.
+# Note, deleting or moving Desktop is not possible, the folder will be re-created immediately. 
+# Temporarily change the location via a user config file, create the symlink, change it back. 
+sudo sed -i -e 's+$HOME/Desktop+$HOME/Documents/Desktop+g' $HOME/.config/user-dirs.dirs
+ln -s /mnt/pool/Users/Local/Asterix/Desktop $HOME/
+sudo sed -i -e 's+$HOME/Documents/Desktop+$HOME/Desktop+g' $HOME/.config/user-dirs.dirs
 
 # Now on a client PC, like a laptop that is shared by NAME1 and NAME2, add symlinks after setting up NFS shares
-mv $HOME/Pictures $HOME/Photos
-mv $HOME/Videos $HOME/Media
-ln -s /mnt/Obelix/Collections/Photos/ $HOME/Photos/Obelix
-ln -s /mnt/Obelix/Collections/Music/ $HOME/Music/Obelix
-ln -s /mnt/Obelix/Media/ $HOME/Media/Obelix
+#ln -s /mnt/Obelix/Collections/Photos/ $HOME/Photos/Obelix
+#ln -s /mnt/Obelix/Collections/Music/ $HOME/Music/Obelix
+#ln -s /mnt/Obelix/Media/ $HOME/Media/Obelix
