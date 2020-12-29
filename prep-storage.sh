@@ -1,12 +1,14 @@
 #!/bin/bash
-# Storage setup
+# Storage setup - RUN THIS BEFORE setting up the server
 # install MergerFS
+# -----------------
 sudo apt -y install mergerfs
 wget https://github.com/trapexit/mergerfs/releases/download/2.32.2/mergerfs_2.32.2.ubuntu-focal_amd64.deb
 sudo apt -y install ./mergerfs*.deb
 rm mergerfs*.deb
 
 # install SnapRAID
+# ----------------
 sudo apt -y install gcc git make
 wget https://github.com/amadvance/snapraid/releases/download/v11.5/snapraid-11.5.tar.gz
 tar xzvf snapraid*.tar.gz
@@ -26,14 +28,46 @@ sudo wget -P /etc https://raw.githubusercontent.com/zilexa/Homeserver/master/sna
 sudo mkdir -p /var/snapraid/
 
 # install nocache - required to move files from pool to archive with rsync
+# ---------------
 sudo apt -y install nocache
 
 # Create the required folders to mount the disks and MergerFS pools
+# ---------------------------
 sudo mkdir -p /mnt/pool
 sudo mkdir -p /mnt/pool-archive
 sudo mkdir -p /mnt/disks/{data_Cache,data_TopLeft,data_TopRight,parity_BottomLeft,parity_BottomRight}
 
 
-# Configure etc/fstab FIRST (open new terminal for the user, pause the current)
-read -p "Use the example etc/fstab to add your disk mounts and MergerFS mounts"
+# BTRFS subvolumes
+# ---------------
+# Create subvolume for docker mounts
+sudo mkdir /mnt/root
+sudo mount -o subvolid=5 /dev/nvme0n1p2 /mnt/root
+sudo btrfs subvolume create /mnt/root/@docker
+sudo umount /mnt/root
+
+# Now mount the docker subvolume, note this will not persist after reboot
+sudo mv $HOME/docker $HOME/docker-old
+sudo mkdir $HOME/docker
+sudo mount -o subvol=@docker /dev/nvme0n1p2 $HOME/docker
+
+# IF docker was already running, move the files.
+sudo nocache rsync -axHAXWES --info=progress2 $HOME/docker-old/ $HOME/docker
+
+# Add a commented line in /etc/fstab, user will need to add the UUID. This makes the mount persistent after reboot.
+echo "# Mount the BTRFS root subvolume @docker" | sudo tee -a /etc/fstab
+echo "UUID=!!COPY-PASTE-FROM-ABOVE /home/asterix/docker           btrfs   defaults,noatime,subvol=@docker 0       2" | sudo tee -a /etc/fstab
+
+
+# Now open fstab for the user to copy paste the UUIDs and mount points for disks and MergerFS
+read -p "Use the example etc/fstab to add your disk mounts and MergerFS mounts and your UUIDs"
 x-terminal-emulator -e sudo nano /etc/fstab
+sudo nano /etc/fstab
+
+
+
+
+
+
+
+
