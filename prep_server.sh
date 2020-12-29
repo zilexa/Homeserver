@@ -126,4 +126,4 @@ sudo sh -c "echo 'vm.max_map_count=262144' >> /etc/sysctl.conf"
 curl -sSL https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh
 
 # PiVPN 
- curl -L https://install.pivpn.io | bash  
+curl -L https://install.pivpn.io | bash  
