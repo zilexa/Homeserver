@@ -1,0 +1,39 @@
+# /etc/fstab: static file system information.
+#
+# EXAMPLE FILE,the first two mounts (do not copy/paste) are set by your system, only add "noatime" to it.
+# Use the example starting at the $ sign to add your disks after they are BTRFS formatted.
+# You can copy paste the rest, just add your disks UUIDs (removed in this example). Get it via the command 'sudo blkid'.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/nvme0n1p2 during installation
+UUID= /               ext4    discard,noatime,errors=remount-ro 0 1
+# /boot/efi was on /dev/nvme0n1p1 during installation
+UUID=  /boot/efi       vfat    umask=0077      0       1
+#
+#
+# Disks for DATA ~ for MerferFS
+UUID= /mnt/disks/data_Cache btrfs defaults,noatime 0 0
+UUID= /mnt/disks/data_TopLeft btrfs defaults,noatime 0 0
+UUID= /mnt/disks/data_TopRight btrfs defaults,noatime 0 0
+#
+# Drives for PARITY ~ for SnapRAID
+UUID= /mnt/disks/parity_BottomLeft btrfs defaults,noatime 0 0
+UUID= /mnt/disks/parity_BottomRight btrfs defaults,noatime 0 0
+#
+#
+# MergerFS ~ DATA POOL (with SSD as cache)
+/mnt/disks/data_Cache:/mnt/disks/data_TopLeft:/mnt/disks/data_TopRight /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=lfs,moveonenospc=true,minfreespace=350G,fsname=mergerfsPool 0 0
+# MergerFS ~ ARCHIVE POOL (without SSD as cache)
+/mnt/disks/data_TopLeft:/mnt/disks/data_TopRight /mnt/pool-archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool 0 0
+#
+#
+# NFS ~ home network shares  
+# NFSv4.2 requires a root folder with each shared folder in it. We create /srv/nfs and bind mount the shared folders.
+/mnt/pool/Users/Local /srv/nfs/Users none rbind 0 0
+/mnt/pool/Collections /srv/nfs/Collections none rbind 0 0
+/mnt/pool/Media /srv/nfs/Media none rbind 0 0
+/mnt/pool/Backups /srv/nfs/Backups none rbind 0 0
