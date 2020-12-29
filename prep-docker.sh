@@ -31,12 +31,15 @@ sudo wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/ma
 # Get docker compose file
 sudo wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/docker-compose.yml
 
-# Requirements to run a DNS server on Ubuntu
+# AdGuardHome ~ Requirements to run a DNS server on Ubuntu
 sudo systemctl disable systemd-resolved.service
 sudo systemctl stop systemd-resolved.service
 echo "dns=default" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
+echo "Move dns=default to the [MAIN] section by manually deleting it and typing it. Hit CTRL+O to save, CTRL+X to exit and continue."
+read -p "ready to do this? Hit a key..."
+sudo nano /etc/NetworkManager/NetworkManager.conf
 sudo rm /etc/resolv.conf
-sudo service network-manager restart
+sudo systemctl restart NetworkManager.service
 
 # Create Traefik files and set permissions
 sudo mkdir -p $HOME/docker/traefik
@@ -70,4 +73,3 @@ sudo sh -c "echo 'vm.max_map_count=262144' >> /etc/sysctl.conf"
 # mv dockprom-master/prometheus $HOME/docker
 # rm -r dockprom-master
 # rm -r master.zip
-
