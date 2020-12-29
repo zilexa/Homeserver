@@ -9,6 +9,27 @@ sudo systemctl enable --now ssh
 # firewall of Ubuntu is disabled by default, I keep it like that but do add the rule in case fw is activated in the future.
 sudo ufw allow ssh 
 
+# Install Powertop
+sudo apt -y install powertop
+# Create a service file to run powertop --auto-tune at boot
+cat << EOF | sudo tee /etc/systemd/system/powertop.service
+[Unit]
+Description=PowerTOP auto tune
+
+[Service]
+Type=idle
+Environment="TERM=dumb"
+ExecStart=/usr/sbin/powertop --auto-tune
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+systemctl enable powertop.service
+
+# Tune system now
+sudo powertop --auto-tune
+
 # Install Docker, Docker-Compose and bash completion for Compose
 wget -qO - https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
