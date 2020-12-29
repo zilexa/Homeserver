@@ -31,18 +31,11 @@ sudo wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/ma
 # Get docker compose file
 sudo wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/docker-compose.yml
 
-# Create PiHole log file
-sudo mkdir -p $HOME/docker/pihole/var-log
-sudo touch $HOME/docker/pihole/var-log/pihole.log
-
-# Requirements to run PiHole docker on Ubuntu
+# Requirements to run a DNS server on Ubuntu
 sudo systemctl disable systemd-resolved.service
 sudo systemctl stop systemd-resolved.service
-echo "add dns=default under [main] then hit CTRL+O (to save) and CTRL+X (to exit file editor)"
-read -p "remember the above and hit a key when you are ready to do it..."
-sudo nano /etc/NetworkManager/NetworkManager.conf
-# if you still have issues, remove /etc/resolv.conf (auto-generated), the backup file is still available.
-sudo mv /etc/resolv.conf /etc/resolv.conf.bak
+echo "dns=default" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
+sudo rm /etc/resolv.conf
 sudo service network-manager restart
 
 # Create Traefik files and set permissions
