@@ -25,7 +25,7 @@ sudo sensors-detect --auto
 # Install Powertop
 sudo apt -y install powertop
 # Create a service file to run powertop --auto-tune at boot
-cat << EOF | sudo tee /etc/systemd/system/powertop.service
+sudo tee -a /etc/systemd/system/powertop.service << EOF
 [Unit]
 Description=PowerTOP auto tune
 
