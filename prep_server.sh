@@ -130,6 +130,10 @@ sudo head -c 20 /dev/urandom | sha1sum | awk '{print $1}' >> $HOME/docker/firefo
 sudo mkdir -p $HOME/docker/filerun/esearch
 sudo chown -R $USER:$USER $HOME/docker/filerun/esearch
 sudo chmod 777 $HOME/docker/filerun/esearch
+# IMPORTANT! Should be the same user:group as the owner of the personal data you access via FileRun!
+sudo mkdir -p $HOME/docker/html
+sudo chown -R $USER:$USER $HOME/docker/html
+sudo chmod 755 $HOME/docker/filerun/esearch
 # Change OS virtual mem allocation as it is too low by default for ElasticSearch
 sudo sysctl -w vm.max_map_count=262144
 # Make this change permanent
