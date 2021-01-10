@@ -1,11 +1,12 @@
 version: "2.3"
 services:
+## ~/docker$ docker-compose -f docker-compose.yml up -d
 ##
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
   portainer:
     container_name: portainer
-    image: portainer/portainer
+    image: portainer/portainer-ce
     restart: always
     environment:
       - TZ=$TZ
@@ -15,10 +16,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $USERDIR/docker/portainer/data:/data
-      - $USERDIR/docker/portainer/shared:/shared
 ##
 ##______NETWORK_______
-##____________________ Unbound [NETWORK/dnsserver]
+##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
@@ -34,7 +34,7 @@ services:
     container_name: unifi
     image: goofball222/unifi
     mac_address: d0:ca:ab:cd:ef:03
-    restart: unless-stopped
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -84,7 +84,7 @@ services:
       MYSQL_PASSWORD: $PW_INT
       MYSQL_DATABASE: filerundb
     volumes:
-      - $USERHOME/docker/filerun/db:/var/lib/mysql
+      - $USERDIR/docker/filerun/db:/var/lib/mysql
 ##
 ##____________________ FileRun [CLOUD/Files]
   filerun:
@@ -100,10 +100,10 @@ services:
       FR_DB_NAME: filerundb
       FR_DB_USER: $USER
       FR_DB_PASS: $PW_INT
-      APACHE_RUN_USER: www-data
-      APACHE_RUN_USER_ID: 33
-      APACHE_RUN_GROUP: www-data
-      APACHE_RUN_GROUP_ID: 33
+      APACHE_RUN_USER: $USER
+      APACHE_RUN_USER_ID: $PUID
+      APACHE_RUN_GROUP: $USER
+      APACHE_RUN_GROUP_ID: $PGID
     depends_on:
       - mariadb
     links:
@@ -129,14 +129,17 @@ services:
       - traefik.http.routers.filerun.rule=Host(`files.$DOMAIN`)
       - traefik.http.routers.filerun.tls.certresolver=letsencrypt
       - traefik.http.services.filerun.loadbalancer.server.port=80
-      - traefik.http.middlewares.oo-header.headers.referrerPolicy=no-referrer
-      - traefik.http.middlewares.oo-header.headers.stsSeconds=31536000
-      - traefik.http.middlewares.oo-header.headers.forceSTSHeader=true
-      - traefik.http.middlewares.oo-header.headers.stsPreload=true
-      - traefik.http.middlewares.oo-header.headers.stsIncludeSubdomains=true
-      - traefik.http.middlewares.oo-header.headers.browserXssFilter=true
-      - traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto=https
-##____________________ FileRun Full-Text Search [CLOUD/Files search]
+      #- traefik.http.middlewares.fr-rep.redirectregex.regex=https://(.*)/.well-known/(card|cal)dav
+      #- traefik.http.middlewares.fr-rep.redirectregex.replacement=https://$$1/remote.php/dav/
+      #- traefik.http.middlewares.fr-rep.redirectregex.permanent=true
+      #- traefik.http.middlewares.fr-header.headers.referrerPolicy=no-referrer
+      #- traefik.http.middlewares.fr-header.headers.stsSeconds=31536000
+      #- traefik.http.middlewares.fr-header.headers.forceSTSHeader=true
+      #- traefik.http.middlewares.fr-header.headers.stsPreload=true
+      #- traefik.http.middlewares.fr-header.headers.stsIncludeSubdomains=true
+      #- traefik.http.middlewares.fr-header.headers.browserXssFilter=true
+      #- traefik.http.middlewares.fr-header.headers.customRequestHeaders.X-Forwarded-Proto=https
+      #- traefik.http.routers.fr-secure.middlewares=fr-rep,fr-header
   filerun-tika:
     image: logicalspark/docker-tikaserver
     container_name: filerun-tika
@@ -163,7 +166,7 @@ services:
     image: onlyoffice/documentserver
     container_name: onlyoffice
     depends_on:
-      - onlyoffice-postgresql
+      #- onlyoffice-postgresql
       - onlyoffice-rabbitmq
     stdin_open: true
     restart: always
@@ -171,38 +174,46 @@ services:
     ports:
       - "8889:80"
     volumes:
-      - /var/www/onlyoffice/Data
-      - /var/log/onlyoffice
-      - /var/lib/onlyoffice/documentserver/App_Data/cache/files
-      - /var/www/onlyoffice/documentserver-example/public/files
-      - /usr/share/fonts
+      - $USERDIR/docker/onlyoffice/data:/var/www/onlyoffice/Data
+      - $USERDIR/docker/onlyoffice/log:/var/log/onlyoffice
+      - $USERDIR/docker/onlyoffice/cache:/var/lib/onlyoffice/documentserver/App_Data/cache/files
+      - $USERDIR/docker/onlyoffice/example:/var/www/onlyoffice/documentserver-example/public/files
+      - $USERDIR/docker/onlyoffice/fonts:/usr/share/fonts
     dns: 1.1.1.1
     environment:
       - JWT_ENABLED="true"
       - JWT_SECRET=$ONLYOFFICEJWT
-      - DB_TYPE=postgres
-      - DB_HOST=onlyoffice-postgresql
-      - DB_PORT=5432
-      - DB_NAME=onlyoffice
-      - DB_USER=onlyoffice
+      #- DB_TYPE=postgres
+      #- DB_HOST=onlyoffice-postgresql
+      #- DB_PORT=5432
+      #- DB_NAME=onlyoffice
+      #- DB_USER=onlyoffice
       - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
     labels:
       - traefik.enable=true
-      - traefik.http.middlewares.onlyoffice-redirect.redirectscheme.scheme=https
-      - traefik.http.routers.onlyoffice-redirect.entrypoints=web
-      - traefik.http.routers.onlyoffice-redirect.middlewares=onlyoffice-redirect
-      - traefik.http.routers.onlyoffice-redirect.rule=Host(`office.$DOMAIN`)
-      - traefik.http.routers.onlyoffice.entrypoints=websecure
-      - traefik.http.routers.onlyoffice.rule=Host(`office.$DOMAIN`)
-      - traefik.http.routers.onlyoffice.tls.certresolver=letsencrypt
-      - traefik.http.services.onlyoffice.loadbalancer.server.port=80
-      - traefik.http.middlewares.oo-header.headers.referrerPolicy=no-referrer
-      - traefik.http.middlewares.oo-header.headers.stsSeconds=31536000
-      - traefik.http.middlewares.oo-header.headers.forceSTSHeader=true
-      - traefik.http.middlewares.oo-header.headers.stsPreload=true
-      - traefik.http.middlewares.oo-header.headers.stsIncludeSubdomains=true
-      - traefik.http.middlewares.oo-header.headers.browserXssFilter=true
-      - traefik.http.middlewares.oo-header.headers.customRequestHeaders.X-Forwarded-Proto=https
+      - traefik.http.routers.office-redirect.entrypoints=web
+      - traefik.http.routers.office-redirect.rule=Host(`office.$DOMAIN`)
+      - traefik.http.middlewares.office-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.office.middlewares=office-redirect
+      - traefik.http.routers.office-secure.entrypoints=websecure
+      - traefik.http.routers.office-secure.rule=Host(`office.$DOMAIN`)
+      - traefik.http.routers.office.tls.certresolver=letsencrypt
+      - traefik.http.services.office.loadbalancer.server.port=80
+      ## Extra headers for onlyoffice
+      - traefik.http.routers.office-secure.tls=true
+      - traefik.http.routers.office-secure.middlewares=secure-headers
+      - traefik.http.middlewares.secure-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.cors-headers.headers.accessControlAllowOrigin=*
+      - traefik.http.routers.office.middlewares=secure-headers,cors-headers
+      ## tested extra headers, works fine without
+      #- traefik.http.middlewares.office-redirectregex.redirectregex.regex=^http://(.*)
+      #- traefik.http.middlewares.office-redirectregex.redirectregex.replacement=https://$$1
+      #- traefik.http.middlewares.secure-headers.headers.referrerPolicy=no-referrer
+      #- traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000
+      #- traefik.http.middlewares.secure-headers.headers.forceSTSHeader=true
+      #- traefik.http.middlewares.secure-headers.headers.stsPreload=true
+      #- traefik.http.middlewares.secure-headers.headers.stsIncludeSubdomains=true
+      #- traefik.http.middlewares.secure-headers.headers.browserXssFilter=true
 ##____________________ Onlyoffice rabbitmq [CLOUD/Office]
   onlyoffice-rabbitmq:
     container_name: onlyoffice-rabbitmq
@@ -211,18 +222,18 @@ services:
     expose:
       - '5672'
 ##____________________ Onlyoffice database [CLOUD/Office]
-  onlyoffice-postgresql:
-    container_name: onlyoffice-postgresql
-    image: postgres:9.5
-    environment:
-      - POSTGRES_DB=onlyoffice
-      - POSTGRES_USER=onlyoffice
-      - POSTGRES_HOST_AUTH_METHOD=trust
-    restart: always
-    expose:
-      - '5432'
-    volumes:
-      - postgresql_data:/var/lib/postgresql
+  #onlyoffice-postgresql:
+    #container_name: onlyoffice-postgresql
+    #image: postgres:9.5
+    #environment:
+      #- POSTGRES_DB=onlyoffice
+      #- POSTGRES_USER=onlyoffice
+      #- POSTGRES_HOST_AUTH_METHOD=trust
+    #restart: always
+    #expose:
+      #- '5432'
+    #volumes:
+      #- postgresql_data:/var/lib/postgresql
 ##
 ##
 ##_____________________ Firefox Sync [CLOUD/Browser] 
@@ -237,10 +248,11 @@ services:
       - TZ=$TZ
       - FF_SYNCSERVER_PUBLIC_URL=https://firefox.$DOMAIN
       - FF_SYNCSERVER_SECRET=$FFSYNCSECRET
-#      - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
+      - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
       - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=true
       - FF_SYNCSERVER_ALLOW_NEW_USERS=true
       - FF_SYNCSERVER_LOGLEVEL=debug
+      - FF_SYNCSERVER_ACCESSLOG=true
     volumes:
       - "$USERDIR/docker/firefox-syncserver:/data"
     ports:
@@ -282,26 +294,38 @@ services:
   vpn:
     container_name: VPN
     image: thrnz/docker-wireguard-pia
+    restart: always
     volumes:
+        # Auth token is stored here
         - $USERDIR/docker/vpn/pia:/pia
+        # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
         - $USERDIR/docker/vpn/pia-shared:/pia-shared
     cap_add:
         - NET_ADMIN
+        # SYS_MODULE might not be needed with a 5.6+ kernel?
+        #- SYS_MODULE
+    # Mounting the tun device may be necessary for userspace implementations
+    #devices:
+    #  - /dev/net/tun:/dev/net/tun
     environment:
-        - LOCAL_NETWORK=$LAN_ADDRESS_RANGES
+        - LOCAL_NETWORK=192.168.88.0/24,10.6.0.1/24
         - LOC=de-frankfurt
         - USER=$VPN_USER_PIA
         - PASS=$VPN_PW_PIA
+        #- KEEPALIVE=25
         #- VPNDNS=8.8.8.8,8.8.4.4
         - PORT_FORWARDING=1
         - PORT_PERSIST=1
+        #- WG_USERSPACE=1
     privileged: true
     sysctls:
-        # wg-quick fails to set this without "privileged: true"
+        # wg-quick fails to set this without --privileged, so set it here instead if needed
         - net.ipv4.conf.all.src_valid_mark=1
+        # May as well disable ipv6. Should be blocked anyway.
         - net.ipv6.conf.default.disable_ipv6=1
         - net.ipv6.conf.all.disable_ipv6=1
         - net.ipv6.conf.lo.disable_ipv6=1
+    # The container has no recovery logic. Use a healthcheck to catch disconnects.
     healthcheck:
         test: ping -c 1 www.google.com || exit 1
         interval: 30s
@@ -316,10 +340,9 @@ services:
     image: linuxserver/transmission
     container_name: transmission
     network_mode: service:vpn
-    restart: always
     depends_on:
       - vpn
-    restart: unless-stopped
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -339,7 +362,7 @@ services:
 #    network_mode: service:vpn
 #    depends_on:
 #      - vpn
-    restart: unless-stopped
+    restart: always
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -385,6 +408,18 @@ services:
       - /mnt/pool/Media:/media
     ports:
       - 9117:9117
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - CAPTCHA_SOLVER=hcaptcha-solver
+      #- CAPTCHA_SOLVER=harvester
+      #- HARVESTER_ENDPOINT=https://127.0.0.1:5000/token
+    ports:
+      - 8191:8191
+    restart: unless-stopped 
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
