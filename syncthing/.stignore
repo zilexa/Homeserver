@@ -4,7 +4,6 @@
 .filerun*
 //---Linux-specific---//
 .Trash-*
-
 //---Mac-specific---//
 //Mac Comments, Finder Windows Size, Tags, ...
 (?d).DS_Store
@@ -21,28 +20,21 @@
 .iCloud
 //Mac OS Metadata on Windows or Linux filesystems
 (?d)._*
-
 //---Windows-Specific---//
 (?d)desktop.ini
 (?d)Thumbs.db
 (?d)$RECYCLE.BIN
-
-
 //---QNAP-specific---//
 (?d).@__thumb
 (?d).AppleDB
-
 //---Synology-specific---//
 (?d)@eaDir
-
 //---Application-specific---//
 //-vi(m)
 (?d)*.*.sw[a-p] # Thankys to Tom Hale!
 //-Dropbox
 .dropbox
 .dropbox.attr
-
-
 //---OTHER---//
 .parallels-vm-directory
 Default.rdp
