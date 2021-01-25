@@ -2,7 +2,8 @@
 
 Go directly to the Installation Guide: https://github.com/zilexa/Homeserver/setup/README.md
 
-What is it?
+## What is it?
+
 An always-on PC like device that you can place near your router or even use as your Desktop/workstation. Giving you access to your data, providing you with a higher level of privacy and security and allowing you to be flexible with all online services you might use. 
 
 Why?
@@ -12,19 +13,40 @@ Why?
 4. No vendor lock-out: moving from iOS to Android? Figuring out how to get your data migrated can be a hassle. 
 5. Because it is really cool, energy efficient and you can support your family, extended family with your server, so that they don't run in to the limitations that paid cloud solutions come with. 
 
-What does it do?
-The following services will be installed + critical configuration will be done automatically with the provided scripts. A lot of care has gone in selecting the right tool, finding the best configuration, to allow everything to run fast, smooth and still be scalable. Sometimes things have been optimised to squeeze out maximum speed. 
+## Why self-build? Just buy a Synology or QNAP..?
+4 reasons: 
+1. A self-build (hardware) server can be 5 times more power efficient. Imagine this system will be powered on 24/7/365. A Synology or QNAP can easily consume 8-15W in idle, while a self-build server can achieve idle power consumption of less than 5W (some even less than 3W). That is probably less than most of your electronic devices *on standby*. 
+2. It will allow you to install any service you might need and is very future-proof as you can add services easily in the future, without vendor lock-in. 
+3. A self-build homeserver is simply much faster, as it will contain a much faster CPU and more/faster RAM and modern SSD to run the applications. 
+4. Scalability & upgrades: you can easily add a cheap SSD as cache or add HDDs if you need more space. 
 
-Services
+## What are the benefits of adopting your setup and config (fully or partially)?
+
+ - A LOT OF CARE has gone in selecting the right tool, finding the best configuration,  
+ - To allow everything to run fast, smooth, efficient and still be scalable. 
+ - Sometimes things have been optimised to squeeze out maximum speed, even though it is not necessary (might be if you add lots of users). 
+ - I have been a perfectionist and spent lots of time researching many tools, discussing with developers on fora, Discord, Reddit to figure out what would allow me to run my rock-stable server with as little as maintenance as possible.  
+ - The tools listed here are only a small subset of the tools I have investigated as I sometimes spent a whole day researching alternatives.
+
+## How does the installation work?
+ The scripts will take care of preparing an Ubuntu (or Debian) based machine, installing and configuring necessities for the system and prepare the per-service requirements. Folder structure is important, the first script requires you to think about it as it will install the harddrive pooling software and mount drives optimised for data (fast compression filesystem), SSD (medium  compression filesystem) or backup (high compression file system), which means you need to determine how which drives/many drives you will use for data. Changing things later on is possible but might require careful moving of data (and reboot of your system, which causes the services to go offline for everyone).
+
+## Can I use the server as PC or workstation? But I have never used Ubuntu..
+You can, I do. Switched cold-turkey from Windows. You can find a [post-installation automated script for Ubuntu](https://github.com/zilexa/UbuntuBudgie-config) here. That is how I configure PCs for parents and friends, after running the script they are good to go, it even adds Macbook-like touchpad gestures. It also installs carefully selected common tools, such as Photoflare, which is in my opinion the Linux alternative to Paint and Paint.net (GIMP is not that user-friendly).  
+
+## What Services will it provide?
+
 There are 4 categories of services, you might not need all services or even all four categories. You can easily adjust to what you need. 
 1. Server Management & Monitoring 
 2. Privacy and Network Security 
 3. File Cloud Experience 
 4. TV media ;)
 
-Note: 
-each service can have one or more dependencies on tools that are only discussed in the installation guide. For example, Netdata requires lm-sensors, which is a tool everyone should install anyway to read-out system sensors. 
-Filerun uses ElasticSearch allowing you to not only search your files, but also search within your files, extremely fast. It also uses AESCrypt to allow file encryption and OnlyOffice can be installed to allow server-side document editing (Google Docs alternative). 
+### Note: 
+Each service can have one or more dependencies on tools that are only discussed in the installation guide. 
+For example:
+- Netdata requires lm-sensors, which is a tool everyone should install anyway to read-out system sensors. 
+- Filerun uses ElasticSearch allowing you to not only search your files, but also search within your files, extremely fast. It also uses AESCrypt to allow file encryption and OnlyOffice can be installed to allow server-side document editing (Google Docs alternative). 
 
 **Category 1: Server Management & Monitoring**
 |Service| Description  | Rationale 
@@ -62,5 +84,6 @@ Filerun uses ElasticSearch allowing you to not only search your files, but also 
 |Transmission| Sonarr, Radarr, Jackett (automatically) add stuff to Transmission which is a p2p client. It should run behind the chosen VPN provider.| Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.  
 |VPN client| While PiVPN installs a VPN-server on your server, this is a VPN client to connect to PIA, a VPN service provider. It allows you to run any application via its network. Transmission will only have internet access via this service.| A carefully chosen provider and docker image: it allows, automatic server selection, Wireguard connection (greatly improves p2p speed) and allows port communication with Transmission.  
 
+this should be deleted:
 Correct folder structure and Docker setup for torrents:
 https://old.reddit.com/r/usenet/wiki/docker#wiki_consistent_and_well_planned_paths
