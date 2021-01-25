@@ -1,6 +1,6 @@
 #!/bin/bash
 ## Before you run this script, run prep_storage.sh and prep_folderstructure.sh !!
-## After you run this script, you can run docker-compose.yml.
+## After you run this script, you can run docker-compose.yml and enjoy your server!
 #
 # See https://github.com/zilexa/Homeserver
 
