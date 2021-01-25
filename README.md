@@ -22,17 +22,20 @@ Why?
 
 ## What are the benefits of adopting your setup and config (fully or partially)?
 
- - A LOT OF CARE has gone in selecting the right tool, finding the best configuration,  
+ - A LOT OF CARE has gone into sane selections of the right tool, finding the best configuration,  
  - To allow everything to run fast, smooth, efficient and still be scalable. 
  - Sometimes things have been optimised to squeeze out maximum speed, even though it is not necessary (might be if you add lots of users). 
  - I have been a perfectionist and spent lots of time researching many tools, discussing with developers on fora, Discord, Reddit to figure out what would allow me to run my rock-stable server with as little as maintenance as possible.  
  - The tools listed here are only a small subset of the tools I have investigated as I sometimes spent a whole day researching alternatives.
+ - Other guides only provide part of the equation. With my scripts, you can litteraly start from scratch. 
 
 ## How does the installation work?
  The scripts will take care of preparing an Ubuntu (or Debian) based machine, installing and configuring necessities for the system and prepare the per-service requirements. Folder structure is important, the first script requires you to think about it as it will install the harddrive pooling software and mount drives optimised for data (fast compression filesystem), SSD (medium  compression filesystem) or backup (high compression file system), which means you need to determine how which drives/many drives you will use for data. Changing things later on is possible but might require careful moving of data (and reboot of your system, which causes the services to go offline for everyone).
+When done, what is left is to configure services that I cannot easily configure via a script or that simply need to be personalised. 
 
 ## Can I use the server as PC or workstation? But I have never used Ubuntu..
 You can, I do. Switched cold-turkey from Windows. You can find a [post-installation automated script for Ubuntu](https://github.com/zilexa/UbuntuBudgie-config) here. That is how I configure PCs for parents and friends, after running the script they are good to go, it even adds Macbook-like touchpad gestures. It also installs carefully selected common tools, such as Photoflare, which is in my opinion the Linux alternative to Paint and Paint.net (GIMP is not that user-friendly).  
+All applications that run on Windows or Mac run on Ubuntu with only a couple of exceptions, for which great open-source alternatives exist. Note you can even install MS Office 2019 or 365 since Wine 6.0 has been released. My server is fast enough to run 22 services in the background, while I am culling my photo collection. It's only a Core i3-9100. 
 
 ## What Services will it provide?
 
