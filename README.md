@@ -2,6 +2,13 @@
 
 Go directly to the Installation Guide: https://github.com/zilexa/Homeserver/setup/README.md
 
+### [What is it](https://github.com/zilexa/Homeserver#what-is-it)?
+### [Why self-build](https://github.com/zilexa/Homeserver#why-self-build-just-buy-a-synology-or-qnap)
+### [What are the benefits of your setup files?](https://github.com/zilexa/Homeserver#what-are-the-benefits-of-adopting-your-setup-and-config-fully-or-partially)
+### [How does the installation work?](https://github.com/zilexa/Homeserver#how-does-the-installation-work)
+### [Can I use the server as PC or workstation?](https://github.com/zilexa/Homeserver#can-i-use-the-server-as-pc-or-workstation-but-i-have-never-used-ubuntu)
+### [What Services are included?](https://github.com/zilexa/Homeserver#what-services-will-it-provide)
+
 ## What is it?
 
 An always-on PC like device that you can place near your router or even use as your Desktop/workstation. Giving you access to your data, providing you with a higher level of privacy and security and allowing you to be flexible with all online services you might use. 
