@@ -3,7 +3,10 @@
 ## After you run this script, you can run docker-compose.yml and enjoy your server!
 #
 # See https://github.com/zilexa/Homeserver
-
+# tba: snapraid-btrfs
+# tba: config of nightly scripts
+# tba: backup script
+# tba: syncthing-backup script (not finished yet)
 
 # ____________________
 # Install server tools
