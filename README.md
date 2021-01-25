@@ -37,7 +37,9 @@ Why?
  - Other guides only provide part of the equation. With my scripts, you can litteraly start from scratch. 
 
 ## How does the installation work?
- The scripts will take care of preparing an Ubuntu (or Debian) based machine, installing and configuring necessities for the system and prepare the per-service requirements. Folder structure is important, the first script requires you to think about it as it will install the harddrive pooling software and mount drives optimised for data (fast compression filesystem), SSD (medium  compression filesystem) or backup (high compression file system), which means you need to determine how which drives/many drives you will use for data. Changing things later on is possible but might require careful moving of data (and reboot of your system, which causes the services to go offline for everyone).
+ The scripts will take care of preparing an Ubuntu (or Debian) based machine, installing and configuring necessities for the system and prepare the per-service requirements. 
+Folder structure is important, the first script requires you to think about it as it will install the harddrive pooling software and mount drives optimised for data (fast compression filesystem), SSD (medium  compression filesystem) or backup (high compression file system), which means you need to determine how which drives/many drives you will use for data. 
+Changing things later on is possible but might require careful moving of data (and reboot of your system, which causes the services to go offline for everyone).
 When done, what is left is to configure services that I cannot easily configure via a script or that simply need to be personalised. 
 
 ## Can I use the server as PC or workstation? But I have never used Ubuntu..
