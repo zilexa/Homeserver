@@ -2,7 +2,7 @@
 
 Go directly to the Installation Guide: https://github.com/zilexa/Homeserver/setup/README.md
 
-### [What is it? And Why?](https://github.com/zilexa/Homeserver#what-is-it)?
+### [What is it? And Why?](https://github.com/zilexa/Homeserver#what-is-it)
 ### [Why self-build?](https://github.com/zilexa/Homeserver#why-self-build-just-buy-a-synology-or-qnap)
 ### [What are the benefits of your setup files?](https://github.com/zilexa/Homeserver#what-are-the-benefits-of-adopting-your-setup-and-config-fully-or-partially)
 ### [How does the installation work?](https://github.com/zilexa/Homeserver#how-does-the-installation-work)
