@@ -40,10 +40,10 @@ All applications that run on Windows or Mac run on Ubuntu with only a couple of 
 ## What Services will it provide?
 
 There are 4 categories of services, you might not need all services or even all four categories. You can easily adjust to what you need. 
-1. Server Management & Monitoring 
-2. Privacy and Network Security 
-3. File Cloud Experience 
-4. TV media ;)
+**1. Server Management & Monitoring**
+**2. Privacy and Network Security**
+**3. File Cloud Experience**
+**4. TV media** ;)
 
 ### Note: 
 Each service can have one or more dependencies on tools that are only discussed in the installation guide. 
