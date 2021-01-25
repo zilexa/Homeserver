@@ -39,7 +39,7 @@ All applications that run on Windows or Mac run on Ubuntu with only a couple of 
 
 ## What Services will it provide?
 
-There are 4 categories of services, you might not need all services or even all four categories. You can easily adjust to what you need. 
+There are 4 categories of services, the first category is essential, but you might not need all of its services. 
 1) **Server Management & Monitoring**
 
 2) **Privacy and Network Security**
