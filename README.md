@@ -1,4 +1,8 @@
+New job, no time to write a guide, I will need a week or 2. 
+The below will be a lot shorter/summarised, there will be an overall step-by-step guide and a more detailed guide per item (post-OS install preparation, docker preparation and additional guides per function like VPN, DNS config etc). 
+
 # A quiet, efficient future-proof and scalable home-server. 
+
 
 Go directly to the Installation Guide: https://github.com/zilexa/Homeserver/setup/README.md
 
