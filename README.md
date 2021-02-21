@@ -23,7 +23,9 @@ Note: I had zero experience when I started and learned everything by googling, s
 1. your router port forwarding of (at least) port 80 and 443 and some more for specific services. 
 2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide. The minimum set of services will be exposed online and only via HTTPS. Other services can be accessed via Wireguard VPN. 
 
-## Tasks to get up and running: 
+&nbsp;
+
+## Steps to get up and running: 
 ### Step 1 Filesystem
 [Preparet the filesystem](https://github.com/zilexa/Homeserver/tree/master/filesystem). Install fs tools, understand their goal, tailor to your needs.
 
@@ -69,6 +71,9 @@ Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenan
 ### Step 9. Configure remote VPN access
 [VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
 
+&nbsp;
+
+&nbsp;
 
 ## Overview of applications and services
 ### _Server Management & Monitoring_
