@@ -35,18 +35,24 @@ sudo apt -y install nocache
 # ---------------------------
 sudo mkdir -p /mnt/pool
 sudo mkdir -p /mnt/pool-archive
-sudo mkdir -p /mnt/disks/{data_Cache,data_TopLeft,data_TopRight,parity_BottomLeft,parity_BottomRight}
+sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}
 
 
-# BTRFS subvolumes
+# BTRFS subvolumes 
 # ---------------
+# Mount the BTRFS root, required to create a flat btrfs subvolumes hierarchy, easy to understand and maintain on long term.
+sudo mkdir /mnt/btrfs-root
+sudo mount -o subvolid=5 /dev/nvme0n1p2 /mnt/btrfs-root
 # Create subvolume for docker mounts
-sudo mkdir /mnt/root
-sudo mount -o subvolid=5 /dev/nvme0n1p2 /mnt/root
-sudo btrfs subvolume create /mnt/root/@docker
+sudo btrfs subvolume create /mnt/btrfs-root/@docker
+# Create subvolume for system snapshots, they will be backupped to the backup1 disk. 
+sudo btrfs subvolume create /mnt/btrfs-root/@system-snapshots
+Unmount the btrfs-root filesystem
 sudo umount /mnt/root
+# Note, you should already have a root subvolume @home and nested subvolumes (root)/tmp and @home/asterix/.cache. See: https://github.com/zilexa/UbuntuBudgie-config 
 
-# Now mount the docker subvolume, note this will not persist after reboot
+# Docker BTRFS prep
+# Temporary mount the docker subvolume, to be able to move the docker files. 
 sudo mv $HOME/docker $HOME/docker-old
 sudo mkdir $HOME/docker
 sudo mount -o subvol=@docker /dev/nvme0n1p2 $HOME/docker
@@ -54,20 +60,12 @@ sudo mount -o subvol=@docker /dev/nvme0n1p2 $HOME/docker
 # IF docker was already running, move the files.
 sudo nocache rsync -axHAXWES --info=progress2 $HOME/docker-old/ $HOME/docker
 
-# Add a commented line in /etc/fstab, user will need to add the UUID. This makes the mount persistent after reboot.
+
+# make the docker subvol mount persistent: add a commented line in /etc/fstab, user will need to add the UUID.
 echo "# Mount the BTRFS root subvolume @docker" | sudo tee -a /etc/fstab
 echo "UUID=!!COPY-PASTE-FROM-ABOVE /home/asterix/docker           btrfs   defaults,noatime,subvol=@docker 0       2" | sudo tee -a /etc/fstab
-
 
 # Now open fstab for the user to copy paste the UUIDs and mount points for disks and MergerFS
 read -p "Use the example etc/fstab to add your disk mounts and MergerFS mounts and your UUIDs"
 x-terminal-emulator -e sudo nano /etc/fstab
 sudo nano /etc/fstab
-
-
-
-
-
-
-
-
