@@ -4,7 +4,7 @@ The system will be running 24/7, so power consumption matters. With this combina
 - A motherboard designed specifically for 24/7/365 stable operation with low power consumption - Fujitsu D3644-B.
 - Error-correcting memory (non-registered/unbuffered ECC RAM) - even normal computers should have this. Prevents data and disk corruption issues.
 - 2.5" harddrives - compared to 3.5" they use up to 5 times less power, even when idle. These USB disks contain normal data controller and are cheaper than the internal versions. Just remove them from the usb case.
-- Samsung PM981a or WesternDigital D SN550 ssd for system/os - they have the lowest idle power consumption (tomshardware.com).
+- Samsung PM981a or WesternDigital SN550 ssd for system/os - they have the lowest idle power consumption (tomshardware.com).
 - PicoPSU-90 & Leicke 120W adapter - extremely efficient at low power consumption. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
 
 Optional:
