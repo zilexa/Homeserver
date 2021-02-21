@@ -10,9 +10,10 @@ _Portainer_
 a Docker webUI to manage and update containers. Basically a ui of the Docker command. 
 _Organizr_
 A a customisable homepage to have quick access to all your services/applications. 
+_Dozzle_
+WebUI to check your logs. 
 
-
-**Category 2: User Privacy & Network Security**
+2) **User Privacy & Network Security**
 _Traefik_
 reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc. Pretty complicated. Spend lots of time figuring it out. I want to replace Traefik for Caddy soon. 
 _PiVPN_
@@ -25,7 +26,7 @@ Can also be used remotely via split tunnel VPN.
 _UniFi Controller_
 Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
 
-**Category 3: Cloud Experience**
+3) **Cloud Experience**
 _FileRun and/or NextCloud_
 FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. It always shows the realtime state of your filesystem. 
 It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no other features: purely a "drive". It does support WebDAV. 
@@ -37,8 +38,10 @@ FileRun and NextCloud are great, they allow you to sync your phone/devices to yo
 Syncthing is build for 1 thing only: secure and fast 2-way syncing. It uses its own protocol. It is extremely fast and robust. On Android, the Syncthing-fork application allows you to easily add your Whatsapp, Signal and other apps backups and photos, camera etc to sync. Always or when charging/when on wifi. 
 _Firefox Sync_
 The web has become a dangerous monopoly with only 3 browser engines: Chrome, Safari and Firefox. Without Firefox, there is little competition and transparency left. By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla. Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. 
+_Paperless_
+This explains it all: [The Paperless Project](https://github.com/the-paperless-project/paperless)
 
-**Category 4: TV media**
+4) **Media Server**
 _Jellyfin_
 A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do. Jellyfin is userfriendly and has easy features that you might miss from the streaming giants such as watched status management etc. 
 The mediaserver can transcode media on the fly to your clients, adjusting for available bandwith. It can use hardware encoding capabilities of your server.
