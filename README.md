@@ -65,7 +65,7 @@ Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenan
 9. [VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
 
 
-## Homeserver/selfhosted applications and services
+## Overview of applications and services
 1) **Server Management & Monitoring**
 _Netdata_
 via Docker: no but possible, probably more difficult. 
