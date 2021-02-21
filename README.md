@@ -113,7 +113,7 @@ _FileRun and/or NextCloud_
 
 FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. It always shows the realtime state of your filesystem. 
 It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no other features: purely a "drive". It does support WebDAV. 
-NextCloud is a similar solution and very popular, open-source and free to use. Though not as fast as FileRun, there are no limits plus it has a plethora of other functionalities such as Calendar, Contacts and much more. 
+NextCloud is similar, very popular and free. Not as fast as FileRun but no user-limits. It also has much more features such as Calendar, Contacts etc. I plan to use it to give others ("External Users" in my folder structure) an account on my cloud and as WebDAV music player for my ripped AudioCDs. 
 
 _OnlyOffice_
 
@@ -121,12 +121,11 @@ Your own selfhosted Google Docs/Office365 alternative! This works well with both
 
 _Syncthing_
 
-FileRun and NextCloud are great, they allow you to sync your phone/devices to your server via the WebDAV protocol --> that is not ideal or fast. 
-Syncthing is build for 1 thing only: secure and fast 2-way syncing. It uses its own protocol. It is extremely fast and robust. On Android, the Syncthing-fork application allows you to easily add your Whatsapp, Signal and other apps backups and photos, camera etc to sync. Always or when charging/when on wifi. 
+To sync your devices to your server, Syncthing is the fastest and most lightweight solution for 2-way syncing. FileRun and NextCloud can also do syncing via WebDAV, but I find webDAV not ideal/reliable for syncing everything you want on your phone (photos, app backups etc). On Android, the Syncthing-fork application allows you to easily add your Whatsapp, Signal and other apps backups and photos, camera etc to sync. Always or when charging/when on wifi. iOS does not allow file access, use FileRun/NextCloud.  
 
 _Firefox Sync_
 
-The web has become a dangerous monopoly with only 3 browser engines: Chrome, Safari and Firefox. Without Firefox, there is little competition and transparency left. By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla. Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. 
+By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla. Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
 
 _Paperless_
 
@@ -138,7 +137,6 @@ _Jellyfin_
 
 A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do. Jellyfin is userfriendly and has easy features that you might miss from the streaming giants such as watched status management etc. 
 The mediaserver can transcode media on the fly to your clients, adjusting for available bandwith. It can use hardware encoding capabilities of your server.
-|Service| Description  | Rationale 
 
 _Sonarr, Radarr, Bazarr, Jackett_ 
 See: https://wiki.servarr.com/Docker_Guide
