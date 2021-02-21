@@ -96,7 +96,7 @@ _Dozzle_
 
 WebUI to check your logs. 
 
-### _User Privacy & Network Security**
+### _User Privacy & Network Security_
 
 _Traefik_
 
@@ -117,7 +117,7 @@ _UniFi Controller_
 
 Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
 
-### _Cloud Experience**
+### _Cloud Experience_
 
 _FileRun and/or NextCloud_
 
@@ -141,7 +141,7 @@ _Paperless_
 
 This explains it all: [The Paperless Project](https://github.com/the-paperless-project/paperless)
 
-### _Media Server**
+### _Media Server_
 
 _Jellyfin_
 
