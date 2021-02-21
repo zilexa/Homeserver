@@ -7,7 +7,7 @@ See [Justification](https://github.com/zilexa/Homeserver/blob/master/Justificati
 
 Have a look at [the overview of all applications and services](https://github.com/zilexa/Homeserver/blob/master/README.md#homeserverselfhosted-applications-and-services) that you will have up and running smoothly with this guide. 
 
-Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosenn after testing alternatives. You can benefit from that :) 
+Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosen after testing alternatives. You can save lots of time with this guide! :) 
 
 
 ## Before you start 
