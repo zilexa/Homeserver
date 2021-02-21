@@ -1,0 +1,40 @@
+// .stignore
+//
+//Filerun//
+.filerun*
+//---Linux-specific---//
+.Trash-*
+//---Mac-specific---//
+//Mac Comments, Finder Windows Size, Tags, ...
+(?d).DS_Store
+.DocumentRevisions-V100
+//Mac Folder Icons, which will not sync to Windows
+(?d)Icon*
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.fseventsd
+//Mac Flag to enable translation of Folder Names
+(?d).localized
+//Mac Temporary iCloud files while synching
+.iCloud
+//Mac OS Metadata on Windows or Linux filesystems
+(?d)._*
+//---Windows-Specific---//
+(?d)desktop.ini
+(?d)Thumbs.db
+(?d)$RECYCLE.BIN
+//---QNAP-specific---//
+(?d).@__thumb
+(?d).AppleDB
+//---Synology-specific---//
+(?d)@eaDir
+//---Application-specific---//
+//-vi(m)
+(?d)*.*.sw[a-p] # Thankys to Tom Hale!
+//-Dropbox
+.dropbox
+.dropbox.attr
+//---OTHER---//
+.parallels-vm-directory
+Default.rdp
