@@ -1,4 +1,5 @@
-# The Best Homeserver - Lightweight home server based on microservices, usable as desktop workstation or headless, with carefully selected apps running to make your life easier and give you the benefits of the "private cloud"! 
+# The Best Homeserver 
+### Setup a lightweight home server usable as desktop workstation or headless, with carefully selected apps running to make your life easier and give you the benefits of the "private cloud"! Use a declarative methodology (docker-compose) to describe and run containerized applications. 
 
 See [Justification](https://github.com/zilexa/Homeserver/blob/master/Justification.md) on the What & the Why and definitely don't start buying stuff before reading [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Hardware%20recommendations.md). Most information online for pc building and NAS devices do not consider long term stability with fault tolerant components and definitely do not focus on low power consumption. My server uses just 4 WATT, less than a phone charger, comparable to a Raspberry Pi, much less than a Synology yet way more powerful and futureproof. 
 
