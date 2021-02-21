@@ -3,7 +3,7 @@ Lightweight home server based on microservices, usable as desktop workstation
 
 See Justification on the What & the Why and definitely don't start buying stuff before reading Hardware Recommendations. Most information online for pc building and NAS devices do not consider long term stability with fault tolerant components and definitely do not focus on low power consumption. My server uses just 4 WATT, less than a phone charger, comparable to a Raspberry Pi, much less than a Synology yet way more powerful and futureproof. 
 
-An overview of server applications and carefully selected docker applications can be found below.  
+Have a look at [the overview of all applications and services](https://github.com/zilexa/Homeserver/blob/master/README.md#homeserverselfhosted-applications-and-services) that you will have up and running smoothly with this guide. 
 
 ## Before you start 
 - This guide assumes your system runs Ubuntu v20.04 minimum. Should work on Debian based systems with no or little modification.
