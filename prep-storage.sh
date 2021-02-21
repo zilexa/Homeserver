@@ -49,7 +49,9 @@ sudo btrfs subvolume create /mnt/btrfs-root/@docker
 sudo btrfs subvolume create /mnt/btrfs-root/@system-snapshots
 Unmount the btrfs-root filesystem
 sudo umount /mnt/root
-# Note, you should already have a root subvolume @home and nested subvolumes (root)/tmp and @home/asterix/.cache. See: https://github.com/zilexa/UbuntuBudgie-config 
+
+# Note, its highly recommended to have a root subvolume @home and nested subvolumes @/tmp and @home/asterix/.cache to exclude them from snapshots and backups.
+# See: https://github.com/zilexa/UbuntuBudgie-config 
 
 # Docker BTRFS prep
 # Temporary mount the docker subvolume, to be able to move the docker files. 
