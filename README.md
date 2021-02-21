@@ -61,11 +61,11 @@ Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenan
 [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
 ### Step 9. Configure remote VPN access
-9. [VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
+[VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
 
 
 ## Overview of applications and services
-1. **Server Management & Monitoring**
+### _Server Management & Monitoring_
 
  _Netdata_
  
@@ -85,7 +85,7 @@ _Dozzle_
 
 WebUI to check your logs. 
 
-2) **User Privacy & Network Security**
+### _User Privacy & Network Security**
 
 _Traefik_
 
@@ -106,7 +106,7 @@ _UniFi Controller_
 
 Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
 
-3) **Cloud Experience**
+### _Cloud Experience**
 
 _FileRun and/or NextCloud_
 
@@ -130,7 +130,7 @@ _Paperless_
 
 This explains it all: [The Paperless Project](https://github.com/the-paperless-project/paperless)
 
-4) **Media Server**
+### _Media Server**
 
 _Jellyfin_
 
