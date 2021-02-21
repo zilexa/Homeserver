@@ -23,14 +23,14 @@ See Justification on the What & the Why and definitely don't start buying stuff 
 ### Step 2. Folder Structure
 [Create your folder structure](https://github.com/zilexa/Homeserver/tree/master/filesystem#Folder-Structure). Note my folder structure is simple.  
 
-## Step 3. Prepare server and docker
+### Step 3. Prepare server and docker
 Install server essential tools and apply basic configuration + apply required stuff for specific docker services:
 If you haven't downloaded the file, use this command to do so: `wget https://github.com/zilexa/Homeserver/blob/master/prepare_server_docker.sh`
 execute it: `bash prepare_server_docker.sh`
 Before you do, please open the file in your text editor (Pluma) first!
 The script has clear comments: remove the parts you don't need. For example, if you are not going to use FileRun, that section can be removed. If you ever will use it, make sure to execute those commands first. 
 
-## Step 5. Docker-Compose configuration
+### Step 5. Docker-Compose configuration
 Modify docker-compose.yml and .env to your needs and run docker-compose.  
 Configure each docker application to your needs. 
 Open the .env file in a text editor, understand these variables appear in docker-compose.yml. Make sure you fill them in to your needs. Each one needs to be filled in!
@@ -49,18 +49,18 @@ Run again in case you ran into time-outs, this can happen, as a server hosting t
 5. Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
 6. To update an application in the future, click that container, hit `recreate` and check `pull new image`. 
 
-## Step 6. Configure your Docker applications/services
+### Step 6. Configure your Docker applications/services
 Via Portainer, you can easily access each of your app by clicking on the ports. 
 Go ahead and configure each of your applications. 
 
-## Step 7. Maintenance
+### Step 7. Maintenance
 Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenance) of your server such as cleanup,  backup and disks protection tasks. 
 
-## Step 8. Local network shares
+### Step 8. Local network shares
 [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
-## Step 9. Configure remote VPN access
+### Step 9. Configure remote VPN access
 9. [VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
 
-### Homeserver/selfhosted applications and services
+## Homeserver/selfhosted applications and services
 
