@@ -6,7 +6,7 @@ User schedule:
 
 ```
 MAILTO=""
-0 2 * * * /usr/bin/bash /home/asterix/docker/HOST/maintenance.sh  >> /home/asterix/docker/HOST/logs/maintenance.log 2>&1
+30 2 * * * /usr/bin/bash /home/asterix/docker/HOST/maintenance.sh  >> /home/asterix/docker/HOST/logs/maintenance.log 2>&1
 ```
 
 Root schedule: 
@@ -14,6 +14,6 @@ Root schedule:
 
 ```
 MAILTO=""
-30 2 * * * /usr/bin/bash /home/asterix/docker/HOST/backup.sh >> /home/asterix/docker/HOST/logs/backup.log 2>&1
+0 3 * * * /usr/bin/bash /home/asterix/docker/HOST/backup.sh >> /home/asterix/docker/HOST/logs/backup.log 2>&1
 ```
 
