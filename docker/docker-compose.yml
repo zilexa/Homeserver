@@ -1,6 +1,6 @@
 version: "2.3"
 services:
-## ~/docker$ docker-compose -f docker-compose.yml up -d
+## Run via: docker-compose -f $HOME/docker/docker-compose.yml up -d
 ##
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
@@ -16,6 +16,33 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $USERDIR/docker/portainer/data:/data
+##
+##_____________________ Heimdall [Management/HOMEPAGE] 
+  organizr:
+    container_name: organizr
+    image: organizr/organizr:latest
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    ports:
+     - "8000:80"
+    volumes:
+      - $USERDIR/docker/organizr:/config
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - fpm=true
+##
+##____________________ SMTP-relay [Management/email]
+  smtp:
+    image: namshi/smtp
+    container_name: smtp_relay
+    restart: always
+    ports:
+      - "25:25"
+    environment:
+      - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
 ##
 ##______NETWORK_______
 ##____________________ Unbound [NETWORK/noads-dnsserver]
@@ -46,7 +73,7 @@ services:
       - $USERDIR/docker/unifi/logs:/usr/lib/unifi/logs
     ports:
       - 3478:3478/udp
-      - 8008:8080
+      - 8080:8080
       - 8443:8443
       - 8001:8880
       - 8843:8843
@@ -69,7 +96,7 @@ services:
       - $USERDIR/docker/traefik/custom_services:/etc/traefik/custom_services
     command:
       - "--certificatesresolvers.dirktls.acme.tlschallenge=true"
-      - "--certificatesresolvers.dirktls.acme.email=rudhra@obelix.cloud"
+      - "--certificatesresolvers.dirktls.acme.email=hello@obelix.cloud"
       - "--certificatesresolvers.dirktls.acme.storage=/etc/traefik/letsencrypt/acme.json"
       - "--certificatesResolvers.dirktls.acme.httpChallenge.entryPoint=web"
 ##
@@ -111,14 +138,12 @@ services:
       - filerun-tika
       - filerun-elasticsearch
     ports:
-      - "8000:80"
+      - "8008:80"
     volumes:
       - $USERDIR/docker/filerun/html:/var/www/html
       - /mnt/pool/Users:/user-files:rw
       - /mnt/pool/Users/Local/Asterix:/user-files/Local/$USER1/Asterix:rw
       - /mnt/pool/Users/Local/Asterix:/user-files/Local/$USER2/Asterix:rw
-      - /mnt/pool/Collections:/user-files/Local/$USER1/Collections:rw
-      - /mnt/pool/Collections:/user-files/Local/$USER2/Collections:rw
     labels:
       - traefik.enable=true
       - traefik.http.middlewares.filerun-redirect.redirectscheme.scheme=https
@@ -161,6 +186,7 @@ services:
     mem_limit: 1g
     volumes:
       - $USERDIR/docker/filerun/esearch:/usr/share/elasticsearch/data
+##
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
     image: onlyoffice/documentserver
@@ -205,16 +231,6 @@ services:
       - traefik.http.middlewares.secure-headers.headers.customrequestheaders.X-Forwarded-Proto=https
       - traefik.http.middlewares.cors-headers.headers.accessControlAllowOrigin=*
       - traefik.http.routers.office.middlewares=secure-headers,cors-headers
-      ## tested extra headers, works fine without
-      #- traefik.http.middlewares.office-redirectregex.redirectregex.regex=^http://(.*)
-      #- traefik.http.middlewares.office-redirectregex.redirectregex.replacement=https://$$1
-      #- traefik.http.middlewares.secure-headers.headers.referrerPolicy=no-referrer
-      #- traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000
-      #- traefik.http.middlewares.secure-headers.headers.forceSTSHeader=true
-      #- traefik.http.middlewares.secure-headers.headers.stsPreload=true
-      #- traefik.http.middlewares.secure-headers.headers.stsIncludeSubdomains=true
-      #- traefik.http.middlewares.secure-headers.headers.browserXssFilter=true
-##____________________ Onlyoffice rabbitmq [CLOUD/Office]
   onlyoffice-rabbitmq:
     container_name: onlyoffice-rabbitmq
     image: rabbitmq
@@ -235,7 +251,6 @@ services:
     #volumes:
       #- postgresql_data:/var/lib/postgresql
 ##
-##
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
   firefox-syncserver:
@@ -254,7 +269,7 @@ services:
       - FF_SYNCSERVER_LOGLEVEL=debug
       - FF_SYNCSERVER_ACCESSLOG=true
     volumes:
-      - "$USERDIR/docker/firefox-syncserver:/data"
+      - $USERDIR/docker/firefox-syncserver:/data
     ports:
       - 5000:5000
     labels:
@@ -279,16 +294,19 @@ services:
       - PGID=$PGID
       - TZ=$TZ
       - UMASK_SET=022 #optional
+    group_add:
+      - 122
     volumes:
       - $USERDIR/docker/jellyfin/config:/config
-      - /mnt/pool/Media/TVshows:/data/tvshows
-      - /mnt/pool/Media/Movies:/data/movies
-      - /mnt/pool/Music:/data/music
+      - /mnt/pool/Users/Local/Asterix/TV/TVshows:/data/tvshows
+      - /mnt/pool/Users/Local/Asterix/TV/Movies:/data/movies
+      - /mnt/pool/Users/Local/Asterix/TV/Music:/data/music
     ports:
       - 8096:8096
       - 8920:8920 #optional
     devices:
-      - /dev/dri:/dev/dri
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
 ##
 ##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
   vpn:
@@ -352,8 +370,8 @@ services:
       - PASS=$PW_MEDIA
     volumes:
       - $USERDIR/docker/transmission/config:/config
-      - /mnt/pool/Media:/media
-      - /mnt/pool/Media/incoming/blackhole:/watch
+      - /mnt/pool/Users/Local/Asterix/TV:/media
+      - /mnt/pool/Users/Local/Asterix/TV/incoming/blackhole:/watch
 ##
 ##____________________ NZBget [MEDIA/download-client]
   nzbget:
@@ -369,7 +387,7 @@ services:
       - TZ=$TZ
     volumes:
       - $USERDIR/docker/nzbget/config:/config
-      - /mnt/pool/Media:/media
+      - /mnt/pool/Users/Local/Asterix/TV:/media
     ports:
       - 6789:6789
 ##
@@ -387,7 +405,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - $USERDIR/docker/sonarr/config:/config
-      - /mnt/pool/Media:/media
+      - /mnt/pool/Users/Local/Asterix/TV:/media
     ports:
       - 8989:8989
 ##
@@ -405,7 +423,7 @@ services:
     volumes:
       - $USERDIR/docker/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - /mnt/pool/Media:/media
+      - /mnt/pool/Users/Local/Asterix/TV:/media
     ports:
       - 9117:9117
   flaresolverr:
@@ -435,7 +453,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - $USERDIR/docker/radarr/config:/config
-      - /mnt/pool/Media:/media
+      - /mnt/pool/Users/Local/Asterix/TV:/media
     ports:
       - 7878:7878
 ##
@@ -454,38 +472,9 @@ services:
       - UMASK_SET=022 #optional
     volumes:
       - $USERDIR/docker/bazarr/config:/config
-      - /mnt/pool/Media:/media
+      - /mnt/pool/Users/Local/Asterix/TV:/media
     ports:
       - 6767:6767
-##
-##______MANAGEMENT_____
-##_____________________ Heimdall [Management/HOMEPAGE] 
-  organizr:
-    container_name: organizr
-    image: organizr/organizr:latest
-    restart: always
-    security_opt:
-      - no-new-privileges:true
-    ports:
-     - "8080:80"
-    volumes:
-      - $USERDIR/docker/organizr:/config
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - fpm=true
-##
-##____________________ SMTP-relay [Management/email]
-  smtp:
-    image: namshi/smtp
-    container_name: smtp_relay
-    restart: always
-    ports:
-      - "25:25"
-    environment:
-      - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
-#
 #
 #
 volumes:
