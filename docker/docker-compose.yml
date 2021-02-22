@@ -45,7 +45,7 @@ services:
       - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
 ##
 ##______NETWORK_______
-##____________________ Unbound [NETWORK/noads-dnsserver]
+##____________________ Unbound [NETWORK/recursive-dns-server]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
@@ -79,8 +79,8 @@ services:
       - 8843:8843
 ##
 ##________CLOUD________
-##_____________________ Traefik [CLOUD/reverse-proxy
-# create empty files and set permissions first see docker-config.sh
+##_____________________ Traefik [CLOUD/reverse-proxy]
+# create empty files and set permissions first see prepare-server-docker.sh: https://github.com/zilexa/Homeserver
   traefik:
     image: traefik:v2.0
     container_name: traefik
