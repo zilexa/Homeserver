@@ -15,9 +15,12 @@ Note: I had zero experience when I started and learned everything by googling, s
 - I highly recommend my [Ubuntu Budgie Post Install Script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). At least walk through it and use what you need. 
 - If you don't, make sure you have a good text editor installed such as Pluma (`sudo apt install pluma`). 
 - I had zero Linux experience when I started, so you don't need it, as long as you are ready to Google everything, especially some [basic Linux commands](https://www.hostinger.com/tutorials/linux-commands).
+
+## Get the files
 - Download this repository to your Downloads folder: Click the green "Code" button top left > Download as Zip. 
 - Open a Terminal (CTRL+ALT+T) or hit the Budgie start button and start typing "Terminal" or "Tilix. 
-- opening a script or textfile in Terminal can sometimes prevent you from messing up the file: `nano /path/to/file.sh` note in some cases you need elevated (root) privileges, to do that, prefix a command with `sudo`. 
+- opening a script or textfile in Terminal (instead of a normal UI text editor like Pluma) can sometimes prevent you from messing up the file: `nano /path/to/file.sh` note in some cases you need elevated (root) privileges, to do that, prefix a command with `sudo`. 
+- Note my system user account is called `asterix`, I use variables as much as possible, but that is not always possible. Make sure you replace "asterix" with your systems username (and read Folder Structure to understand why I use a fictional name). 
 
 ## Not included: 
 1. your router port forwarding of (at least) port 80 and 443 and some more for specific services. 
