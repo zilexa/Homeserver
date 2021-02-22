@@ -17,7 +17,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $USERDIR/docker/portainer/data:/data
 ##
-##_____________________ Heimdall [Management/HOMEPAGE] 
+##_____________________ Organizr [Management/HOMEPAGE] 
   organizr:
     container_name: organizr
     image: organizr/organizr:latest
