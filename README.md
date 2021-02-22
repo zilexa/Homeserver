@@ -24,7 +24,7 @@ Note: I had zero experience when I started and learned everything by googling, s
 
 ## Not included: 
 1. your router port forwarding of (at least) port 80 and 443 and some more for specific services. 
-2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide. The minimum set of services will be exposed online and only via HTTPS. Other services can be accessed via Wireguard VPN. 
+2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide. The minimum set of services will be exposed online and only via HTTPS. Other services (including SSH/SFTP) can be accessed via Wireguard VPN. 
 
 &nbsp;
 
