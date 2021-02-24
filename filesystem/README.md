@@ -43,12 +43,7 @@ RAID1: Mirror both the file system data and metadata across several devices: use
 - Pick your evil. RAID1 is most secure but only useful if you have plenty of disks. Otherwise, go for default or RAID0.
 - For benefits of SnapRAID versus RAID1: [READ THESE FIRST 5 QUESTIONS](https://www.snapraid.it/faq#whatisit). 
 
-OS Installation
-Step 1: 
-- When installing Ubuntu (Budgie), make sure you select "SOMETHING ELSE".
-- The drive you install on, should contain /boot/efi of at least 556MB and a BTRFS partition (max size) with mountpoint "/". 
-
-Step 1: 
+### Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
 Check this via `btrfs subvolume list /`
 @ (mounted at /)
@@ -56,7 +51,7 @@ Check this via `btrfs subvolume list /`
 @home/.cache (mounted at /home/.cache)
 @/tmp (mounted at /tmp)
 
-Step 2: Create new filesystems for disks
+### Step 2: Create new filesystems for disks
 -unmount all the drives you are going to format: `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l`
 - Scenario1: create the filesystem for each disk, do not use paritions (no numbers such as sda1): `sudo mkfs.btrfs -f -L data1 –m single /dev/sda`
@@ -66,18 +61,18 @@ Step 2: Create new filesystems for disks
 More commands and info about BtrFS: https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html
 
 
-Step 3: setup-storage.sh & adjust for your disks
-Don't just run the script, open it in Pluma or other text editor. Read the comments. 
-The script will install tools, create mount point folders and create the recommended subvolumes for Docker (to backup seperately and to "go back in time" with Docker containers) and for OS drive backup purposes (system-snapshots).  
+### Step 3: setup-storage.sh & adjust for your disks
+Don't just run the script! Open it in Pluma or other text editor. Read the comments. 
+The script will install tools, create mount point folders and create the recommended subvolumes for Docker (to backup seperately and to "go back in time" with Docker containers) and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, therefor not in the post-install script.
 
-For both scenarios: 
+#### For both scenarios: 
 - Expand the command that creates the disk mount points: data1, data2..., parity1, parity2...,backup1, backup2 ... etc to reflect the # of drives you have. 
 
-Scenario 2 specific steps: 
+#### Scenario 2 specific steps: 
 - remove the part that installs MergerFS
 - Remove the command that creates /mnt/pool (already created in step 2) and /mnt/pool-archive. 
 
-Step 4: 
+### Step 4: 
 - Run the script, when finished the script opens /etc/fstab file, this file contains all disks mounted at boot. You must fill in the UUIDs for all mounts. Easy for the OS drive as you can copy paste and save the file. 
 - Open Pluma, new empty file. Run `blkid` command to get the UUIDs of all drives. Copy paste them in Pluma. 
 - Run `sudo nano /etc/fstab`, copy paste the correct UUID per mount. 
@@ -85,7 +80,7 @@ Step 4:
 - If using MergerFS, make sure the first part of each MergerFS line contains all your data disks and no parity/backup disk. Make sure the first MergerFS mount also contains the cache disk or cache folder. 
 - save the file. 
 
-Step 5: unmount old mount points
+### Step 5: unmount old mount points
 - Go to Budgie menu, search DISKS, open it. 
 - hit the STOP button for each disk, not the boot drive of course. Just to make sure there are no old mounts.
 - Now run `sudo mount -a` to mount everything.
