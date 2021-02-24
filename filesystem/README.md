@@ -1,4 +1,4 @@
-## A Modern Homeserver filesystem
+## A Modern Homeserver _filesystem_
 
 Technologies used: 
 - BtrFS, the most advanced filesystem. 
