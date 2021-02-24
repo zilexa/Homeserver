@@ -6,7 +6,7 @@ My folder structure is extremely simple, this supports easy backups and snapshot
 ### My mounts: 
 - `/mnt/disks` --> physical disks
   - `/mnt/disks/data1`, `/mnt/disks/data2`, `/mnt/disks/data3`
-  - `/mnt/disks/parity1`, `/mnt/disks/parity2`* (*optional)*
+  - `/mnt/disks/parity1`, optional: `/mnt/disks/parity2` 
   - `/mnt/disks/backup1`
 - `/mnt/pool` --> the single access point to your data (disk array is mapped here). 
 - `/mnt/btrfs-root` --> temporary, during initial setup and during nightly backup) 
