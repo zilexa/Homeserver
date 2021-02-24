@@ -74,5 +74,5 @@ And on  a local (shared) home laptop which syncs her and your folders, or even o
 In the Docker Compose file, you can see how to work around this issue, by mapping `Users/Local/Asterix` into the filesystem of the (Nextcloud or Filerun) container. 
 
 ## Action to take
-I hope this makes sense. The script prep-folderstructure.sh will create the folder structure as described AND map those `asterix` documents and media folders to the server /home dir, replacing those personal folders for symlinks. 
+I hope this makes sense. The script prep-folderstructure.sh will create the folder structure as described AND map those `asterix` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it. 
 
