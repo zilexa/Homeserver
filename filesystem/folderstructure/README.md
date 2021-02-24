@@ -2,17 +2,13 @@
 
 My folder structure is extremely simple, this supports easy backups and snapshots with a similar file structure: 
 
-The root of my data (data disk array) is `/mnt/pool` it contains a single folder: 
-> Users/
+The root of my data (data disk array) is `/mnt/pool` it contains a single folder: `/mnt/pool/Users`
+Within this folder I differentiate between 2 types of Users, and each user will have their own UserName folder (a requirement for web access/identity management).
 
-Which contains: 
-> Users/Local
-> Users/External
-
-- Users/Local is the primary data storage for local users:
+- `Users/Local` is the primary data storage for local users:
 My partner, myself, parents, perhaps some very close relatives or friends. 
 
-- Users/External is the secondary data storage for external users: 
+- `Users/External` is the secondary data storage for external users: 
 Friends and family that need a backup of their data and would like to enjoy the benefits of your fast, reliable Homeserver/private cloud solution.
 
 
