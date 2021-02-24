@@ -61,6 +61,17 @@ Username1/Phone-Sync (special folder)
 Username1/Ebooks
 Username1/[several document folders]
 ```
+
+#### Phone-sync: 2-way sync
+Folders on the users phone will be synced as subfolders within this directory. Note that 2-way sync, even if you use "send-only" or "receive-only", means _delete_ actions on the phone are also synced to the server. That is why this folder exists: it is not the backup of the phone folders. 
+Example: 
+- user syncs its smartphone/Pictures folder when the phone is on wifi & charging (at night). 
+- They are synced to Username/Phone-Sync/Photos and immediately hardlinked* to Username/Photos/Phone-pics. 
+- A hardlink means an extra 'chapter' in the 'index' of the filesystem has been made, but this chapter links to the same actual data (take up space only once). 
+- Now, the user can delete the files on the phone, they will be deleted in `Phone-Sync` but still exist in ` Username/Photos/Phone-pics. 
+* The script that does this isn't functional yet.. 
+
+
 ### Shared user for couples/families
 The issue: My partner and I share photo albums, administrative documents etc. With Google Drive/DropBox/Onedrive, 1 user would own those files and share them with the other, but this only works in the online environment. The files are still stored in your folder. 
 And on  a local (shared) home laptop which syncs her and your folders, or even on the server itself which you might use as PC you see the local filesystem: your partner won't see those shared files in her folder. This can be frustrating and annoying as she has to go find your dir with those files.
