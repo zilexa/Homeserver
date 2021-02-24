@@ -5,7 +5,7 @@ This guide uses a declarative methodology, not only to describe and run containe
 
 See [Justification](https://github.com/zilexa/Homeserver/blob/master/Justification.md) on the What & the Why and definitely don't start buying stuff before reading [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Hardware%20recommendations.md). Most information online for pc building and NAS devices do not consider long term stability with fault tolerant components and definitely do not focus on low power consumption. My server uses just 4 WATT, less than a phone charger, comparable to a Raspberry Pi, much less than a Synology yet way more powerful and futureproof. 
 
-Have a look at [the overview of all applications and services](https://github.com/zilexa/Homeserver/blob/master/README.md#homeserverselfhosted-applications-and-services) that you will have up and running smoothly with this guide. 
+Have a look at [the overview of all applications and services](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) that you will have up and running smoothly with this guide. 
 
 Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosen after testing alternatives. You can save lots of time with this guide! :) 
 
