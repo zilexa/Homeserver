@@ -17,11 +17,11 @@ Why BtrFS?
 - Background scrub process to find and to fix errors on files with redundant copies: data integrity.
 - Online filesystem defragmentation
 - Great for SSDs and HDDs.
-- Until BcacheFS is released and stable, the best choice. 
 
 Downsides: 
 - minimally slower, but this will be unnoticeable for our use case. 
-- No support for a cache drive, solved by using MergerFS instead of BtrFS features for pooling. 
+- No support for a cache drive, solved by using MergerFS for pooling instead of BtrFS features for pooling. In this case, the drives will be formatted as BtrFS single. When BcacheFS (potential BtrFS successor) is released, the MergerFS solution is probably not necessary anymore. 
+ 
 
 ### Adding an SSD as cache for the data disk pool
 If your boot drive is large enough, you can use a folder on it for caching of your data drives. If you have a secondary SSD, you can dedicate that one fully. 
@@ -31,7 +31,6 @@ If your boot drive is large enough, you can use a folder on it for caching of yo
 - new files will be created on the SSD cache drive or folder (instead of the data disks pool) if certain conditions are met (such as free space). 
 - Files that haven't been modified for X days will be moved to the data disks pool. 
 - MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. 2 pools: one with, one without the SSD or cache folder. Nightly, data from the cache drive is copied to the pool without the cache folder. 
-- In the future, when switching from BtrFS to BcacheFS, we won't need MergerFS. 
 
 ## Scenario 2 Without a cache: multiple choices
 - You can use existing disks with data only if they were already BTRFS formatted.
@@ -52,7 +51,8 @@ Check this via `btrfs subvolume list /`
 @/tmp (mounted at /tmp)
 
 ### Step 2: Create new filesystems for disks
--unmount all the drives you are going to format: `sudo umount /media/(diskname)`
+Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
+- unmount all the drives you are going to format: `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l`
 - Scenario1: create the filesystem for each disk, do not use paritions (no numbers such as sda1): `sudo mkfs.btrfs -f -L data1 –m single /dev/sda`
 - Scenario2 default: `sudo mkfs.btrfs -f -L data1 –m single /dev/sda`
