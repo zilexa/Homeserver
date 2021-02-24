@@ -32,7 +32,7 @@ Note: I had zero experience when I started and learned everything by googling, s
 
 ## Steps to get up and running: 
 ### Step 1 Filesystem
-[Preparet the filesystem](https://github.com/zilexa/Homeserver/tree/master/filesystem). Install fs tools, understand their goal, tailor to your needs.
+[Prepare the filesystem](https://github.com/zilexa/Homeserver/tree/master/filesystem). Install fs tools, understand their goal, tailor to your needs.
 
 ### Step 2. Folder Structure
 [Create your folder structure](https://github.com/zilexa/Homeserver/tree/master/filesystem#Folder-Structure). Note my folder structure is simple.  
