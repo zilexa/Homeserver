@@ -4,12 +4,12 @@ My folder structure is extremely simple, this supports easy backups and snapshot
 
 ## System folder structure
 ### My mounts: 
-- /mnt/disks --> physical disks
-  - /mnt/disks/data1, /mnt/disks/data2, /mnt/disks/data3
-  - /mnt/disks/parity1, /mnt/disks/parity2* (*optional)*
-  - /mnt/disks/backup1
-- /mnt/pool --> the single access point to your data (disk array is mapped here). 
-- /mnt/btrfs-root --> temporary, during initial setup and during nightly backup) 
+- /mnt/disks` --> physical disks
+  - `/mnt/disks/data1`, `/mnt/disks/data2`, `/mnt/disks/data3`
+  - `/mnt/disks/parity1`, `/mnt/disks/parity2`* (*optional)*
+  - `/mnt/disks/backup1`
+- `/mnt/pool` --> the single access point to your data (disk array is mapped here). 
+- `/mnt/btrfs-root` --> temporary, during initial setup and during nightly backup) 
 
 ### subvolumes: 
 BTRFS snapshots of a subvolume exclude nested subvolumes. This way, we can exclude folders that should not be backupped or should be backupped separately: 
