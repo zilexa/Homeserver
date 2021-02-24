@@ -12,9 +12,12 @@ Note: I had zero experience when I started and learned everything by googling, s
 
 ## Before you start 
 - This guide assumes your system runs Ubuntu v20.04 minimum. Should work on Debian based systems with no or little modification.
-- I highly recommend my [Ubuntu Budgie Post Install Script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). At least walk through it and use what you need. 
+- When installing Ubuntu (Budgie), make sure you select "SOMETHING ELSE".
+- The drive you install on, should contain /boot/efi of at least 556MB and a BTRFS partition (max size) with mountpoint "/". 
+- When done, I highly recommend my [Ubuntu Budgie Post Install Script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). At least walk through it and use what you need. 
 - If you don't, make sure you have a good text editor installed such as Pluma (`sudo apt install pluma`). 
 - I had zero Linux experience when I started, so you don't need it, as long as you are ready to Google everything, especially some [basic Linux commands](https://www.hostinger.com/tutorials/linux-commands).
+
 
 ## Get the files
 - Download this repository to your Downloads folder: Click the green "Code" button top left > Download as Zip. 
