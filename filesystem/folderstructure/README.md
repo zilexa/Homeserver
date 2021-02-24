@@ -30,6 +30,7 @@ This allows you to first snapshot (backup) "/", and do a clean OS install on "/"
 - docker-compose.yml and .env files in the root of the folder.
 - HOST folder: containing configs and scripts for maintenance, cleanup, backup. This way, you backup a single folder, /docker == equals backup of your complete server configuration. 
 
+&nbsp;
 
 ## User data
 The root of my data (data disk array) is `/mnt/pool` it contains a single folder: `/mnt/pool/Users`
