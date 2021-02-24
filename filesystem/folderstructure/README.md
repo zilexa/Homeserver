@@ -12,7 +12,7 @@ My folder structure is extremely simple, this supports easy backups and snapshot
 - `/mnt/btrfs-root` --> temporary, during initial setup and during nightly backup) 
 
 ### subvolumes: 
-BTRFS snapshots of a subvolume exclude nested subvolumes. This way, we can exclude folders that should not be backupped or should be backupped separately: 
+When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately: 
 On the OS system SSD: 
 - `/` --> root subvolume (in btrfs-root, also known as subvolid5)
 - `/home` --> root subvolume, contains user data, backupped seperately (Ubuntu, Fedora default behavior).
