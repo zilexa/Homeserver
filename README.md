@@ -17,13 +17,6 @@ Note: I had zero experience when I started and learned everything by googling, s
 - Make sure you have a good text editor installed such as Pluma (`sudo apt install pluma`), this is done by the post-install script. 
 - I had zero Linux experience when I started, so you don't need it, as long as you are ready to Google everything, especially some [basic Linux commands](https://www.hostinger.com/tutorials/linux-commands).
 
-
-## Get the files
-- Download this repository to your Downloads folder: Click the green "Code" button top left > Download as Zip. 
-- Open a Terminal (CTRL+ALT+T) or hit the Budgie start button and start typing "Terminal" or "Tilix. 
-- opening a script or textfile in Terminal (instead of a normal UI text editor like Pluma) can sometimes prevent you from messing up the file: `nano /path/to/file.sh` note in some cases you need elevated (root) privileges, to do that, prefix a command with `sudo`. 
-- Note my system user account is called `asterix`, I use variables as much as possible, but that is not always possible. Make sure you replace "asterix" with your systems username (and read Folder Structure to understand why I use a fictional name). 
-
 ## Not included: 
 1. your router port forwarding of (at least) port 80 and 443 and some more for specific services. 
 2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide. The minimum set of services will be exposed online and only via HTTPS. Other services (including SSH/SFTP) can be accessed via Wireguard VPN. 
@@ -31,6 +24,13 @@ Note: I had zero experience when I started and learned everything by googling, s
 &nbsp;
 
 ## Steps to get up and running: 
+### Step 0 Get the files
+- Download this repository to your Downloads folder: Click the green "Code" button top left > Download as Zip. 
+- Open a Terminal (CTRL+ALT+T) or hit the Budgie start button and start typing "Terminal" or "Tilix. 
+- opening a script or textfile in Terminal (instead of a normal UI text editor like Pluma) can sometimes prevent you from messing up the file: `nano /path/to/file.sh` note in some cases you need elevated (root) privileges, to do that, prefix a command with `sudo`. 
+- **Note my system user account is called `asterix`, I use variables as much as possible, but that is not always possible. Make sure you replace "asterix" with your systems username (and read Folder Structure! Because "asterix" is very important in my folder structure).**
+
+
 ### Step 1 Filesystem
 [Prepare the filesystem](https://github.com/zilexa/Homeserver/tree/master/filesystem). Install fs tools, understand their goal, tailor to your needs.
 
