@@ -12,14 +12,16 @@ My folder structure is extremely simple, this supports easy backups and snapshot
 - `/mnt/btrfs-root` --> temporary, during initial setup and during nightly backup) 
 
 ### subvolumes: 
-When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately: 
+When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately, with a different cadence or a different retention policy.  
+
 On the OS system SSD: 
 - `/` --> root subvolume (in btrfs-root, also known as subvolid5)
 - `/home` --> root subvolume, contains user data, backupped seperately (Ubuntu, Fedora default behavior).
 - `$HOME/docker` --> root subvolume, contains non-expendable config and data of all Docker containers, backupped seperately.  
 - `$HOME/.cache`, `/tmp` --> nested subvolumes, contains expendable temp files. Exclude.  
 - `/system-snapshots` --> the location of snapshots. Exclude.
-- On data disks, the only subvolume in the root subvolume is `/.snapshots` (the location of snapshots for snapraid-btrfs). 
+On data disks: 
+`/` and `/.snapshots` both root subvolumes. That latter contains the snapshots of the disk. Exclude.
 
 ### MAJOR benefit of subvolumes
 The docker and home subvolumes are root subvolumes just like /. 
