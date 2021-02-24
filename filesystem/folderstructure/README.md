@@ -4,7 +4,7 @@ My folder structure is extremely simple, this supports easy backups and snapshot
 
 ## System folder structure
 ### My mounts: 
-- /mnt/disks` --> physical disks
+- `/mnt/disks` --> physical disks
   - `/mnt/disks/data1`, `/mnt/disks/data2`, `/mnt/disks/data3`
   - `/mnt/disks/parity1`, `/mnt/disks/parity2`* (*optional)*
   - `/mnt/disks/backup1`
