@@ -16,11 +16,16 @@ Why?
 5. Because it is really cool, energy efficient and you can support your family, extended family with your server, so that they don't run in to the limitations that paid cloud solutions come with. 
 
 ## Why self-build? Just buy a Synology or QNAP..?
-4 reasons: 
+8 reasons: 
 1. A self-build (hardware) server can be 5 times more power efficient. Imagine this system will be powered on 24/7/365. A Synology or QNAP can easily consume 8-15W in idle, while a self-build server can achieve idle power consumption of less than 5W (some even less than 3W). That is probably less than most of your electronic devices *on standby*. 
 2. It will allow you to install any service you might need and is very future-proof as you can add services easily in the future, without vendor lock-in. 
 3. A self-build homeserver is simply much faster, as it will contain a much faster CPU and more/faster RAM and modern SSD to run the applications. 
 4. Scalability & upgrades: you can easily add a cheap SSD as cache or add HDDs if you need more space. 
+5. In case of issues or disaster, you have the maximum set of options to restore data or resolve the issue, as you have designed the system yourself (with help of this guide). 
+6. Value for money: a Synology or QNAP is actually quite expensive and not very future proof: limited expansion options.
+7. Some "ready to go" solutions require you to use specific storage systems that are overpriced. Synology is moving in that direction.
+8. It is *NOT* simpler! You still need to do the hardest and time consuming part: configure your drives and organise your data.
+9. Thanks to Docker and Docker-Compose, self-build is just as user friendly and simple as Synology to run cloud services for your users.
 
 ## What are the benefits of adopting your setup and config (fully or partially)?
 
