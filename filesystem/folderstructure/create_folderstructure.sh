@@ -3,20 +3,6 @@
 # sudo chown asterix:asterix $NAME
 # sudo chmod u+rwx -R $NAME
 
-
-echo "My folder structure might not be yours."
-echo "1 drive pool (/mnt/pool) via MergerFS with my system drive (SSD 1TB) as fast cache and 2 HDDs as storage"
-echo "1 drive pool (/mnt/archive) the same but without the system drive"
-echo "only /mnt/pool is used by users, mnt/archive contains the same files and exists for MergerFS to purge the cache regularly."
-echo " /mnt/pool/Collections --> My Photos & videos, ripped HQ music albums. Stuff to store and carefully backup forever."
-echo "this data is usually to large to sync across devices."
-echo "  "
-echo "/mnt/pool/Users for all user data per user folder plus a 3rd virtual user for shared stuff on this pc"
-echo "mnt/pool/Media for media downloads"
-echo "I use my Ubuntu Budgie server also as home PC/workstation, together with my partner (1 user account)."
-echo "I want all local folders (Documents, Downloads, Desktop, Music, Pictures) to be stored on the drive Pool."
-echo "To do that, I replace the folders in $HOME for symbolic links."
-echo "I also want them to be accessible via the personal cloud accounts of each PC user."
 echo "Enter the name of the first workstation user (example: Monkey), followed by [ENTER]:"
 read NAME1
 echo USER1='"'$NAME1'"' >> /etc/environment
