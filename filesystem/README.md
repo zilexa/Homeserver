@@ -60,8 +60,7 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 - Scenario2 default: `sudo mkfs.btrfs -f -L data1 –m single /dev/sda`
 - Scenario2 Raid0: `sudo mkfs.btrfs -f -L data1 –m raid0 /dev/sda`
 - Scenario2 Raid0: `sudo mkfs.btrfs -f -L data1 –d raid1 /dev/sda`
-More commands and info about BtrFS: https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html
-
+More commands and info about BtrFS can be found via the official doc or by Googling. I prefer this doc as [quick reference](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html).
 
 ### Step 3: setup-storage.sh & adjust for your disks
 Don't just run the script! Open it in Pluma or other text editor. Read the comments. 
