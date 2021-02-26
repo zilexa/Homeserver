@@ -42,7 +42,7 @@ Default (with SnapRAID): Stripe the data and mirror the file system metadata acr
 Raid0 (with SnapRAID): Stripe both the file system data and metadata across several devices: use all space for data (no mirroring). 
 RAID1: Mirror both the file system data and metadata across several devices: use half of the total space for data (since everything is mirrored). 
 - Pick your evil. RAID1 is most secure but only useful if you have plenty of disks. Otherwise, go for default or RAID0.
-- For benefits of SnapRAID versus RAID1: [READ THESE FIRST 5 QUESTIONS](https://www.snapraid.it/faq#whatisit). 
+- For benefits of SnapRAID versus RAID1: [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). 
 
 ### Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
