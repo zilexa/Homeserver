@@ -26,7 +26,7 @@ Downsides:
 
 ### Adding an SSD as cache for the data disk pool
 If your boot drive is large enough, you can use a folder on it for caching of your data drives. If you have a secondary SSD, you can dedicate that one fully.
-Please read here about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching) solution. We use this solution because it is extremely easy to understand, to setup and to use. And because BtrFS does not support tiered caching natively. 
+Please read about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching) solution. We use this solution because it is extremely easy to understand, to setup and to use. BtrFS does not support tiered caching by itself. MergerFS can run atop any filesystem to create a simple union of your drives. 
  
 ## Scenario 1 With a cache
 - You can use existing disks with data on it, in different sizes. BTRFS filesystem is recommended. Not required.
