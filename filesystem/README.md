@@ -2,7 +2,7 @@
 
 Technologies used: 
 - [BtrFS](https://linuxhint.com/btrfs-filesystem-beginner-guide/), the most advanced filesystem. 
-- [MergerFS](https://github.com/trapexit/mergerfs#description) (optionally/recommended) if you want to add a fast cache to your drive pool. Explaination here: [Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching). 
+- [MergerFS](https://github.com/trapexit/mergerfs#description) (optionally/recommended) if you want to add a fast cache to your drive pool. Explaination here: [Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching). This way, [you can choose to use](https://github.com/zilexa/Homeserver/blob/master/Hardware%20recommendations.md) small 2.5" disk drives with very low power consumption and don't worry about speed (disk speed is not very important in a homeserver anyway).  
 - [SnapRAID](http://www.snapraid.it/faq#whatisit) via [Snapraid-btrfs](https://github.com/automorphism88/snapraid-btrfs#faq), reap the benefits for home use of SnapRAID-btrfs over BTRFS-RAID.
 - [btrbk](https://github.com/digint/btrbk), the default tool for a wide variety of backup purposes.
 - [nocache](https://github.com/Feh/nocache#nocache---minimize-filesystem-caching-effects)-rsync, only for a specific task (see MergerFS Tiered Caching).  
