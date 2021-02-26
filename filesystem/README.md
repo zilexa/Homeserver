@@ -1,11 +1,11 @@
 ## A Modern Homeserver _filesystem_
 
 Technologies used: 
-- BtrFS, the most advanced filesystem. 
-- MergerFS (optionally) if you want to add a fast cache to your drive pool.
-- SnapRAID-btrfs, reap the benefits for home use of SnapRAID-btrfs over BTRFS-RAID.
-- btrbk, the default tool for a wide variety of backup purposes.
-- nocache, to allow use of rsync without caching (safe). 
+- [BtrFS](https://linuxhint.com/btrfs-filesystem-beginner-guide/), the most advanced filesystem. 
+- [MergerFS](https://github.com/trapexit/mergerfs#description) (optionally/recommended) if you want to add a fast cache to your drive pool. Explaination here: [Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching). 
+- [SnapRAID](http://www.snapraid.it/faq#whatisit) via [Snapraid-btrfs](https://github.com/automorphism88/snapraid-btrfs#faq), reap the benefits for home use of SnapRAID-btrfs over BTRFS-RAID.
+- [btrbk](https://github.com/digint/btrbk), the default tool for a wide variety of backup purposes.
+- [nocache](https://github.com/Feh/nocache#nocache---minimize-filesystem-caching-effects)-rsync, only for a specific task (see MergerFS Tiered Caching).  
 
 Why BtrFS? 
 - It is stable, used for years by major cloud providers and tech companies. It did get a bad reputation because of bugs in the past. Emphasis on past. In some consumber Linux distributions, it is the default filesystem. 
@@ -24,7 +24,8 @@ Downsides:
  
 
 ### Adding an SSD as cache for the data disk pool
-If your boot drive is large enough, you can use a folder on it for caching of your data drives. If you have a secondary SSD, you can dedicate that one fully. 
+If your boot drive is large enough, you can use a folder on it for caching of your data drives. If you have a secondary SSD, you can dedicate that one fully.
+Please read here about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching) solution. We use this solution because it is extremely easy to understand, to setup and to use. And because BtrFS does not support tiered caching natively. 
  
 ## Scenario 1 With a cache
 - You can use existing disks with data on it, in different sizes. BTRFS filesystem is recommended. Not required.
