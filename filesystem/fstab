@@ -1,39 +1,45 @@
-# /etc/fstab: static file system information.
-#
-# Use 'blkid' to print the universally unique identifier for a
+  GNU nano 5.2                                                                                                   /etc/fstab                                                                                                             
+# sudo nano /etc/fstab: static file system information.
+# STOP! Use 'blkid' to print the universally unique identifier for a
 # device; this may be used with UUID= as a more robust way to name devices
-# that works even if disks are added and removed. See fstab(5).
+# that works even if disks are added and removed.
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 #
+# Mount System disk ~ subvolumes
+#--------------------------------
 # Mount root subvolume @
-UUID=!!!YOUR SYSTEM SSD UUID HERE!!! /                    btrfs   defaults,noatime,compress=lzo,subvol=@ 0       1
+UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /                    btrfs   defaults,noatime,compress=lzo,subvol=@ 0       1
 # Mount boot efi
-UUID=!!!YOUR BOOT PARTITION UUID HERE!!!  /boot/efi       vfat    umask=0077      0       1
+UUID=!ADD YOUR OS/SYSTEM BOOT PARTITION UUID HERE!  /boot/efi       vfat    umask=0077      0       1
 # Mount root subvolume  @home
-UUID=!!!YOUR SYSTEM SSD UUID HERE!!! /home                 btrfs   defaults,noatime,compress=lzo,subvol=@home 0       2
+UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home                 btrfs   defaults,noatime,compress=lzo,subvol=@home 0       2
 # Mount root subvolume @docker
-UUID=!!!YOUR SYSTEM SSD UUID HERE!!! /home/asterix/docker  btrfs   defaults,noatime,compress=lzo,subvol=@docker 0       2
+UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home/asterix/docker  btrfs   defaults,noatime,compress=lzo,subvol=@docker 0       2
 #
+# Mount DATA disks
+# ----------------- 
+UUID=!ADD YOUR CACHE SSD UUID HERE! /mnt/disks/cache btrfs defaults,noatime,compress=zstd:1 0 0
+UUID=!ADD YOUR DATA DISK1 UUID HERE! /mnt/disks/data1 btrfs defaults,noatime,compress=lzo 0 0
+UUID=!ADD YOUR DATA DISK2 UUID HERE! /mnt/disks/data4 btrfs defaults,noatime,compress=lzo 0 0
+UUID=!ADD YOUR DATA DISK3 UUID HERE! /mnt/disks/data5 btrfs defaults,noatime,compress=lzo 0 0
 #
-# Mount DATA drives ~ for MerferFS
-UUID=!!!YOUR CACHE DRIVEx UUID HERE!!! /mnt/disks/cache btrfs defaults,noatime,compress=zstd:1 0 0
-UUID=!!!YOUR DATA DRIVEx UUID HERE!!! /mnt/disks/data1 btrfs defaults,noatime,compress=lzo 0 0
-UUID=!!!YOUR DATA DRIVEx UUID HERE!!! /mnt/disks/data2 btrfs defaults,noatime,compress=lzo 0 0
-UUID=!!!YOUR DATA DRIVEx UUID HERE!!! /mnt/disks/data3 btrfs defaults,noatime,compress=lzo 0 0
+# MergerFS ~ POOL & pool-archive
+# ------------------------------
+# MergerFS datapool ~ with SSD as tiered cache
+/mnt/disks/cache:/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,ca>
+# MergerFS ~ datapool excluding the SSD cache (required to be able to unload the cache)
+/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool-archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.cr>
 #
-# Mount parity drives ~ for SnapRAID
-UUID=!!!YOUR PARITY DRIVEx UUID HERE!!! /mnt/disks/parity1 btrfs defaults,noatime,compress=zstd:3 0 0
-#
-# MergerFS ~ DATA POOL (with SSD as cache)
-/mnt/disks/cache:/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=lfs,moveonenospc=true,minfreespace=350G,fsname=mergerfsPool 0 0
-# MergerFS ~ ARCHIVE POOL (without SSD as cache)
-/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool-archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool 0 0
-#
+# Mount PARITY disk(s) ~ for regular SnapRAID sync
+# ------------------------------------------------
+# If you only want to run SnapRAID nightly, remove this line and just mount it temporarily. 
+UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 btrfs defaults,noatime,compress=zstd:3 0 0
 #
 # NFS ~ home network shares  
+# -------------------------
 # NFSv4.2 requires a root folder with each shared folder in it. We create /srv/nfs and bind mount the shared folders.
 /mnt/pool/Users/Local /srv/nfs/Users none rbind 0 0
 #
-# other devices example: how to mount your servers NFS shares on other devices:
-# 192.168.88.X:  /mnt/Y  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0
+# Example how to mount your servers NFS shares to a client:
+#192.168.88.X:  /mnt/Y  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0
