@@ -32,10 +32,12 @@ sudo mkdir -p /var/snapraid/
 sudo apt -y install nocache
 
 # Create the required folders to mount the disks and MergerFS pools
+# !!! CHANGE THESE LINES!!!!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!
 # ---------------------------
 sudo mkdir -p /mnt/pool
-sudo mkdir -p /mnt/pool-archive
-sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}
+sudo mkdir -p /mnt/pool-archive #Comment-out/skip if no SSD cache
+sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}  #add/remove according to your number of disks
 
 
 # BTRFS subvolumes 
@@ -66,24 +68,33 @@ sudo nocache rsync -axHAXWES --info=progress2 $HOME/docker-old/ $HOME/docker
 # make the docker subvol mount persistent: add a commented line in /etc/fstab, user will need to add the UUID.
 # Add the docker subvolume mountpoint, user will have to fill in the OS System disk UUID. 
 echo "# Mount the BTRFS root subvolume @docker" | sudo tee -a /etc/fstab
-echo "UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home/asterix/docker  btrfs   defaults,noatime,compress=lzo,subvol=@docker 0       2" | sudo tee -a /etc/fstab
-echo "======================================================"
-echo "YOU WILL NOW HAVE TO PERFORM MULTIPLE ACTIONS MANUALLY" 
-echo "Make sure you have the example fstab file from the documentation ready!" 
-echo "======================================================" 
-read -p "are you ready? Hit Enter, nothing will happen yet" 
-echo "First, sudo blkid which will list your disks and corresponding UUID, copy those IDs to your text editor" 
-echo "Second, sudo nano /etc/fstab file will open the terminal text editor, you can add your drives just like in the example fstab. Add your own UUIDs." 
-echo "When done, save the file via CTRL+O and exit the editor with CTRL+X"
-read -p "are you ready? Hit Enter. The UUIDs will be printed." 
-# First, print the disks UUIDs
-sudo nano blkid
-echo "Now copy the information above, next step will run sudo nano /etc/fstab to edit your mounts" 
-echo "Make sure you have the example fstab ready!" 
-echo "====================================================="
-echo "Remember: CTRL+O to save your changes, CTRL+X to exit. If you make mistakes, exit, don't save changes. Run sudo nano /etc/fstab to try again"
-echo "=====================================================" 
-read -p "hit Enter to open fstab, or CTRL+C to terminate the script, you can edit fstab manually". 
-# Second, open fstab for the user to copy paste the UUIDs and mount points for disks and MergerFS
-read -p "Use the example etc/fstab to add your disk mounts and MergerFS mounts and your UUIDs"
+echo "UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE (just COPY from above)! /home/asterix/docker  btrfs   defaults,noatime,compress=lzo,subvol=@docker 0       2" | sudo tee -a /etc/fstab
+echo "==========================================================================================================="
+echo "The script is now done."
+echo "Before rebooting, you need to (Task 1) add the UUID of your OS disk to the line that was just added to your mountfile /etc/fstab" 
+echo "While doing that, you can also (Task 2) add the mount points of all your disks according to the fstab example from the documentation" 
+echo "-----------------------------------------------------------------------------------------------------------"
+echo "To do both tasks manually in 1 single file edit (easier), just continue this script. Or do it later like this:" 
+echo "for Task1: run 'sudo nano /etc/fstab' and switch the text in CAPS with the UUID above it"
+echo "for Task2: run 'sudo blkid' to get UUIDS/disks and in a 2nd window, 'sudo nano /etc/fstab'"
+echo "Use the example file, add the lines to your fstab with your own UUIDs"
+echo "==========================================================================================================="
+echo "Read between the lines then HIT CTRL+C to stop the script here or hit ENTER to do it now..."
+echo "===========================================================================================================" 
+echo " UUIDs will be printed AND A SECOND WINDOW will open to edit the fstab file..
+#
+sudo blkid
 x-terminal-emulator -e sudo nano /etc/fstab
+echo "============================================================================================"
+echo "2nd window openened!"
+echo "Enter password in the 2nd window to open the file."
+echo "CTRL+O to save changes, CTRL+X to exit the editor, ready? Hit Enter" 
+echo "--------------------------------------------------------------------------------------------"
+echo "Edit the bottom line with the UUID you see at the top of the file" 
+echo "Then add lines according to the EXAMPLE FSTAB and your disks UUIDs printed here"
+read -p "Hit Enter in this screen to continue."
+echo "============================================================================================" 
+echo "To mount everything now, run 'sudo mount -a'" 
+echo "============================================================================================"
+echo "Note, if you did not modify line 38-40 of this script or created the folders for mounting yourself,"
+echo "you need to do that first: 'sudo mkdir /mnt/pool', 'sudo mkdir /mnt/disks/data1' etc"  
