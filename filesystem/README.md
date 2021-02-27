@@ -74,7 +74,8 @@ The script will install tools, create mount point folders and create the recomme
 - Remove the command that creates /mnt/pool (already created in step 2) and /mnt/pool-archive. 
 
 ### Step 4: 
-- Run the script, when finished the script opens /etc/fstab file, this file contains all disks mounted at boot. You must fill in the UUIDs for all mounts. Easy for the OS drive as you can copy paste and save the file. 
+- Run the script OR perform each command manually for greater control. Be extra careful with your /etc/fstab file! 
+  - When finished the script opens /etc/fstab file, this file contains all disks mounted at boot. You must fill in the UUIDs of all disks mounts. Easy for the OS drive as you can copy paste and save the file. Make sure the boot-efi UUID is unchanged. 
 - Open Pluma, new empty file. Run `blkid` command to get the UUIDs of all drives. Copy paste them in Pluma. 
 - Run `sudo nano /etc/fstab`, copy paste the correct UUID per mount. 
 - This means, you will choose which physical disks will be mounted as "data1", "data2", "parity1" and "backup1" in /mnt/disks. If you have more drives, copy paste & add them. 
