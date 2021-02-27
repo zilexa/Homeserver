@@ -18,8 +18,10 @@ Note: I had zero experience when I started and learned everything by googling, s
 - I had zero Linux experience when I started, so you don't need it, as long as you are ready to Google everything, especially some [basic Linux commands](https://www.hostinger.com/tutorials/linux-commands).
 
 ## Not included: 
-1. your router port forwarding of (at least) port 80 and 443 and some more for specific services. 
-2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide. The minimum set of services will be exposed online and only via HTTPS. Other services (including SSH/SFTP) can be accessed via Wireguard VPN. 
+1. Your router port forwarding:
+  - The minimum set of services will be exposed, other containers, applications or services like SSH will only be accessible via VPN:
+  - port 80 and 443 for remote HTTPS access, 51822 for VPN access, 22000 for syncing devices.
+2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide, get it via GoDaddy.com or Porkbun.com.
 
 &nbsp;
 
