@@ -28,20 +28,21 @@ Downsides:
 If your boot drive is large enough, you can use a folder on it for caching of your data drives. If you have a secondary SSD, you can dedicate that one fully.
 Please read about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching) solution. We use this solution because it is extremely easy to understand, to setup and to use. BtrFS does not support tiered caching by itself. MergerFS can run atop any filesystem to create a simple union of your drives. 
  
-## Scenario 1 With a cache
+## Scenario 1 With tiered caching via MergerFS pool.
 - You can use existing disks with data on it, in different sizes. BTRFS filesystem is recommended. Not required.
 - new files will be created on the SSD cache drive or folder (instead of the data disks pool) if certain conditions are met (such as free space). 
 - Files that haven't been modified for X days will be moved to the data disks pool. 
 - MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. 2 pools: one with, one without the SSD or cache folder. Nightly, data from the cache drive is copied to the pool without the cache folder. 
-
-## Scenario 2 Without a cache: multiple choices
+- Note: instead of having seperate data disks pooled by MergerFS. you can also create a RAID0 BTRFS data array and pool it via MergerFS with the ssd cache. I would prefer this if the documentation would be clear whether you loose all data if 1 disk in the BTRFS RAID0 array fails (it is not clear to me). 
+ 
+## Scenario 2 No MergerFS, no tiered caching: multiple choices
 - You can use existing disks with data only if they were already BTRFS formatted.
 - New files always go to the data disks pool. You don't need MergerFS, you can create a BTRFS filesystem that spans disks. 
 - Recommended to use the btrfs default:
 Default (with SnapRAID): Stripe the data and mirror the file system metadata across several devices: Use part of the space for data (since metadata is mirrored). 
 Raid0 (with SnapRAID): Stripe both the file system data and metadata across several devices: use all space for data (no mirroring). 
 RAID1: Mirror both the file system data and metadata across several devices: use half of the total space for data (since everything is mirrored). 
-- Pick your evil. RAID1 is most secure but only useful if you have plenty of disks. Otherwise, go for default or RAID0.
+- Pick your evil. RAID1 is most secure but only useful if you have plenty of disks. Otherwise, go for default or choose RAID0 if you can confirm my last note in Scenario1.
 - For benefits of SnapRAID versus RAID1: [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). 
 
 ### Step 1: 
@@ -63,26 +64,18 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 More commands and info about BtrFS can be found via the official doc or by Googling. I prefer this doc as [quick reference](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html).
 
 ### Step 3: setup-storage.sh & adjust for your disks
-Don't just run the script! Open it in Pluma or other text editor. Read the comments. 
-The script will install tools, create mount point folders and create the recommended subvolumes for Docker (to backup seperately and to "go back in time" with Docker containers) and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, therefor not in the post-install script.
+Read this step fully before running the script.
+The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, therefore not in the post-install script. The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.
 
 #### For both scenarios: 
-- Expand the command that creates the disk mount points: data1, data2..., parity1, parity2...,backup1, backup2 ... etc to reflect the # of drives you have. 
+- _*EDIT LINE 40 FIRST!*_ To reflect the # of drives you have (for data, parity and backup). 
 
-#### Scenario 2 specific steps: 
-- remove the part that installs MergerFS
-- Remove the command that creates /mnt/pool (already created in step 2) and /mnt/pool-archive. 
+#### Scenario 2 exceptions: 
+- remove line 3-8: No need to install MergerFS.
+- Remove line 39 as there is no /mnt/pool-archive folder necessary without MergerFS tiered cache.
+- Mount your BTRFS1 array with the same arguments as a data disk in the example fstab.
 
-### Step 4: 
-- Run the script OR perform each command manually for greater control. Be extra careful with your /etc/fstab file! 
-  - When finished the script opens /etc/fstab file, this file contains all disks mounted at boot. You must fill in the UUIDs of all disks mounts. Easy for the OS drive as you can copy paste and save the file. Make sure the boot-efi UUID is unchanged. 
-- Open Pluma, new empty file. Run `blkid` command to get the UUIDs of all drives. Copy paste them in Pluma. 
-- Run `sudo nano /etc/fstab`, copy paste the correct UUID per mount. 
-- This means, you will choose which physical disks will be mounted as "data1", "data2", "parity1" and "backup1" in /mnt/disks. If you have more drives, copy paste & add them. 
-- If using MergerFS, make sure the first part of each MergerFS line contains all your data disks and no parity/backup disk. Make sure the first MergerFS mount also contains the cache disk or cache folder. 
-- save the file. 
-
-### Step 5: unmount old mount points
+### Step 4: unmount old mount points
 - Go to Budgie menu, search DISKS, open it. 
 - hit the STOP button for each disk, not the boot drive of course. Just to make sure there are no old mounts.
 - Now run `sudo mount -a` to mount everything.
