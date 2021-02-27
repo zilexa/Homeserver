@@ -68,7 +68,7 @@ Read this step fully before running the script.
 The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, therefore not in the post-install script. The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.
 
 #### For both scenarios: 
-- _*EDIT LINE 40 FIRST!*_ To reflect the # of drives you have (for data, parity and backup). 
+- *_EDIT LINE 40 FIRST!_* To reflect the # of drives you have (for data, parity and backup). 
 
 #### Scenario 2 exceptions: 
 - remove line 3-8: No need to install MergerFS.
