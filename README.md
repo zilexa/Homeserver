@@ -12,7 +12,7 @@ Note: I had zero experience when I started and learned everything by googling, s
 
 ## Before you start 
 - The OS used is Ubuntu Budgie, because it is one of the most light-weight and extremely user-friendly of all Linux options. As this script is for beginners, it will help to have an intuitive OS to set everything up. Ofcourse, you can run the server headless (without UI, even without a monitor) . 
-- **Please [follow these steps](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/blob/master/OS-installation/README.md) during OS installation. BtrFS filesystem is a requirement for this guide.**
+- **Please follow the [OS Installation Guide.](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/blob/master/OS-installation/README.md) Step 3 (BtrFS filesystem) is required for this guide!**
 - **In addition, run my post-install script [Ubuntu Budgie Post Install Script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). Although targeted for home desktops and laptops (clients that will use the server), it also takes care of some OS essentials and btrfs subvolumes for some OS folders. At least use the parts of the script that make sense, especially the subvolumes.**
 - Make sure you have a good text editor installed such as Pluma (`sudo apt install pluma`), this is done by the post-install script. 
 - I had zero Linux experience when I started, so you don't need it, as long as you are ready to Google everything, especially some [basic Linux commands](https://www.hostinger.com/tutorials/linux-commands).
