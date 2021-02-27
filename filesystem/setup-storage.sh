@@ -64,10 +64,26 @@ sudo nocache rsync -axHAXWES --info=progress2 $HOME/docker-old/ $HOME/docker
 
 
 # make the docker subvol mount persistent: add a commented line in /etc/fstab, user will need to add the UUID.
+# Add the docker subvolume mountpoint, user will have to fill in the OS System disk UUID. 
 echo "# Mount the BTRFS root subvolume @docker" | sudo tee -a /etc/fstab
-echo "UUID=!!COPY-PASTE-FROM-ABOVE /home/asterix/docker           btrfs   defaults,noatime,subvol=@docker 0       2" | sudo tee -a /etc/fstab
-
-# Now open fstab for the user to copy paste the UUIDs and mount points for disks and MergerFS
+echo "UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home/asterix/docker  btrfs   defaults,noatime,compress=lzo,subvol=@docker 0       2" | sudo tee -a /etc/fstab
+echo "======================================================"
+echo "YOU WILL NOW HAVE TO PERFORM MULTIPLE ACTIONS MANUALLY" 
+echo "Make sure you have the example fstab file from the documentation ready!" 
+echo "======================================================" 
+read -p "are you ready? Hit Enter, nothing will happen yet" 
+echo "First, sudo blkid which will list your disks and corresponding UUID, copy those IDs to your text editor" 
+echo "Second, sudo nano /etc/fstab file will open the terminal text editor, you can add your drives just like in the example fstab. Add your own UUIDs." 
+echo "When done, save the file via CTRL+O and exit the editor with CTRL+X"
+read -p "are you ready? Hit Enter. The UUIDs will be printed." 
+# First, print the disks UUIDs
+sudo nano blkid
+echo "Now copy the information above, next step will run sudo nano /etc/fstab to edit your mounts" 
+echo "Make sure you have the example fstab ready!" 
+echo "====================================================="
+echo "Remember: CTRL+O to save your changes, CTRL+X to exit. If you make mistakes, exit, don't save changes. Run sudo nano /etc/fstab to try again"
+echo "=====================================================" 
+read -p "hit Enter to open fstab, or CTRL+C to terminate the script, you can edit fstab manually". 
+# Second, open fstab for the user to copy paste the UUIDs and mount points for disks and MergerFS
 read -p "Use the example etc/fstab to add your disk mounts and MergerFS mounts and your UUIDs"
 x-terminal-emulator -e sudo nano /etc/fstab
-sudo nano /etc/fstab
