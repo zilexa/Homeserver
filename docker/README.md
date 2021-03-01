@@ -9,7 +9,8 @@ Before running docker-compose, make sure:
 - all app-specific requirements are taken care of. 
 - the .env file is complete and correct.
 - the docker-compose.yml file is correct. 
-- Open a terminal (CTRL+ALT+T or Budgie>Tilix). Do not prefix with sudo. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
+- Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
+- If you do prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped.
 
 All images will be downloaded, containers will be build and everything will start running. 
 Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
