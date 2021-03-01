@@ -38,7 +38,7 @@ Please read about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs
 - You can use existing disks with data only if they were already BTRFS formatted.
 - New files always go to the data disks pool. You don't need MergerFS, you can create a BTRFS filesystem that spans disks. 
 - Recommended to use the btrfs default:
-  - Default (with SnapRAID): _Stripe_ data (="spread in blocks over all the disks") and _mirror_ metadata across disks: When 1 disk fails, you don't loose data on the whole array. Use SnapRAID.
+  - *Default* (with SnapRAID): _Stripe_ data (="spread in blocks over all the disks") and _mirror_ metadata across disks: When 1 disk fails, you don't loose data on the whole array. Use SnapRAID.
   - RAID1 (realtime mirroring instead of SnapRAID): _Mirror_ both data and metadata across across disks: only half of total disk space will be available for data. Don't use SnapRAID.
 - For benefits of SnapRAID versus RAID1: [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). 
 
