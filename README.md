@@ -100,11 +100,10 @@ _[PiVPN](https://www.pivpn.io/)_ - via [Native Install](https://docs.pivpn.io/in
 >I highly recommend to use it for DNS & homeserver access by default. All other traffic can bypass the server unless you are connected to unsafe networks (public networks or countries that do not respect privacy). 
 >Runs natively because Wireguard-VPN is part of the Linux kernel already. 
 
-_[AdGuard Home](https://adguard.com/en/adguard-home/overview.html)_ - via [Native Install](https://github.com/AdguardTeam/AdGuardHome#getting-started)\
-_[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
+_[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via [Native Install](https://github.com/AdguardTeam/AdGuardHome#getting-started) with _[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
 >Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting. 
->AdGuard Home is a DNS based malware & ad filter. No more ads, malware, coinmining, phishing. All devices on your homenetwork are ad-free and protected. 
->Can also be used remotely via split tunnel VPN. 
+>AdGuardHome is a DNS based malware & ad filter. No more ads, malware, coinmining, phishing. All devices on your homenetwork are ad-free and protected, after filtering, the approved DNS requests are forwarded to Unbound, which chops it up in pieces and contacts the end-point DNS providers to get the necessary IP for you to visit the site. This way, not 1 company in the world has your complete DNS requests. With the popular encrypted DNS options (DoH), your request is decrypted at the provider and all end-point DNS providers see your un-encrypted request.
+>Can also be used remotely via split tunnel VPN. This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world (this requires the first DNS server, AdGuardHome, to be outside of Docker). 
 >AdGuard Home runs natively otherwise you cannot use it as DNS server when you are remote away from home. 
 
 _[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker
