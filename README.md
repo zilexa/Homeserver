@@ -65,7 +65,6 @@ Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenan
 
 &nbsp;
 
-&nbsp;
 
 ## Overview of applications and services
 
