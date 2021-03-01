@@ -81,7 +81,7 @@ Example:
 * The script that does this isn't functional yet.. 
 
 
-### Shared user for couples/families
+## 3. Shared user for couples/families
 The issue: My partner and I share photo albums, administrative documents etc. With Google Drive/DropBox/Onedrive, 1 user would own those files and share them with the other, but this only works in the online environment. The files are still stored in your folder. 
 But your partner won't see those files on the local filesystem of your laptop, PC, workstation or server: only if she uses the web application (FileRun or NextCloud). As you will prefer to use the local files directly, this can be frustrating and annoying as she has to go find your folder with those files.
 
