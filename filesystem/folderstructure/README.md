@@ -99,5 +99,5 @@ In the Docker Compose file, you can see how to work around this issue, by mappin
 ## Action to take
 I hope this makes sense. The script prep-folderstructure.sh will create the folder structure as described AND map those `asterix` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it. 
 
-When done, continue with the main guide to (Step 3 - Prepare server & Docker)[https://github.com/zilexa/Homeserver#step-3-prepare-server-and-docker]
+When done, continue with the main guide to [Step 3 - Prepare server & Docker.](https://github.com/zilexa/Homeserver#step-3-prepare-server-and-docker)
 
