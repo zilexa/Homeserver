@@ -29,17 +29,25 @@ If your boot drive is large enough, you can use a folder on it for caching of yo
 Please read about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching) solution. We use this solution because it is extremely easy to understand, to setup and to use. BtrFS does not support tiered caching by itself. MergerFS can run atop any filesystem to create a simple union of your drives. 
  
 ## Scenario 1 With tiered caching via MergerFS pool.
+How it works: MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. 2 pools: one with, one without the SSD or cache folder. Nightly, data from the cache drive is copied to the pool without the cache folder. 
 - You can use existing disks with data on it, in different sizes. BTRFS filesystem is recommended. Not required.
-- new files will be created on the SSD cache drive or folder (instead of the data disks pool) if certain conditions are met (such as free space). 
-- Files that haven't been modified for X days will be moved to the data disks pool. 
-- MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. 2 pools: one with, one without the SSD or cache folder. Nightly, data from the cache drive is copied to the pool without the cache folder. 
+- Data is striped/smeared over disks: they will get filled more or less evenly. 
+- If 1 disk fails, data on other disks is available like normal, via the pool or by accessing the disks individually.   
+- New files will be created on the SSD cache drive or a specific folder on your system SSD drive if certain conditions are met (such as free space). 
+- Files that haven't been modified for X days will be moved from the SSD to the disks within the pool. 
  
 ## Scenario 2 No MergerFS, no tiered caching: multiple choices
-- You can use existing disks with data only if they were already BTRFS formatted.
-- New files always go to the data disks pool. You don't need MergerFS, you can create a BTRFS filesystem that spans disks. 
-- Recommended to use the btrfs default:
-  - *Default* (with SnapRAID): _Stripe_ data (="spread in blocks over all the disks") and _mirror_ metadata across disks: When 1 disk fails, you don't loose data on the whole array. Use SnapRAID.
-  - RAID1 (realtime mirroring instead of SnapRAID): _Mirror_ both data and metadata across across disks: only half of total disk space will be available for data. Don't use SnapRAID.
+You simply use BtrFS own pooling and you can choose whether you want traditional realtime mirroring or use SnapRAID for a more backup-like scheduled parity/mirroring.
+- You cannot use an SSD as cache (BtrFS has no tiered caching support).
+- You can use existing disks with data only if they were already BTRFS formatted.. 
+- Recommended in this scenario is use the btrfs default way to pool drives, but you have 2 options:
+  - **Recommended** (no realtime mirroring): _Stripe data_ (="spread in blocks over all the disks") and _mirror metadata_ across disks:
+    - When 1 disk fails, you don't loose data on the whole array, but you can't restore the data via BtrFS, you can use SnapRAID to overcome this. 
+    - Use SnapRAID like in scenario 1 as alternative to realtime mirroring: scheduled parity. 
+  - **BtrFS-Raid1** (=realtime mirroring): _Mirror_ both data and metadata across across disks: 
+    - Only half (!) of total disk space will be available for data. Use this only if you have plenty of disks. 
+    - When a disk fails, you can restore data. 
+    - Don't use SnapRAID as you already have realtime mirroring. 
 - For benefits of SnapRAID versus RAID1: [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). 
 
 ### Step 1: 
