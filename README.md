@@ -76,19 +76,19 @@ Below a description of each application that are in Docker-Compose.yml. Choose t
 The only exceptions -apps that run natively on the OS for specific reasons- are Netdata, PiVPN and AdGuard Home. These apps have very easy installation instructions. 
 
 ### _Server Management & Monitoring_\
-_[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)\
-Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info. 
-There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors. 
-Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.
+_[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)
+>Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info. 
+>There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors. 
+>Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.
 
-_[Portainer](https://www.portainer.io/products/community-edition)_ - via Docker\
-a Docker webUI to manage and update containers. Basically a ui of the Docker command. 
+_[Portainer](https://www.portainer.io/products/community-edition)_ - via Docker
+>a Docker webUI to manage and update containers. Basically a ui of the Docker command. 
 
-_[Organizr](https://github.com/causefx/Organizr)_ - via Docker\
-A a customisable homepage to have quick access to all your services/applications. 
+_[Organizr](https://github.com/causefx/Organizr)_ - via Docker
+>A a customisable homepage to have quick access to all your services/applications. 
 
-_[Dozzle](https://dozzle.dev/)_ - via Docker\
-WebUI to check your logs. 
+_[Dozzle](https://dozzle.dev/)_ - via Docker
+>WebUI to check your logs. 
 
 ### _User Privacy & Network Security_
 
