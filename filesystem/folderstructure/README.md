@@ -35,9 +35,12 @@ This allows you to first snapshot (backup) "/", and do a clean OS install on "/"
 &nbsp;
 
 ### User-specific data and non-personal data
+The root of my data (data disk array) is `/mnt/pool`, it contains 2 folders:
 - `/mnt/pool/Users` <--- User-specific data.
-- `/mnt/pool/Media` <--- non-personal data: tvshow and movie downloads, AudioCD rips. 
-The root of my data (data disk array) is `/mnt/pool` it contains 2 folders. The Media folder contains "expendable" data such as tvshows/movies and AudioCD rips, they are not included in my _main_ backup strategy, since they do not contain personal data. But they are still protected against disk failure via SnapRAID.
+- `/mnt/pool/Media` <--- non-personal data: tvshow and movie downloads, AudioCD rips.
+
+#### non-personal data
+The Media folder contains "expendable" data such as tvshows/movies and AudioCD rips, they are not included in my _main_ backup strategy, since they do not contain personal data. But they are still protected against disk failure via SnapRAID.
 
 #### User-specific data
 Within this folder I differentiate between 2 types of Users, and each user will have their own UserName folder (a requirement for web access/identity management).
