@@ -24,11 +24,11 @@ Downsides:
 - No support for a cache drive, solved by using MergerFS for pooling instead of BtrFS features for pooling. In this case, the drives will be formatted as BtrFS single. When BcacheFS (potential BtrFS successor) is released, the MergerFS solution is probably not necessary anymore. 
  
 
-### Adding an SSD as cache for the data disk pool
+## Adding an SSD as cache for the data disk pool
 If your boot drive is large enough, you can use a folder on it for caching of your data drives. If you have a secondary SSD, you can dedicate that one fully.
 Please read about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching) solution. We use this solution because it is extremely easy to understand, to setup and to use. BtrFS does not support tiered caching by itself. MergerFS can run atop any filesystem to create a simple union of your drives. 
  
-## Scenario 1 With tiered caching via MergerFS pool.
+### Scenario 1 With tiered caching via MergerFS pool.
 How it works: MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. 2 pools: one with, one without the SSD or cache folder. Nightly, data from the cache drive is copied to the pool without the cache folder. 
 - You can use existing disks with data on it, in different sizes. BTRFS filesystem is recommended. Not required.
 - Data is striped/smeared over disks: they will get filled more or less evenly. 
@@ -36,7 +36,7 @@ How it works: MergerFS runs on top of the BTRFS disks in "user-space". It's flex
 - New files will be created on the SSD cache drive or a specific folder on your system SSD drive if certain conditions are met (such as free space). 
 - Files that haven't been modified for X days will be moved from the SSD to the disks within the pool. 
  
-## Scenario 2 No MergerFS, no tiered caching: 2 options
+### Scenario 2 No MergerFS, no tiered caching: 2 options
 You simply use BtrFS own pooling and you can choose whether you want traditional realtime mirroring or use SnapRAID for a more backup-like scheduled parity/mirroring.
 - You cannot use an SSD as cache (BtrFS has no tiered caching support).
 - You can use existing disks with data only if they were already BTRFS formatted.. 
@@ -53,15 +53,15 @@ You simply use BtrFS own pooling and you can choose whether you want traditional
     - When data is written, **all disks** will spin. This also means the disks will wear down more or less at the same pace.
 - **For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). This is why, for home use instead of enterprise use I recommend no realtime mirroring. 
 
-### Step 1: 
+## Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
-Check this via `btrfs subvolume list /`
-@ (mounted at /)
-@home (mounted at /home)
-@home/.cache (mounted at /home/.cache)
-@/tmp (mounted at /tmp)
+Check your system drive subvolumes via `btrfs subvolume list /` \
+`@` (mounted at /)\
+`@home` (mounted at /home)\
+`@home/.cache` (nested subvolume /home/.cache)\
+`@/tmp` (nested subvolume /tmp)\
 
-### Step 2: Create new filesystems for disks
+## Step 2: Create new filesystems for disks
 Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
 - unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l`
@@ -72,21 +72,34 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
   - Run the command from scenario 1 for the remaining disk with label `backup1`. 
 More commands and info about BtrFS can be found via the official doc or by Googling. I prefer this doc as [quick reference](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html).
 
-### Step 3: setup-storage.sh & adjust for your disks
+## Step 3: setup-storage.sh & adjust for your disks
 Read this step fully before running the script.
 The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, therefore not in the post-install script. The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.
 
-#### For both scenarios: 
+### For both scenarios: 
 - *_EDIT LINE 40 FIRST!_* To reflect the # of drives you have (for data, parity and backup). 
 
-#### Scenario 2 exceptions: 
+### Scenario 1: 
+- The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tels the system how and where to mount your disks.
+- The script does not add your disks to that system file! 
+- Instead, use the example fstab file and copy the lines yourself when the script asks you to.
+
+#### MergerFS disk pool
+Notice the 2 long lines for MergerFS in the example fstab!
+- The first should contain the cache SSD and all data disks seperated with `:`, mounting them to `/mnt/pool`
+- The second is identical except without the SSD and a different mount path: `mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
+- The long list of arguments have carefully been chosen for this Tiered Caching setup. They are documented here. No need to change unless you know what you are doing.
+When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts that should be in that same file!
+
+### Scenario 2 exceptions: 
 - remove line 3-8: No need to install MergerFS.
 - Remove line 39 as there is no /mnt/pool-archive folder necessary without MergerFS tiered cache.
 - Mount your BTRFS1 array with the same arguments as a data disk in the example fstab.
 
-### Step 4: unmount old mount points
+### Step 4: unmount old mount points, make sure new mount points are EMPTY FOLDERS!
 - Go to Budgie menu, search DISKS, open it. 
 - hit the STOP button for each disk, not the boot drive of course. Just to make sure there are no old mounts.
+- Check all newly created mount points (folders) in `/mnt/disks`, each folder (for example `/mnt/disks/data1`, `/mnt/pool`) should be empty!
 - Now run `sudo mount -a` to mount everything.
 
 Congrats, your filesystem is now setup!
