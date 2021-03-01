@@ -41,12 +41,12 @@ You simply use BtrFS own pooling and you can choose whether you want traditional
 - You cannot use an SSD as cache (BtrFS has no tiered caching support).
 - You can use existing disks with data only if they were already BTRFS formatted.. 
 - Recommended in this scenario is use the btrfs default way to pool drives, but you have 2 options:
-  - **Recommended** (no realtime mirroring): _Stripe data_ (="spread in blocks over all the disks") and _mirror metadata_ across disks:
+  - **Recommended: no realtime mirroring**: _Stripe data_ (="spread in blocks over all the disks") and _mirror metadata_ across disks:**
     - When 1 disk fails, the array is still avaiable with data of the other disks but you can't restore the data via BtrFS options (no data mirroring). 
     - Instead, you protect against disk failure with SnapRAID: You need (at least) 1 dedicated parity disk per 4 data disks.
     - SnapRAID is scheduled to run nightly or every 6 hrs. Means you loose ability to restore data of the last 6hrs.
     - When data is written, only data disks will spin. This means the parity disk should have a longer lifecycle/wear down at a much slower pace.
-  - **BtrFS-Raid1** (realtime mirroring): _Mirror_ both data and metadata across across disks: 
+  - **BtrFS-Raid1: realtime mirroring: _Mirror_ both data and metadata across across disks:** 
     - Data is mirrrored realtime to other disk in the pool: only half (!) of total disk space will be available for data. Use this only if you have plenty of disks.
     - When a disk fails, you can restore data via BtrFS.
     - There is no specific parity disk, so no need to distinguish between data and parity disks in your naming convention. 
