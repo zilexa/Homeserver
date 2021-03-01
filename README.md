@@ -49,27 +49,10 @@ Before you do, please open the file in your text editor (Pluma) first!
 The script has clear comments: remove the parts you don't need. For example, if you are not going to use FileRun, that section can be removed. If you ever will use it, make sure to execute those commands first. 
 
 ### Step 5. Docker-Compose configuration
-Modify docker-compose.yml and .env to your needs and run docker-compose.  
-Configure each docker application to your needs. 
-Open the .env file in a text editor, understand these variables appear in docker-compose.yml. Make sure you fill them in to your needs. Each one needs to be filled in!
-Open docker-compose.yml and add/remove what you need. Make sure the paths of each volume is correct. 
-Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): docker-compose -f $HOME/docker/docker-compose.yml config
-
-Before running docker-compose, make sure: 
-1. all app-specific requirements are taken care of. 
-2. the .env file is complete and correct.
-3. the docker-compose.yml file is correct. 
-4. Open a terminal (CTRL+ALT+T or Budgie>Tilix). Do not prefix with sudo. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
-
-All images will be downloaded, containers will be build and everything will start running. 
-Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
-
-5. Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
-6. To update an application in the future, click that container, hit `recreate` and check `pull new image`. 
+See the subguide for [Docker Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md). 
 
 ### Step 6. Configure your Docker applications/services
-Via Portainer, you can easily access each of your app by clicking on the ports. 
-Go ahead and configure each of your applications. 
+See the chapter on [Docker management](https://github.com/zilexa/Homeserver/blob/master/docker/README.md) in the Docker Compose guide..  
 
 ### Step 7. Maintenance
 Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenance) of your server such as cleanup,  backup and disks protection tasks. 
