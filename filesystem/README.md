@@ -73,7 +73,8 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 More commands and info about BtrFS can be found via the official doc or by Googling. I prefer this doc as [quick reference](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html).
 
 ## Step 3: setup-storage.sh & adjust for your disks
-Read this step fully before running the script.
+From the folder where you downloaded the script, run it via `bash setup-storage.sh`. 
+**Read this step fully before running the script.**
 The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, therefore not in the post-install script. The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.
 
 ### For both scenarios: 
@@ -96,7 +97,7 @@ When you copy these lines from the example fstab to your fstab, make sure you us
 - Remove line 39 as there is no /mnt/pool-archive folder necessary without MergerFS tiered cache.
 - Mount your BTRFS1 array with the same arguments as a data disk in the example fstab.
 
-### Step 4: unmount old mount points, make sure new mount points are EMPTY FOLDERS!
+## Step 4: unmount old mount points, make sure new mount points are EMPTY FOLDERS!
 - Go to Budgie menu, search DISKS, open it. 
 - hit the STOP button for each disk, not the boot drive of course. Just to make sure there are no old mounts.
 - Check all newly created mount points (folders) in `/mnt/disks`, each folder (for example `/mnt/disks/data1`, `/mnt/pool`) should be empty!
