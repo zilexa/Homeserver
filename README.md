@@ -101,44 +101,44 @@ _[PiVPN](https://www.pivpn.io/)_ - via [Native Install](https://docs.pivpn.io/in
 >Runs natively because Wireguard-VPN is part of the Linux kernel already. 
 
 _[AdGuard Home](https://adguard.com/en/adguard-home/overview.html)_ - via [Native Install](https://github.com/AdguardTeam/AdGuardHome#getting-started)\
-_[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker\
+_[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
 >Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting. 
 >AdGuard Home is a DNS based malware & ad filter. No more ads, malware, coinmining, phishing. All devices on your homenetwork are ad-free and protected. 
 >Can also be used remotely via split tunnel VPN. 
-AdGuard Home runs natively otherwise you cannot use it as DNS server when you are remote away from home. 
+>AdGuard Home runs natively otherwise you cannot use it as DNS server when you are remote away from home. 
 
-_[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker\
-Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
+_[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker
+>Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
 
 ### _Cloud Experience_
 
-_[FileRun](https://filerun.com/)_ and/or _[NextCloud](https://nextcloud.com/)_ - via Docker\
-FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. It always shows the realtime state of your filesystem. 
-It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no other features: purely a "drive". It does support WebDAV. 
-NextCloud is similar, very popular and free. Not as fast as FileRun but no user-limits. It also has much more features such as Calendar, Contacts etc. I plan to use it to give others ("External Users" in my folder structure) an account on my cloud and as WebDAV music player for my ripped AudioCDs. 
+_[FileRun](https://filerun.com/)_ and/or _[NextCloud](https://nextcloud.com/)_ - via Docker
+>FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. It always shows the realtime state of your filesystem. 
+>It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no other features: purely a "drive". It does support WebDAV. 
+>NextCloud is similar, very popular and free. Not as fast as FileRun but no user-limits. It also has much more features such as Calendar, Contacts etc. I plan to use it to give others ("External Users" in my folder structure) an account on my cloud and as WebDAV music player for my ripped AudioCDs. 
 
-_[OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker\
-Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud. 
+_[OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker
+>Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud. 
 
-_[Syncthing](https://syncthing.net/)_ - via Docker\
-To sync your devices to your server, Syncthing is the fastest and most lightweight solution for 2-way syncing. FileRun and NextCloud can also do syncing via WebDAV, but I find webDAV not ideal/reliable for syncing everything you want on your phone (photos, app backups etc). On Android, the Syncthing-fork application allows you to easily add your Whatsapp, Signal and other apps backups and photos, camera etc to sync. Always or when charging/when on wifi. iOS does not allow file access, use FileRun/NextCloud.  
+_[Syncthing](https://syncthing.net/)_ - via Docker
+>To sync your devices to your server, Syncthing is the fastest and most lightweight solution for 2-way syncing. FileRun and NextCloud can also do syncing via WebDAV, but I find webDAV not ideal/reliable for syncing everything you want on your phone (photos, app backups etc). On Android, the Syncthing-fork application allows you to easily add your Whatsapp, Signal and other apps backups and photos, camera etc to sync. Always or when charging/when on wifi. iOS does not allow file access, use FileRun/NextCloud.  
 
-_[Firefox Sync](https://github.com/mozilla-services/syncserver)_ - via Docker\
-By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla. Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
+_[Firefox Sync](https://github.com/mozilla-services/syncserver)_ - via Docker
+>By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla. Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
 
-_[Paperless](https://github.com/jonaswinkler/paperless-ng)_ - via Docker\
-Scan files and auto-organise for your administration archive with a webUI to see and manage them. [Background](https://blog.kilian.io/paperless/) of Paperless. No more paper archives!
+_[Paperless](https://github.com/jonaswinkler/paperless-ng)_ - via Docker
+>Scan files and auto-organise for your administration archive with a webUI to see and manage them. [Background](https://blog.kilian.io/paperless/) of Paperless. No more paper archives!
 
 ### _Media Server_
 
-_[Jellyfin](https://jellyfin.org/)_ - via Docker\
-A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do. Jellyfin is userfriendly and has easy features that you might miss from the streaming giants such as watched status management etc. 
+_[Jellyfin](https://jellyfin.org/)_ - via Docker
+>A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do. Jellyfin is userfriendly and has easy features that you might miss from the streaming giants such as watched status management etc. 
 The mediaserver can transcode media on the fly to your clients, adjusting for available bandwith. It can use hardware encoding capabilities of your server.
 
-_[Sonarr (tvshows), Radarr (movies) Bazarr (subtitles), Jackett (torrentproxy)](https://wiki.servarr.com/Docker_Guide)_ - via Docker\
-A visual, user-friendly tool allowing you to search & add your favourite TV shows (Sonarr) or Movies (Radarr) and subtitles (Bazarr), see a schedule of when the next episodes will air and completely take care of obtaining the requires files (by searching magnets/torrents via Jackett, a proxy for all torrentsites) and organising them, all in order to get a full-blown Nextflix experience served by JellyFin.| For years I have messed with FlexGet, but it can't beat Sonarr.   
+_[Sonarr (tvshows), Radarr (movies) Bazarr (subtitles), Jackett (torrentproxy)](https://wiki.servarr.com/Docker_Guide)_ - via Docker
+>A visual, user-friendly tool allowing you to search & add your favourite TV shows (Sonarr) or Movies (Radarr) and subtitles (Bazarr), see a schedule of when the next episodes will air and completely take care of obtaining the requires files (by searching magnets/torrents via Jackett, a proxy for all torrentsites) and organising them, all in order to get a full-blown Nextflix experience served by JellyFin.| For years I have messed with FlexGet, but it can't beat Sonarr.   
 
-_[Transmission](https://hub.docker.com/r/linuxserver/transmission/)_ + [PIA Wireguard VPN](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_  - via Docker\
-Sonarr, Radarr, Jackett (automatically) add stuff to Transmission which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.  
-Via the PIA Wireguard VPN docker image, your downloads are obscured while still allowing you to reach high speeds via the open port in the VPN tunnel. 
+_[Transmission](https://hub.docker.com/r/linuxserver/transmission/)_ + [PIA Wireguard VPN](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_  - via Docker
+>Sonarr, Radarr, Jackett (automatically) add stuff to Transmission which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.  
+>Via the `docker-wireguard-pia` image created by `thrnz`, your downloads are obscured while still allowing you to reach high speeds via the open port in the VPN tunnel, and you can even automatically change the port in Transmission when PIA assigns a new open port, which happens every 90 days.
 
