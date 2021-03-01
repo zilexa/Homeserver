@@ -49,7 +49,7 @@ Before you do, please open the file in your text editor (Pluma) first!
 The script has clear comments: remove the parts you don't need. For example, if you are not going to use FileRun, that section can be removed. If you ever will use it, make sure to execute those commands first. 
 
 ### Step 5. Docker-Compose configuration
-See the subguide for [Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker). **this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**
+See the subguide for [Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker). _**this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**_
 
 ### Step 6. Configure your Docker applications/services
 See the subguide for [Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker). 
