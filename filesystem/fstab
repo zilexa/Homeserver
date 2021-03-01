@@ -31,10 +31,18 @@ UUID=!ADD YOUR DATA DISK3 UUID HERE! /mnt/disks/data3 btrfs defaults,noatime,com
 # MergerFS ~ datapool excluding the SSD cache (required to be able to unload the cache)
 /mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool-archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool 0 0
 #
+#
 # Mount PARITY disk(s) ~ for regular SnapRAID sync
 # ------------------------------------------------
-# If you only want to run SnapRAID nightly, remove this line and just mount it temporarily. 
-UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 btrfs defaults,noatime,compress=zstd:3 0 0
+# Commented out because not necessary, it will be temporarily mounted by maintenance.sh
+# UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 btrfs defaults,noatime,compress=zstd:3 0 0
+#
+#
+# Mount BACKUP disk(s) ~ for regular backups
+# ------------------------------------------------
+# Commented out because not necessary, it will be temporarily mounted by backup.sh
+# UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs defaults,noatime,compress=zstd:3 0 0
+#
 #
 # NFS ~ home network shares  
 # -------------------------
