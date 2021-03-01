@@ -90,7 +90,7 @@ Notice the 2 long lines for MergerFS in the example fstab!
 - The first should contain the cache SSD and all data disks seperated with `:`, mounting them to `/mnt/pool`
 - The second is identical except without the SSD and a different mount path: `mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
 - The long list of arguments have carefully been chosen for this Tiered Caching setup. They are documented here. No need to change unless you know what you are doing.
-When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts that should be in that same file!
+- When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, that each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
 ### Scenario 2 exceptions: 
 - remove line 3-8: No need to install MergerFS.
