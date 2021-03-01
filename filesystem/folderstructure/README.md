@@ -40,7 +40,9 @@ The root of my data (data disk array) is `/mnt/pool`, it contains 2 folders:
 - `/mnt/pool/Media` <--- non-personal data: tvshow and movie downloads, AudioCD rips.
 
 ### non-personal data
-The Media folder contains _expendable_ data such as tvshows/movies and AudioCD rips, they are not included in my _main_ backup strategy, since they do not contain personal data. Note this data is still very well protected via SnapRAID. It just won't take up storage on the backup drive. You can of course choose to add your music to a backup schedule (see maintenance guide). 
+The Media folder contains _expendable_ data such as TV shows, Movies and AudioCD rips.
+This folder is not included in my _main_ backup strategy: it won't be backupped to `/mnt/disks/backup1` since it does not contain personal data. Only the relevant subvolumes of the OS-system SSD and the /mnt/pool/Users folder is backupped with a timeline on that disk.  
+The data is still very well protected via SnapRAID and data can easily be restored in case of a disk failure. It just won't take up storage on the backup drive, unless you choose to (and have enough free space). 
 
 ### User-specific data
 Within this folder I differentiate between 2 types of Users, and each user will have their own UserName folder (a requirement for web access/identity management).
