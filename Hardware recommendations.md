@@ -1,6 +1,8 @@
 A lot of research has been done to determine the required choices to have a rock stable, future-proof homeserver with the lowest power consumption.
 The system will be running 24/7, so power consumption matters. With this combination you should be able to reach idle power consumption of 4 watt.
 
+The research can be found in [this Dutch forum](https://gathering.tweakers.net/forum/list_messages/1673583) (or see [translation](https://translate.google.com/translate?hl=&sl=nl&tl=en&u=https%3A%2F%2Fgathering.tweakers.net%2Fforum%2Flist_messages%2F1673583), the first post is long and contains the most important information. Below the concluding recommendations: 
+
 The most important part that goes against most online recommendations:
 1. A motherboard designed specifically for 24/7/365 stable operation with low power consumption - Fujitsu D3644-B. This is the cheapest (yet feature-complete) motherboard with the C246 chipset, one that is specifically meant for embedded devices and edge solutions. It is made of special components for low power consumption and stability. Almost every other motherboard you find is made up of components focused on performance (for gaming usually). This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server.  
 
