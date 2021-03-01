@@ -2,7 +2,7 @@
 
 My folder structure is extremely simple, this supports easy backups and snapshots with a similar file structure. 
 
-## System folder structure
+## 1. System folder structure
 ### My mounts: 
 - `/mnt/disks` --> physical disks
   - `/mnt/disks/data1`, `/mnt/disks/data2`, `/mnt/disks/data3`
@@ -34,7 +34,7 @@ This allows you to first snapshot (backup) "/", and do a clean OS install on "/"
 
 &nbsp;
 
-### User-specific data and non-personal data
+## 2. User-specific data and non-personal data
 The root of my data (data disk array) is `/mnt/pool`, it contains 2 folders:
 - `/mnt/pool/Users` <--- User-specific data.
 - `/mnt/pool/Media` <--- non-personal data: tvshow and movie downloads, AudioCD rips.
