@@ -32,7 +32,7 @@ Note: I had zero experience when I started and learned everything by googling, s
 
 NOTES:
   - Opening a script or textfile in Terminal (instead of a normal UI text editor like Pluma) can sometimes prevent you from messing up the file: `nano /path/to/file.sh` note in some cases you need elevated (root) privileges, to do that, prefix a command with `sudo`. 
-  - **My system user account is called `asterix`, I use variables as much as possible, but that is not always possible. Make sure you replace "asterix" with your systems username (and read Folder Structure! Because "asterix" is very important in my folder structure).**
+  - **My system user account is called `asterix`, I use variables instead of personal names, but that is not always possible. Make sure you replace "asterix" with your systems username (and read Folder Structure! Because "asterix" is also very important in my folder structure).**
 
 
 ### Step 1. Filesystem
