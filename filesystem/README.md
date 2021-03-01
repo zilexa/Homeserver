@@ -63,7 +63,7 @@ Check this via `btrfs subvolume list /`
 
 ### Step 2: Create new filesystems for disks
 Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
-- unmount all the drives you are going to format: `sudo umount /media/(diskname)`
+- unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l`
 - Scenario 1 and 2-option1: create a single filesystem per disk: run `sudo mkfs.btrfs -f -L data1 –m single /dev/sda` for each disk device. 
   - Change label `data1` and path `/dev/sda` for each disk. 
