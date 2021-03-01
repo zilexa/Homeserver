@@ -88,67 +88,66 @@ Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenan
 The apps are devided in 4 categories. With the exaception of Netdata, PiVPN and AdGuard Home everything runs via your Docker-Compose script in Docker. 
 
 ### _Server Management & Monitoring_\
-_[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)\
+_[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)\
 Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info. 
 There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors. 
 
-_[Portainer](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - Docker\
+_[Portainer](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via Docker\
 a Docker webUI to manage and update containers. Basically a ui of the Docker command. 
 
-_[Organizr](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - Docker\
+_[Organizr](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via Docker\
 A a customisable homepage to have quick access to all your services/applications. 
 
-_[Dozzle](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - Docker\
+_[Dozzle](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via Docker\
 WebUI to check your logs. 
 
 ### _User Privacy & Network Security_
 
-_[Traefik](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - Docker
+_[Traefik](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via Docker\
 reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc. Pretty complicated. Spend lots of time figuring it out. I want to replace Traefik for Caddy soon. 
 
-_[PiVPN](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - [Install instructions]()
+_[PiVPN](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install]()\
 Using the Wireguard VPN protocol, easy and secure access to non-exposed services and to your server (via SSH).
 I highly recommend to use it for DNS & homeserver access by default. All other traffic can bypass the server unless you are connected to unsafe networks (public networks or countries that do not respect privacy). 
 
-_[AdGuard Home]()_ - [Install instructions]()
-_[Unbound]()_ - Docker
+_[AdGuard Home]()_ - via [Native Install]()\
+_[Unbound]()_ - via Docker\
 Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting. 
 AdGuard Home is a DNS based malware & ad filter. No more ads, malware, coinmining, phishing. All devices on your homenetwork are ad-free and protected. 
 Can also be used remotely via split tunnel VPN. 
 
-_[UniFi Controller]()_ - Docker
+_[UniFi Controller]()_ - via Docker\
 Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
 
 ### _Cloud Experience_
 
-_[FileRun]()_ and/or _[NextCloud]()_
+_[FileRun]()_ and/or _[NextCloud]()_ - via Docker\
 FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. It always shows the realtime state of your filesystem. 
 It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no other features: purely a "drive". It does support WebDAV. 
 NextCloud is similar, very popular and free. Not as fast as FileRun but no user-limits. It also has much more features such as Calendar, Contacts etc. I plan to use it to give others ("External Users" in my folder structure) an account on my cloud and as WebDAV music player for my ripped AudioCDs. 
 
-_[OnlyOffice DocumentServer]()_ - Docker
+_[OnlyOffice DocumentServer]()_ - via Docker\
 Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud. 
 
-_[Syncthing]()_ - Docker
+_[Syncthing]()_ - via Docker\
 To sync your devices to your server, Syncthing is the fastest and most lightweight solution for 2-way syncing. FileRun and NextCloud can also do syncing via WebDAV, but I find webDAV not ideal/reliable for syncing everything you want on your phone (photos, app backups etc). On Android, the Syncthing-fork application allows you to easily add your Whatsapp, Signal and other apps backups and photos, camera etc to sync. Always or when charging/when on wifi. iOS does not allow file access, use FileRun/NextCloud.  
 
-_[Firefox Sync]()_ - Docker
+_[Firefox Sync]()_ - via Docker\
 By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla. Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
 
-_[Paperless]()_ - Docker
-[Overview](https://learn.netdata.cloud/docs/overview/what-is-netdata) - via Docker-Compose
+_[Paperless]()_ - via Docker\
 This explains it all: [The Paperless Project](https://github.com/the-paperless-project/paperless)
 
 ### _Media Server_
 
-_[Jellyfin]()_ - Docker
+_[Jellyfin]()_ - via Docker\
 A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do. Jellyfin is userfriendly and has easy features that you might miss from the streaming giants such as watched status management etc. 
 The mediaserver can transcode media on the fly to your clients, adjusting for available bandwith. It can use hardware encoding capabilities of your server.
 
-_[Sonarr (tvshows), Radarr (movies) Bazarr (subtitles), Jackett (torrentproxy)](https://wiki.servarr.com/Docker_Guide)_ - Docker
+_[Sonarr (tvshows), Radarr (movies) Bazarr (subtitles), Jackett (torrentproxy)](https://wiki.servarr.com/Docker_Guide)_ - via Docker\
 A visual, user-friendly tool allowing you to search & add your favourite TV shows (Sonarr) or Movies (Radarr) and subtitles (Bazarr), see a schedule of when the next episodes will air and completely take care of obtaining the requires files (by searching magnets/torrents via Jackett, a proxy for all torrentsites) and organising them, all in order to get a full-blown Nextflix experience served by JellyFin.| For years I have messed with FlexGet, but it can't beat Sonarr.   
 
-_[Transmission]()_ + [PIA Wireguard VPN]()_  - Docker
+_[Transmission]()_ + [PIA Wireguard VPN]()_  - via Docker\
 Sonarr, Radarr, Jackett (automatically) add stuff to Transmission which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.  
 Via the PIA Wireguard VPN docker image, your downloads are obscured while still allowing you to reach high speeds via the open port in the VPN tunnel. 
 
