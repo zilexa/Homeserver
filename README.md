@@ -93,7 +93,7 @@ WebUI to check your logs.
 ### _User Privacy & Network Security_
 
 _[Traefik](https://doc.traefik.io/traefik/)_ - via Docker\
-reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc. Pretty complicated. Spend lots of time figuring it out. I want to replace Traefik for Caddy soon. 
+>reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc. Pretty complicated. Spend lots of time figuring it out. I want to replace Traefik for Caddy soon. 
 
 _[PiVPN](https://www.pivpn.io/)_ - via [Native Install](https://docs.pivpn.io/install/)\
 Using the Wireguard VPN protocol, easy and secure access to non-exposed services and to your server (via SSH).
