@@ -27,9 +27,9 @@ UUID=!ADD YOUR DATA DISK3 UUID HERE! /mnt/disks/data5 btrfs defaults,noatime,com
 # MergerFS ~ POOL & pool-archive
 # ------------------------------
 # MergerFS datapool ~ with SSD as tiered cache
-/mnt/disks/cache:/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,ca>
+/mnt/disks/cache:/mnt/disks/data1 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=lfs,moveonenospc=true,minfreespace=200G,fsname=mergerfsPool 0 0
 # MergerFS ~ datapool excluding the SSD cache (required to be able to unload the cache)
-/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool-archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.cr>
+/mnt/disks/data1 /mnt/pool-archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool 0 0
 #
 # Mount PARITY disk(s) ~ for regular SnapRAID sync
 # ------------------------------------------------
