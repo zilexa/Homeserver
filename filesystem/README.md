@@ -36,22 +36,22 @@ How it works: MergerFS runs on top of the BTRFS disks in "user-space". It's flex
 - New files will be created on the SSD cache drive or a specific folder on your system SSD drive if certain conditions are met (such as free space). 
 - Files that haven't been modified for X days will be moved from the SSD to the disks within the pool. 
  
-## Scenario 2 No MergerFS, no tiered caching: multiple choices
+## Scenario 2 No MergerFS, no tiered caching: 2 options
 You simply use BtrFS own pooling and you can choose whether you want traditional realtime mirroring or use SnapRAID for a more backup-like scheduled parity/mirroring.
 - You cannot use an SSD as cache (BtrFS has no tiered caching support).
 - You can use existing disks with data only if they were already BTRFS formatted.. 
 - Recommended in this scenario is use the btrfs default way to pool drives, but you have 2 options:
-  - **Recommended: no realtime mirroring: _Stripe data_ (="spread in blocks over all the disks") _and mirror metadata_ across disks:**
+  - **Option 1.Recommended: no realtime mirroring: _Stripe data_ (="spread in blocks over all the disks") _and mirror metadata_ across disks:**
     - When 1 disk fails, the array is still avaiable with data of the other disks but you can't restore the data via BtrFS options (no data mirroring). 
     - Instead, you protect against disk failure with SnapRAID: You need (at least) 1 dedicated parity disk per 4 data disks.
     - SnapRAID is scheduled to run nightly or every 6 hrs. Means you loose ability to restore data of the last 6hrs.
     - When data is written, only data disks will spin. This means the parity disk should have a longer lifecycle/wear down at a much slower pace.
-  - **BtrFS-Raid1: realtime mirroring: _Mirror both data and metadata_ across disks:** 
+  - **Option 2.BtrFS-Raid1: realtime mirroring: _Mirror both data and metadata_ across disks:** 
     - Data is mirrrored realtime to other disk in the pool: only half (!) of total disk space will be available for data. Use this only if you have plenty of disks.
     - When a disk fails, you can restore data via BtrFS.
     - There is no specific parity disk, so no need to distinguish between data and parity disks in your naming convention. 
     - When data is written, **all disks** will spin. This also means the disks will wear down more or less at the same pace.
-- For benefits of SnapRAID versus RAID1: [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). This is why, for home use instead of enterprise use I recommend no realtime mirroring. 
+- **For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). This is why, for home use instead of enterprise use I recommend no realtime mirroring. 
 
 ### Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
