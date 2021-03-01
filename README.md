@@ -19,7 +19,7 @@ Note: I had zero experience when I started and learned everything by googling, s
 
 ## Not included: 
 1. Your router port forwarding:
-    - The minimum set of services should be exposed, forward to your server IP: TCP ports 80 and 443 for remote HTTPS access, UDP port 51822 for VPN access, tcp port 22000 for syncing devices via syncthing.
+    - The minimum set of services should be exposed via portforwarding to your server IP: **TCP ports 80 and 443** for remote HTTPS access, **UDP port 51822** for VPN access, **TCP and UDP port 22000** for syncing devices via syncthing.
     - other containers, applications or services including SSH will only be accessible via VPN.
 2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide, get it via GoDaddy.com or Porkbun.com.
 
