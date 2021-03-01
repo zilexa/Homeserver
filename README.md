@@ -75,7 +75,7 @@ You can easily find other applications via https://hub.docker.com/
 Below a description of each application that are in Docker-Compose.yml. Choose the ones you need.
 The only exceptions -apps that run natively on the OS for specific reasons- are Netdata, PiVPN and AdGuard Home. These apps have very easy installation instructions. 
 
-### _Server Management & Monitoring_\
+### _Server Management & Monitoring_
 _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)
 >Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info. 
 >There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors. 
