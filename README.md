@@ -90,16 +90,20 @@ The apps are devided in 4 categories. With the exaception of Netdata, PiVPN and 
 ### _Server Management & Monitoring_
 
  _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - [Install instructions](https://learn.netdata.cloud/docs/agent/packaging/installer)
+ 
 Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info. 
 There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors. 
 
-_[[Portainer](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - Docker
+_[Portainer](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - Docker
+
 a Docker webUI to manage and update containers. Basically a ui of the Docker command. 
 
 _[Organizr](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - Docker
+
 A a customisable homepage to have quick access to all your services/applications. 
 
 _[Dozzle](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - Docker
+
 WebUI to check your logs. 
 
 ### _User Privacy & Network Security_
