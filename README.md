@@ -1,7 +1,7 @@
 # The Modern Homeserver 
 ### Setup a lightweight home server usable as desktop workstation or headless, with carefully selected apps to make your life easier and give you the benefits of the "private cloud"! 
 
-This guide uses a declarative methodology, not only to describe and run containerized applications (via docker-compose), but also to install and configure the server and all necessary tools via bash scripts. 
+This guide uses a declarative methodology, not only to describe and run containerized applications (via docker-compose), but also to install and configure the server and all necessary tools via bash scripts. See [What is a Container?](https://www.docker.com/resources/what-container) to get a quick understanding why Docker is now the default way to deploy, run and manage web applications and how it differs from virtual machines.  
 
 See [Justification](https://github.com/zilexa/Homeserver/blob/master/Justification.md) on the What & the Why and definitely don't start buying stuff before reading [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Hardware%20recommendations.md). Most information available online for pc building and NAS devices do not consider **long term stability** and low power consumption with **fault tolerant components**: they focus on downloading stuff and just storing them. **My server uses just 4 WATT**, less than a phone charger, comparable to a Raspberry Pi, much less than a Synology (a popular ready-to-use NAS system) yet way **more powerful and futureproof**. 
 
