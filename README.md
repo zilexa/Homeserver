@@ -26,7 +26,7 @@ Note: I had zero experience when I started and learned everything by googling, s
 &nbsp;
 
 ## Steps to get up and running: 
-### Step 0 Get the files
+### Step 0. Get the files
 - Download this repository to your Downloads folder: Click the green "Code" button top left > Download as Zip. 
 - Open a Terminal (CTRL+ALT+T) or hit the Budgie start button and start typing "Terminal" or "Tilix. 
 
@@ -35,7 +35,7 @@ NOTES:
   - **My system user account is called `asterix`, I use variables as much as possible, but that is not always possible. Make sure you replace "asterix" with your systems username (and read Folder Structure! Because "asterix" is very important in my folder structure).**
 
 
-### Step 1 Filesystem
+### Step 1. Filesystem
 [Prepare the filesystem](https://github.com/zilexa/Homeserver/tree/master/filesystem). Install fs tools, understand their goal, tailor to your needs.
 
 ### Step 2. Folder Structure
