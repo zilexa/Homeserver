@@ -69,7 +69,7 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
   - Change label `data1` and path `/dev/sda` for each disk. 
   - At least one disk should have label `parity1` and one disk `backup1`. This way you can add such disks later and easily update the config of your backup and snapraid tasks. 
 - Scenario2-option2: Create a single filesystem across all disks (except a dedicated backup disk) `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb (add paths)`. 
-  - Run the command from scenario 1 for your backup1 disk. 
+  - Run the command from scenario 1 for the remaining disk with label `backup1`. 
 More commands and info about BtrFS can be found via the official doc or by Googling. I prefer this doc as [quick reference](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html).
 
 ### Step 3: setup-storage.sh & adjust for your disks
