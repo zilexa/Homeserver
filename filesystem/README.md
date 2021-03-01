@@ -104,3 +104,5 @@ When you copy these lines from the example fstab to your fstab, make sure you us
 
 Congrats, your filesystem is now setup!
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-archive. 
+
+Continue setting up your [Folder Structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure) or go back to the main guide. 
