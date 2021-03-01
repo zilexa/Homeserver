@@ -34,13 +34,13 @@ UUID=!ADD YOUR DATA DISK3 UUID HERE! /mnt/disks/data3 btrfs defaults,noatime,com
 #
 # Mount PARITY disk(s) ~ for regular SnapRAID sync
 # ------------------------------------------------
-# Commented out because not necessary, it will be temporarily mounted by maintenance.sh
+# Commented out because not necessary, it will be temporarily mounted by maintenance.sh. Do add the UUID, for your reference!
 # UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 btrfs defaults,noatime,compress=zstd:3 0 0
 #
 #
 # Mount BACKUP disk(s) ~ for regular backups
 # ------------------------------------------------
-# Commented out because not necessary, it will be temporarily mounted by backup.sh
+# Commented out because not necessary, it will be temporarily mounted by backup.sh. Do add the UUID, for your reference!
 # UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs defaults,noatime,compress=zstd:3 0 0
 #
 #
