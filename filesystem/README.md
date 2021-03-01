@@ -65,11 +65,11 @@ Check this via `btrfs subvolume list /`
 Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
 - unmount all the drives you are going to format: `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l`
-- Scenario 1 and 2-option1: create a single filesystem per disk: run `sudo mkfs.btrfs -f -L data1 –m single /dev/sda` for each disk device, with the right path. 
-- Scenario2-option2: Single command to create a volume/array, add path to all disk devices (except backup disk) `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb`.
-- with `-L data1` you set the label of the disk to `data1`, change this per disk. For raid1, the name above is "pool". Change at will. 
-- For Scenario 1, make sure 1 disk is labeled `parity1`. 
-- In both scenarios I recommend to have a dedidicated backup disk, name this one `backup1` (easy to distinguish with externally attached backup drives during the config of your maintenance/backup tasks).  
+- Scenario 1 and 2-option1: create a single filesystem per disk: run `sudo mkfs.btrfs -f -L data1 –m single /dev/sda` for each disk device. 
+  - Change label `data1` and path `/dev/sda` for each disk. 
+  - At least one disk should have label `parity1` and one disk `backup1`. This way you can add such disks later and easily update the config of your backup and snapraid tasks. 
+- Scenario2-option2: Use this single command to create a volume/array with the path to all disk devices except the backup drive `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb`. 
+  - Run the command from scenario 1 for your backup1 disk. 
 More commands and info about BtrFS can be found via the official doc or by Googling. I prefer this doc as [quick reference](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html).
 
 ### Step 3: setup-storage.sh & adjust for your disks
