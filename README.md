@@ -85,12 +85,15 @@ Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenan
 &nbsp;
 
 ## Overview of applications and services
-The apps are devided in 4 categories. With the exaception of Netdata, PiVPN and AdGuard Home everything runs via your Docker-Compose script in Docker. 
+See the Docker Compose guide on how to get up and running quickly with Docker and Docker-Compose. Below a description of the apps that are in Docker-Compose.yml. 
+Almost everything will run isolated in Docker containers. The setup is easy with the provided docker-compose.yml file, which is a declarative way to pull the images from the internet, create containers and configure everything with a single command!
+The only exceptions -apps that run natively on the OS for specific reasons- are Netdata, PiVPN and AdGuard Home. These apps have very easy installation instructions. 
 
 ### _Server Management & Monitoring_\
 _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)\
 Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info. 
 There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors. 
+Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.
 
 _[Portainer](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via Docker\
 a Docker webUI to manage and update containers. Basically a ui of the Docker command. 
@@ -109,12 +112,14 @@ reverse-proxy for HTTPS access to the services that you want to expose online. T
 _[PiVPN](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install]()\
 Using the Wireguard VPN protocol, easy and secure access to non-exposed services and to your server (via SSH).
 I highly recommend to use it for DNS & homeserver access by default. All other traffic can bypass the server unless you are connected to unsafe networks (public networks or countries that do not respect privacy). 
+Runs natively because Wireguard-VPN is part of the Linux kernel already. 
 
 _[AdGuard Home]()_ - via [Native Install]()\
 _[Unbound]()_ - via Docker\
 Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting. 
 AdGuard Home is a DNS based malware & ad filter. No more ads, malware, coinmining, phishing. All devices on your homenetwork are ad-free and protected. 
 Can also be used remotely via split tunnel VPN. 
+AdGuard Home runs natively otherwise you cannot use it as DNS server when you are remote away from home. 
 
 _[UniFi Controller]()_ - via Docker\
 Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
@@ -136,7 +141,7 @@ _[Firefox Sync]()_ - via Docker\
 By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla. Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
 
 _[Paperless]()_ - via Docker\
-This explains it all: [The Paperless Project](https://github.com/the-paperless-project/paperless)
+Scan files and auto-organise for your administration archive with a webUI to see and manage them. 
 
 ### _Media Server_
 
