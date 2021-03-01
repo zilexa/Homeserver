@@ -33,16 +33,13 @@ Please read about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs
 - new files will be created on the SSD cache drive or folder (instead of the data disks pool) if certain conditions are met (such as free space). 
 - Files that haven't been modified for X days will be moved to the data disks pool. 
 - MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. 2 pools: one with, one without the SSD or cache folder. Nightly, data from the cache drive is copied to the pool without the cache folder. 
-- Note: instead of having seperate data disks pooled by MergerFS. you can also create a RAID0 BTRFS data array and pool it via MergerFS with the ssd cache. I would prefer this if the documentation would be clear whether you loose all data if 1 disk in the BTRFS RAID0 array fails (it is not clear to me). 
  
 ## Scenario 2 No MergerFS, no tiered caching: multiple choices
 - You can use existing disks with data only if they were already BTRFS formatted.
 - New files always go to the data disks pool. You don't need MergerFS, you can create a BTRFS filesystem that spans disks. 
 - Recommended to use the btrfs default:
-Default (with SnapRAID): Stripe the data and mirror the file system metadata across several devices: Use part of the space for data (since metadata is mirrored). 
-Raid0 (with SnapRAID): Stripe both the file system data and metadata across several devices: use all space for data (no mirroring). 
-RAID1: Mirror both the file system data and metadata across several devices: use half of the total space for data (since everything is mirrored). 
-- Pick your evil. RAID1 is most secure but only useful if you have plenty of disks. Otherwise, go for default or choose RAID0 if you can confirm my last note in Scenario1.
+  - Default (with SnapRAID): _Stripe_ data (="spread in blocks over all the disks") and _mirror_ metadata across disks: When 1 disk fails, you don't loose data on the whole array. Use SnapRAID.
+  - RAID1 (realtime mirroring instead of SnapRAID): _Mirror_ both data and metadata across across disks: only half of total disk space will be available for data. Don't use SnapRAID.
 - For benefits of SnapRAID versus RAID1: [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). 
 
 ### Step 1: 
@@ -57,10 +54,9 @@ Check this via `btrfs subvolume list /`
 Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
 - unmount all the drives you are going to format: `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l`
-- Scenario1: create the filesystem for each disk, do not use paritions (no numbers such as sda1): `sudo mkfs.btrfs -f -L data1 –m single /dev/sda`
-- Scenario2 default: `sudo mkfs.btrfs -f -L data1 –m single /dev/sda`
-- Scenario2 Raid0: `sudo mkfs.btrfs -f -L data1 –m raid0 /dev/sda`
-- Scenario2 Raid0: `sudo mkfs.btrfs -f -L data1 –d raid1 /dev/sda`
+- Scenario1: create a single filesystem per disk: `sudo mkfs.btrfs -f -L data1 –m single /dev/sda`
+- Scenario2 with SnapRAID: `sudo mkfs.btrfs -f -L data1 –m single /dev/sda /dev/sdb` etc for all non-backup disks.
+- Scenario2 Raid1 (realtime mirroring instead of SnapRAID): `sudo mkfs.btrfs -f -L data1 –d raid1 /dev/sda /dev/sdb` etc for all non-backup disks.
 More commands and info about BtrFS can be found via the official doc or by Googling. I prefer this doc as [quick reference](https://docs.oracle.com/cd/E37670_01/E37355/html/ol_about_btrfs.html).
 
 ### Step 3: setup-storage.sh & adjust for your disks
