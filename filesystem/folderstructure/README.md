@@ -34,8 +34,12 @@ This allows you to first snapshot (backup) "/", and do a clean OS install on "/"
 
 &nbsp;
 
-## User data
-The root of my data (data disk array) is `/mnt/pool` it contains a single folder: `/mnt/pool/Users`
+### User-specific data and non-personal data
+- `/mnt/pool/Users` <--- User-specific data.
+- `/mnt/pool/Media` <--- non-personal data: tvshow and movie downloads, AudioCD rips. 
+The root of my data (data disk array) is `/mnt/pool` it contains 2 folders. The Media folder contains "expendable" data such as tvshows/movies and AudioCD rips, they are not included in my _main_ backup strategy, since they do not contain personal data. But they are still protected against disk failure via SnapRAID.
+
+#### User-specific data
 Within this folder I differentiate between 2 types of Users, and each user will have their own UserName folder (a requirement for web access/identity management).
 
 - `Users/Local` is the primary data storage for local users:
@@ -64,7 +68,7 @@ Username1/Ebooks
 Username1/[several document folders]
 ```
 
-#### Phone-sync: 2-way sync
+#### User-specific data special folder: Phone-sync, for 2-way sync
 Folders on the users phone will be synced as subfolders within this directory. Note that 2-way sync, even if you use "send-only" or "receive-only", means _delete_ actions on the phone are also synced to the server. That is why this folder exists: it is not the backup of the phone folders. 
 Example: 
 - user syncs its smartphone/Pictures folder when the phone is on wifi & charging (at night). 
@@ -76,13 +80,13 @@ Example:
 
 ### Shared user for couples/families
 The issue: My partner and I share photo albums, administrative documents etc. With Google Drive/DropBox/Onedrive, 1 user would own those files and share them with the other, but this only works in the online environment. The files are still stored in your folder. 
-And on  a local (shared) home laptop which syncs her and your folders, or even on the server itself which you might use as PC you see the local filesystem: your partner won't see those shared files in her folder. This can be frustrating and annoying as she has to go find your dir with those files.
+But your partner won't see those files on the local filesystem of your laptop, PC, workstation or server: only if she uses the web application (FileRun or NextCloud). As you will prefer to use the local files directly, this can be frustrating and annoying as she has to go find your folder with those files.
 
 #### Solution
-1. To keep the filesystem structure simple, we create a 3rd user, for example `asterix`. This is the same username as the server OS login user account for convenience. `Users/Local/Asterix` contains our photo albums, Music albums, documents etc. 
-2. This folder is symlinked to `Users/Local/Myusername` and `Users/Local/Herusername`. A symlink makes it appear as if the folder is inside those folders but in reality it isn't. It is a redirect, without the user noticing. Now both users have access to shared stuff!
-4. Extra benefit: on a shared home laptop, the local `Documents` folder of that laptop has `Myusername` and `Herusername` mounted into it (network shares). This allows easy and WAF-friendly access to files. And of course that symlinked Asterix/Documents folder will be there as well, in each users folder!
-3. In a similar way. `Users/Local/Asterix/Photo Albums` is mounted inside the shared home laptop `Pictures` folder for quick and easy access. Now you can have local stuff in `Pictures` (handy if no internet) and also access the servers Photo Albums that you share. 
+1. To keep the filesystem structure simple, we create a 3rd user, for example `asterix`. This is the same username as the server OS login user account for convenience. `Users/Local/Asterix` contains our shared photo albums, shared documents etc. 
+2. This folder is _symlinked_ to `Users/Local/Myusername` and `Users/Local/Herusername`. A symlink makes it appear as if a copy of the folder has been made but in reality it is only stored once: like a shortcut/redirect. Now both users have access to shared stuff!
+4. Extra benefit: on a shared home laptop, you can now easily mount (via NFSv4.2) each others User folders in the laptops local `Documents`. This allows easy and WAF-friendly access to files. And of course that symlinked Asterix/Documents folder will be there as well, in each users folder!
+3. In a similar way. `Users/Local/Asterix/Photo Albums` is mounted inside the shared home laptop `Pictures` folder for quick and easy access. Now you can have local stuff in `Pictures` (handy if no internet, to work directly on the storage of the laptop) and also access albums stored on the server.
 
 4. Note that private cloud solutions such as Nextcloud and FileRun won't allow access to symlinked folders, since each user access is tied to its own folder. 
 In the Docker Compose file, you can see how to work around this issue, by mapping `Users/Local/Asterix` into the filesystem of the (Nextcloud or Filerun) container. 
