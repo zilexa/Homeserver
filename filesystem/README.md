@@ -75,7 +75,7 @@ We use this solution because it is extremely easy to understand, to setup and to
 
 &nbsp;
 
---> If you prefer Raid1 follow steps 2B, 3B and notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". 
+--> If you prefer Raid1 follow steps 2B, 3B and notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
 --> Otherwise ignore those steps.
 ## Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
