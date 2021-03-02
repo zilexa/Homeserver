@@ -102,14 +102,14 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 - For the backup disk, use the command in 2A. 
 
 
-## Step 3: Prepare setup-storage.sh & adjust for your disks
+## Step 3: Add # of disks to setup-storage.sh
 The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
 **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**
 - The script does not add your disks to that system file! 
 - Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.
-### 3A: MODIFY THE SCRIPT to reflect your # of disks:
-- Line 40: Change the labels betweeen brackets { } to reflect the # of drives you have for data, parity and backup.  
-### 3B: If you use Raid1:
+### 3A: add # disks:
+- Line 40: All you have to do is change the labels betweeen brackets { } to reflect the # of drives you have for data, parity and backup.  
+### 3B Raid1 only:
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
 - Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
 - Line 40: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
