@@ -134,10 +134,9 @@ Have a look at the example fstab file. Notice:
   - _Exception `Raid1` + SSD cache_: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
 
 #### MergerFS Notes
---> The long list of arguments have carefully been chosen for this Tiered Caching setup.\ 
+--> The long list of arguments have carefully been chosen for this Tiered Caching setup. \ 
 --> [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.\
---> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!\
-
+--> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
 ## Step 5: Mounting the disks according to the updated fstab file
 First we have to _unmount old mount points_ and you should _verify the new mount points are EMPTY FOLDERS:_
