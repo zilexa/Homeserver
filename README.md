@@ -44,7 +44,7 @@ NOTES:
 ### Step 3. Prepare server and docker
 Install server essential tools and apply basic configuration + apply required stuff for specific docker services:
 If you haven't downloaded the file, use this command to do so: `wget https://github.com/zilexa/Homeserver/blob/master/prepare_server_docker.sh`
-execute it: `bash prepare_server_docker.sh`
+execute it (no sudo): `bash prepare_server_docker.sh`
 Before you do, please open the file in your text editor (Pluma) first!
 The script has clear comments: remove the parts you don't need. For example, if you are not going to use FileRun, that section can be removed. If you ever will use it, make sure to execute those commands first. 
 
