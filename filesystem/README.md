@@ -98,21 +98,23 @@ The script will install tools, create the subvolume for Docker persistent volume
 ### If you use Raid1 and don't need an SSD cache:
 - remove line 3-8: No need to install MergerFS.
 - Remove line 39 as there is no /mnt/pool-archive folder necessary without MergerFS tiered cache.
-- Mount your BTRFS1 array with the same arguments as a data disk in the example fstab. N
+- During step 4, you only need the UUID of your array (not per disk). Use the same arguments as a data disk in the example fstab.
 
 ### ALWAYS MODIFY THE SCRIPT TO REFLECT YOUR # OF DISKS! 
 - *_EDIT LINE 40 FIRST!_* To reflect the # of drives you have (for data, parity and backup). 
-- (For raid1 you only need 1 folder for data (/mnt/disks/raid1) and no parity folder.)
-- The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.
+- Exception raid1: you only need 1 folder for data (/mnt/disks/raid1) and no parity folder.
+
+The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.
 - The script does not add your disks to that system file! 
 - Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.
+
 
 ## Step 4: Run the script & use the fstab example file
 _Read this step fully first_
 From the folder where you downloaded the script, run it via `bash setup-storage.sh`. 
 Have a look at the example fstab file. Notice: 
 - There is a line for each system subvolume to mount it to a specific location.
-- There is a line for each data disk to mount it to a location (for Raid1: you only need 1 line!).
+- There is a line for each data disk to mount it to a location (Exception Raid1: you only need 1 line and seperate parity!).
 - There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to have it here. 
 - For MergerFS there are VERY long lines, because of all the arguments. 
   - The first should contain the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
