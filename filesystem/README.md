@@ -108,12 +108,12 @@ The script will install tools, create the subvolume for Docker persistent volume
 - The script does not add your disks to that system file! 
 - Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.
 ### 3A: MODIFY THE SCRIPT to reflect your # of disks:
-- *_EDIT LINE 40_* To reflect the # of drives you have (for data, parity and backup).  
-### 3B: MODIFY THE SCRIPT for Raid1:
+- Line 40: Change the labels betweeen brackets { } to reflect the # of drives you have for data, parity and backup.  
+### 3B: If you use Raid1:
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
 - Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
-- Line 40: Remove parity1 and remove data1-data3, as raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
-  - Exception `Raid1` + SSD Cache: Add `raid1` in line 40. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
+- Line 40: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
+- Exception `Raid1` + SSD Cache: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
 
 ## Step 4: Run the script & use the fstab example file
 _Read this step fully first_
