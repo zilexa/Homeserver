@@ -87,8 +87,8 @@ Check your system drive subvolumes via `btrfs subvolume list /` \
 
 ## Step 2: Create new filesystems for disks
 Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
-- unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
-- list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
+- >> unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
+- >> list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
 - Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
 - In the next steps, know `-L name` is how you label your disks. 
 
