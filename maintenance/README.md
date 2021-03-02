@@ -10,7 +10,7 @@ Copy the folders and files in this folder to `$HOME/docker/HOST`.
 Notice this way you have everything in 1 folder: you docker container volumes with their config and data, your docker-compose.yml and environment file and your folder with maintenance and backup config. 
 
 ### Step 1: Choose # of days to keep files on cache.
-Open maintenance.sh in Pluma/text editor. 
+Open `/HOST/maintenance.sh` in Pluma/text editor. 
 Under Cache Cleanup, change the # of days (30) to your needs. 
 
 ### Step 2: Choose # of days to keep watched tv-media.
