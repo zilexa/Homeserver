@@ -95,14 +95,15 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 ## Step 3: Prepare setup-storage.sh & adjust for your disks
 The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, therefore not in the post-install script. The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.
 
+### AlWAYS MODIFY THE SCRIPT to reflect your # of disks! 
+- *_EDIT LINE 40_* To reflect the # of drives you have (for data, parity and backup). 
+- Exception raid1: you only need 1 folder for data. Remove parity1 and remove data1-data3, as the array can be mounted to /mnt/pool.
+- Exception raid1 w/ MergerFS SSD cache: add `raid1`, the array will be mounted to `mnt/disks/raid1` and the pool with ssd will be /mnt/pool. 
+ 
 ### If you use Raid1 and don't need an SSD cache:
 - remove line 3-8: No need to install MergerFS.
 - Remove line 39 as there is no /mnt/pool-archive folder necessary without MergerFS tiered cache.
 - During step 4, you only need the UUID of your array (not per disk). Use the same arguments as a data disk in the example fstab.
-
-### ALWAYS MODIFY THE SCRIPT TO REFLECT YOUR # OF DISKS! 
-- *_EDIT LINE 40 FIRST!_* To reflect the # of drives you have (for data, parity and backup). 
-- Exception raid1: you only need 1 folder for data (/mnt/disks/raid1) and no parity folder.
 
 The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.
 - The script does not add your disks to that system file! 
@@ -120,7 +121,7 @@ Have a look at the example fstab file. Notice:
   - The first should contain the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
     - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
   - The second is identical except without the SSD and a different mount path: `mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
-- For Raid1 combined with SSD cache: your mergerfs mounts should only have 2 items, the SSD path and the Raid1 path (/mnt/disks/raid1). 
+- For Raid1 with MergerFS SSD cache: you only need the first MergerFS line, with the SSD path and the Raid1 path (/mnt/disks/raid1). 
 
 #### MergerFS Notes
 - The long list of arguments have carefully been chosen for this Tiered Caching setup. They are documented here. No need to change unless you know what you are doing.
