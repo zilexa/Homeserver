@@ -81,7 +81,7 @@ Check your system drive subvolumes via `btrfs subvolume list /` \
 `@` (mounted at /)\
 `@home` (mounted at /home)\
 `@home/.cache` (nested subvolume /home/.cache)\
-`@/tmp` (nested subvolume /tmp)\
+`@/tmp` (nested subvolume /tmp)
 
 &nbsp;
 
