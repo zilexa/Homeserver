@@ -103,7 +103,7 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 
 
 ## Step 3: Add # of disks to setup-storage.sh
-### 3A: add # disks:
+### 3A: add # disks
 - All you have to do is change the labels betweeen brackets { } on [line 40](https://github.com/zilexa/Homeserver/blob/48cd734f453ddff1ed63cfb61047af6cb96b4d1e/filesystem/setup-storage.sh#L40) to reflect the # of drives you have for data, parity and backup.  That's it!\
 \
 Notes:\
@@ -113,7 +113,7 @@ Notes:\
 --> The script does not add your disks to that system file!\
 --> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
 
-### 3B For Raid1:
+### 3B For Raid1
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
 - Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
 - Line 40: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
@@ -133,7 +133,7 @@ Have a look at the example fstab file. Notice:
   - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
   - _Exception `Raid1` + SSD cache_: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
 
-#### MergerFS Notes
+#### MergerFS Notes:
 --> The long list of arguments have carefully been chosen for this Tiered Caching setup.\
 --> [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.\
 --> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
