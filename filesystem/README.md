@@ -135,6 +135,7 @@ Have a look at the example fstab file. Notice:
 
 #### MergerFS Notes
 --> The long list of arguments have carefully been chosen for this Tiered Caching setup. \ 
+
 --> [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.\
 --> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
