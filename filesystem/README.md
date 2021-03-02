@@ -36,7 +36,7 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
     - Where, on which disks files are stored exactly is unknown: blocks of a single file (>1GB) can be spread across disks. 
 - **BtrFS Raid1**: data is striped and duplicated, metadata is duplicated. 
   - Pros
-    - Data is mirrored on other disks, when a disk fails, the data is easily recoverable. 
+    - Data is mirrored on other disks in realtime, when a disk fails, the data is easily recoverable. 
     - The most secure method to store precious data. 
   - Cons
     - It costs more: only half of the total storage space is available for data, because of duplication. Use only if you have plenty of disks.
@@ -56,11 +56,12 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
 - **You can combine whatever combination of disks and disk sizes.**
 - **No risk of losing files >1GB.**
 - **Disks don't all have to spin up for file access/write.**
-- Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) **with lower activity compared to raid1 duplication, extending its lifecycle**.
 
-**For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit) and note by using _snapraid-btrfs_ we overcome the single major [disadvantage of SnapRAID](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs) (versus BtrFS-Raid1). Because these tools exist, for home use instead of enterprise use I really recommend no realtime duplication. 
+#### Coupled with snapraid/snapraid-btrfs
+- Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) for scheduled parity, the disk will be less active than data disks, **extending its lifecycle** compared to the realtime duplication of Raid1.
+- **For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit) and note by using _snapraid-btrfs_ we overcome the single major [disadvantage of snapraid itself](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs) (versus BtrFS-Raid1). Because these tools exist, I really recommend no realtime duplication for home use. 
 
-#### MergerFS BONUS! add an SSD (or folder on your system SSD) for tiered caching!
+#### MergerFS BONUS: SSD tiered caching
 Optional read: [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching).  
 Short version: 
 MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. We setup 2 disk pools: 1 with and 1 without the SSD. You will only use the first one. The 2nd is only used by the system to offload cache to the disks. 
