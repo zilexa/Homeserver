@@ -75,8 +75,8 @@ We use this solution because it is extremely easy to understand, to setup and to
 
 &nbsp;
 
-The instructions are for the recommended method but if you prefer Raid1 follow steps 2B and 3B also notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". 
-
+--> If you prefer Raid1 follow steps 2B, 3B and notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". 
+--> Otherwise ignore those steps.
 ## Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
 Check your system drive subvolumes via `btrfs subvolume list /` \
@@ -85,8 +85,8 @@ Check your system drive subvolumes via `btrfs subvolume list /` \
 `@home/.cache` (nested subvolume /home/.cache)\
 `@/tmp` (nested subvolume /tmp)\
 
-## Step 2: Create new filesystems for disks
-Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
+## Step 2: Prep your disks with a filesystem
+Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
 - unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
 - Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
