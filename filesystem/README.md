@@ -39,11 +39,11 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
     - Data is mirrored on other disks, when a disk fails, the data is easily recoverable. 
     - The most secure method to store precious data. 
   - Cons
-    - Only half of the total storage space is available for data, because of duplication. Use only if you have plenty of disks.
+    - It costs more: only half of the total storage space is available for data, because of duplication. Use only if you have plenty of disks.
     - requirements around disk sizes because of duplication. 
-    - Although it is not known where files are stored, on which disk, it doesn't matter due to duplication. 
+    - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
 
-### The alternative, home-friendly method: BtrFS + MergerFS + snapraid-btrfs w/ optional tiered cache SSD!
+### The alternative, home-friendly method: BtrFS + snapraid-btrfs & MergerFS w/ optional tiered cache SSD!
 The default solution in this guide doesn't use BtrFS to pool disks into 1 filesystem, although Raid1 is optionally explained in the steps below. 
 2 reasons: 
 1. BtrFS Single pool is not secure enough for your personal data. 
@@ -55,12 +55,15 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
 - **You can always see where (on which disk) what files are stored: access to individual disks via /mnt/disks/...**
 - **You can combine whatever combination of disks and disk sizes.**
 - **No risk of losing files >1GB.**
+- **Even without SSD cache disks don't all have to spin up for file access/write.
 - **BONUS: can optionally be coupled with an SSD as tiered cache!** It's even possible without an extra SSD: folder based: just add a system ssd folder to the pool.
-- Data will be protected via _snapraid-btrfs_ which is explained in (the backup subguide)[https://github.com/zilexa/Homeserver/tree/master/maintenance].**For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). This is why, for home use instead of enterprise use I recommend no realtime mirroring. 
+- Protection against disk failure with **dedicated parity disk(s)** that does not wear out in a similar fashion as in btrfs-raid1.
+  - This is done via via _snapraid and snapraid-btrfs_. See the (the backup subguide)[https://github.com/zilexa/Homeserver/tree/master/maintenance].
+  - **For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit) and note by using _snapraid-btrfs_ we overcome the single major (disadvantage of SnapRAID)[https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs] (versus BtrFS-Raid1). Because these tools exist, for home use instead of enterprise use I really recommend no realtime duplication. 
  
-Please read about [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching) solution.  We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
-
 #### How Tiered Caching works
+Optional read: [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching).  We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
+
 MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. We setup 2 disk pools: 1 with and 1 without the SSD. You will only use the first one. The 2nd is only used by the system to offload cache to the disks. 
 - New files will be created on the SSD cache location (dedicated SSD or system SSD folder) but only if certain conditions are met (such as free space). 
 - Files that haven't been modified for X days will be moved from the SSD to the disks within the pool. 
