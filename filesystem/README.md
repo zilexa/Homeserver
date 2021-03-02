@@ -62,13 +62,17 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
   - **For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit) and note by using _snapraid-btrfs_ we overcome the single major (disadvantage of SnapRAID)[https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs] (versus BtrFS-Raid1). Because these tools exist, for home use instead of enterprise use I really recommend no realtime duplication. 
  
 #### How Tiered Caching works
-Optional read: [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching).  We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
-
+Optional read: [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching).  
+Short version: 
 MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. We setup 2 disk pools: 1 with and 1 without the SSD. You will only use the first one. The 2nd is only used by the system to offload cache to the disks. 
 - New files will be created on the SSD cache location (dedicated SSD or system SSD folder) but only if certain conditions are met (such as free space). 
 - Files that haven't been modified for X days will be moved from the SSD to the disks within the pool. 
 - In most cases, you won't hear your disks spinning the entire day, since everything you use frequently is on the SSD. 
 - This CAN be used in combination with Raid1. 
+
+We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
+
+&nbsp;
 
 ## Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
