@@ -101,7 +101,7 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 
 
 ## Step 3: Prepare setup-storage.sh & adjust for your disks
-The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, therefore not in the post-install script. The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.
+The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, in addition to subvolumes created by the (Ubuntu Budgie post-install script)[https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script]. The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
 **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**
 - The script does not add your disks to that system file! 
 - Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.
@@ -110,9 +110,9 @@ The script will install tools, create the subvolume for Docker persistent volume
 ### If you use Raid1:
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
 - Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
-- Line 40: Remove parity1 and remove data1-data3, as raid1 appears as a single disk, it should be mounted to `/mnt/pool`.
-  - Line 40: For `raid1` + SSD Cache: Add `raid1`. The array should be mounted (step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.\
-Note: During step 4, you only need the UUID of your array (not per disk). Use the same arguments as a data disk in the example fstab.
+- Line 40: Remove parity1 and remove data1-data3, as raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
+  - Line 40: For `raid1` + SSD Cache: Add `raid1`. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.\
+Note: During step 4, you only need the UUID of your filesystem (not per disk). Use the same arguments as a data disk in the example fstab.
 
 
 ## Step 4: Run the script & use the fstab example file
