@@ -43,7 +43,7 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
     - requirements around disk sizes because of duplication. 
     - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
 
-### The alternative, home-friendly method: BtrFS + snapraid-btrfs & MergerFS w/ optional tiered cache SSD!
+### The alternative, home-friendly method: BTRFS, MergerFS pooling, snapraid-btfs protection, SSD tiered cache(!)
 The default solution in this guide doesn't use BtrFS to pool disks into 1 filesystem, although Raid1 is optionally explained in the steps below. 
 2 reasons: 
 1. BtrFS Single pool is not secure enough for your personal data. 
