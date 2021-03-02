@@ -73,37 +73,39 @@ MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you main
 
 We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
 
-&nbsp;
 
---> If you prefer Raid1, skip 2A and 3A, do 2B, 3B instead and notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
---> Otherwise ignore those steps. 
-## Step 1: 
-After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
+## Requirements: 
+1. The OS disk should be BtrFS: [OS Installation](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/tree/master/OS-installation) shows how to do that.
+2. Highly recommended: subvolumes on the OS disk. This can be done with my OS [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). If you don't use that script, create these subvolumes yourself please. The script contains clear comments how its done, copy/paste the commands.
 Check your system drive subvolumes via `btrfs subvolume list /` \
 `@` (mounted at /)\
 `@home` (mounted at /home)\
 `@home/.cache` (nested subvolume /home/.cache)\
 `@/tmp` (nested subvolume /tmp)\
 
-## Step 2: Prep your disks with a filesystem
+&nbsp;
+
+--> If you prefer Raid1, skip 1A and 2A, do 1B, 2B instead and notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
+--> Otherwise ignore those steps. 
+## Step 1: Prep your disks with a filesystem
 Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
 - unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
 - Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
 - In the next steps, know `-L name` is how you label your disks. 
 
-### 2A: Make filesystems
+### 1A: Make filesystems
 - Create a filesystem per disk: run `sudo mkfs.btrfs -f -L data1 /dev/sda` for each disk device, set label and path accordingly (see output of fdisk).
 - Do the same for the parity disk with label `parity1` and backup disk with label `backup1`. 
 - Via this naming scheme you can add/replace disks easily and combine scheduled backup tasks with temporarily USB attached disks. 
 
-### 2B: For Raid1
+### 1B: For Raid1
 - Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 - For the backup disk, use the command in 2A. 
 
 
-## Step 3: Add # of disks to setup-storage.sh
-### 3A: add # disks
+## Step 2: Add # of disks to setup-storage.sh
+### 2A: add # disks
 - All you have to do is change the labels betweeen brackets { } on [line 40](https://github.com/zilexa/Homeserver/blob/48cd734f453ddff1ed63cfb61047af6cb96b4d1e/filesystem/setup-storage.sh#L40) to reflect the # of drives you have for data, parity and backup.  That's it!\
 \
 Notes:\
@@ -113,13 +115,13 @@ Notes:\
 --> The script does not add your disks to that system file!\
 --> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
 
-### 3B For Raid1
+### 2B For Raid1
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
 - Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
 - Line 40: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
 - _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
 
-## Step 4: Run the script & use the fstab example file
+## Step 3: Run the script & use the fstab example file
 _Read this step fully first_\
 Only 1 action: From the folder where you downloaded the script, run it (no sudo) via `bash setup-storage.sh`, follow the steps laid out during execution.
 Have a look at the example fstab file. Notice: 
@@ -138,7 +140,7 @@ Have a look at the example fstab file. Notice:
 --> [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.\
 --> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
-## Step 5: Mounting the disks according to the updated fstab file
+## Step 4: Mounting the disks according to the updated fstab file
 First we have to _unmount old mount points_ and you should _verify the new mount points are EMPTY FOLDERS:_
 - Go to Budgie menu, search DISKS, open it. 
 - hit the STOP button for each disk, not the boot drive of course. Just to make sure there are no old mounts.
