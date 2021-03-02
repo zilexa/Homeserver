@@ -87,8 +87,8 @@ Check your system drive subvolumes via `btrfs subvolume list /` \
 
 ## Step 2: Create new filesystems for disks
 Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
-- -> unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
-- -> list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
+- unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
+- list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
 - Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
 - In the next steps, know `-L name` is how you label your disks. 
 
@@ -105,12 +105,12 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 ## Step 3: Add # of disks to setup-storage.sh
 ### 3A: add # disks:
 - All you have to do is change the labels betweeen brackets { } on [line 40](https://github.com/zilexa/Homeserver/blob/48cd734f453ddff1ed63cfb61047af6cb96b4d1e/filesystem/setup-storage.sh#L40) to reflect the # of drives you have for data, parity and backup.  That's it!
-
-The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). These are server specific, in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
-Note:
-- **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**
-- The script does not add your disks to that system file! 
-- Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.
+Notes:
+--> The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots). 
+--> These are server specific, in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.
+--> **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**
+--> The script does not add your disks to that system file! 
+--> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.
 
 ### 3B Raid1 only:
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
@@ -133,8 +133,8 @@ Have a look at the example fstab file. Notice:
   - Exception `Raid1` + SSD cache: you only need the first MergerFS line, with the SSD path and the Raid1 path (/mnt/disks/raid1). 
 
 #### MergerFS Notes
-- The long list of arguments have carefully been chosen for this Tiered Caching setup. They are documented here. No need to change unless you know what you are doing.
-- When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
+--> The long list of arguments have carefully been chosen for this Tiered Caching setup. They are documented here. No need to change unless you know what you are doing.
+--> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
 
 ## Step 5: Mounting the disks according to the updated fstab file
