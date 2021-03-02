@@ -75,6 +75,7 @@ We use this solution because it is extremely easy to understand, to setup and to
 
 &nbsp;
 
+The instructions are for the recommended method but do contain info labeled _Exception `Raid1`_ or _Exception `Raid1` + SSD Cache_ if you do prefer BtrFS-Raid1.
 ## Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
 Check your system drive subvolumes via `btrfs subvolume list /` \
@@ -111,22 +112,21 @@ The script will install tools, create the subvolume for Docker persistent volume
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
 - Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
 - Line 40: Remove parity1 and remove data1-data3, as raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
-  - Line 40: For `raid1` + SSD Cache: Add `raid1`. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.\
-Note: During step 4, you only need the UUID of your filesystem (not per disk). Use the same arguments as a data disk in the example fstab.
-
+  - Line 40 Exception `Raid1` + SSD Cache: Add `raid1`. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.\
 
 ## Step 4: Run the script & use the fstab example file
 _Read this step fully first_
 From the folder where you downloaded the script, run it via `bash setup-storage.sh`. 
 Have a look at the example fstab file. Notice: 
 - There is a line for each system subvolume to mount it to a specific location.
-- There is a line for each data disk to mount it to a location (Exception Raid1: you only need 1 line and seperate parity!).
-- There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to have it here. 
+- There is a line for each data disk to mount it to a location.
+  - Exception `Raid1`: you only need 1 line, with the single UUID of the raid1 filesystem and no line for parity.
+- There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to add their UUIDs. 
 - For MergerFS there are VERY long lines, because of all the arguments. 
   - The first should contain the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
-    - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
   - The second is identical except without the SSD and a different mount path: `mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
-- For Raid1 with MergerFS SSD cache: you only need the first MergerFS line, with the SSD path and the Raid1 path (/mnt/disks/raid1). 
+  - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
+  - Exception `Raid1` + SSD cache: you only need the first MergerFS line, with the SSD path and the Raid1 path (/mnt/disks/raid1). 
 
 #### MergerFS Notes
 - The long list of arguments have carefully been chosen for this Tiered Caching setup. They are documented here. No need to change unless you know what you are doing.
