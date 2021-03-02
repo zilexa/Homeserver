@@ -127,11 +127,11 @@ Have a look at the example fstab file. Notice:
 - There is a line for each data disk to mount it to a location.
   - Exception `Raid1`: you only need 1 line, with the single UUID of the raid1 filesystem and no line for parity.
 - There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to add their UUIDs. 
-- For MergerFS there are VERY long lines, because of all the arguments. 
-  - The first should contain the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
-  - The second is identical except without the SSD and a different mount path: `mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
+- For MergerFS, the 2 mounts contain many arguments, copy paste them completely. 
+  - The first should start with the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
+  - The second is identical except without the SSD and a different mount path: `/mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
   - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
-  - Exception `Raid1` + SSD cache: you only need the first MergerFS line, with the SSD path and the Raid1 path (/mnt/disks/raid1). 
+  - Exception `Raid1` + SSD cache: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
 
 #### MergerFS Notes
 --> The long list of arguments have carefully been chosen for this Tiered Caching setup. They are documented here. No need to change unless you know what you are doing.
