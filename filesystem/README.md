@@ -105,13 +105,13 @@ The script will install tools, create the subvolume for Docker persistent volume
 
 ### AlWAYS MODIFY THE SCRIPT to reflect your # of disks! 
 - *_EDIT LINE 40_* To reflect the # of drives you have (for data, parity and backup). 
-- Exception raid1: you only need 1 folder for data. Remove parity1 and remove data1-data3, as the array can be mounted to /mnt/pool.
-- Exception raid1 w/ MergerFS SSD cache: add `raid1`, the array will be mounted to `mnt/disks/raid1` and the pool with ssd will be /mnt/pool. 
  
-### If you use Raid1 and don't need an SSD cache:
-- remove line 3-8: No need to install MergerFS.
-- Remove line 39 as there is no /mnt/pool-archive folder necessary without MergerFS tiered cache.
-- During step 4, you only need the UUID of your array (not per disk). Use the same arguments as a data disk in the example fstab.
+### If you use Raid1:
+- Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
+- Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
+- Line 40: Remove parity1 and remove data1-data3, as raid1 appears as a single disk, it should be mounted to `/mnt/pool`.
+  - Line 40: For `raid1` + SSD Cache: Add `raid1`. The array should be mounted (step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`. 
+Note: During step 4, you only need the UUID of your array (not per disk). Use the same arguments as a data disk in the example fstab.
 
 The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.
 - The script does not add your disks to that system file! 
