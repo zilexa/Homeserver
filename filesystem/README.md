@@ -127,13 +127,14 @@ Have a look at the example fstab file. Notice:
 - When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
 
-## Step 5: unmount old mount points, make sure new mount points are EMPTY FOLDERS!
+## Step 5: Mounting the disks according to the updated fstab file
+First we have to _unmount old mount points_ and you should _verify the new mount points are EMPTY FOLDERS:_
 - Go to Budgie menu, search DISKS, open it. 
 - hit the STOP button for each disk, not the boot drive of course. Just to make sure there are no old mounts.
 - Check all newly created mount points (folders) in `/mnt/disks`, each folder (for example `/mnt/disks/data1`, `/mnt/pool`) should be empty!
 - Now run `sudo mount -a` to mount everything.
 
-Congrats, your filesystem is now setup!
+If there is no output: Congrats, your filesystem is now setup!
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-archive. 
 
 Continue setting up your [Folder Structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure) or go back to the main guide. 
