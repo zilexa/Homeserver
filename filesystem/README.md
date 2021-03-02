@@ -51,11 +51,11 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
 
 ### Coupled with MergerFS:
 - Disks each have _individual BtrFS Single_ filesystems: metadata is duplicated, **disk can recover its filesystem by itself**. 
-- **Files are stored as a whole on disks**, not spread out in blocks across multiple disks.
-- You can always see where (on which disk) what files are stored: **you have access to individual disks**
-- **You can combine whatever combination of disks and disk sizes.**
+- Files are stored **as a whole** on disks, not spread out in blocks across multiple disks.
+- You can always **see where (on which disk)** what files are stored and access them directly for recovery purposes.
+- You can **combine whatever combination of disk sizes.**
 - **No risk of losing files >1GB.**
-- **Disks don't all have to spin up for file access/write.**
+- **Disks don't all have to spin up** for file access/write.
 - Disks become **more or less evenly full**, as files are written to the disk with the most free space (and you can balance manually). 
 
 ### Coupled with snapraid/snapraid-btrfs
