@@ -1,6 +1,6 @@
 # Server Maintenance & Backup system
 
-## Maintenance tasks
+# Maintenance tasks
 Depending on the purpose of your server, several maintenance tasks can be executed nightly: 
 - Delete watched tv shows, episodes, seasons and movies xx days after they have been watched. 
 - Unload SSD cache: move files not modified for 30 days to the hard disks (to /mnt/pool-archive). The files will be unchanged in /mnt/pool, only their physical location is changed. 
