@@ -56,6 +56,7 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
 - **You can combine whatever combination of disks and disk sizes.**
 - **No risk of losing files >1GB.**
 - **Disks don't all have to spin up for file access/write.**
+- Disks become **more or less evenly full**, as files are written to the disk with the most free space (and you can balance manually). 
 
 ### Coupled with snapraid/snapraid-btrfs
 - Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) for scheduled parity, the disk will be less active than data disks, **extending its lifecycle** compared to the realtime duplication of Raid1.
