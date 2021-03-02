@@ -105,6 +105,7 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 ## Step 3: Add # of disks to setup-storage.sh
 ### 3A: add # disks:
 - All you have to do is change the labels betweeen brackets { } on [line 40](https://github.com/zilexa/Homeserver/blob/48cd734f453ddff1ed63cfb61047af6cb96b4d1e/filesystem/setup-storage.sh#L40) to reflect the # of drives you have for data, parity and backup.  That's it!\
+\
 Notes:\
 --> The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
 --> These are server specific, in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
