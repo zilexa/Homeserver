@@ -92,12 +92,12 @@ Note this will delete your data. To convert EXT4 disks or add existing BtrFS dis
 - Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
 - In the next steps, know `-L name` is how you label your disks. 
 
-### 2A: filesystem without BtrFS Raid1 pooling (recommended for most users):
+### 2A: Make filesystems
 - Create a filesystem per disk: run `sudo mkfs.btrfs -f -L data1 /dev/sda` for each disk device, set label and path accordingly (see output of fdisk).
 - Do the same for the parity disk with label `parity1` and backup disk with label `backup1`. 
 - Via this naming scheme you can add/replace disks easily and combine scheduled backup tasks with temporarily USB attached disks. 
 
-### 2B: filesystem with BtrFS Raid1 pooling:
+### 2B: For Raid1
 - Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 - For the backup disk, use the command in 2A. 
 
@@ -113,7 +113,7 @@ Notes:\
 --> The script does not add your disks to that system file!\
 --> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
 
-### 3B Raid1 only:
+### 3B For Raid1:
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
 - Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
 - Line 40: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
