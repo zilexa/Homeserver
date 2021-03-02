@@ -17,7 +17,12 @@ Under Cache Cleanup, change the # of days (30) to your needs.
 Open `HOST/media-cleaner/media_cleaner.conf`in Pluma/text editor. 
 Change the days to keep watched episodes/seasons/movies and choose whether to keep everything marked as favourite. Those will never be deleted automatically. 
 
-### Step 3: set schedule for tasks.
+### Step 3: First run of snapraid-btrfs
+The command (no sudo): `snapraid-btrfs sync`
+Make sure there are no errors. Some warnings about UUIDs are normal. 
+**The first run should be done manually because it can take HOURS**, depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
+
+### Step 4: set schedule for tasks.
 Now in terminal (CTRL+ALT+T) open Linux scheduler (no sudo): `crontab -e` and copy-paste the below into it. Make sure you replace MAILTO: 
 ```
 # Disable errors appearing in syslog
@@ -28,10 +33,6 @@ MAILTO=""
 # Every 6hrs between 10.00-23.00 do additonal snapraid-btrfs runs
 0 10-23/6 * * * snapraid-btrfs sync | gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' >> $HOME/docker/HOST/logs/snapraid-btrfs.log 2>&1
 ```
---> To modify the schedule, this cron schedule calculator helps: https://crontab.guru/ 
---> Notice the first part sets the schedule, second part is the actual task, what follows is mumbo jumbo to get nice timestamps, and store the output of the tasks in in logs.  
---> keep snapraid-btrfs in there and move on to the Backup system below. 
-
 
 # 2. Disk Protection & File Backup
 
@@ -66,7 +67,12 @@ With btrbk:
 - On each data disk (for example `/mnt/disks/cache` and `/mnt/disks/data1`) create a folder `.snapshots`, because of the dot it will be hidden by default. Note this folder should be accessible by the user, not just root. This will contain the snapshots (which are in fact subvolumes) of the disk before snapraid is run.
 - On each data disk and the cache disk, a separate subvolume needs to be created to store snapraid content files: `sudo btrfs subvolume create /mnt/disks/data1/.snapraid` this way the content files are excluded. 
 
-### Step 4 create the backup schedule
+### Step 4 First run of backup tasks
+The command for system backups: ``
+The command for user data backups: ``
+**The first run should be done manually because for user data it can take HOURS**, depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
+
+### Step 5 create the backup schedule
 Note: The backup schedule requires root, as `btrbk` needs it. Root has its own scheduler. Do not mix up these two crontabs. 
 - In terminal (CTRL+ALT+T) open Linux scheduler: `sudo crontab -e` and copy-paste the below into it. Make sure you replace MAILTO: 
 
@@ -77,6 +83,7 @@ MAILTO=""
 # Nightly at 03.00h run backup tasks and tune power consumption
 0 3 * * * /usr/bin/bash /home/asterix/docker/HOST/backup.sh | gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' >> /home/asterix/docker/HOST/logs/backup.log 2>&1
 ```
---> To modify the schedule, this cron schedule calculator helps: https://crontab.guru/ 
---> Notice the first part sets the schedule, second part is the actual task, what follows is mumbo jumbo to get nice timestamps, and store the output of the tasks in in logs.  
---> 
+
+--> To modify the schedule, this cron schedule calculator helps: https://crontab.guru/ \
+--> Notice the first part sets the schedule, second part is the actual task, what follows is mumbo jumbo to get nice timestamps, and store the output of the tasks in in logs.\
+--> If `maintenance.sh` is still running when `backup.sh` is triggered, the backup script will wait nicely for maintenance to finish before starting its run.
