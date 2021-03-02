@@ -41,8 +41,8 @@ You simply use BtrFS own pooling and you can choose whether you want traditional
 - You cannot use an SSD as cache (BtrFS has no tiered caching support).
 - You can use existing disks with data only if they were already BTRFS formatted.. 
 - Recommended in this scenario is use the btrfs default way to pool drives, but you have 2 options:
-  - **Option 1.Recommended: no realtime mirroring: _Stripe data_ (="spread in blocks over all the disks") _and mirror metadata_ across disks:**
-    - When 1 disk fails, the array is still avaiable with data of the other disks but you can't restore the data via BtrFS options (no data mirroring). 
+  - **Option 1.BtrFS Single: no realtime mirroring: _Stripe data_ (="spread in blocks over all the disks") _and mirror metadata_ across disks:**
+    - When 1 disk fails, the array is still salvable (contrary to raid0), data of the other disks is not lost (contrary to raid0) but you can't restore the data from the failed disk. 
     - Instead, you protect against disk failure with SnapRAID: You need (at least) 1 dedicated parity disk per 4 data disks.
     - SnapRAID is scheduled to run nightly or every 6 hrs. Means you loose ability to restore data of the last 6hrs.
     - When data is written, only data disks will spin. This means the parity disk should have a longer lifecycle/wear down at a much slower pace.
@@ -65,7 +65,7 @@ Check your system drive subvolumes via `btrfs subvolume list /` \
 Note this will delete your data. To convert EXT4 disks or add existing BtrFS disks to a filesystem, Google. 
 - unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
 - list the disk devices: `sudo fdisk -l`
-- Scenario 1 and 2-option1: create a filesystem per disk: run `sudo mkfs.btrfs -f -L data1 –m single /dev/sda` for each disk device. 
+- Scenario 1 and 2-option1: create a filesystem per disk: run `sudo mkfs.btrfs -f -L data1 /dev/sda` for each disk device. 
   - Change label `data1` and path `/dev/sda` for each disk. 
   - At least one disk should have label `parity1` and one disk `backup1`. This way you can add such disks later and easily update the config of your backup and snapraid tasks. 
 - Scenario2-option2: Create a single filesystem across all disks (except a dedicated backup disk) `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb (add paths)`. 
