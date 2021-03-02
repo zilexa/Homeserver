@@ -117,7 +117,7 @@ Notes:\
 - Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
 - Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
 - Line 40: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
-- Exception `Raid1` + SSD Cache: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
+- _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
 
 ## Step 4: Run the script & use the fstab example file
 _Read this step fully first_
@@ -125,13 +125,13 @@ From the folder where you downloaded the script, run it via `bash setup-storage.
 Have a look at the example fstab file. Notice: 
 - There is a line for each system subvolume to mount it to a specific location.
 - There is a line for each data disk to mount it to a location.
-  - Exception `Raid1`: you only need 1 line, with the single UUID of the raid1 filesystem and no line for parity.
+  - _Exception `Raid1`_: you only need 1 line, with the single UUID of the raid1 filesystem and no line for parity.
 - There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to add their UUIDs. 
 - For MergerFS, the 2 mounts contain many arguments, copy paste them completely. 
   - The first should start with the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
   - The second is identical except without the SSD and a different mount path: `/mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
   - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
-  - Exception `Raid1` + SSD cache: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
+  - _Exception `Raid1` + SSD cache_: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
 
 #### MergerFS Notes
 --> The long list of arguments have carefully been chosen for this Tiered Caching setup. They are documented here. No need to change unless you know what you are doing.
