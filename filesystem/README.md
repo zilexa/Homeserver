@@ -51,9 +51,9 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
 
 **Coupled with MergerFS:**
 - **Disks each have _individual BtrFS Single_ filesystems: metadata is duplicated, **disk can recover its filesystem by itself**. 
-- **Not block-based: files are stored as a whole, not spread out in blocks across disk.** 
-- **You can always see what files are stored on which disk.**
-- **You can combine whatever combination of disks and disk sizes**
+- **Files are stored as a whole on disks, not spread out in blocks across multiple disks.** 
+- **You can always see where (on which disk) what files are stored: access to individual disks via /mnt/disks/...**
+- **You can combine whatever combination of disks and disk sizes.**
 - **No risk of losing files >1GB.**
 - **BONUS: can optionally be coupled with an SSD as tiered cache!** It's even possible without an extra SSD: folder based: just add a system ssd folder to the pool.
 - Data will be protected via _snapraid-btrfs_ which is explained in (the backup subguide)[https://github.com/zilexa/Homeserver/tree/master/maintenance].**For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit). This is why, for home use instead of enterprise use I recommend no realtime mirroring. 
