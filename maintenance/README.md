@@ -1,6 +1,6 @@
 # Server Maintenance & Backup system
 
-# Maintenance tasks
+# 1. Maintenance tasks
 Depending on the purpose of your server, several maintenance tasks can be executed nightly: 
 - Delete watched tv shows, episodes, seasons and movies xx days after they have been watched. 
 - Unload SSD cache: move files not modified for 30 days to the hard disks (to /mnt/pool-archive). The files will be unchanged in /mnt/pool, only their physical location is changed. 
@@ -30,4 +30,53 @@ MAILTO=""
 ```
 --> To modify the schedule, this cron schedule calculator helps: https://crontab.guru/ 
 --> Notice the first part sets the schedule, second part is the actual task, what follows is mumbo jumbo to get nice timestamps, and store the output of the tasks in in logs.  
---> keep snapraid-btrfs in there and move on to the Backup subguide. 
+--> keep snapraid-btrfs in there and move on to the Backup system below. 
+
+
+# 2. Disk Protection & File Backup
+
+## Disk protection
+- To protect the filesytem, SnapRAID will calculate parity of the drives and store it on the parity drives.
+- The concept of parity simplified: assign a number to each data disk sector, like "3" to disk1-sector1 and "4" to disk2-sector1. Calculate parity: 3+4=7. Now if disk1 fails, you can restore it from parity, since 7-4=3.
+- If a disk fails, you can insert a replacement disk and restore the data on it easily, but you can also use snapraid to restore individual files easily! 
+- Snapraid can be run nightly, however it does have a disadvantage described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). 
+- That is why we use snapraid-btrfs wrapper: now BtrFS snapshots are made first before each snapraid run, allowing you to always have the ability to restore data easily, without having to worry about modified data on the data disks between snapraid runs. Genius!
+
+## Backups
+The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives such as Snapper are more deeply integrated and too limiting for backup purposes. Timeshift is very user friendly, mac-like Timemachine (installed and configured via my post-install script) but not suited to backup personal data. 
+With btrbk: 
+- System drive subvolumes (/, home and docker) will be snapshotted with a chosen retention policy.
+- In addition, the system drive subvolume snapshots are backupped using native capabilities of BtrFS (`btrfs send-receive`).
+- data folder mnt/pool/Users is a MergerFS pool, not a BtrFS subvolume. It is first incrementally synced to the backup disk then snapshotted to adhere to your chosen retention policy.
+- For both system subvolume backups and Users data backup, you have a nice time-line like overview of snapshots (folders) on the backup disk. 
+
+### Requirements
+- All requirements (snapraid, snapraid-btrfs and snapper) have been taken care of during filesystem configuration by execution of Step 3, setup-storage.sh. 
+- `/etc/snapraid.conf` and `/etc/snapper/.conf` have also been downloaded and copied there by `setup-storage.sh`, note a copy of those files is available in `HOST/snapraid-btrfs/` as backup.  
+
+### Step 1 configure snapper (required for snapraid-btrfs)
+- Make copies of `/etc/snapper/config/.conf` in that same dir to reflect the # of data disks you have. 
+- Rename the files to match your disk labels. 
+- Open each files and set the correct mount point path of the disk.
+
+### Step 2 configure snapraid
+- Open `/etc/snapraid.conf` and make changes to section 1 (parity disk path), section 3 (# of data AND parity disks and their path) and section 4 (data disks including cache). 
+
+### Step 3 create the necessary folders
+- On each data disk (for example `/mnt/disks/cache` and `/mnt/disks/data1`) create a folder `.snapshots`, because of the dot it will be hidden by default. Note this folder should be accessible by the user, not just root. This will contain the snapshots (which are in fact subvolumes) of the disk before snapraid is run.
+- On each data disk and the cache disk, a separate subvolume needs to be created to store snapraid content files: `sudo btrfs subvolume create /mnt/disks/data1/.snapraid` this way the content files are excluded. 
+
+### Step 4 create the backup schedule
+Note: The backup schedule requires root, as `btrbk` needs it. Root has its own scheduler. Do not mix up these two crontabs. 
+- In terminal (CTRL+ALT+T) open Linux scheduler: `sudo crontab -e` and copy-paste the below into it. Make sure you replace MAILTO: 
+
+```
+# Disable errors appearing in syslog
+MAILTO=""
+#
+# Nightly at 03.00h run backup tasks and tune power consumption
+0 3 * * * /usr/bin/bash /home/asterix/docker/HOST/backup.sh | gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' >> /home/asterix/docker/HOST/logs/backup.log 2>&1
+```
+--> To modify the schedule, this cron schedule calculator helps: https://crontab.guru/ 
+--> Notice the first part sets the schedule, second part is the actual task, what follows is mumbo jumbo to get nice timestamps, and store the output of the tasks in in logs.  
+--> 
