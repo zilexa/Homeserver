@@ -75,7 +75,8 @@ We use this solution because it is extremely easy to understand, to setup and to
 
 &nbsp;
 
-The instructions are for the recommended method but do contain info labeled _Exception `Raid1`_ or _Exception `Raid1` + SSD Cache_ if you do prefer BtrFS-Raid1.
+The instructions are for the recommended method but if you prefer Raid1 follow step 2B and notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". 
+
 ## Step 1: 
 After installation and after running the [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script), your drive should already has a few subvolumes. If you don't use that script, create these subvolumes yourself please. 
 Check your system drive subvolumes via `btrfs subvolume list /` \
