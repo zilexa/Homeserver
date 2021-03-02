@@ -56,11 +56,11 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
 - **You can combine whatever combination of disks and disk sizes.**
 - **No risk of losing files >1GB.**
 - **Disks don't all have to spin up for file access/write.**
-- Protection against disk failure with dedicated parity disk(s) **with lower activity compared to raid1 duplication, extending its lifecycle**.
-  - By using _snapraid and snapraid-btrfs_ on a scheduled basis. See the (the backup subguide)[https://github.com/zilexa/Homeserver/tree/master/maintenance].
-  - **For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit) and note by using _snapraid-btrfs_ we overcome the single major (disadvantage of SnapRAID)[https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs] (versus BtrFS-Raid1). Because these tools exist, for home use instead of enterprise use I really recommend no realtime duplication. 
+- Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) **with lower activity compared to raid1 duplication, extending its lifecycle**.
 
-- BONUS: **can optionally be coupled with an SSD as tiered cache!**\It's even possible without an extra SSD: folder based: just add a system ssd folder to the pool.
+**For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit) and note by using _snapraid-btrfs_ we overcome the single major (disadvantage of SnapRAID)[https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs] (versus BtrFS-Raid1). Because these tools exist, for home use instead of enterprise use I really recommend no realtime duplication. 
+
+BONUS: **can optionally be coupled with an SSD as tiered cache!**\It's even possible without an extra SSD: folder based: just add a system ssd folder to the pool.
 #### How Tiered Caching works
 Optional read: [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching).  
 Short version: 
