@@ -121,7 +121,7 @@ Notes:\
 
 ## Step 4: Run the script & use the fstab example file
 _Read this step fully first_\
-Only 1 action: From the folder where you downloaded the script, run it via `bash setup-storage.sh`, follow the steps laid out during execution.
+Only 1 action: From the folder where you downloaded the script, run it (no sudo) via `bash setup-storage.sh`, follow the steps laid out during execution.
 Have a look at the example fstab file. Notice: 
 - There is a line for each system subvolume to mount it to a specific location.
 - There is a line for each data disk to mount it to a location.
