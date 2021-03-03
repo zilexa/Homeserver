@@ -108,16 +108,14 @@ echo "for Task1: run 'sudo nano /etc/fstab' and switch the text in CAPS with the
 echo "for Task2: run 'sudo blkid' to get UUIDS/disks and in a 2nd window, 'sudo nano /etc/fstab'"
 echo "Use the example file, add the lines to your fstab with your own UUIDs"
 echo "==========================================================================================================="
-echo "Read between the lines then HIT CTRL+C to stop the script here or hit ENTER to do it now..."
-echo "===========================================================================================================" 
-echo " UUIDs will be printed AND A SECOND WINDOW will open to edit the fstab file.."
+read -p "Read between the lines then HIT CTRL+C to stop the script here or hit ENTER to do it now..."
 # run command to find UUIDs, open fstab in seperate window 
 sudo blkid
 x-terminal-emulator -e sudo nano /etc/fstab
 echo "============================================================================================"
-echo "2nd window openened!"
-echo "Enter password in the 2nd window to open the file."
-echo "CTRL+O to save changes, CTRL+X to exit the editor, ready? Hit Enter" 
+echo " UUIDs will be printed!"
+echo "2nd window openened!" Enter password in the 2nd window to open the file."
+echo "CTRL+O to save changes, CTRL+X to exit the file." 
 echo "--------------------------------------------------------------------------------------------"
 echo "Edit the bottom line with the UUID you see at the top of the file" 
 echo "Then add lines according to the EXAMPLE FSTAB and your disks UUIDs printed here"
