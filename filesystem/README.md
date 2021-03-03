@@ -72,7 +72,7 @@ We use this solution because it is extremely easy to understand, to setup and to
 ## Requirements: 
 1. The OS disk should be BtrFS: [OS Installation](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/tree/master/OS-installation) shows how to do that.
 2. Your system root folder `/` and `/home` folder should be root subvolumes. This is common practice for Ubuntu (Budgie) when you installed it on a BtrFS disk. 
-3. With BtrFS it is highly recommended & common practice to create nested subvolumes for systemfolders `/tmp`  and `$HOME/.cache`. The `setup-storage.sh` (Step 2) will do that, plus a root sobvolume, mounted at `$HOME/docker`. Check the file and remove the sections if you already have those subvolumes.
+3. With BtrFS it is highly recommended & common practice to create nested subvolumes for systemfolders `/tmp`  and `$HOME/.cache`. The `setup-storage.sh` (Step 2) will do that, plus a root subvolume, mounted at `$HOME/docker`. Check the file and remove the sections if you already have those subvolumes.
 
 
 &nbsp;
