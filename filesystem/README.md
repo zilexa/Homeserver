@@ -98,7 +98,7 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 
 ## Step 2: Add # of disks to setup-storage.sh
 ### 2A: add # disks
-- All you have to do is change the labels betweeen brackets { } on [line 40](https://github.com/zilexa/Homeserver/blob/48cd734f453ddff1ed63cfb61047af6cb96b4d1e/filesystem/setup-storage.sh#L40) to reflect the # of drives you have for data, parity and backup.  That's it!\
+- All you have to do is change the labels betweeen brackets { } on [line 50](https://github.com/zilexa/Homeserver/blob/48cd734f453ddff1ed63cfb61047af6cb96b4d1e/filesystem/setup-storage.sh#L40) to reflect the # of drives you have for data, parity and backup.  That's it!\
 \
 Notes:\
 --> The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
@@ -108,9 +108,9 @@ Notes:\
 --> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
 
 ### 2B For Raid1
-- Line 10-28 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you also don't need SSD cache with Raid1. 
-- Line 39: remove. Line 38: Keep, as this is the path used by scripts and applications. 
-- Line 40: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
+- Line 10-38 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you will not use an SSD cache with Raid1. 
+- Line 49: remove. Line 48: Keep, as this is the path used by scripts and applications. 
+- Line 50: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
 - _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
 
 ## Step 3: Run the script & use the fstab example file
