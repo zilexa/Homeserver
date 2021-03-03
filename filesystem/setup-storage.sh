@@ -40,8 +40,24 @@ sudo mkdir -p /mnt/pool-archive #Comment-out/skip if no SSD cache
 sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}  #add/remove according to your number of disks
 
 
-# BTRFS subvolumes 
-# ---------------
+# BTRFS nested subvolumes (common practice to exclude from snapshots/backups)
+# ================
+# Create nested subvolume for /tmp
+cd /
+sudo mv /tmp /tmpold
+sudo btrfs subvolume create tmp
+sudo chmod 1777 /tmp
+sudo mv /tmpold/* /tmp
+sudo rm -r /tmpold
+# Create nested subvolume for $HOME/.cache
+cd $HOME
+mv ~/.cache ~/.cacheold
+btrfs subvolume create .cache
+mv .cacheold/* .cache
+rm -r .cacheold/
+
+#BTRFS root subvolumes (for docker and snapshots)
+=======================
 # Mount the BTRFS root, required to create a flat btrfs subvolumes hierarchy, easy to understand and maintain on long term.
 sudo mkdir /mnt/btrfs-root
 sudo mount -o subvolid=5 /dev/nvme0n1p2 /mnt/btrfs-root
@@ -52,8 +68,8 @@ sudo btrfs subvolume create /mnt/btrfs-root/@system-snapshots
 Unmount the btrfs-root filesystem
 sudo umount /mnt/root
 
-# Note, its highly recommended to have a root subvolume @home and nested subvolumes @/tmp and @home/asterix/.cache to exclude them from snapshots and backups.
-# See: https://github.com/zilexa/UbuntuBudgie-config 
+# Note, its highly recommended to have a root subvolume @home to be able to snapshot/backup them seperately.
+# See: https://github.com/zilexa/UbuntuBudgie-post-install
 
 # Docker BTRFS prep
 # Temporary mount the docker subvolume, to be able to move the docker files. 
@@ -64,11 +80,14 @@ sudo mount -o subvol=@docker /dev/nvme0n1p2 $HOME/docker
 # IF docker was already running, move the files.
 sudo nocache rsync -axHAXWES --info=progress2 $HOME/docker-old/ $HOME/docker
 
-
 # make the docker subvol mount persistent: add a commented line in /etc/fstab, user will need to add the UUID.
-# Add the docker subvolume mountpoint, user will have to fill in the OS System disk UUID. 
 echo "# Mount the BTRFS root subvolume @docker" | sudo tee -a /etc/fstab
 echo "UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE (just COPY from above)! /home/asterix/docker  btrfs   defaults,noatime,compress=lzo,subvol=@docker 0       2" | sudo tee -a /etc/fstab
+
+# Manual actions by user: 
+#1. in fstab copy system disk UUID shown in fstab to docker mount
+#2. Find UUIDs of other disks
+#3. Add disks to fstab according to the example fstab file
 echo "==========================================================================================================="
 echo "The script is now done."
 echo "Before rebooting, you need to (Task 1) add the UUID of your OS disk to the line that was just added to your mountfile /etc/fstab" 
@@ -81,8 +100,8 @@ echo "Use the example file, add the lines to your fstab with your own UUIDs"
 echo "==========================================================================================================="
 echo "Read between the lines then HIT CTRL+C to stop the script here or hit ENTER to do it now..."
 echo "===========================================================================================================" 
-echo " UUIDs will be printed AND A SECOND WINDOW will open to edit the fstab file..
-#
+echo " UUIDs will be printed AND A SECOND WINDOW will open to edit the fstab file.."
+# run command to find UUIDs, open fstab in seperate window 
 sudo blkid
 x-terminal-emulator -e sudo nano /etc/fstab
 echo "============================================================================================"
