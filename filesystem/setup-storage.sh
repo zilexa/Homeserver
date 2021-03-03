@@ -27,6 +27,16 @@ sudo wget -P /etc https://raw.githubusercontent.com/zilexa/Homeserver/master/sna
 # SnapRAID create path for local content file
 sudo mkdir -p /var/snapraid/
 
+# Get snapraid-btrfs script and make it executable
+sudo wget -P /etc https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
+sudo chmod +x /etc/snapraid-btrfs
+
+# Install snapper, required for snapraid-btrfs 
+echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu_20.10/ /' | sudo tee /etc/apt/sources.list.d/filesystems:snapper.list
+curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbuntu_20.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/filesystems_snapper.gpg > /dev/null
+sudo apt -y update
+sudo apt -y install snapper
+
 # install nocache - required to move files from pool to archive with rsync
 # ---------------
 sudo apt -y install nocache
