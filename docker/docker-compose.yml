@@ -9,6 +9,8 @@ services:
     container_name: portainer
     image: portainer/portainer-ce
     restart: always
+    networks: 
+      - management
     environment:
       - TZ=$TZ
     command: -H unix:///var/run/docker.sock
@@ -23,6 +25,8 @@ services:
     container_name: organizr
     image: organizr/organizr:latest
     restart: always
+    networks: 
+      - management
     security_opt:
       - no-new-privileges:true
     ports:
@@ -35,22 +39,14 @@ services:
       - TZ=$TZ
       - fpm=true
 ##
-##____________________ SMTP-relay [Management/email]
-  smtp:
-    image: namshi/smtp
-    container_name: smtp_relay
-    restart: always
-    ports:
-      - "25:25"
-    environment:
-      - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
-##
 ##______NETWORK_______
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
     restart: always
+    networks: 
+      - dnsserver
     volumes:
       - $USERDIR/docker/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
     ports:
@@ -63,6 +59,8 @@ services:
     image: goofball222/unifi
     mac_address: d0:ca:ab:cd:ef:03
     restart: always
+    networks: 
+      - management
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -80,8 +78,7 @@ services:
       - 8843:8843
 ##
 ##________CLOUD________
-##_____________________ Traefik [CLOUD/reverse-proxy
-# create empty files and set permissions first see docker-config.sh
+##_____________________ Caddy [CLOUD/reverse-proxy]
   caddy:
     container_name: caddy-proxy
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
@@ -286,6 +283,18 @@ services:
       - '5432'
     volumes:
       - postgresql_data:/var/lib/postgresql
+##
+##____________________ SMTP-relay [Cloud/notifications]
+  smtp:
+    image: namshi/smtp
+    container_name: smtp_relay
+    restart: always
+    networks:
+      - caddy
+    ports:
+      - "25:25"
+    environment:
+      - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
 ##________MEDIA________
 ##
 ##_____________________ Jellyfin [MEDIA/Library] 
@@ -293,6 +302,8 @@ services:
     container_name: jellyfin
     image: linuxserver/jellyfin
     restart: always
+    networks: 
+      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -317,6 +328,8 @@ services:
     container_name: VPN-proxy
     image: thrnz/docker-wireguard-pia
     restart: always
+    networks: 
+      - media
     volumes:
         # Auth token is stored here
         - $USERDIR/docker/vpn/pia:/pia
@@ -385,6 +398,8 @@ services:
 #    depends_on:
 #      - vpn
     restart: always
+    networks: 
+      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -402,6 +417,8 @@ services:
     depends_on:
       - transmission
     restart: always
+    networks: 
+      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -419,6 +436,8 @@ services:
     image: linuxserver/jackett:latest
     depends_on:
       - transmission
+    networks: 
+      - media
     restart: always
     environment:
       - PUID=$PUID
@@ -434,6 +453,8 @@ services:
     # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
+    networks: 
+      - media
     environment:
       - LOG_LEVEL=info
       - CAPTCHA_SOLVER=hcaptcha-solver
@@ -450,6 +471,8 @@ services:
     depends_on:
       - transmission
     restart: always
+    networks: 
+      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -469,6 +492,8 @@ services:
        - sonarr
        - radarr
     restart: always
+    networks: 
+      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -484,5 +509,9 @@ services:
 volumes:
   postgresql_data:
 networks:
+  management:
+    driver: bridge
   caddy:
+    driver: bridge
+  media: 
     driver: bridge
