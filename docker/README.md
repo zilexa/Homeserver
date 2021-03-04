@@ -1,5 +1,6 @@
-If you have an understanding of Docker containerization and docker-compose to set it up, realise the following: 
-_Containers, Images and non-persistent Volumes are mostly expendable: you can delete them all (basically delete contents of /var/lib/docker), run docker-compose and it will pull all images online, create containers and use your persistent volumes ($HOME/docker/...): the applications should be in the same state as they were before deletion (unless you didn't make the required volumes persistent via compose)._ This makes Docker the most simple, easy and fast way to deploy applications and maintain them. 
+If you have an understanding of Docker containerization and docker-compose to set it up, realise the following:\
+_Containers, Images and non-persistent Volumes are mostly expendable:\
+You can delete them all (basically delete contents of /var/lib/docker), run docker-compose and it will pull all images online, create containers and use your persistent volumes ($HOME/docker/...): the applications should be in the same state as they were before deletion (unless you didn't make the required volumes persistent via compose)._ This makes Docker the most simple, easy and fast way to deploy applications and maintain them.\
 Updating = pull new image, re-create container. Usually 1 command or 2 mouse-clicks. 
 
 ### Step 1 - Prepare your docker-compose.yml and personalise via environment variables
