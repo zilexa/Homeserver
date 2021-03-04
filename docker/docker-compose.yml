@@ -115,8 +115,8 @@ services:
       - FF_SYNCSERVER_ACCESSLOG=true
     volumes:
       - $USERDIR/docker/firefox-syncserver:/data
-    ports:
-      - 5000:5000
+    #ports:
+      #- 5000:5000
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
@@ -132,8 +132,8 @@ services:
     volumes:
       - "$USERDIR/docker/syncthing/config:/var/syncthing/config"
       - "/mnt/pool/Users:/var/syncthing"
-    ports:
-      - "8384:8384"
+    #ports:
+      #- "8384:8384"
       - "22000:22000/tcp"
       - "22000:22000/udp"
     labels:
@@ -165,8 +165,8 @@ services:
       - mariadb
       - filerun-tika
       - filerun-elasticsearch
-    ports:
-      - "8008:80"
+    #ports:
+      #- "8008:80"
     volumes:
       - $USERDIR/docker/filerun/html:/var/www/html
       - /mnt/pool/Users:/user-files:rw
@@ -229,8 +229,8 @@ services:
     networks: 
       - web-proxy
     tty: true
-    ports:
-      - "8889:80"
+    #ports:
+      #- "8889:80"
     volumes:
       - $USERDIR/docker/onlyoffice/data:/var/www/onlyoffice/Data
       - $USERDIR/docker/onlyoffice/log:/var/log/onlyoffice
