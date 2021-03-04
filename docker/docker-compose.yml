@@ -224,8 +224,6 @@ services:
   onlyoffice:
     image: onlyoffice/documentserver
     container_name: onlyoffice
-    depends_on:
-      - onlyoffice-rabbitmq
     stdin_open: true
     restart: always
     networks: 
@@ -236,14 +234,12 @@ services:
     volumes:
       - $USERDIR/docker/onlyoffice/data:/var/www/onlyoffice/Data
       - $USERDIR/docker/onlyoffice/log:/var/log/onlyoffice
-      - $USERDIR/docker/onlyoffice/cache:/var/lib/onlyoffice/documentserver/App_Data/cache/files
-      - $USERDIR/docker/onlyoffice/example:/var/www/onlyoffice/documentserver-example/public/files
       - $USERDIR/docker/onlyoffice/fonts:/usr/share/fonts
+      - $USERDIR/docker/onlyoffice/database:/var/lib/postgresql
     dns: 9.9.9.9
     environment:
       - JWT_ENABLED="true"
       - JWT_SECRET=$ONLYOFFICEJWT
-      - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
     labels:
       caddy: office.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
@@ -256,15 +252,6 @@ services:
       caddy.header.X-XSS-Protection: '"1; mode=block;"'
       caddy.header.X-Content-Type-Options: "nosniff"
       caddy.header.X-Frame-Options: "SAMEORIGIN"
-##____________________ Onlyoffice rabbitmq [CLOUD/Office/Database]
-  onlyoffice-rabbitmq:
-    container_name: onlyoffice-rabbitmq
-    image: rabbitmq
-    restart: always
-    networks: 
-      - caddy
-    expose:
-      - '5672'
 ##
 ##____________________ SMTP-relay [CLOUD/notifications]
   smtp:
@@ -489,8 +476,6 @@ services:
       - 6767:6767
 #
 #
-volumes:
-  postgresql_data:
 networks:
   management:
     driver: bridge
