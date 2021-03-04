@@ -28,7 +28,7 @@ Via Portainer, you can easily access each of your app by clicking on the ports.
 Go ahead and configure each of your applications.
 
 
-##Frequent tasks
+## Frequent tasks
 ### Check status of your apps/containers
 Open Portainer (your.server.lan.IP:9000), click containers, green = OK. 
 Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile. 
