@@ -225,7 +225,6 @@ services:
     image: onlyoffice/documentserver
     container_name: onlyoffice
     depends_on:
-      - onlyoffice-database
       - onlyoffice-rabbitmq
     stdin_open: true
     restart: always
@@ -240,15 +239,10 @@ services:
       - $USERDIR/docker/onlyoffice/cache:/var/lib/onlyoffice/documentserver/App_Data/cache/files
       - $USERDIR/docker/onlyoffice/example:/var/www/onlyoffice/documentserver-example/public/files
       - $USERDIR/docker/onlyoffice/fonts:/usr/share/fonts
-    dns: 1.1.1.1
+    dns: 9.9.9.9
     environment:
       - JWT_ENABLED="true"
       - JWT_SECRET=$ONLYOFFICEJWT
-      #- DB_TYPE=postgres
-      #- DB_HOST=onlyoffice-postgresql
-      #- DB_PORT=5432
-      #- DB_NAME=onlyoffice
-      #- DB_USER=onlyoffice
       - AMQP_URI=amqp://guest:guest@onlyoffice-rabbitmq
     labels:
       caddy: office.$DOMAIN
@@ -262,6 +256,7 @@ services:
       caddy.header.X-XSS-Protection: '"1; mode=block;"'
       caddy.header.X-Content-Type-Options: "nosniff"
       caddy.header.X-Frame-Options: "SAMEORIGIN"
+##____________________ Onlyoffice rabbitmq [CLOUD/Office/Database]
   onlyoffice-rabbitmq:
     container_name: onlyoffice-rabbitmq
     image: rabbitmq
@@ -270,19 +265,6 @@ services:
       - caddy
     expose:
       - '5672'
-##____________________ Onlyoffice database [CLOUD/Office/Database]
-  onlyoffice-database:
-    container_name: onlyoffice-database
-    image: postgres:9.5
-    environment:
-      - POSTGRES_DB=onlyoffice
-      - POSTGRES_USER=onlyoffice
-      - POSTGRES_HOST_AUTH_METHOD=trust
-    restart: always
-    expose:
-      - '5432'
-    volumes:
-      - postgresql_data:/var/lib/postgresql
 ##
 ##____________________ SMTP-relay [Cloud/notifications]
   smtp:
