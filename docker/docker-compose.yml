@@ -1,6 +1,7 @@
 version: "2.3"
 services:
-## ~/docker$ docker-compose -f docker-compose.yml up -d
+## Check this file & .env for typos/errors: docker-compose -f docker-compose.yml config
+## Run: docker-compose -f docker-compose.yml up -d
 ##
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
