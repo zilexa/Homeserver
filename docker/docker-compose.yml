@@ -20,7 +20,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $USERDIR/docker/portainer/data:/data
 ##
-##_____________________ Heimdall [Management/HOMEPAGE] 
+##_____________________ Organizr [Management/Homepage] 
   organizr:
     container_name: organizr
     image: organizr/organizr:latest
@@ -40,7 +40,7 @@ services:
       - fpm=true
 ##
 ##______NETWORK_______
-##____________________ Unbound [NETWORK/noads-dnsserver]
+##____________________ Unbound [NETWORK/DNS-server]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
@@ -53,7 +53,7 @@ services:
       - 5335:53/tcp
       - 5335:53/udp
 ##
-##____________________ Unifi Controller [NETWORK/Wifi]
+##____________________ Unifi Controller [NETWORK/WiFi]
   unifi:
     container_name: unifi
     image: goofball222/unifi
@@ -220,7 +220,7 @@ services:
     volumes:
       - $USERDIR/docker/filerun/esearch:/usr/share/elasticsearch/data
 ##
-##_____________________ OnlyOffice Documentserver [Cloud/Office]
+##_____________________ OnlyOffice Documentserver [CLOUD/Office]
   onlyoffice:
     image: onlyoffice/documentserver
     container_name: onlyoffice
@@ -266,7 +266,7 @@ services:
     expose:
       - '5672'
 ##
-##____________________ SMTP-relay [Cloud/notifications]
+##____________________ SMTP-relay [CLOUD/notifications]
   smtp:
     image: namshi/smtp
     container_name: smtp_relay
@@ -279,7 +279,7 @@ services:
       - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
 ##________MEDIA________
 ##
-##_____________________ Jellyfin [MEDIA/mediaserver] 
+##_____________________ Jellyfin [MEDIA/media-server] 
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin
@@ -352,7 +352,7 @@ services:
       - 9091:9091 #Transmission
       #- 6789:6789 #NZBget
 ##
-##____________________ Transmission [MEDIA/PVR/download-client]
+##____________________ Transmission [MEDIA/VPN-proxy/download-client]
   transmission:
     image: linuxserver/transmission
     container_name: transmission
@@ -372,7 +372,7 @@ services:
       - /mnt/pool/Users/Local/Asterix/TV:/media
       - /mnt/pool/Users/Local/Asterix/TV/incoming/blackhole:/watch
 ##
-##____________________ NZBget [MEDIA/PVR/download-client]
+##____________________ NZBget [MEDIA/VPN-proxy/download-client]
   nzbget:
     container_name: nzbget
     image: linuxserver/nzbget:latest
@@ -431,9 +431,10 @@ services:
       - /mnt/pool/Users/Local/Asterix/TV:/media
     ports:
       - 9117:9117
+##
+##____________________ Jackett [MEDIA/PVR/torrent-proxy/captcha-solver]
   flaresolverr:
-    # DockerHub mirror flaresolverr/flaresolverr:latest
-    image: ghcr.io/flaresolverr/flaresolverr:latest
+    image: flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     networks: 
       - media
