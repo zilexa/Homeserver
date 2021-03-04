@@ -279,7 +279,7 @@ services:
       - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
 ##________MEDIA________
 ##
-##_____________________ Jellyfin [MEDIA/Library] 
+##_____________________ Jellyfin [MEDIA/mediaserver] 
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin
@@ -305,7 +305,7 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
 ##
-##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
+##____________________ vpn-proxy [MEDIA/vpn-proxy]
   vpn-proxy:
     container_name: VPN-proxy
     image: thrnz/docker-wireguard-pia
@@ -352,7 +352,7 @@ services:
       - 9091:9091 #Transmission
       #- 6789:6789 #NZBget
 ##
-##____________________ Transmission [MEDIA/download-client]
+##____________________ Transmission [MEDIA/PVR/download-client]
   transmission:
     image: linuxserver/transmission
     container_name: transmission
@@ -372,7 +372,7 @@ services:
       - /mnt/pool/Users/Local/Asterix/TV:/media
       - /mnt/pool/Users/Local/Asterix/TV/incoming/blackhole:/watch
 ##
-##____________________ NZBget [MEDIA/download-client]
+##____________________ NZBget [MEDIA/PVR/download-client]
   nzbget:
     container_name: nzbget
     image: linuxserver/nzbget:latest
@@ -392,7 +392,7 @@ services:
     ports:
       - 6789:6789
 ##
-##____________________ Sonarr [MEDIA/PVR-TVshows]
+##____________________ Sonarr [MEDIA/PVR/TVshows]
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:preview
@@ -412,7 +412,7 @@ services:
     ports:
       - 8989:8989
 ##
-##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
+##____________________ Jackett [MEDIA/PVR/torrent-proxy]
   jackett:
     container_name: jackett
     image: linuxserver/jackett:latest
@@ -446,7 +446,7 @@ services:
       - 8191:8191
     restart: unless-stopped 
 ##
-##____________________ Radarr [MEDIA/PVR-Movies]
+##____________________ Radarr [MEDIA/PVR/Movies]
   radarr:
     container_name: radarr
     image: linuxserver/radarr:latest
@@ -466,7 +466,7 @@ services:
     ports:
       - 7878:7878
 ##
-##____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
+##____________________ Bazarr [MEDIA/PVR/subtitle-proxy]
   bazarr:
     container_name: bazarr
     image: linuxserver/bazarr
