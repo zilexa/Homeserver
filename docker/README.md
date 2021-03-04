@@ -31,9 +31,9 @@ Go ahead and configure each of your applications.
 
 ## Frequent tasks
 ### Check status of your apps/containers
-Open Portainer (your.server.lan.IP:9000), click containers, green = OK. 
-Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile. 
-If needed, you can even access the terminal of the container and check files/logs directly. But an easier way is to go to those files in $HOME/docker/yourcontainer. Only persistent volumes (mapped via docker-compose.yml) are there. Expendable data (containers, volumes, images) is in/var/lib/docker/.  
+A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.\
+B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.\
+C. If needed, you can even access the terminal of the container and check files/logs directly. But an easier way is to go to those files in $HOME/docker/yourcontainer. Only persistent volumes (mapped via docker-compose.yml) are there. Expendable data (containers, volumes, images) is in/var/lib/docker/.  
 
 ### Update apps
 In Portainer, click on a container, then select _Recreate_ and check the box to re-download the image. 
