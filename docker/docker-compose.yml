@@ -78,7 +78,7 @@ services:
       - 8843:8843
 ##
 ##________CLOUD________
-##_____________________ Caddy [CLOUD/reverse-proxy]
+##_____________________ Caddy [CLOUD/web-proxy]
   caddy:
     container_name: caddy-proxy
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
