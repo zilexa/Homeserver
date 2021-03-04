@@ -1,3 +1,7 @@
+If you have an understanding of Docker containerization and docker-compose to set it up, realise the following: 
+_Containers, Images and non-persistent Volumes are mostly expendable: you can delete them all (basically delete contents of /var/lib/docker), run docker-compose and it will pull all images online, create containers and use your persistent volumes ($HOME/docker/...): the applications should be in the same state as they were before deletion (unless you didn't make the required volumes persistent via compose)._ This makes Docker the most simple, easy and fast way to deploy applications and maintain them. 
+Updating = pull new image, re-create container. Usually 1 command or 2 mouse-clicks. 
+
 ### Step 1 - Prepare your docker-compose.yml and personalise via environment variables
 1. Modify docker-compose.yml and .env to your needs and run docker-compose.  
 2. Configure each docker application to your needs. 
@@ -23,7 +27,14 @@ Run again in case you ran into time-outs, this can happen, as a server hosting t
 Via Portainer, you can easily access each of your app by clicking on the ports. 
 Go ahead and configure each of your applications.
 
-### Step 4 - Update apps
+
+##Frequent tasks
+### Check status of your apps/containers
+Open Portainer (your.server.lan.IP:9000), click containers, green = OK. 
+Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile. 
+If needed, you can even access the terminal of the container and check files/logs directly. But an easier way is to go to those files in $HOME/docker/yourcontainer. Only persistent volumes (mapped via docker-compose.yml) are there. Expendable data (containers, volumes, images) is in/var/lib/docker/.  
+
+### Update apps
 In Portainer, click on a container, then select _Recreate_ and check the box to re-download the image. 
 The latest image will be downloaded and a new container will be created with it. 
 It will still use your persistent volume mappings: your configuration and persistent data remains. Just like a normal application update. 
