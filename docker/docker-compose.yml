@@ -84,7 +84,7 @@ services:
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
     restart: always
     networks: 
-      - caddy
+      - web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       # this volume is needed to keep the certificates
@@ -101,7 +101,7 @@ services:
     container_name: firefox_syncserver
     restart: always
     networks: 
-      - caddy
+      - web-proxy
     environment: 
       - PUID=$PUID
       - PGID=$PGID
@@ -128,7 +128,7 @@ services:
     image: syncthing/syncthing
     restart: always
     networks: 
-      - caddy
+      - web-proxy
     volumes:
       - "$USERDIR/docker/syncthing/config:/var/syncthing/config"
       - "/mnt/pool/Users:/var/syncthing"
@@ -147,7 +147,7 @@ services:
     container_name: filerun
     restart: always
     networks: 
-      - caddy
+      - web-proxy
     environment:
       PUID: $PUID
       PGID: $PGID
@@ -230,7 +230,7 @@ services:
     stdin_open: true
     restart: always
     networks: 
-      - caddy
+      - web-proxy
     tty: true
     ports:
       - "8889:80"
@@ -290,7 +290,7 @@ services:
     container_name: smtp_relay
     restart: always
     networks:
-      - caddy
+      - web-proxy
     ports:
       - "25:25"
     environment:
@@ -511,7 +511,7 @@ volumes:
 networks:
   management:
     driver: bridge
-  caddy:
+  web-proxy:
     driver: bridge
   media: 
     driver: bridge
