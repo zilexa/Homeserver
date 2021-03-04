@@ -132,7 +132,7 @@ services:
     volumes:
       - "$USERDIR/docker/syncthing/config:/var/syncthing/config"
       - "/mnt/pool/Users:/var/syncthing"
-    #ports:
+    ports:
       #- "8384:8384"
       - "22000:22000/tcp"
       - "22000:22000/udp"
