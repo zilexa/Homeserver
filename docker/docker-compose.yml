@@ -130,15 +130,14 @@ services:
       - $USERDIR/docker/bitwarden:/data
     labels:
       caddy: pw.$DOMAIN
-      caddy.reverse_proxy: "{{upstreams 80}}"
-      caddy.header.up: "X-Real-IP"
       caddy.tls: $EMAIL
       caddy.encode: gzip
       caddy.header.X-XSS-Protection: '"1; mode=block;"'
       caddy.header.X-Frame-Options: "DENY"
       caddy.header.X-Content-Type-Options: "none"
-      caddy.reverse_proxy_0: "/notifications/hub/negotiate {{upstreams 80}}"
-      caddy.reverse_proxy_1: "/notifications/hub {{upstreams 3012}}"
+      caddy.reverse_proxy_0: "{{upstreams 80}}"
+      caddy.reverse_proxy_2: "/notifications/hub/negotiate {{upstreams 80}}"
+      caddy.reverse_proxy_3: "/notifications/hub {{upstreams 3012}}"
 ##
 ##____________________ Syncthing [CLOUD/Sync]
   syncthing:
