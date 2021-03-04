@@ -110,6 +110,9 @@ _[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker
 
 ### _Cloud Experience_
 
+_[Bitwarden](https://github.com/dani-garcia/bitwarden_rs)_ - via Docker
+One of the best password manager out there. Open source and therefore fully audited to be secure. On top of that also user-friendly even on your mobile devices. by using `bitwarden_rs`, written in the modern language RUST, it users exponentially less resources than the conventional Bitwarden-server. 
+
 _[FileRun](https://filerun.com/)_ and/or _[NextCloud](https://nextcloud.com/)_ - via Docker
 >FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. It always shows the realtime state of your filesystem. 
 >It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no other features: purely a "drive". It does support WebDAV. 
