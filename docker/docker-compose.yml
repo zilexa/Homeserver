@@ -119,6 +119,26 @@ services:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
       caddy.tls: $EMAIL
+##_____________________ Bitwarden [CLOUD/Password-manager] 
+  bitwarden:
+    image: bitwardenrs/server:latest
+    container_name: bitwarden
+    restart: always
+    networks: 
+      - caddy
+    volumes:
+      - $USERDIR/docker/bitwarden:/data
+    labels:
+      caddy: pw.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.header.up: "X-Real-IP"
+      caddy.tls: $EMAIL
+      caddy.encode: gzip
+      caddy.header.X-XSS-Protection: '"1; mode=block;"'
+      caddy.header.X-Frame-Options: "DENY"
+      caddy.header.X-Content-Type-Options: "none"
+      caddy.reverse_proxy_0: "/notifications/hub/negotiate {{upstreams 80}}"
+      caddy.reverse_proxy_1: "/notifications/hub {{upstreams 3012}}"
 ##
 ##____________________ Syncthing [CLOUD/Sync]
   syncthing:
@@ -143,6 +163,10 @@ services:
     image: afian/filerun
     container_name: filerun
     restart: always
+    depends_on:
+      - mariadb
+      - filerun-tika
+      - filerun-elasticsearch
     networks: 
       - web-proxy
     environment:
@@ -158,10 +182,6 @@ services:
       APACHE_RUN_USER_ID: $PUID
       APACHE_RUN_GROUP: $USER
       APACHE_RUN_GROUP_ID: $PGID
-    depends_on:
-      - mariadb
-      - filerun-tika
-      - filerun-elasticsearch
     volumes:
       - $USERDIR/docker/filerun/html:/var/www/html
       - /mnt/pool/Users:/user-files:rw
@@ -174,10 +194,10 @@ services:
       caddy.file_server: ""
       caddy.encode: gzip
       #caddy.header: /
-      #caddy.header.Strict-Transport-Security: '"max-age=31536000;"'
-      #caddy.header.X-XSS-Protection: '"1; mode=block;"'
-      #caddy.header.X-Content-Type-Options: "nosniff"
-      #caddy.header.X-Frame-Options: "SAMEORIGIN"
+      caddy.header.Strict-Transport-Security: '"max-age=31536000;"'
+      caddy.header.X-XSS-Protection: '"1; mode=block;"'
+      caddy.header.X-Content-Type-Options: "nosniff"
+      caddy.header.X-Frame-Options: "SAMEORIGIN"
 ##____________________ MariaDB MySQL [CLOUD/Files/Database]
   filerun-database:
     image: mariadb:10.1
@@ -239,12 +259,9 @@ services:
       caddy.tls: $EMAIL
       caddy.file_server: ""
       caddy.encode: gzip
+      caddy.header.X-Content-Type-Options: "nosniff"
       #caddy.tls_insecure_skip_verify: ""
       #caddy.header: /
-      caddy.header.Strict-Transport-Security: '"max-age=31536000;"'
-      caddy.header.X-XSS-Protection: '"1; mode=block;"'
-      caddy.header.X-Content-Type-Options: "nosniff"
-      caddy.header.X-Frame-Options: "SAMEORIGIN"
 ##
 ##____________________ SMTP-relay [CLOUD/notifications]
   smtp:
