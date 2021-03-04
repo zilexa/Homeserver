@@ -202,7 +202,7 @@ services:
     image: logicalspark/docker-tikaserver
     container_name: filerun-tika
     restart: always
-##____________________ Tikaserver [CLOUD/Files/Search]
+##____________________ ElasticSearch [CLOUD/Files/Search]
   filerun-elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     container_name: filerun-elasticsearch
@@ -222,7 +222,7 @@ services:
     volumes:
       - $USERDIR/docker/filerun/esearch:/usr/share/elasticsearch/data
 ##
-##_____________________ OnlyOffice Document Server [Cloud/Office]
+##_____________________ OnlyOffice Documentserver [Cloud/Office]
   onlyoffice:
     image: onlyoffice/documentserver
     container_name: onlyoffice
