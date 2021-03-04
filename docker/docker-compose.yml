@@ -128,8 +128,12 @@ services:
       - caddy
     volumes:
       - $USERDIR/docker/bitwarden:/data
+     environment:
+      - DOMAIN=https://bw.$DOMAIN
+      - SIGNUPS_ALLOWED=false
+      - ADMIN_TOKEN=$BITWARDENTOKEN
     labels:
-      caddy: pw.$DOMAIN
+      caddy: bw.$DOMAIN
       caddy.tls: $EMAIL
       caddy.encode: gzip
       caddy.header.X-XSS-Protection: '"1; mode=block;"'
