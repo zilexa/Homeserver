@@ -257,8 +257,7 @@ services:
     volumes:
       - $USERDIR/docker/onlyoffice/data:/var/www/onlyoffice/Data
       - $USERDIR/docker/onlyoffice/log:/var/log/onlyoffice
-      - $USERDIR/docker/onlyoffice/cache:/var/lib/onlyoffice/documentserver/App_Data/cache/files
-      - $USERDIR/docker/onlyoffice/example:/var/www/onlyoffice/documentserver-example/public/files
+      - $USERDIR/docker/onlyoffice/database:/var/lib/postgresql
       - $USERDIR/docker/onlyoffice/fonts:/usr/share/fonts
     dns: 9.9.9.9
     environment:
