@@ -86,7 +86,7 @@ services:
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
     restart: always
     networks: 
-      - caddy-proxy
+      - web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       # this volume is needed to keep the certificates
@@ -103,7 +103,7 @@ services:
     container_name: firefox_syncserver
     restart: always
     networks: 
-      - caddy-proxy
+      - web-proxy
     environment: 
       PUID: $PUID
       PGID: $PGID
@@ -127,7 +127,7 @@ services:
     container_name: bitwarden
     restart: always
     networks: 
-      - caddy-proxy
+      - web-proxy
     volumes:
       - $USERDIR/docker/bitwarden:/data
     environment:
@@ -156,7 +156,7 @@ services:
     image: syncthing/syncthing
     restart: always
     networks: 
-      - caddy-proxy
+      - web-proxy
     volumes:
       - "$USERDIR/docker/syncthing/config:/var/syncthing/config"
       - "/mnt/pool/Users:/var/syncthing"
@@ -175,7 +175,7 @@ services:
     container_name: filerun
     restart: always
     networks: 
-      - caddy-proxy
+      - web-proxy
     environment:
       PUID: $PUID
       PGID: $PGID
@@ -252,7 +252,7 @@ services:
     stdin_open: 'true'
     restart: always
     networks: 
-      - caddy-proxy
+      - web-proxy
     tty: 'true'
     volumes:
       - $USERDIR/docker/onlyoffice/data:/var/www/onlyoffice/Data
