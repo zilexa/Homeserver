@@ -180,7 +180,7 @@ services:
       PUID: $PUID
       PGID: $PGID
       TZ: $TZ
-      FR_DB_HOST: mariadb
+      FR_DB_HOST: filerun-db
       FR_DB_PORT: 3306
       FR_DB_NAME: filerundb
       FR_DB_USER: $USER
@@ -214,6 +214,8 @@ services:
     image: mariadb:10.1
     container_name: filerun-db
     restart: always
+    networks: 
+      - web-proxy
     environment:
       MYSQL_ROOT_PASSWORD: $PW_INT
       MYSQL_USER: $USER
@@ -225,11 +227,16 @@ services:
   filerun-tika:
     image: logicalspark/docker-tikaserver
     container_name: filerun-tika
+    restart: always
+    networks: 
+      - web-proxy
 ##____________________ FileRun ElasticSearch [CLOUD/Files/search]
   filerun-search:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     container_name: filerun-search
     restart: always
+    networks: 
+      - web-proxy
     environment:
       PUID: $PUID
       PGID: $PGID
