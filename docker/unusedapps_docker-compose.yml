@@ -38,39 +38,6 @@ services:
     dns:
       - 127.0.0.1
       - 192.168.88.89#53
-##____________________ SyncThing [CLOUD/Sync]
-  syncthing:
-    container_name: syncthing
-    image: linuxserver/syncthing
-    restart: unless-stopped
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - UMASK_SET=022
-    volumes:
-      - $USERHOME/docker/syncthing/config:/config
-      - /mnt/pool/Desktop:/desktop:rw
-      - /mnt/pool/Downloads:/downloads:rw
-      - /mnt/pool/Documents:/documents:rw
-      - /mnt/pool/Users:/users:rw
-    ports:
-      - '8384:8384'
-      - '21027:21027/udp'
-      - '22000:22000'
-    labels:
-      - traefik.enable=true
-      - traefik.http.middlewares.syncthing-redirect.redirectscheme.scheme=https
-      - traefik.http.routers.syncthing-redirect.entrypoints=web
-      - traefik.http.routers.syncthing-redirect.middlewares=syncthing-redirect
-      - traefik.http.routers.syncthing-redirect.rule=Host(`sync.$DOMAIN`)
-      - traefik.http.routers.syncthing.entrypoints=websecure
-      - traefik.http.routers.syncthing.rule=Host(`sync.obelix.xyz`)
-      - traefik.http.routers.syncthing.tls.certresolver=letsencrypt
-      - traefik.http.services.syncthing.loadbalancer.server.port=8384
-#      - traefik.http.routers.syncthing-listen.rule=Host(`sync.$DOMAIN`) && Path(`/listen`)
-#      - traefik.http.services.syncthing-listen.loadbalancer.server.port=22000
-##
 ##____________________ Duplicati [CLOUD/Backup]
   duplicati:
     image: linuxserver/duplicati
@@ -87,8 +54,6 @@ services:
     ports:
       - 8200:8200
     restart: unless-stopped
-      
-      
 ##_____________________ Heimdall [Management/HOMEPAGE] 
   heimdall:
     container_name: heimdall
