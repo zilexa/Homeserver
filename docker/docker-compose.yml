@@ -1,7 +1,6 @@
 version: "2.3"
 services:
-## Check this file & .env for typos/errors: docker-compose -f docker-compose.yml config
-## Run: docker-compose -f docker-compose.yml up -d
+## ~/docker$ docker-compose -f docker-compose.yml up -d
 ##
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
@@ -9,8 +8,6 @@ services:
     container_name: portainer
     image: portainer/portainer-ce
     restart: always
-    networks: 
-      - management
     environment:
       - TZ=$TZ
     command: -H unix:///var/run/docker.sock
@@ -20,13 +17,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $USERDIR/docker/portainer/data:/data
 ##
-##_____________________ Organizr [Management/Homepage] 
+##_____________________ Heimdall [Management/HOMEPAGE] 
   organizr:
     container_name: organizr
     image: organizr/organizr:latest
     restart: always
-    networks: 
-      - management
     security_opt:
       - no-new-privileges:true
     ports:
@@ -39,32 +34,29 @@ services:
       - TZ=$TZ
       - fpm=true
 ##
+##
 ##______NETWORK_______
-##____________________ Unbound [NETWORK/DNS-server]
+##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
     restart: always
-    networks: 
-      - dnsserver
     volumes:
       - $USERDIR/docker/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
     ports:
       - 5335:53/tcp
       - 5335:53/udp
 ##
-##____________________ Unifi Controller [NETWORK/WiFi]
+##____________________ Unifi Controller [NETWORK/Wifi]
   unifi:
     container_name: unifi
     image: goofball222/unifi
     mac_address: d0:ca:ab:cd:ef:03
     restart: always
-    networks: 
-      - management
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $USERDIR/docker/unifi/cert:/usr/lib/unifi/cert
@@ -77,6 +69,7 @@ services:
       - 8001:8880
       - 8843:8843
 ##
+##
 ##________CLOUD________
 ##_____________________ Caddy [CLOUD/web-proxy]
   caddy:
@@ -84,7 +77,7 @@ services:
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
     restart: always
     networks: 
-      - web-proxy
+      - caddy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       # this volume is needed to keep the certificates
@@ -101,20 +94,22 @@ services:
     container_name: firefox_syncserver
     restart: always
     networks: 
-      - web-proxy
+      - caddy
     environment: 
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - FF_SYNCSERVER_PUBLIC_URL=https://firefox.$DOMAIN
-      - FF_SYNCSERVER_SECRET=$FFSYNCSECRET
-      - FF_SYNCSERVER_FORWARDED_ALLOW_IPS=*
-      - FF_SYNCSERVER_FORCE_WSGI_ENVIRON=true
-      - FF_SYNCSERVER_ALLOW_NEW_USERS=true
-      - FF_SYNCSERVER_LOGLEVEL=debug
-      - FF_SYNCSERVER_ACCESSLOG=true
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      FF_SYNCSERVER_PUBLIC_URL: https://firefox.$DOMAIN
+      FF_SYNCSERVER_SECRET: $FFSYNCSECRET
+      FF_SYNCSERVER_FORWARDED_ALLOW_IPS: '*'
+      FF_SYNCSERVER_FORCE_WSGI_ENVIRON: 'true'
+      FF_SYNCSERVER_ALLOW_NEW_USERS: 'true'
+      FF_SYNCSERVER_LOGLEVEL: debug
+      FF_SYNCSERVER_ACCESSLOG: 'true'
     volumes:
       - $USERDIR/docker/firefox-syncserver:/data
+    #ports:
+      #- 5000:5000
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
@@ -128,20 +123,24 @@ services:
       - caddy
     volumes:
       - $USERDIR/docker/bitwarden:/data
-     environment:
-      - DOMAIN=https://bw.$DOMAIN
-      - SIGNUPS_ALLOWED=false
-      - ADMIN_TOKEN=$BITWARDENTOKEN
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      WEBSOCKET_ENABLED: 'true'
+      DOMAIN: https://bw.$DOMAIN
+      SIGNUPS_ALLOWED: 'false'
+      ADMIN_TOKEN: $BITWARDENTOKEN
     labels:
       caddy: bw.$DOMAIN
+      caddy.reverse_proxy_0: "{{upstreams 80}}"
       caddy.tls: $EMAIL
       caddy.encode: gzip
       caddy.header.X-XSS-Protection: '"1; mode=block;"'
       caddy.header.X-Frame-Options: "DENY"
       caddy.header.X-Content-Type-Options: "none"
-      caddy.reverse_proxy_0: "{{upstreams 80}}"
-      caddy.reverse_proxy_2: "/notifications/hub/negotiate {{upstreams 80}}"
-      caddy.reverse_proxy_3: "/notifications/hub {{upstreams 3012}}"
+      caddy.reverse_proxy_1: "/notifications/hub/negotiate {{upstreams 80}}"
+      caddy.reverse_proxy_2: "/notifications/hub {{upstreams 3012}}"
 ##
 ##____________________ Syncthing [CLOUD/Sync]
   syncthing:
@@ -149,11 +148,12 @@ services:
     image: syncthing/syncthing
     restart: always
     networks: 
-      - web-proxy
+      - caddy
     volumes:
       - "$USERDIR/docker/syncthing/config:/var/syncthing/config"
       - "/mnt/pool/Users:/var/syncthing"
     ports:
+      #- "8384:8384"
       - "22000:22000/tcp"
       - "22000:22000/udp"
     labels:
@@ -161,17 +161,28 @@ services:
       caddy.reverse_proxy: "{{upstreams 8384}}"
       caddy.tls: $EMAIL
 ##
+##____________________ MariaDB MySQL [CLOUD/Database]
+  mariadb:
+    image: mariadb:10.1
+    container_name: mariadb
+    restart: always
+    networks: 
+      - caddy
+    environment:
+      MYSQL_ROOT_PASSWORD: $PW_INT
+      MYSQL_USER: $USER
+      MYSQL_PASSWORD: $PW_INT
+      MYSQL_DATABASE: filerundb
+    volumes:
+      - $USERDIR/docker/filerun/db:/var/lib/mysql
+##
 ##____________________ FileRun [CLOUD/Files]
   filerun:
     image: afian/filerun
     container_name: filerun
     restart: always
-    depends_on:
-      - mariadb
-      - filerun-tika
-      - filerun-elasticsearch
     networks: 
-      - web-proxy
+      - caddy
     environment:
       PUID: $PUID
       PGID: $PGID
@@ -185,6 +196,14 @@ services:
       APACHE_RUN_USER_ID: $PUID
       APACHE_RUN_GROUP: $USER
       APACHE_RUN_GROUP_ID: $PGID
+    depends_on:
+      - mariadb
+    links:
+      - mariadb
+      - filerun-tika
+      - filerun-elasticsearch
+    #ports:
+      #- "8008:80"
     volumes:
       - $USERDIR/docker/filerun/html:/var/www/html
       - /mnt/pool/Users:/user-files:rw
@@ -201,28 +220,17 @@ services:
       caddy.header.X-XSS-Protection: '"1; mode=block;"'
       caddy.header.X-Content-Type-Options: "nosniff"
       caddy.header.X-Frame-Options: "SAMEORIGIN"
-##____________________ MariaDB MySQL [CLOUD/Files/Database]
-  filerun-database:
-    image: mariadb:10.1
-    container_name: filerun-database
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: $PW_INT
-      MYSQL_USER: $USER
-      MYSQL_PASSWORD: $PW_INT
-      MYSQL_DATABASE: filerundb
-    volumes:
-      - $USERDIR/docker/filerun/db:/var/lib/mysql
-##____________________ Tikaserver [CLOUD/Files/Server]
   filerun-tika:
     image: logicalspark/docker-tikaserver
     container_name: filerun-tika
-    restart: always
-##____________________ ElasticSearch [CLOUD/Files/Search]
+    networks: 
+      - caddy
   filerun-elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
     container_name: filerun-elasticsearch
     restart: always
+    networks: 
+      - caddy
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -238,21 +246,24 @@ services:
     volumes:
       - $USERDIR/docker/filerun/esearch:/usr/share/elasticsearch/data
 ##
-##_____________________ OnlyOffice Documentserver [CLOUD/Office]
+##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
     image: onlyoffice/documentserver
     container_name: onlyoffice
-    stdin_open: true
+    stdin_open: 'true'
     restart: always
     networks: 
-      - web-proxy
-    tty: true
+      - caddy
+    tty: 'true'
+    #ports:
+      #- "8889:80"
     volumes:
       - $USERDIR/docker/onlyoffice/data:/var/www/onlyoffice/Data
       - $USERDIR/docker/onlyoffice/log:/var/log/onlyoffice
+      - $USERDIR/docker/onlyoffice/cache:/var/lib/onlyoffice/documentserver/App_Data/cache/files
+      - $USERDIR/docker/onlyoffice/example:/var/www/onlyoffice/documentserver-example/public/files
       - $USERDIR/docker/onlyoffice/fonts:/usr/share/fonts
-      - $USERDIR/docker/onlyoffice/database:/var/lib/postgresql
-    dns: 9.9.9.9
+    dns: 1.1.1.1
     environment:
       - JWT_ENABLED="true"
       - JWT_SECRET=$ONLYOFFICEJWT
@@ -266,26 +277,13 @@ services:
       #caddy.tls_insecure_skip_verify: ""
       #caddy.header: /
 ##
-##____________________ SMTP-relay [CLOUD/notifications]
-  smtp:
-    image: namshi/smtp
-    container_name: smtp_relay
-    restart: always
-    networks:
-      - web-proxy
-    ports:
-      - "25:25"
-    environment:
-      - RELAY_NETWORKS=192.168.88.0/24:192.168.0.0/24:10.0.0.0/16
-##________MEDIA________
 ##
-##_____________________ Jellyfin [MEDIA/media-server] 
+##________MEDIA________
+##_____________________ Jellyfin [MEDIA/Library] 
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin
     restart: always
-    networks: 
-      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -305,13 +303,11 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
 ##
-##____________________ vpn-proxy [MEDIA/vpn-proxy]
-  vpn-proxy:
-    container_name: VPN-proxy
+##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
+  vpn:
+    container_name: VPN
     image: thrnz/docker-wireguard-pia
     restart: always
-    networks: 
-      - media
     volumes:
         # Auth token is stored here
         - $USERDIR/docker/vpn/pia:/pia
@@ -334,7 +330,7 @@ services:
         - PORT_FORWARDING=1
         - PORT_PERSIST=1
         #- WG_USERSPACE=1
-    privileged: true
+    privileged: 'true'
     sysctls:
         # wg-quick fails to set this without --privileged, so set it here instead if needed
         - net.ipv4.conf.all.src_valid_mark=1
@@ -352,7 +348,7 @@ services:
       - 9091:9091 #Transmission
       #- 6789:6789 #NZBget
 ##
-##____________________ Transmission [MEDIA/VPN-proxy/download-client]
+##____________________ Transmission [MEDIA/download-client]
   transmission:
     image: linuxserver/transmission
     container_name: transmission
@@ -372,7 +368,7 @@ services:
       - /mnt/pool/Users/Local/Asterix/TV:/media
       - /mnt/pool/Users/Local/Asterix/TV/incoming/blackhole:/watch
 ##
-##____________________ NZBget [MEDIA/VPN-proxy/download-client]
+##____________________ NZBget [MEDIA/download-client]
   nzbget:
     container_name: nzbget
     image: linuxserver/nzbget:latest
@@ -380,8 +376,6 @@ services:
 #    depends_on:
 #      - vpn
     restart: always
-    networks: 
-      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -392,15 +386,13 @@ services:
     ports:
       - 6789:6789
 ##
-##____________________ Sonarr [MEDIA/PVR/TVshows]
+##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:preview
     depends_on:
       - transmission
     restart: always
-    networks: 
-      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -412,14 +404,12 @@ services:
     ports:
       - 8989:8989
 ##
-##____________________ Jackett [MEDIA/PVR/torrent-proxy]
+##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
     container_name: jackett
     image: linuxserver/jackett:latest
     depends_on:
       - transmission
-    networks: 
-      - media
     restart: always
     environment:
       - PUID=$PUID
@@ -431,13 +421,10 @@ services:
       - /mnt/pool/Users/Local/Asterix/TV:/media
     ports:
       - 9117:9117
-##
-##____________________ Jackett [MEDIA/PVR/torrent-proxy/captcha-solver]
   flaresolverr:
-    image: flaresolverr/flaresolverr:latest
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
-    networks: 
-      - media
     environment:
       - LOG_LEVEL=info
       - CAPTCHA_SOLVER=hcaptcha-solver
@@ -447,15 +434,13 @@ services:
       - 8191:8191
     restart: unless-stopped 
 ##
-##____________________ Radarr [MEDIA/PVR/Movies]
+##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
     container_name: radarr
     image: linuxserver/radarr:latest
     depends_on:
       - transmission
     restart: always
-    networks: 
-      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -467,7 +452,7 @@ services:
     ports:
       - 7878:7878
 ##
-##____________________ Bazarr [MEDIA/PVR/subtitle-proxy]
+##____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
   bazarr:
     container_name: bazarr
     image: linuxserver/bazarr
@@ -475,8 +460,6 @@ services:
        - sonarr
        - radarr
     restart: always
-    networks: 
-      - media
     environment:
       - PUID=$PUID
       - PGID=$PGID
@@ -489,10 +472,8 @@ services:
       - 6767:6767
 #
 #
+volumes:
+  postgresql_data:
 networks:
-  management:
-    driver: bridge
-  web-proxy:
-    driver: bridge
-  media: 
+  caddy:
     driver: bridge
