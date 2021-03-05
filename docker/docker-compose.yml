@@ -1,6 +1,9 @@
 version: "2.3"
 services:
-## ~/docker$ docker-compose -f docker-compose.yml up -d
+## Check file for errors: docker-compose -f docker-compose.yml config
+## Run this compose: docker-compose -f docker-compose.yml up -d
+## Regularly cleanup: sudo docker system prune --all --volumes --force
+### This will delete many BTRFS subvolumes, containing stopped containers, dangling/unused images, dangling/unused volumes. 
 ##
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
