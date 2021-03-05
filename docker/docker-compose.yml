@@ -190,9 +190,9 @@ services:
       APACHE_RUN_GROUP: $USER
       APACHE_RUN_GROUP_ID: $PGID
     depends_on:
-      - mariadb
+      - filerun-db
       - filerun-tika
-      - filerun-elasticsearch
+      - filerun-search
     volumes:
       - $USERDIR/docker/filerun/html:/var/www/html
       - /mnt/pool/Users:/user-files:rw
@@ -210,9 +210,9 @@ services:
       caddy.header.X-Content-Type-Options: "nosniff"                # Required for FileRun+OnlyOffice
       caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Required for FileRun+OnlyOffice
 ##____________________ Filerun database [CLOUD/Files/Database]
-  mariadb:
+  filerun-db:
     image: mariadb:10.1
-    container_name: filerun-mariadb
+    container_name: filerun-db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: $PW_INT
@@ -226,9 +226,9 @@ services:
     image: logicalspark/docker-tikaserver
     container_name: filerun-tika
 ##____________________ FileRun ElasticSearch [CLOUD/Files/search]
-  filerun-elasticsearch:
+  filerun-search:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-    container_name: filerun-elasticsearch
+    container_name: filerun-search
     restart: always
     environment:
       PUID: $PUID
@@ -481,8 +481,6 @@ services:
       - 6767:6767
 #
 #
-volumes:
-  postgresql_data:
 networks:
   management:
     driver: bridge
