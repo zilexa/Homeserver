@@ -11,7 +11,7 @@ services:
     networks: 
       - management
     environment:
-      - TZ=$TZ
+      TZ: $TZ
     command: -H unix:///var/run/docker.sock
     ports:
       - "9000:9000"
@@ -228,12 +228,12 @@ services:
     container_name: filerun-elasticsearch
     restart: always
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      cluster.name: docker-cluster
+      bootstrap.memory_lock: 'true'
+      ES_JAVA_OPTS: '-Xms512m -Xmx512m'
     ulimits:
       memlock:
         soft: -1
@@ -259,6 +259,9 @@ services:
       - $USERDIR/docker/onlyoffice/fonts:/usr/share/fonts
     dns: 9.9.9.9
     environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
       JWT_ENABLED: 'true'
       JWT_SECRET: $ONLYOFFICEJWT
     labels:
@@ -307,41 +310,41 @@ services:
     networks: 
       - vpn-proxy
     volumes:
-        # Auth token is stored here
-        - $USERDIR/docker/vpn/pia:/pia
-        # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
-        - $USERDIR/docker/vpn/pia-shared:/pia-shared
+      # Auth token is stored here
+      - $USERDIR/docker/vpn/pia:/pia
+      # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
+      - $USERDIR/docker/vpn/pia-shared:/pia-shared
     cap_add:
-        - NET_ADMIN
-        # SYS_MODULE might not be needed with a 5.6+ kernel?
-        #- SYS_MODULE
-    # Mounting the tun device may be necessary for userspace implementations
-    #devices:
-    #  - /dev/net/tun:/dev/net/tun
+      - NET_ADMIN
+      #- SYS_MODULE might not be needed with a 5.6+ kernel?
+      #- SYS_MODULE
+      # Mounting the tun device may be necessary for userspace implementations
+      #devices:
+      #- /dev/net/tun:/dev/net/tun
     environment:
-        LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
-        LOC: de-frankfurt
-        USER: $VPN_USER_PIA
-        PASS: $VPN_PW_PIA
-        #KEEPALIVE: 25
-        #VPNDNS: 8.8.8.8,8.8.4.4
-        PORT_FORWARDING: 1
-        PORT_PERSIST: 1
-        #WG_USERSPACE: 1
+      LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
+      LOC: de-frankfurt
+      USER: $VPN_USER_PIA
+      PASS: $VPN_PW_PI 
+      #KEEPALIVE: 25
+      #VPNDNS: 8.8.8.8,8.8.4.4
+      PORT_FORWARDING: 1
+      PORT_PERSIST: 
+      #WG_USERSPACE: 1
     privileged: 'true'
     sysctls:
-        # wg-quick fails to set this without --privileged, so set it here instead if needed
-        - net.ipv4.conf.all.src_valid_mark=1
-        # May as well disable ipv6. Should be blocked anyway.
-        - net.ipv6.conf.default.disable_ipv6=1
-        - net.ipv6.conf.all.disable_ipv6=1
-        - net.ipv6.conf.lo.disable_ipv6=1
+      # wg-quick fails to set this without --privileged, so set it here instead if needed
+      - net.ipv4.conf.all.src_valid_mark=1
+      # May as well disable ipv6. Should be blocked anyway.
+      - net.ipv6.conf.default.disable_ipv6=1
+      - net.ipv6.conf.all.disable_ipv6=1
+      - net.ipv6.conf.lo.disable_ipv6=1
     # The container has no recovery logic. Use a healthcheck to catch disconnects.
     healthcheck:
-        test: ping -c 1 www.google.com || exit 1
-        interval: 30s
-        timeout: 10s
-        retries: 3
+      test: ping -c 1 www.google.com || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
       - 9091:9091 #Transmission
       - 6789:6789 #NZBget
@@ -422,7 +425,6 @@ services:
     ports:
       - 9117:9117
   flaresolverr:
-    # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     networks: 
