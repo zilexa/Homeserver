@@ -327,7 +327,7 @@ services:
       LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
       LOC: de-frankfurt
       USER: $VPN_USER_PIA
-      PASS: $VPN_PW_PI 
+      PASS: $VPN_PW_PIA
       #KEEPALIVE: 25
       #VPNDNS: 8.8.8.8,8.8.4.4
       PORT_FORWARDING: 1
@@ -364,7 +364,7 @@ services:
       PGID: $PGID
       TZ: $TZ
       TRANSMISSION_WEB_HOME: /transmission-web-control/
-      USER: $USER_MEDIA
+      USER: $USER
       PASS: $PW_MEDIA
     volumes:
       - $USERDIR/docker/transmission/config:/config
