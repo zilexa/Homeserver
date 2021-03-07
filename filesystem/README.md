@@ -1,8 +1,7 @@
 ## A Modern Homeserver _filesystem_
 
+# SYNOPSIS
 Technologies used: 
-<details><summary>click to expand</summary>
-  
 - [BtrFS](https://linuxhint.com/btrfs-filesystem-beginner-guide/), an advanced filesystem. 
 - [MergerFS](https://github.com/trapexit/mergerfs#description) Allows to add a fast cache to your drive pool. Explaination here: [Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching). This way, [you can choose to use](https://github.com/zilexa/Homeserver/blob/master/Hardware%20recommendations.md) small 2.5" disk drives with very low power consumption and don't worry about speed (disk speed is not very important in a homeserver anyway).  
 - [SnapRAID](http://www.snapraid.it/faq#whatisit) via [Snapraid-btrfs](https://github.com/automorphism88/snapraid-btrfs#faq), reap the benefits for home use of SnapRAID-btrfs over BTRFS-RAID.
@@ -12,8 +11,6 @@ Technologies used:
 </details>
 
 Why BtrFS?
-<details><summary>click to expand</summary>
-  
 - It is stable, used for years by major cloud providers and tech companies. It did get a bad reputation because of bugs in the past. Emphasis on past. In some consumber Linux distributions, it is the default filesystem. 
 - It is extremely easy to use with regards to snapshots and subvolumes, supporting read-only snapshots for backups. 
 - It does not require excessive (RAM) resources like ZFS. 
@@ -24,8 +21,6 @@ Why BtrFS?
 - Great for SSDs and HDDs.</details>
 
 ## Use Btrfs data duplication? 2 options.
-<details><summary>click to expand</summary>
-
 BtrFS offers 3 ways to create a single fileystem across multiple devices, I only mention 2 here: 
 - **BtrFS Single**: data is striped (not duplicated), metadata is duplicated. 
   - Pros: 
@@ -44,7 +39,6 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
     - It costs more: only half of the total storage space is available for data, because of duplication. Use only if you have plenty of disks.
     - requirements around disk sizes because of duplication. 
     - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
-</details>
 
 ## The alternative, economical home-friendly method
 The default solution in this guide doesn't use BtrFS to pool disks into 1 filesystem, although Raid1 is optionally explained in the steps below. 
@@ -76,7 +70,7 @@ MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you main
 
 We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
 
-
+# MODERN FILESYSTEM GUIDE
 ## Requirements: 
 1. The OS disk should be BtrFS: [OS Installation](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/tree/master/OS-installation) shows how to do that.
 2. Your system root folder `/` and `/home` folder should be root subvolumes. This is common practice for Ubuntu (Budgie) when you installed it on a BtrFS disk. 
