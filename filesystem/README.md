@@ -77,43 +77,46 @@ We use this solution because it is extremely easy to understand, to setup and to
 
 &nbsp;
 
---> If you prefer Raid1, skip 1A and 2A, do 1B, 2B instead and notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
+--> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
 --> Otherwise ignore those steps. 
-## Step 1: Prep your disks with a filesystem
+## Step 1A: Prep your disks with a filesystem
 Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
 - unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)` or use the Disks utility via Budgie menu and hit the stop button for each disk. 
 - list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
 - Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
 - In the next steps, know `-L name` is how you label your disks. 
 
-### 1A: Make filesystems & root subvolume
+### STEP 1B: Create the permanent mount points
 1. Prepare: create the permanent mount points for each disk and for your MergerFS pools: 
 `sudo mkdir -p /mnt/pool`
 `sudo mkdir -p /mnt/pool-archive` #Comment-out/skip if no SSD cache
-`sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` change to reflect the # of drives you have for data, parity and backup.\
+`sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` change to reflect the # of drives you have for data, parity and backup.\0
+
+### STEP 1C: Create filesystems and root subvolume
 _**Do the following task for each disk**_, !Change labels accordingly!: 
-2. Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
-3. Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
-4. Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/XXX` _where XXX is data for datadisks_, parity for paritydisk, backup for backupdisk.
+2. (skip for raid1) Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
+3. (skip for raid1) Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
+4. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/XXX` _where XXX is data for datadisks_, parity for paritydisk, backup for backupdisk.
 
-### 1B: For Raid1
-- Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
-- For the backup disk, use the command in 2A. 
+### STEP 1C For Raid1
+2. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
+3. For the backup disk, use the command in 2A. 
+4. Do step 3 and 4 from 1C now, but obtaining the path of your array first via `sudo lsblk`. 
 
-### 1C: Modify script for Raid1
-- Line 10-38 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you will not use an SSD cache with Raid1. 
-- Line 49: remove. Line 48: Keep, as this is the path used by scripts and applications. 
-- Line 50: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
-- _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
-
-## Script notes
+#### You are now almost ready to run the script
 --> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
 --> These are in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
 --> **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
 --> The script does not add your disks to that system file!\
 --> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
 
-## Step 2: Run the script & use the fstab example file
+### Step 3 raid1 prep: remove part of the script
+- Line 10-38 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you will not use an SSD cache with Raid1. 
+- Line 49: remove. Line 48: Keep, as this is the path used by scripts and applications. 
+- Line 50: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
+- _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
+- 
+### Step 3: Run the script & use the fstab example file
 _Read this step fully first_\
 Only 1 action: From the folder where you downloaded the script, run it (no sudo) via `bash setup-storage.sh`, follow the steps laid out during execution.
 Have a look at the example fstab file. Notice: 
@@ -132,10 +135,8 @@ Have a look at the example fstab file. Notice:
 --> [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.\
 --> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
-If there is no output: Congrats!! Almost done!
-
-## Step 5: root subvolume and necessary folders per disk
-- Automatically mount everything in fstab via `sudo mount -a`  
+## Step 4: root subvolume and necessary folders per disk
+- Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
 - Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-archive. 
