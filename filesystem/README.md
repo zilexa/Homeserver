@@ -79,7 +79,7 @@ We use this solution because it is extremely easy to understand, to setup and to
 
 --> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
 --> Otherwise ignore those steps. 
-## Step 1A: Prep your disks with a filesystem
+### Step 1A: Prep your disks with a filesystem
 Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
 - unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)` or use the Disks utility via Budgie menu and hit the stop button for each disk. 
 - list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
