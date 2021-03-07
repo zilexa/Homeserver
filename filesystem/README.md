@@ -98,11 +98,14 @@ _**Do the following task for each disk**_, !Change labels accordingly!:
 3. (skip for raid1) Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
 4. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/XXX` _where XXX is data for datadisks_, parity for paritydisk, backup for backupdisk.
 
-### STEP 1C For Raid1
+<details>
+  <summary>### STEP 1C For Raid1</summary>
+
 2. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 3. For the backup disk, use the command in 2A. 
 4. Do step 3 and 4 from 1C now, but obtaining the path of your array first via `sudo lsblk`. 
-
+</details>
+  
 #### You are now almost ready to run the script
 --> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
 --> These are in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
@@ -110,12 +113,15 @@ _**Do the following task for each disk**_, !Change labels accordingly!:
 --> The script does not add your disks to that system file!\
 --> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
 
-### Step 3 raid1 prep: remove part of the script
+<details>
+  <summary>### Step 3 raid1 prep: remove part of the script</summary>
+  
 - Line 10-38 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you will not use an SSD cache with Raid1. 
 - Line 49: remove. Line 48: Keep, as this is the path used by scripts and applications. 
 - Line 50: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
 - _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
-- 
+</details>
+
 ### Step 3: Run the script & use the fstab example file
 _Read this step fully first_\
 Only 1 action: From the folder where you downloaded the script, run it (no sudo) via `bash setup-storage.sh`, follow the steps laid out during execution.
