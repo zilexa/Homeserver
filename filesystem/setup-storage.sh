@@ -44,10 +44,11 @@ sudo apt -y install nocache
 # Create the required folders to mount the disks and MergerFS pools
 # !!! CHANGE THESE LINES!!!!
 # !!!!!!!!!!!!!!!!!!!!!!!!!!
+# UPDATE: commented out since user needs to create root subvolumes before mounting. Described in step1. 
 # ---------------------------
-sudo mkdir -p /mnt/pool
-sudo mkdir -p /mnt/pool-archive #Comment-out/skip if no SSD cache
-sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}  #add/remove according to your number of disks
+#sudo mkdir -p /mnt/pool
+#sudo mkdir -p /mnt/pool-archive #Comment-out/skip if no SSD cache
+#sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}  #add/remove according to your number of disks
 
 
 # BTRFS nested subvolumes (common practice to exclude from snapshots/backups)
