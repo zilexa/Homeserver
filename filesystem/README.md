@@ -87,13 +87,12 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 4. In the next steps, know `-L name` is how you label your disks. 
 
 ### STEP 1B: Create the permanent mount points
-create the permanent mount points for each disk and for your MergerFS pools: 
 1. Create mount point for the pool: `sudo mkdir -p /mnt/pool`
 2. If you want an SSD cache: Create mount point for the pool excluding your cache`sudo mkdir -p /mnt/pool-archive` (to be able to unload the cache). 
 3. Create mount point for every disk at once: `sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` (change to reflect the # of drives you have for data, parity and backup.)
 
 ### STEP 2A: Create filesystems and root subvolume
-_**Do the following task for each disk**_: 
+_**Do task 1 for all disks, tasks 2 and 3 for data disks**_: 
 1. Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk) and data1 the label (data2, parity1, backup1 etc).
 2. For each data disk: Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
 3. For each data disk: Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/root`
