@@ -81,40 +81,39 @@ We use this solution because it is extremely easy to understand, to setup and to
 --> Otherwise ignore those steps. 
 ## Step 1: Prep your disks with a filesystem
 Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
-- unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)`
+- unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)` or use the Disks utility via Budgie menu and hit the stop button for each disk. 
 - list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
 - Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
 - In the next steps, know `-L name` is how you label your disks. 
 
 ### 1A: Make filesystems & root subvolume
-- Create a filesystem per disk: run `sudo mkfs.btrfs -f -L data1 /dev/sda` for each disk device, set label and path accordingly (see output of fdisk).
-- Do the same for the parity disk with label `parity1` and backup disk with label `backup1`. 
-- Via this naming scheme you can add/replace disks easily and combine scheduled backup tasks with temporarily USB attached disks. 
+1. Prepare: create the permanent mount points for each disk and for your MergerFS pools: 
+`sudo mkdir -p /mnt/pool`
+`sudo mkdir -p /mnt/pool-archive` #Comment-out/skip if no SSD cache
+`sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` change to reflect the # of drives you have for data, parity and backup.\
+_**Do the following task for each disk**_, !Change labels accordingly!: 
+2. Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
+3. Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
+4. Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/XXX` _where XXX is data for datadisks_, parity for paritydisk, backup for backupdisk.
 
 ### 1B: For Raid1
 - Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 - For the backup disk, use the command in 2A. 
 
-
-## Step 2: Add # of disks to setup-storage.sh
-### 2A: add # disks
-- All you have to do is change the labels betweeen brackets { } on [line 50](https://github.com/zilexa/Homeserver/blob/48cd734f453ddff1ed63cfb61047af6cb96b4d1e/filesystem/setup-storage.sh#L40) to reflect the # of drives you have for data, parity and backup.  That's it!\
-\
-Notes:\
---> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
---> These are server specific, in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
---> For data disks, it will create 1 root subvolume ("data"), 1 nested subvolume (data/.snapraid) and 1 folder (data/.snapshots). 
---> **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
---> The script does not add your disks to that system file!\
---> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
-
-### 2B For Raid1
+### 1C: Modify script for Raid1
 - Line 10-38 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you will not use an SSD cache with Raid1. 
 - Line 49: remove. Line 48: Keep, as this is the path used by scripts and applications. 
 - Line 50: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
 - _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
 
-## Step 3: Run the script & use the fstab example file
+## Script notes
+--> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
+--> These are in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
+--> **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
+--> The script does not add your disks to that system file!\
+--> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
+
+## Step 2: Run the script & use the fstab example file
 _Read this step fully first_\
 Only 1 action: From the folder where you downloaded the script, run it (no sudo) via `bash setup-storage.sh`, follow the steps laid out during execution.
 Have a look at the example fstab file. Notice: 
@@ -133,14 +132,12 @@ Have a look at the example fstab file. Notice:
 --> [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.\
 --> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
-## Step 4: Mounting the disks according to the updated fstab file
-First we have to _unmount old mount points_ and you should _verify the new mount points are EMPTY FOLDERS:_
-- Go to Budgie menu, search DISKS, open it. 
-- hit the STOP button for each disk, not the boot drive of course. Just to make sure there are no old mounts.
-- Check all newly created mount points (folders) in `/mnt/disks`, each folder (for example `/mnt/disks/data1`, `/mnt/pool`) should be empty!
-- Now run `sudo mount -a` to mount everything.
+If there is no output: Congrats!! Almost done!
 
-If there is no output: Congrats, your filesystem is now setup!
+## Step 5: root subvolume and necessary folders per disk
+- Automatically mount everything in fstab via `sudo mount -a`  
+- Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
+
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-archive. 
 
 Continue setting up your [Folder Structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure) or go back to the main guide. 
