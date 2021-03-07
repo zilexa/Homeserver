@@ -140,7 +140,7 @@ _**MergerFS Notes:**_
 - [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
 - When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
-## Step 4: root subvolume and necessary folders per disk
+## Step 4: Mount the disks and pools!
 1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media.
 2. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
 3. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
