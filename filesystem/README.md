@@ -118,11 +118,11 @@ _**Do the following task for each disk**_, !Change labels accordingly!:
 _Read the notes in this step first_
 - To run the script, `cd $HOME/Downloads` and run it via `bash setup-storage.sh`, follow the steps laid out during execution.\
 
-_**Script notes:**_
+_**Script notes:**_\
 --> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
 --> **The script does everything for you except adding your disks to the systems mount config file (/etc/fstab), it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
 
-_**Example fstab notes:**_
+_**Example fstab notes:**_\
 - There is a line for each system subvolume to mount it to a specific location.
 - There is a line for each data disk to mount it to a location.
 - There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to add their UUIDs. 
@@ -138,7 +138,7 @@ _**Example fstab notes:**_
 - RAID1 + SSD cache: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
 </details>
 
-_**MergerFS Notes:**_
+_**MergerFS Notes:**_\
 --> The long list of arguments have carefully been chosen for this Tiered Caching setup.\
 --> [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.\
 --> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
