@@ -110,13 +110,10 @@ _**Do the following task for each disk**_, !Change labels accordingly!:
 &nbsp;
 #### You are now almost ready to run the script
 --> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
---> These are in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
---> **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
---> The script does not add your disks to that system file!\
---> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
+--> **The script does everything for you except adding your disks to the systems mount config file (/etc/fstab), it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
 
 <details>
-  <summary>### Step 3 raid1 prep: remove part of the script</summary>
+  <summary>### Step 3 raid1 only prep: remove part of the script</summary>
   
 - Line 10-38 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you will not use an SSD cache with Raid1. 
 - Line 49: remove. Line 48: Keep, as this is the path used by scripts and applications. 
