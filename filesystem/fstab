@@ -34,12 +34,12 @@ UUID=!ADD YOUR DATA DISK3 UUID HERE! /mnt/disks/data3 btrfs subvol=root,defaults
 #
 # Mount PARITY disk(s) ~ for regular SnapRAID sync
 # ------------------------------------------------
-UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 btrfs subvol=parity,defaults,noatime,compress=zstd:8 0 0
+UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 btrfs subvol=root,defaults,noatime,compress=zstd:8 0 0
 #
 # Mount BACKUP disk(s) ~ for regular backups
 # ------------------------------------------------
 # No need to mount at boot/have always mounted (commented out), it will be temporarily mounted by backup.sh. Do add the UUID, for your reference!
-# UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs subvol=backup,defaults,noatime,compress=zstd:8 0 0
+# UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs subvol=root,defaults,noatime,compress=zstd:8 0 0
 #
 #
 # NFS ~ home network shares  
