@@ -92,14 +92,14 @@ create the permanent mount points for each disk and for your MergerFS pools:
 2. If you want an SSD cache: Create mount point for the pool excluding your cache`sudo mkdir -p /mnt/pool-archive` (to be able to unload the cache). 
 3. Create mount point for every disk at once: `sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` (change to reflect the # of drives you have for data, parity and backup.)
 
-### STEP 2: Create filesystems and root subvolume
-_**Do the following task for each data disk**_ & change labels accordingly!: 
-1. (skip for raid1) Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
-2. (skip for raid1) Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
-3. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/root`
+### STEP 2A: Create filesystems and root subvolume
+_**Do the following task for each disk**_: 
+1. Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk) and data1 the label (data2, parity1, backup1 etc).
+2. For each data disk: Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
+3. For each data disk: Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/root`
 
 <details>
-  <summary>### STEP 2 For Raid1 (click to expand)</summary>
+  <summary>### STEP 2B For Raid1 (click to expand)</summary>
 
 1. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 2. For the backup disk, use the command in 2A. 
@@ -142,8 +142,9 @@ _**MergerFS Notes:**_
 - When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
 ## Step 4: root subvolume and necessary folders per disk
-1. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
-2. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
+1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media.
+2. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
+3. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-archive. 
 
