@@ -142,8 +142,9 @@ _**MergerFS Notes:**_
 
 ## Step 4: Mount the disks and pools!
 1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media.
-2. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
-3. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
+2. Make sure each mount point is an empty folder after unmounting.
+3. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
+4. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-archive. 
 
