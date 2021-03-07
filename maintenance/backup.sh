@@ -8,7 +8,7 @@ done
 
 
 # first mount the backup drive
-mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o subvolid=backup,defaults,noatime,compress=zstd:3
+mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o subvolid=backup,defaults,noatime,compress=zstd:8
 
 # BACKUP OF LOCAL USERS
 # ---------------------
