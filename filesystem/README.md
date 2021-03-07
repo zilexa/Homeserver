@@ -105,37 +105,40 @@ _**Do the following task for each disk**_, !Change labels accordingly!:
 1. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 2. For the backup disk, use the command in 2A. 
 3. Do step 3 and 4 from 1C now, but obtaining the path of your array first via `sudo lsblk`. 
-</details>
-
-&nbsp;
-#### You are now almost ready to run the script
---> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
---> **The script does everything for you except adding your disks to the systems mount config file (/etc/fstab), it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
-
-<details>
-  <summary>### Step 3 raid1 only prep: remove part of the script</summary>
-  
+4. Modify the script:  
 - Line 10-38 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you will not use an SSD cache with Raid1. 
 - Line 49: remove. Line 48: Keep, as this is the path used by scripts and applications. 
 - Line 50: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
 - _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
 </details>
 
+&nbsp;
+
 ### Step 3: Run the script & use the fstab example file
-_Read this step fully first_\
-Only 1 action: From the folder where you downloaded the script, run it (no sudo) via `bash setup-storage.sh`, follow the steps laid out during execution.
-Have a look at the example fstab file. Notice: 
+_Read the notes in this step first_\
+- To run the script, `cd $HOME/Downloads` and run it via `bash setup-storage.sh`, follow the steps laid out during execution.\
+
+_**Script notes:**_
+--> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
+--> **The script does everything for you except adding your disks to the systems mount config file (/etc/fstab), it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
+
+_**Example fstab notes:**_
 - There is a line for each system subvolume to mount it to a specific location.
 - There is a line for each data disk to mount it to a location.
-  - _Exception `Raid1`_: you only need 1 line, with the single UUID of the raid1 filesystem and no line for parity.
 - There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to add their UUIDs. 
 - For MergerFS, the 2 mounts contain many arguments, copy paste them completely. 
   - The first should start with the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
   - The second is identical except without the SSD and a different mount path: `/mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
   - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
-  - _Exception `Raid1` + SSD cache_: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
 
-#### MergerFS Notes:
+<details>
+  <summary>fstab RAID1 exceptions</summary>
+  
+- You only need 1 line for datadisks, with the single UUID of the raid1 filesystem and no line for parity.
+- RAID1 + SSD cache: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
+</details>
+
+_**MergerFS Notes:**_
 --> The long list of arguments have carefully been chosen for this Tiered Caching setup.\
 --> [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.\
 --> When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
