@@ -96,7 +96,7 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 _**Do the following task for each disk**_, !Change labels accordingly!: 
 1. (skip for raid1) Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
 2. (skip for raid1) Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
-3. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/XXX` _where XXX is data for datadisks_, parity for paritydisk, backup for backupdisk.
+3. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/root`
 
 <details>
   <summary>### STEP 1C For Raid1 (click to expand)</summary>
