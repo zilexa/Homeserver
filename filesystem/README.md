@@ -10,7 +10,7 @@ Technologies used:
 - hdparm and/or built in Disks tool of Ubuntu to configure drives to sleep after 15min & to make sure drives don't do too many load-cycles, keeps them healthy. 
 </details>
 
-Why BtrFS?
+## Why BtrFS?
 - It is stable, used for years by major cloud providers and tech companies. It did get a bad reputation because of bugs in the past. Emphasis on past. In some consumber Linux distributions, it is the default filesystem. 
 - It is extremely easy to use with regards to snapshots and subvolumes, supporting read-only snapshots for backups. 
 - It does not require excessive (RAM) resources like ZFS. 
@@ -70,13 +70,13 @@ MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you main
 
 We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
 
+&nbsp;
+
 # MODERN FILESYSTEM GUIDE
 ## Requirements: 
 1. The OS disk should be BtrFS: [OS Installation](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/tree/master/OS-installation) shows how to do that.
 2. Your system root folder `/` and `/home` folder should be root subvolumes. This is common practice for Ubuntu (Budgie) when you installed it on a BtrFS disk. 
 3. With BtrFS it is highly recommended & common practice to create nested subvolumes for systemfolders `/tmp`  and `$HOME/.cache`. The `setup-storage.sh` (Step 2) will do that, plus a root subvolume, mounted at `$HOME/docker`. Check the file and remove the sections if you already have those subvolumes.
-
-&nbsp;
 
 --> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
 --> Otherwise ignore those steps. 
