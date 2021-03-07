@@ -115,7 +115,7 @@ _**Do the following task for each disk**_, !Change labels accordingly!:
 &nbsp;
 
 ### Step 3: Run the script & use the fstab example file
-_Read the notes in this step first_\
+_Read the notes in this step first_
 - To run the script, `cd $HOME/Downloads` and run it via `bash setup-storage.sh`, follow the steps laid out during execution.\
 
 _**Script notes:**_
