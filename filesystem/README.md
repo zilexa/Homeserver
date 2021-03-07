@@ -90,16 +90,16 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 1. Prepare: create the permanent mount points for each disk and for your MergerFS pools: 
 `sudo mkdir -p /mnt/pool`
 `sudo mkdir -p /mnt/pool-archive` #Comment-out/skip if no SSD cache
-`sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` change to reflect the # of drives you have for data, parity and backup.\0
+Create mount point for every disk at once: `sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` change to reflect the # of drives you have for data, parity and backup.\0
 
-### STEP 1C: Create filesystems and root subvolume
+### STEP 2: Create filesystems and root subvolume
 _**Do the following task for each disk**_, !Change labels accordingly!: 
 1. (skip for raid1) Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
 2. (skip for raid1) Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
 3. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/root`
 
 <details>
-  <summary>### STEP 1C For Raid1 (click to expand)</summary>
+  <summary>### STEP 2 For Raid1 (click to expand)</summary>
 
 1. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 2. For the backup disk, use the command in 2A. 
