@@ -48,10 +48,10 @@ The data is still very well protected via SnapRAID and data can easily be restor
 Within this folder I differentiate between 2 types of Users, and each user will have their own UserName folder (a requirement for web access/identity management).
 
 - `Users/Local` is the primary data storage for local users:
-My partner, myself, parents, perhaps some very close relatives or friends. 
+My partner, myself, parents, perhaps some very close relatives or friends. Your cloud solution is their primary data storage just like it is your primary storage.
 
 - `Users/External` is the secondary data storage for external users: 
-Friends and family that need a backup of their data and would like to enjoy the benefits of your fast, reliable Homeserver/private cloud solution.
+Friends and family that have their own primary storage (perhaps with a public provider) that need a backup of their data and would like to enjoy the benefits of your fast, reliable Homeserver/private cloud solution.
 
 Example: 
 ```
