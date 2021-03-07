@@ -8,7 +8,6 @@ Technologies used:
 - [btrbk](https://github.com/digint/btrbk), the default tool (for BtrFS) for a wide variety of backup purposes.
 - [nocache](https://github.com/Feh/nocache#nocache---minimize-filesystem-caching-effects)-rsync, only for a specific task (see MergerFS Tiered Caching).  
 - hdparm and/or built in Disks tool of Ubuntu to configure drives to sleep after 15min & to make sure drives don't do too many load-cycles, keeps them healthy. 
-</details>
 
 ## Why BtrFS?
 - It is stable, used for years by major cloud providers and tech companies. It did get a bad reputation because of bugs in the past. Emphasis on past. In some consumber Linux distributions, it is the default filesystem. 
@@ -100,7 +99,7 @@ _**Do the following task for each disk**_, !Change labels accordingly!:
 3. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/XXX` _where XXX is data for datadisks_, parity for paritydisk, backup for backupdisk.
 
 <details>
-  <summary>### STEP 1C For Raid1</summary>
+  <summary>### STEP 1C For Raid1 (click to expand)</summary>
 
 1. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 2. For the backup disk, use the command in 2A. 
@@ -132,7 +131,7 @@ _**Example fstab notes:**_
   - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
 
 <details>
-  <summary>fstab RAID1 exceptions</summary> 
+  <summary>fstab RAID1 exceptions (click to expand)</summary> 
 - You only need 1 line for datadisks, with the single UUID of the raid1 filesystem and no line for parity.
 - RAID1 + SSD cache: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
 </details>
