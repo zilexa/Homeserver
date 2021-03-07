@@ -94,16 +94,16 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 
 ### STEP 1C: Create filesystems and root subvolume
 _**Do the following task for each disk**_, !Change labels accordingly!: 
-2. (skip for raid1) Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
-3. (skip for raid1) Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
-4. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/XXX` _where XXX is data for datadisks_, parity for paritydisk, backup for backupdisk.
+1. (skip for raid1) Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
+2. (skip for raid1) Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
+3. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/XXX` _where XXX is data for datadisks_, parity for paritydisk, backup for backupdisk.
 
 <details>
   <summary>### STEP 1C For Raid1</summary>
 
-2. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
-3. For the backup disk, use the command in 2A. 
-4. Do step 3 and 4 from 1C now, but obtaining the path of your array first via `sudo lsblk`. 
+1. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
+2. For the backup disk, use the command in 2A. 
+3. Do step 3 and 4 from 1C now, but obtaining the path of your array first via `sudo lsblk`. 
 </details>
   
 #### You are now almost ready to run the script
