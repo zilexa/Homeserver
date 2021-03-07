@@ -1,14 +1,19 @@
 ## A Modern Homeserver _filesystem_
 
 Technologies used: 
+<details><summary>click to expand</summary>
+  
 - [BtrFS](https://linuxhint.com/btrfs-filesystem-beginner-guide/), an advanced filesystem. 
 - [MergerFS](https://github.com/trapexit/mergerfs#description) Allows to add a fast cache to your drive pool. Explaination here: [Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching). This way, [you can choose to use](https://github.com/zilexa/Homeserver/blob/master/Hardware%20recommendations.md) small 2.5" disk drives with very low power consumption and don't worry about speed (disk speed is not very important in a homeserver anyway).  
 - [SnapRAID](http://www.snapraid.it/faq#whatisit) via [Snapraid-btrfs](https://github.com/automorphism88/snapraid-btrfs#faq), reap the benefits for home use of SnapRAID-btrfs over BTRFS-RAID.
 - [btrbk](https://github.com/digint/btrbk), the default tool (for BtrFS) for a wide variety of backup purposes.
 - [nocache](https://github.com/Feh/nocache#nocache---minimize-filesystem-caching-effects)-rsync, only for a specific task (see MergerFS Tiered Caching).  
 - hdparm and/or built in Disks tool of Ubuntu to configure drives to sleep after 15min & to make sure drives don't do too many load-cycles, keeps them healthy. 
+</details>
 
-Why BtrFS? 
+Why BtrFS?
+<details><summary>click to expand</summary>
+  
 - It is stable, used for years by major cloud providers and tech companies. It did get a bad reputation because of bugs in the past. Emphasis on past. In some consumber Linux distributions, it is the default filesystem. 
 - It is extremely easy to use with regards to snapshots and subvolumes, supporting read-only snapshots for backups. 
 - It does not require excessive (RAM) resources like ZFS. 
@@ -16,9 +21,11 @@ Why BtrFS?
 - high compression capabilities to reduce the amount of data that needs to be written tot disk: maintain good speed, get max storage capacity. 
 - Background scrub process to find and to fix errors on files with redundant copies: data integrity.
 - Online filesystem defragmentation.
-- Great for SSDs and HDDs.
+- Great for SSDs and HDDs.</details>
 
 ## Use Btrfs data duplication? 2 options.
+<details><summary>click to expand</summary>
+
 BtrFS offers 3 ways to create a single fileystem across multiple devices, I only mention 2 here: 
 - **BtrFS Single**: data is striped (not duplicated), metadata is duplicated. 
   - Pros: 
@@ -37,6 +44,7 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
     - It costs more: only half of the total storage space is available for data, because of duplication. Use only if you have plenty of disks.
     - requirements around disk sizes because of duplication. 
     - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
+</details>
 
 ## The alternative, economical home-friendly method
 The default solution in this guide doesn't use BtrFS to pool disks into 1 filesystem, although Raid1 is optionally explained in the steps below. 
@@ -74,7 +82,6 @@ We use this solution because it is extremely easy to understand, to setup and to
 2. Your system root folder `/` and `/home` folder should be root subvolumes. This is common practice for Ubuntu (Budgie) when you installed it on a BtrFS disk. 
 3. With BtrFS it is highly recommended & common practice to create nested subvolumes for systemfolders `/tmp`  and `$HOME/.cache`. The `setup-storage.sh` (Step 2) will do that, plus a root subvolume, mounted at `$HOME/docker`. Check the file and remove the sections if you already have those subvolumes.
 
-
 &nbsp;
 
 --> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
@@ -105,7 +112,8 @@ _**Do the following task for each disk**_, !Change labels accordingly!:
 2. For the backup disk, use the command in 2A. 
 3. Do step 3 and 4 from 1C now, but obtaining the path of your array first via `sudo lsblk`. 
 </details>
-  
+
+&nbsp;
 #### You are now almost ready to run the script
 --> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
 --> These are in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
