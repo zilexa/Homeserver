@@ -93,7 +93,7 @@ create the permanent mount points for each disk and for your MergerFS pools:
 3. Create mount point for every disk at once: `sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` (change to reflect the # of drives you have for data, parity and backup.)
 
 ### STEP 2: Create filesystems and root subvolume
-_**Do the following task for each disk**_, !Change labels accordingly!: 
+_**Do the following task for each data disk**_ & change labels accordingly!: 
 1. (skip for raid1) Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk).
 2. (skip for raid1) Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
 3. (skip for raid1) Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/root`
