@@ -86,7 +86,7 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 - Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
 - In the next steps, know `-L name` is how you label your disks. 
 
-### 1A: Make filesystems
+### 1A: Make filesystems & root subvolume
 - Create a filesystem per disk: run `sudo mkfs.btrfs -f -L data1 /dev/sda` for each disk device, set label and path accordingly (see output of fdisk).
 - Do the same for the parity disk with label `parity1` and backup disk with label `backup1`. 
 - Via this naming scheme you can add/replace disks easily and combine scheduled backup tasks with temporarily USB attached disks. 
@@ -101,8 +101,9 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 - All you have to do is change the labels betweeen brackets { } on [line 50](https://github.com/zilexa/Homeserver/blob/48cd734f453ddff1ed63cfb61047af6cb96b4d1e/filesystem/setup-storage.sh#L40) to reflect the # of drives you have for data, parity and backup.  That's it!\
 \
 Notes:\
---> The script will install tools, create the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
+--> The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).\
 --> These are server specific, in addition to subvolumes created by the [Ubuntu Budgie post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). The Docker subvolume will allow you to easily backup or migrate your Docker apps config/data and all maintenance scripts/tasks for the server.\
+--> For data disks, it will create 1 root subvolume ("data"), 1 nested subvolume (data/.snapraid) and 1 folder (data/.snapshots). 
 --> **The script does everything for you except adding your disks UUIDs, it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**\
 --> The script does not add your disks to that system file!\
 --> Instead, use the example fstab file and copy the lines yourself _when the script asks you to_.\
