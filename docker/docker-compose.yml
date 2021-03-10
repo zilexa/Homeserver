@@ -91,7 +91,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/caddy/caddy_data:/data
       - $DOCKERDIR/caddy/config:/config
-      - $DOCKERDIR/nextcloud/html:/php-files/nextcloud
+      - $DOCKERDIR/nextcloud/var/www/html:/nextcloud/var/www/html
     ports:
       - 80:80
       - 443:443
@@ -156,6 +156,10 @@ services:
     restart: always
     networks: 
       - web-proxy
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
     volumes:
       - "$DOCKERDIR/syncthing/config:/var/syncthing/config"
       - "$USERDATA:/var/syncthing"
@@ -270,17 +274,27 @@ services:
       PGID: $PGID
       TZ: $TZ
       NEXTCLOUD_TRUSTED_DOMAINS: next.$DOMAIN
-      POSTGRES_DB: nextcloud
+      NEXTCLOUD_ADMIN_USER: $USER1
+      NEXTCLOUD_ADMIN_PASSWORD: $USER1PW
       POSTGRES_HOST: nextcloud-db
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: $USER
+      POSTGRES_PASSWORD: $PW_INT
       REDIS_HOST: nextcloud-cache
       REDIS_HOST_PASSWORD: $PW_INT
+      SMTP_HOST: $SMTPHOST
+      SMTP_SECURE: tls
+      SMTP_NAME: $SMTPUSER
+      SMTP_PASSWORD: $SMTPPASS
+      SMTP_FROM_ADDRESS: $EMAIL
+      SMTP_PORT: 587
     volumes:
         # the actual data of the Nextcloud:
-      - $DOCKERDIR/nextcloud/data:/var/nextdata
+      - $DOCKERDIR/nextcloud/var/nextdata:/var/nextdata
         # Main folder needed for updating:
-      - $DOCKERDIR/nextcloud/html:/var/www/html
+      - $DOCKERDIR/nextcloud/var/www/html:/var/www/html
         # local configuration
-      - $DOCKERDIR/nextcloud/config:/var/www/html/config
+      - $DOCKERDIR/nextcloud/var/www/html/config:/var/www/html/config
         # userdata folder:
       - $USERDATA:/mnt/users
         # Custom settings for php fpm to make nextcloud work. The default settings resulted in the error:
@@ -290,14 +304,14 @@ services:
       caddy: next.$DOMAIN
       caddy.tls: $EMAIL
       caddy.file_server: "" 
-      caddy.root: "* /php-files/nextcloud"
+      caddy.root: "* /nextcloud/var/www/html"
       caddy.php_fastcgi: "{{upstreams 9000}}"
-      caddy.php_fastcgi.root: "/var/www/html"
+      caddy.php_fastcgi.root: "var/www/html"
       caddy.php_fastcgi.env: "front_controller_active true"
       caddy.encode: gzip
-      #caddy.rewrite_0: "/.well-known/carddav /remote.php/dav"
-      #caddy.rewrite_1: "/.well-known/caldav /remote.php/dav"
-      #caddy.header.Strict-Transport-Security: '"max-age=31536000;"' # Required for FileRun+OnlyOffice 
+      caddy.rewrite_0: "/.well-known/carddav /remote.php/carddav"
+      caddy.rewrite_1: "/.well-known/caldav /remote.php/caldav"
+      caddy.header.Strict-Transport-Security: '"max-age=31536000;"' # Required for FileRun+OnlyOffice 
       #caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Required for FileRun+OnlyOffice
       #caddy.header.X-Content-Type-Options: "nosniff"                # Required for FileRun+OnlyOffice
       #caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Required for FileRun+OnlyOffice
@@ -309,10 +323,13 @@ services:
     networks:
       - nextcloud
     environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
       POSTGRES_USER: $USER
       POSTGRES_PASSWORD: $PW_INT
     volumes:
-      - $DOCKERDIR/nextcloud/db:/var/lib/postgresql/data
+      - $DOCKERDIR/nextcloud/var/db:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
 ##____________________ NextCloud [CLOUD/Files/NextCloud/cache]
   nextcloud-cache:
@@ -324,6 +341,10 @@ services:
     networks:
       - nextcloud
     command: redis-server --requirepass $PW_INT
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
 ##
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
