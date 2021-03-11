@@ -1,5 +1,7 @@
 version: "2.3"
 services:
+## Docker-Compose 3.x is for Docker Swarm, NOT Compose. Read the doc. Most examples use 3.x. That is not correct.
+## Docker-Compose 2.x is for Compose. 
 ## Check file for errors: docker-compose -f docker-compose.yml config
 ## Run this compose: docker-compose -f docker-compose.yml up -d
 ## Regularly cleanup: sudo docker system prune --all --volumes --force
@@ -43,11 +45,26 @@ services:
 ##
 ##
 ##______NETWORK_______
+##____________________ AdGuard Home [NETWORK/noads-dnsserver]
+  adguard:
+    container_name: adguard-home
+    image: adguard/adguardhome
+    restart: always
+    network_mode: host
+    volumes:
+       - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
+       - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
+    ports:
+     - 53:53/tcp
+     - 53:53/udp
+     - 3000:80
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
     image: mvance/unbound:latest
     restart: always
+    networks: 
+      - management  
     volumes:
       - $DOCKERDIR/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
     ports:
