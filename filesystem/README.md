@@ -94,7 +94,7 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 ### STEP 2A: Create filesystems and root subvolume
 _**Do task 1 for the parity disk, task 2-4 for data disks**_: 
 1. Create an ext4 filesystem for the paritydisk with [snapraid's recommended options](https://sourceforge.net/p/snapraid/discussion/1677233/thread/ecef094f/): `sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sdX` _where X is the device disk name, see 1A_.
-2. Create btrfs filesystem per data and backup disk: 
+2. Create btrfs filesystem for each data and backup disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX`.
 3. For each data disk: Temporarily mount the disk like this: `sudo mount /dev/sdX /mnt/disks/data1`.
 4. For each data disk: Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/data`.
 
