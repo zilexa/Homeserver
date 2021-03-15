@@ -82,8 +82,8 @@ We use this solution because it is extremely easy to understand, to setup and to
 ### Step 1A: Prep your disks with a filesystem
 Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
 1. unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)` or use the Disks utility via Budgie menu and hit the stop button for each disk. 
-2. list the disk devices: `sudo fdisk -l` you will need the paths of each disks. 
-3. Decide which disk(s) will be the `backup1` disk and for 2A which will be the `parity1`disk. 
+2. list the disk devices: `sudo fdisk -l` you will need the paths of each disks (for example /dev/sda, /dev/sdb, /dev/sdc). 
+3. Decide the purpose of each disk and their corresponding label, make notes (`data1`, `data2` etc. `backup1`, `parity1`). 
 4. In the next steps, know `-L name` is how you label your disks. 
 
 ### STEP 1B: Create the permanent mount points
@@ -92,15 +92,15 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 3. Create mount point for every disk at once: `sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` (change to reflect the # of drives you have for data, parity and backup.)
 
 ### STEP 2A: Create filesystems and root subvolume
-_**Do task 1 for all disks, tasks 2 and 3 for data disks**_: 
-1. Create a filesystem per disk: `sudo mkfs.btrfs -f -L data1 /dev/sdX` _where X is the diskname_, like sda, sdb etc (see output of fdisk) and data1 the label (data2, parity1, backup1 etc).
-2. For each data disk: Temporarily mount the disk: `sudo mount /dev/sda /mnt/disks/data1`
-3. For each data disk: Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/root`
+_**Do task 1 for the parity disk, task 2-4 for data disks**_: 
+1. Create a filesystem for the paritydisk: `sudo mkfs.ext4 -L parity1 /dev/sdX` _where X is the diskname_.
+2. For each data disk: Temporarily mount the disk like this: `sudo mount /dev/sdX /mnt/disks/data1`.
+3. For each data disk: Create a root subvolume: `sudo btrfs subvolume create /mnt/disks/data1/data`.
 
 <details>
   <summary>### STEP 2B For Raid1 (click to expand)</summary>
 
-1. Create 1 filesystem for all data+parity disks (no dedicated parity drive):  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
+1. Create 1 filesystem for all data+backup disks:  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
 2. For the backup disk, use the command in 2A. 
 3. Do step 3 and 4 from 1C now, but obtaining the path of your array first via `sudo lsblk`. 
 4. Modify the script:  
