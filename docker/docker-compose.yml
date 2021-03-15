@@ -15,8 +15,6 @@ services:
     restart: always
     networks: 
       - management
-    environment:
-      TZ: $TZ
     command: -H unix:///var/run/docker.sock
     ports:
       - "9000:9000"
@@ -38,9 +36,6 @@ services:
     volumes:
       - $DOCKERDIR/organizr:/config
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
       - fpm=true
 ##
 ##
@@ -79,10 +74,6 @@ services:
     restart: always
     networks: 
       - management
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $DOCKERDIR/unifi/cert:/usr/lib/unifi/cert
@@ -108,7 +99,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/caddy/caddy_data:/data
       - $DOCKERDIR/caddy/config:/config
-      - $DOCKERDIR/nextcloud/var/www/html:/nextcloud/var/www/html
+      - $DOCKERDIR/nextcloud/www/html:/nextcloud/var/www/html
     ports:
       - 80:80
       - 443:443
@@ -121,9 +112,6 @@ services:
     networks: 
       - web-proxy
     environment: 
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
       FF_SYNCSERVER_PUBLIC_URL: https://firefox.$DOMAIN
       FF_SYNCSERVER_SECRET: $FFSYNCSECRET
       FF_SYNCSERVER_FORWARDED_ALLOW_IPS: '*'
@@ -147,9 +135,6 @@ services:
     volumes:
       - $DOCKERDIR/bitwarden:/data
     environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
       WEBSOCKET_ENABLED: 'true'
       DOMAIN: https://bw.$DOMAIN
       SIGNUPS_ALLOWED: 'false'
@@ -173,13 +158,9 @@ services:
     restart: always
     networks: 
       - web-proxy
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
     volumes:
-      - "$DOCKERDIR/syncthing/config:/var/syncthing/config"
-      - "$USERDATA:/var/syncthing"
+      - $DOCKERDIR/syncthing/config:/var/syncthing/config
+      - $DATAPOOL/Users:/var/syncthing
     ports:
       #- "8384:8384"
       - "22000:22000/tcp"
@@ -198,9 +179,6 @@ services:
       - web-proxy
       - filerun
     environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
       FR_DB_HOST: filerun-db
       FR_DB_PORT: 3306
       FR_DB_NAME: filerundb
@@ -216,9 +194,7 @@ services:
       - filerun-search
     volumes:
       - $DOCKERDIR/filerun/html:/var/www/html
-      - $USERDATA:/user-files:rw
-      - $USERDATA/Local/Asterix:/user-files/Local/$USER1/Asterix:rw
-      - $USERDATA/Local/Asterix:/user-files/Local/$USER2/Asterix:rw
+      - $DATAPOOL/Users:/user-files:rw
     labels:
       caddy: files.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
@@ -259,9 +235,6 @@ services:
     networks:
       - filerun
     environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
       cluster.name: docker-cluster
       bootstrap.memory_lock: 'true'
       ES_JAVA_OPTS: '-Xms512m -Xmx512m'
@@ -287,9 +260,7 @@ services:
       - nextcloud-db
       - nextcloud-cache
     environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
+      NEXTCLOUD_DATA_DIR: /DATAPOOL
       NEXTCLOUD_TRUSTED_DOMAINS: next.$DOMAIN
       NEXTCLOUD_ADMIN_USER: $USER1
       NEXTCLOUD_ADMIN_PASSWORD: $USER1PW
@@ -307,13 +278,13 @@ services:
       SMTP_PORT: 587
     volumes:
         # the actual data of the Nextcloud:
-      - $DOCKERDIR/nextcloud/var/nextdata:/var/nextdata
+      - $DOCKERDIR/nextcloud/data:/DATAPOOL
         # Main folder needed for updating:
-      - $DOCKERDIR/nextcloud/var/www/html:/var/www/html
+      - $DOCKERDIR/nextcloud/www/html:/var/www/html
         # local configuration
-      - $DOCKERDIR/nextcloud/var/www/html/config:/var/www/html/config
-        # userdata folder:
-      - $USERDATA:/mnt/users
+      - $DOCKERDIR/nextcloud/www/html/config:/var/www/html/config
+        # DATAPOOL folder:
+      - $DATAPOOL/Users:/mnt/users
         # Custom settings for php fpm to make nextcloud work. The default settings resulted in the error:
         # WARNING: [pool www] server reached pm.max_children setting (5), consider raising it
       - $DOCKERDIR/nextcloud/etc/www-custom.ini:/usr/local/etc/php-fpm.d/zz-custom.conf
@@ -323,12 +294,12 @@ services:
       caddy.file_server: "" 
       caddy.root: "* /nextcloud/var/www/html"
       caddy.php_fastcgi: "{{upstreams 9000}}"
-      caddy.php_fastcgi.root: "var/www/html"
+      caddy.php_fastcgi.root: "/var/www/html"
       caddy.php_fastcgi.env: "front_controller_active true"
       caddy.encode: gzip
-      caddy.rewrite_0: "/.well-known/carddav /remote.php/carddav"
-      caddy.rewrite_1: "/.well-known/caldav /remote.php/caldav"
-      caddy.header.Strict-Transport-Security: '"max-age=31536000;"' # Required for FileRun+OnlyOffice 
+      caddy.redir_0: "/.well-known/carddav /remote.php/dav 301"
+      caddy.redir_1: "/.well-known/caldav /remote.php/dav 301"
+      caddy.header.Strict-Transport-Security: '"max-age=15768000;includeSubDomains;preload"' # Required for Nextcloud
       #caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Required for FileRun+OnlyOffice
       #caddy.header.X-Content-Type-Options: "nosniff"                # Required for FileRun+OnlyOffice
       #caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Required for FileRun+OnlyOffice
@@ -340,13 +311,10 @@ services:
     networks:
       - nextcloud
     environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
       POSTGRES_USER: $USER
       POSTGRES_PASSWORD: $PW_INT
     volumes:
-      - $DOCKERDIR/nextcloud/var/db:/var/lib/postgresql/data
+      - $DOCKERDIR/nextcloud/db:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
 ##____________________ NextCloud [CLOUD/Files/NextCloud/cache]
   nextcloud-cache:
@@ -358,10 +326,6 @@ services:
     networks:
       - nextcloud
     command: redis-server --requirepass $PW_INT
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
 ##
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
@@ -379,9 +343,6 @@ services:
       - $DOCKERDIR/onlyoffice/fonts:/usr/share/fonts
     dns: 9.9.9.9
     environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
       JWT_ENABLED: 'true'
       JWT_SECRET: $ONLYOFFICEJWT
     labels:
@@ -411,9 +372,9 @@ services:
       - 122
     volumes:
       - $DOCKERDIR/jellyfin/config:/config
-      - $USERDATA/Local/Asterix/TV/TVshows:/data/tvshows
-      - $USERDATA/Local/Asterix/TV/Movies:/data/movies
-      - $USERDATA/Local/Asterix/TV/Music:/data/music
+      - $DATAPOOL/Media/TV/Series:/data/tvshows
+      - $DATAPOOL/Media/TV/Movies:/data/movies
+      - $DATAPOOL/Media/Music:/data/music
     ports:
       - 8096:8096
       - 8920:8920 #optional
@@ -486,8 +447,7 @@ services:
       PASS: $PW_MEDIA
     volumes:
       - $DOCKERDIR/transmission/config:/config
-      - $USERDATA/Local/Asterix/TV:/media
-      - $USERDATA/Local/Asterix/TV/incoming/blackhole:/watch
+      - $DATAPOOL/Media/TV/incoming:/Media/TV/incoming
 ##
 ##____________________ NZBget [MEDIA/download-client]
   nzbget:
@@ -503,12 +463,12 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/nzbget/config:/config
-      - $USERDATA/Local/Asterix/TV:/media
+      - $DATAPOOL/Media/TV/incoming/usenet:/Media/TV/incoming/usenet
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
-    image: linuxserver/sonarr:preview
+    image: linuxserver/sonarr:latest
     networks: 
       - media
     depends_on:
@@ -521,14 +481,14 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $DOCKERDIR/sonarr/config:/config
-      - $USERDATA/Local/Asterix/TV:/media
+      - $DATAPOOL/Media/TV:/Media/TV
     ports:
       - 8989:8989
 ##
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
     container_name: jackett
-    image: linuxserver/jackett:latest
+    image: linuxserver/jackett
     networks: 
       - media
     depends_on:
@@ -541,7 +501,7 @@ services:
     volumes:
       - $DOCKERDIR/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - $USERDATA/Local/Asterix/TV:/media
+      - $DATAPOOL/Media/TV/incoming:/Media/TV/incoming
     ports:
       - 9117:9117
   flaresolverr:
@@ -561,7 +521,7 @@ services:
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
     container_name: radarr
-    image: linuxserver/radarr:latest
+    image: linuxserver/radarr
     networks: 
       - media
     depends_on:
@@ -574,7 +534,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - $DOCKERDIR/radarr/config:/config
-      - $USERDATA/Local/Asterix/TV:/media
+      - $DATAPOOL/Media/TV:/Media/TV
     ports:
       - 7878:7878
 ##
@@ -594,7 +554,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/bazarr/config:/config
-      - $USERDATA/Local/Asterix/TV:/media
+      - $DATAPOOL/Media/TV:/Media/TV
     ports:
       - 6767:6767
 #
