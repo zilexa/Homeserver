@@ -49,10 +49,6 @@ services:
     volumes:
        - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
        - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
-    ports:
-     - 53:53/tcp
-     - 53:53/udp
-     - 3000:80
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
