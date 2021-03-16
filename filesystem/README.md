@@ -6,12 +6,13 @@ Technologies used:
 - [MergerFS](https://github.com/trapexit/mergerfs#description) Allows to add a fast cache to your drive pool. Explaination here: [Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching). This way, [you can choose to use](https://github.com/zilexa/Homeserver/blob/master/Hardware%20recommendations.md) small 2.5" disk drives with very low power consumption and don't worry about speed (disk speed is not very important in a homeserver anyway).  
 - [SnapRAID](http://www.snapraid.it/faq#whatisit) via [Snapraid-btrfs](https://github.com/automorphism88/snapraid-btrfs#faq), reap the benefits for home use of SnapRAID-btrfs over BTRFS-RAID.
 - [btrbk](https://github.com/digint/btrbk), the default tool (for BtrFS) for a wide variety of backup purposes.
-- [nocache](https://github.com/Feh/nocache#nocache---minimize-filesystem-caching-effects)-rsync, only for a specific task (see MergerFS Tiered Caching).  
+- [nocache](https://github.com/Feh/nocache#nocache---minimize-filesystem-caching-effects)-rsync, to free up cache by moving data to the disks within the merged pool.
 - hdparm and/or built in Disks tool of Ubuntu to configure drives to sleep after 15min & to make sure drives don't do too many load-cycles, keeps them healthy. 
 
 ## Why BtrFS?
 - It is stable, used for years by major cloud providers and tech companies. It did get a bad reputation because of bugs in the past. Emphasis on past. In some consumber Linux distributions, it is the default filesystem. 
 - It is extremely easy to use with regards to snapshots and subvolumes, supporting read-only snapshots for backups. 
+- btrfs send/receive command allow for safe and very fast copying/backup of your data, with less physical effort from the harddisk components compared to rsync. 
 - It does not require excessive (RAM) resources like ZFS. 
 - Several benefits over EXT4 to protect data integrity and protect against disk read/write errors such as checksums and (meta)data redundancy.
 - high compression capabilities to reduce the amount of data that needs to be written tot disk: maintain good speed, get max storage capacity. 
