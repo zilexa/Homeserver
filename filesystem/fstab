@@ -45,7 +45,7 @@ UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 ext4 defaults,noatime 
 # NFS ~ home network shares  
 # -------------------------
 # NFSv4.2 requires a root folder with each shared folder in it. We create /srv/nfs and bind mount the shared folders.
-/mnt/pool/Users/Local /srv/nfs/Users none rbind 0 0
+/mnt/pool/Media /srv/nfs/Media none rbind 0 0
 #
 # Example how to mount your servers NFS shares to a client:
 #192.168.88.X:  /mnt/Y  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0
