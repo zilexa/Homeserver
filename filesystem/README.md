@@ -94,6 +94,7 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 
 <details>
   <summary>### practical commands you might need before step 2A: wipe the disk, delete partitions</summary>
+  
 - To wipe the filesystems, run this command per partition (a partition is for example /dev/sda1 on disk /dev/sda): `sudo wipefs --all /dev/sda1`
 - To delete the partitions: `sudo fdisk /dev/sda`, now you are in the fdisk tool. Hit `m`. You will see the commands available. Use `p` to show the list of partitions, `d` to delete them one by one, `w` to safe changes. Then proceed with step 2A. 
 - To list all subvolumes in your whole system: `sudo btrfs subvolume list /` or only of one mounted disk `sudo btrfs subvolume list /mnt/disks/data1`.
