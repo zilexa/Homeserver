@@ -99,7 +99,7 @@ services:
       - 80:80
       - 443:443
 ##_____________________ Firefox Sync [CLOUD/Browser] 
-# generate secret.txt first see docker-config.sh
+# note .env file contains secret token and how to generate such a token
   firefox-syncserver:
     image: crazymax/firefox-syncserver:latest
     container_name: firefox_syncserver
