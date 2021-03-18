@@ -190,13 +190,9 @@ services:
     volumes:
       - $DOCKERDIR/filerun/html:/var/www/html
       - $DATAPOOL/Users:/user-files:rw
-      # bind mount is required to mount the shared local system user folders into the 2 home lan users folders
-      - type: bind
-        source: /mnt/pool/Users/Local/$USER
-        target: /user-files/Local/$USER1/$USER
-      - type: bind
-        source: /mnt/pool/Users/Local/$USER
-        target: /user-files/Local/$USER2/$USER
+      # Mount local host user containing family shared files, into home users folders
+      - $DATAPOOL/Users/Local/Asterix:/user-files/Local/$USER1/$USER
+      - $DATAPOOL/Users/Local/Asterix:/user-files/Local/$USER2/$USER
     labels:
       caddy: files.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
