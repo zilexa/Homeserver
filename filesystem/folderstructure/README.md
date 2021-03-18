@@ -5,7 +5,7 @@ My folder structure is extremely simple, this supports easy backups and snapshot
 ## 1. System folder structure
 ### My mounts: 
 - `/mnt/disks` --> physical disks
-  - `/mnt/disks/ {data1, data2, data3}
+  - `/mnt/disks/ {data1, data2, data3}`
   - `/mnt/disks/parity1` 
   - `/mnt/disks/backup1`
 - `/mnt/pool` --> the single access point to your data (disk array is mapped here). 
