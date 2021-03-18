@@ -21,8 +21,10 @@ On the OS system SSD:
 - `$HOME/.cache`, `/tmp` --> nested subvolumes are excluded when the parent subvol is snapshotted. These folders contain expendable data, should be excluded.  
 - `/system-snapshots` --> the location of snapshots. Exclude.\
 
-On data disks: 
-`/data` and `/.snapraid` both root subvolumes. That latter contains the snapraid content file.
+On data disks (root subvolumes): 
+- `/data` contains all data. This is the subvolume that will be backupped (!) and protected via parity. 
+- `/.snapraid` contains the snapraid content file.
+- `/data/Media/TV/incoming/incomplete` a nested subvolume. Downloaded files can be heavily fragmented. The torrent client can be set to download to `incomplete` and move files to `complete` when finished. By having a subvol for incomplete, files will be newly created (instead of just updating the index table) in complete. Zero fragmentation!
 
 ### MAJOR benefit of subvolumes
 The docker and home subvolumes are root subvolumes just like /. 
