@@ -19,7 +19,8 @@ On the OS system SSD:
 - `/home` --> root subvolume, contains user data, backupped seperately (Ubuntu, Fedora default behavior).
 - `$HOME/docker` --> root subvolume, contains non-expendable config and data of all Docker containers, backupped seperately.  
 - `$HOME/.cache`, `/tmp` --> nested subvolumes are excluded when the parent subvol is snapshotted. These folders contain expendable data, should be excluded.  
-- `/system-snapshots` --> the location of snapshots. Exclude.
+- `/system-snapshots` --> the location of snapshots. Exclude.\
+
 On data disks: 
 `/data` and `/.snapraid` both root subvolumes. That latter contains the snapraid content file.
 
