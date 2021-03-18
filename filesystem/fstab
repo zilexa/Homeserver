@@ -8,12 +8,6 @@
 #
 # Mount System disk ~ subvolumes
 #--------------------------------
-# Mount root subvolume @
-UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /                    btrfs   defaults,noatime,compress=zstd:1,subvol=@ 0       1
-# Mount boot efi
-UUID=!ADD YOUR OS/SYSTEM BOOT PARTITION UUID HERE!  /boot/efi       vfat    umask=0077      0       1
-# Mount root subvolume  @home
-UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home                 btrfs   defaults,noatime,compress=zstd:1,subvol=@home 0       2
 # Mount root subvolume @docker
 UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home/asterix/docker  btrfs   defaults,noatime,compress=zstd:1,subvol=@docker 0       2
 #
