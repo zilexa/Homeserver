@@ -58,11 +58,9 @@ ln -s /mnt/pool/Users/Asterix/Desktop $HOME/
 ln -s /mnt/pool/Users/Asterix/Downloads $HOME/
 ln -s /mnt/pool/Users/Asterix/Photos/ $HOME/
 
-# Note, deleting or moving Desktop is not possible, the folder will be re-created immediately. 
-# Temporarily change the location via a user config file, create the symlink, change it back. 
-sudo sed -i -e 's+$HOME/Desktop+$HOME/Documents/Desktop+g' $HOME/.config/user-dirs.dirs
-ln -s /mnt/pool/Users/Local/Asterix/Desktop $HOME/
-sudo sed -i -e 's+$HOME/Documents/Desktop+$HOME/Desktop+g' $HOME/.config/user-dirs.dirs
+# Be warned, the file $HOME/.config/user-dirs.dirs contains the path of your account folders,
+# if you rename folders (like I rename Pictures to Photos) or move folders (I prefer Templates (you can't get rid of it) to be within Documents) you need to change it here as well.
+#
 # Move Templates folder into Documents because it does not make sense to be outside it. 
 sudo sed -i -e 's+$HOME/Templates+$HOME/Documents/Templates+g' $HOME/.config/user-dirs.dirs
 mv $HOME/Templates $HOME/Documents/
@@ -73,6 +71,12 @@ rm -rf $HOME/Public
 sudo sed -i -e 's+$HOME/Pictures+$HOME/Photos+g' $HOME/.config/user-dirs.dirs
 # Rename Videos to TV 
 sudo sed -i -e 's+$HOME/Videos+$HOME/TV+g' $HOME/.config/user-dirs.dirs
+#
+# Note, deleting or moving Desktop is not possible, the folder will be re-created immediately. 
+# Temporarily change the location via a user config file, create the symlink, change it back. 
+sudo sed -i -e 's+$HOME/Desktop+$HOME/Documents/Desktop+g' $HOME/.config/user-dirs.dirs
+ln -s /mnt/pool/Users/Local/Asterix/Desktop $HOME/
+sudo sed -i -e 's+$HOME/Documents/Desktop+$HOME/Desktop+g' $HOME/.config/user-dirs.dirs
 
 # after setting up NFS shares (see NFS v4.2 guide), you can mount the folders that are too large for the laptop/client devices:
 # Other stuff like documents can be 2-way synced via Syncthing. 
