@@ -34,14 +34,14 @@ On the OS system SSD:
 - HOST folder: containing configs and scripts for maintenance, cleanup, backup. This way, you backup a single folder, /docker == equals backup of your complete server configuration. 
 
 ### 3. Data folder structure
-On data disks (root subvolumes) and in the unionised pool:  
+In the mountpoint of each cache/data disk, create the following subvolumes (for example, `cd /mnt/disks`, `sudo btrfs subvolume create data1/Users`: 
 - `/Users` personal, non-expendable precious userdata. Protected via parity _and_ backupped to backup disk. 
 - `/TV` non-personal, expendable tv media and downloads. Protected via parity, not backupped. 
 - `/Music` non-personal, semi-expendable music files. Protected via parity, backup is a choice, if you have enough space. 
 - `/.snapraid` contains the snapraid content file.
 - additionally: `/data/Media/TV/incoming/incomplete` is a nested subvolume and should have `chattr -R +C incomplete` applied to it from its parent folder.\Reason: Downloaded files can be heavily fragmented. The torrent client can be set to download to `incomplete` and move files to `complete` when finished. By having a subvol for incomplete, files will be newly created (instead of just updating the index table) in complete. Zero fragmentation!
 
-**When mounting the MergerFS pool, the folders on the cache/datadisks will appear unionised inside `/mnt/pool`:**
+**When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool`:**
 `mnt/pool/Users`, `mnt/pool/TV` and `/mnt/pool/Music`.  
 
 ### 4. Backup structure
