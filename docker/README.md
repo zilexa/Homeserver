@@ -1,3 +1,6 @@
+The overview of docker applications included in the compose yml:
+https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services
+
 If you have an understanding of Docker containerization and docker-compose to set it up, realise the following:\
 _Containers, Images and non-persistent Volumes are mostly expendable:\
 You can delete them all (basically delete contents of /var/lib/docker), run docker-compose and it will pull all images online, create containers and use your persistent volumes ($HOME/docker/...): the applications should be in the same state as they were before deletion (unless you didn't make the required volumes persistent via compose)._ This makes Docker the most simple, easy and fast way to deploy applications and maintain them.\
