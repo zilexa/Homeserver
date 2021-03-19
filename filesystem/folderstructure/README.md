@@ -39,7 +39,7 @@ On data disks (root subvolumes) and in the unionised pool:
 - `/TV` non-personal, expendable tv media and downloads. Protected via parity, not backupped. 
 - `/Music` non-personal, semi-expendable music files. Protected via parity, backup is a choice, if you have enough space. 
 - `/.snapraid` contains the snapraid content file.
-- `/data/Media/TV/incoming/incomplete` a nested subvolume. Downloaded files can be heavily fragmented. The torrent client can be set to download to `incomplete` and move files to `complete` when finished. By having a subvol for incomplete, files will be newly created (instead of just updating the index table) in complete. Zero fragmentation!
+- additionally: `/data/Media/TV/incoming/incomplete` is a nested subvolume and should have `chattr -R +C incomplete` applied to it from its parent folder.\Reason: Downloaded files can be heavily fragmented. The torrent client can be set to download to `incomplete` and move files to `complete` when finished. By having a subvol for incomplete, files will be newly created (instead of just updating the index table) in complete. Zero fragmentation!
 
 **When mounting the MergerFS pool, the folders on the cache/datadisks will appear unionised inside `/mnt/pool`:**
 `mnt/pool/Users`, `mnt/pool/TV` and `/mnt/pool/Music`.  
