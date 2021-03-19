@@ -5,7 +5,22 @@ Note I rely heavily on the flexibility and portability of btrfs subvolumes.
 For example, the docker and home subvolumes are root subvolumes just like /. This allows you to quickly restore the state of your docker applications to any point in time for which snapshot exists. Or you could even re-install your system, mount the docker subvolume and be back online immediately. 
 
 ## 1. System folder structure
-### System mounts: 
+When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately, with a different cadence or a different retention policy.  
+
+On the OS system SSD: 
+- `/` --> root subvolume (in btrfs-root, also known as subvolid5)
+- `/home` --> root subvolume, contains user data, backupped seperately (Ubuntu, Fedora default behavior).
+- `$HOME/docker` --> root subvolume, contains non-expendable config and data of all Docker containers, backupped seperately.  
+- `$HOME/.cache`, `/tmp` --> nested subvolumes are excluded when the parent subvol is snapshotted. These folders contain expendable data, should be excluded.  
+- `/system-snapshots` --> the location of snapshots. Exclude.\
+
+**the Docker folder**:\
+**This folder is precious and non-expendable! Will be backupped to backup disk just like your system disk and home folder.**
+- a folder per container for app data/config data. 
+- docker-compose.yml and .env files in the root of the folder.
+- HOST folder: containing configs and scripts for maintenance, cleanup, backup. This way, you backup a single folder, /docker == equals backup of your complete server configuration. 
+
+### 2. Disk mounts: 
 - `/mnt/disks` --> physical disks
   - `/mnt/disks/ {data1, data2, data3}`
   - `/mnt/disks/parity1` 
@@ -16,22 +31,6 @@ For example, the docker and home subvolumes are root subvolumes just like /. Thi
 - `/mnt/pool-nocache` --> the union but excluding the cache, required to offload the cache on a scheduled basis. 
 - `/mnt/pool-backup` --> the union of cache/data disk snapshots on backupdisk. They are seperately backupped on the backupdisk. Not auto-mounted.
 - `/mnt/btrfs-root` --> used during initial setup and during nightly backup. Not auto-mounted.
-
-### 2. System subvolumes: 
-When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately, with a different cadence or a different retention policy.  
-
-On the OS system SSD: 
-- `/` --> root subvolume (in btrfs-root, also known as subvolid5)
-- `/home` --> root subvolume, contains user data, backupped seperately (Ubuntu, Fedora default behavior).
-- `$HOME/docker` --> root subvolume, contains non-expendable config and data of all Docker containers, backupped seperately.  
-- `$HOME/.cache`, `/tmp` --> nested subvolumes are excluded when the parent subvol is snapshotted. These folders contain expendable data, should be excluded.  
-- `/system-snapshots` --> the location of snapshots. Exclude.\
-
-**the Docker folder**\
-**This folder is precious and non-expendable! Will be backupped to backup disk just like your system disk and home folder.**
-- a folder per container for app data/config data. 
-- docker-compose.yml and .env files in the root of the folder.
-- HOST folder: containing configs and scripts for maintenance, cleanup, backup. This way, you backup a single folder, /docker == equals backup of your complete server configuration. 
 
 ### 3. Data folder structure
 In the mountpoint of each cache/data disk, create the following subvolumes (for example, `cd /mnt/disks`, `sudo btrfs subvolume create data1/Users`: 
