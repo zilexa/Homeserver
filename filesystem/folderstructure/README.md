@@ -14,7 +14,7 @@ On the OS system SSD:
 - `$HOME/.cache`, `/tmp` --> nested subvolumes are excluded when the parent subvol is snapshotted. These folders contain expendable data, should be excluded.  
 - `/system-snapshots` --> the location of snapshots. Exclude.\
 
-**the Docker folder**:\
+**About the Docker subvolume**:\
 **This folder is precious and non-expendable! Will be backupped to backup disk just like your system disk and home folder.**
 - a folder per container for app data/config data. 
 - docker-compose.yml and .env files in the root of the folder.
@@ -44,9 +44,12 @@ In the mountpoint of each cache/data disk, create the following subvolumes (for 
 `mnt/pool/Users`, `mnt/pool/TV` and `/mnt/pool/Music`.  
 
 ### 4. Backup structure
-the parity disk will contain a single file with the parity data. It will be a fraction of the combined size of the cache/data disk, allowing you to protect up to 4 disks with 1 parity disk. 1 disk could fail and you should be able to recover it. To protect against >1 disk failure, use multiple parity disks. 
+_Realize the most precious folders/subvolumes are the Docker subvolume and (on each cache/datadisk) the Users subvolume._
+Although extremely annoying if needed, the system and home subvol should be considered expendable as you can always reinstall. 
+
+The parity disk will contain a single file with the parity data. It will be a fraction of the combined size of the cache/data disk allowing you to protect up to 4 disks with 1 parity disk. 1 disk could fail and you should be able to recover it. To protect against >1 disk failure, use multiple parity disks. 
 The backup disk wil contain snapshots (backups) of /, /home, /docker and for each cache/data disks snapshots of /cache/Users, /data1/Users, data2/Users. To restore User files without having to search through each, you can create an additional MergerFS mount to unionise them at /mnt/pool-backup. 
-Note snapshots are always created on the respective disk before they are send to the backup disk. You can decide the retention policy of those snapshots and the ones sent to the backup disk. 
+--> Note snapshots are always created on the respective disk before they are send to the backup disk. You can decide the retention policy of those snapshots and the ones sent to the backup disk. 
 
 &nbsp;
 Extras: 
