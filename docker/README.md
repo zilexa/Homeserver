@@ -4,18 +4,24 @@ You can delete them all (basically delete contents of /var/lib/docker), run dock
 Updating = pull new image, re-create container. Usually 1 command or 2 mouse-clicks. 
 
 ### Step 1 - Prepare your docker-compose.yml and personalise via environment variables
-1. Modify docker-compose.yml and .env to your needs and run docker-compose.  
-2. Configure each docker application to your needs. 
-3. Open the .env file in a text editor, understand these variables appear in docker-compose.yml. Make sure you fill them in to your needs. Each one needs to be filled in!
-4. Open docker-compose.yml and add/remove what you need. Make sure the paths of each volume is correct. 
-5. Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): docker-compose -f $HOME/docker/docker-compose.yml config
+Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
+Things you need to take care of:
+- get your own domain, required for secure https connections for your web applications.
+- link your domain to your IP via a dynamic DNS server, modern routers usually have this option.
+- set the env variables in the .env file, generate the required secret tokens with the given command.
+- in the compose file, make sure the volume mappings are correct.
+- if you remove certain applications, also remove the network that it belongs to, unless other apps use it.
+- notice the commands at the top of the compose file, for your convenience.
+ 
+### When you are ready
+Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): docker-compose -f $HOME/docker/docker-compose.yml config
 
 Before running docker-compose, make sure: 
 - all app-specific requirements are taken care of. 
 - the .env file is complete and correct.
 - the docker-compose.yml file is correct. 
 - Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
-- If you do prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped.
+- **Warning: if you do prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped.**
 
 All images will be downloaded, containers will be build and everything will start running. 
 Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
@@ -39,3 +45,6 @@ C. If needed, you can even access the terminal of the container and check files/
 In Portainer, click on a container, then select _Recreate_ and check the box to re-download the image. 
 The latest image will be downloaded and a new container will be created with it. 
 It will still use your persistent volume mappings: your configuration and persistent data remains. Just like a normal application update. 
+
+Issues:
+Permission issues can be solved with the chown and chmod commands.
