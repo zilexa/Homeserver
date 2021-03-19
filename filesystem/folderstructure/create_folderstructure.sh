@@ -77,4 +77,3 @@ sudo sed -i -e 's+$HOME/Videos+$HOME/TV+g' $HOME/.config/user-dirs.dirs
 # after setting up NFS shares (see NFS v4.2 guide), you can mount the folders that are too large for the laptop/client devices:
 # Other stuff like documents can be 2-way synced via Syncthing. 
 #ln -s /mnt/servername/Asterix/Photos $HOME/
-#ln -s /mnt/servername/Media $HOME/
