@@ -27,7 +27,7 @@ On the OS system SSD:
 - `$HOME/.cache`, `/tmp` --> nested subvolumes are excluded when the parent subvol is snapshotted. These folders contain expendable data, should be excluded.  
 - `/system-snapshots` --> the location of snapshots. Exclude.\
 
-**the Docker folder** 
+**the Docker folder**\
 **This folder is precious and non-expendable! Will be backupped to backup disk just like your system disk and home folder.**
 - a folder per container for app data/config data. 
 - docker-compose.yml and .env files in the root of the folder.
@@ -41,7 +41,7 @@ In the mountpoint of each cache/data disk, create the following subvolumes (for 
 - `/.snapraid` contains the snapraid content file.
 - additionally: `/data/Media/TV/incoming/incomplete` is a nested subvolume and should have `chattr -R +C incomplete` applied to it from its parent folder.\Reason: Downloaded files can be heavily fragmented. The torrent client can be set to download to `incomplete` and move files to `complete` when finished. By having a subvol for incomplete, files will be newly created (instead of just updating the index table) in complete. Zero fragmentation!
 
-**When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool`:**
+**When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool`:**\
 `mnt/pool/Users`, `mnt/pool/TV` and `/mnt/pool/Music`.  
 
 ### 4. Backup structure
