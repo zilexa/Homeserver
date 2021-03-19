@@ -137,7 +137,7 @@ _**Example fstab notes:**_
 - There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to add their UUIDs. 
 - For MergerFS, the 2 mounts contain many arguments, copy paste them completely. 
   - The first should start with the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
-  - The second is identical except without the SSD and a different mount path: `/mnt/pool-archive`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
+  - The second is identical except without the SSD and a different mount path: `/mnt/pool-nocache`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
   - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
 
 <details>
@@ -157,6 +157,6 @@ _**MergerFS Notes:**_
 3. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
 4. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
-The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-archive. 
+The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-nocache. 
 
 Continue setting up your [Folder Structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure) or go back to the main guide. 
