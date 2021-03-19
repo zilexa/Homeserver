@@ -37,7 +37,7 @@ curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbunt
 sudo apt -y update
 sudo apt -y install snapper
 
-# install nocache - required to move files from pool to archive with rsync
+# install nocache - required to move files from pool to pool-nocache with rsync
 # ---------------
 sudo apt -y install nocache
 
