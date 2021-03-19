@@ -50,12 +50,12 @@ The backup disk wil contain snapshots (backups) of /, /home, /docker and for eac
 Note snapshots are always created on the respective disk before they are send to the backup disk. You can decide the retention policy of those snapshots and the ones sent to the backup disk. 
 
 &nbsp;
-
-## 3. Sharing data locally
+Extras: 
+## 5. Sharing data locally
 NFSv4.2 is the fastest network protocol, allows server-side copy just like more common smb/samba and works on all OS's, although only for free on Mac and Linux. 
 I only use this to share folders that are too large to actually sync with my laptop. For example photo albums. To sync files to laptops/PCs, Syncthing is the recommended application (installed via docker). 
 
-## 4. Sharing files between partners/family with a structure that supports online access for all
+## 6. Sharing files between partners/family with a structure that supports online access for all
 The issue: My partner and I share photo albums, administrative documents etc. With Google Drive/DropBox/Onedrive, 1 user would own those files and share them with the other, but this only works in the online environment. The files are still stored in your folder. 
 But your partner won't see those files on the local filesystem of your laptop, PC, workstation or server: only if she uses the web application (FileRun or NextCloud). As you will prefer to use the local files directly, this can be frustrating and annoying as she has to go find your folder with those files.
 
