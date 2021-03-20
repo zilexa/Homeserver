@@ -8,7 +8,6 @@
 # /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
 # /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
 #
-/srv/nfs/Users/    192.168.88.0/24(rw,async,fsid=0,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
-/srv/nfs/Users/Asterix    192.168.88.0/24(rw,async,fsid=1,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
-/srv/nfs/Users/User1    192.168.88.0/24(rw,async,fsid=1,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
-/srv/nfs/Users/User2    192.168.88.0/24(rw,async,fsid=1,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
+/srv/nfs/    192.168.88.0/24(rw,async,fsid=0,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
+/srv/nfs/Photos    192.168.88.0/24(rw,async,fsid=1,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
+/srv/nfs/Music    192.168.88.0/24(rw,async,fsid=2,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
