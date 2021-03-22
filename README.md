@@ -62,7 +62,7 @@ Almost everything will run isolated in [Docker containers](https://www.docker.co
 
 You can easily find other applications via https://hub.docker.com/
 Below a description of each application that are in Docker-Compose.yml. Choose the ones you need.
-The only exceptions -apps that run natively on the OS for specific reasons- are Netdata, PiVPN and AdGuard Home. These apps have very easy installation instructions.\
+The only exceptions -apps that run natively on the OS for specific reasons- are Netdata, PiVPN and AdGuard Home. These apps have very easy installation instructions.
 
 ### _Server Management & Monitoring_
 _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)
@@ -81,7 +81,7 @@ _[Organizr](https://github.com/causefx/Organizr)_ - via Docker
 \
 _[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker\
 Mobile App: [Unifi Network](https://play.google.com/store/apps/details?id=com.ubnt.easyunifi)
->Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once.\
+>Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once.
 
 ### _Web Access Security_
 
@@ -101,7 +101,7 @@ _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker 
 >AdGuardHome is a DNS based malware & ad filter. No more ads, malware, coinmining, phishing. All devices on your homenetwork are ad-free and protected, after filtering, the approved DNS requests are forwarded to Unbound, which chops it up in pieces and contacts the end-point DNS providers to get the necessary IP for you to visit the site.\
 
 >This way, not 1 company in the world has your complete DNS requests. With the popular encrypted DNS options (DoH), your request is decrypted at the provider and all end-point DNS providers see your un-encrypted request.\
->This setup can also be used used remotely via split tunnel VPN (see PiVPN). This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world.\
+>This setup can also be used used remotely via split tunnel VPN (see PiVPN). This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world.
 
 
 ### _Cloud Experience_
