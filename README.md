@@ -143,7 +143,7 @@ _[Firefox Sync](https://github.com/mozilla-services/syncserver)_ - via Docker
 _[Paperless](https://github.com/jonaswinkler/paperless-ng)_ - via Docker
 >Scan files and auto-organise for your administration archive with a webUI to see and manage them. [Background](https://blog.kilian.io/paperless/) of Paperless. No more paper archives!
 
-\
+
 ### _Media Server_
 _[Jellyfin](https://jellyfin.org/)_ - via Docker\
 Mobile & TV Apps: [Jellyfin clients](https://jellyfin.org/clients/) (for series/movies), [Gelli](https://github.com/dkanada/gelli/releases) (amazing Music Player)
