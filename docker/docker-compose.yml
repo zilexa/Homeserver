@@ -1,11 +1,12 @@
 ## Run compose               : docker-compose -f docker-compose.yml up -d
 ## Check for typos           : docker-compose -f docker-compose.yml config
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
-### Note this will delete: stopped containers, the dangling or unused images, networks, non-persistent volumes and their btrfs subvolumes.
+### Note this will delete stopped containers and everything linked to them.
+#
 version: "2.3"
-## Read the Docker Documentation! Most examples use 3.x.
-## Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm. 
+## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm.
 ## Docker-Compose 2.x is for Compose.
+#
 services:
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
