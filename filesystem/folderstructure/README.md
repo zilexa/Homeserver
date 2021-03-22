@@ -29,7 +29,7 @@ On the OS system SSD:
 
 **Helper folders:**
 - `/mnt/pool-nocache` --> the union but excluding the cache, required to offload the cache on a scheduled basis. 
-- `/mnt/pool-backup` --> the union of cache/data disk snapshots on backupdisk. They are seperately backupped on the backupdisk. Not auto-mounted.
+- `/mnt/pool-backup` --> the union of cache/data disk backup snapshots on backupdisk. They are seperately backupped on the backupdisk. Not auto-mounted. Create this mount yourself when needed. 
 - `/mnt/btrfs-root` --> used during initial setup and during nightly backup. Not auto-mounted.
 
 ### 3. Data folder structure
