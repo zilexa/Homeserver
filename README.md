@@ -26,7 +26,7 @@ Note: I had zero experience when I started and learned everything by googling, s
 &nbsp;
 
 ## Steps to get up and running: 
-### Step 0. Get the files
+### Step zero. Get the files
 - Download this repository to your Downloads folder: Click the green "Code" button top left > Download as Zip. 
 - Open a Terminal (CTRL+ALT+T) or hit the Budgie start button and start typing "Terminal" or "Tilix. 
 
