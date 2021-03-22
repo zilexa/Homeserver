@@ -43,15 +43,17 @@ In the mountpoint of each cache/data disk, create the following subvolumes (for 
 **When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool`:**\
 `mnt/pool/Users`, `mnt/pool/TV` and `/mnt/pool/Music`.  
 
-### 4. Backup structure
-_Realize the most precious folders/subvolumes are the Docker subvolume and (on each cache/datadisk) the Users subvolume._
-Although extremely annoying if needed, the system and home subvol should be considered expendable as you can always reinstall.\
-
-The parity disk will contain a single file with the parity data. It will be a fraction of the combined size of the cache/data disk allowing you to protect up to 4 disks with 1 parity disk. 1 disk could fail and you should be able to recover it. To protect against >1 disk failure, use multiple parity disks.\
-The backup disk wil contain snapshots (backups) of /, /home, /docker and for each cache/data disks snapshots of /cache/Users, /data1/Users, data2/Users. To restore User files without having to search through each, you can create an additional MergerFS mount to unionise them at /mnt/pool-backup.\
---> Note snapshots are always created on the respective disk before they are send to the backup disk. You can decide the retention policy of those snapshots and the ones sent to the backup disk. 
+### 4. Move files to your server!
+- To copy files from existing disks, connect them via USB. 
+- Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your SSD!
+- While copying via the file manager is an option I highly recommend using rsync as it will verify each disk read and write action, to ensure the files are copied correctly. Also it includes options to have 100% identical copy with all of your files metadata and attributes. This is the recommended command: 
+`nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
+- Alternatively, if you want to be able to do other things, interact with the filesystem or allow other apps to interact with the filesystem, use `nocache`, it has been installed via the server setup script: 
+`# nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
+- You can also install the rsync app: `sudo apt install grsync`. 
 
 &nbsp;
+
 Extras: 
 ## 5. Sharing data locally
 NFSv4.2 is the fastest network protocol, allows server-side copy just like more common smb/samba and works on all OS's, although only for free on Mac and Linux. 
