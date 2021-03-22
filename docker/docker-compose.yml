@@ -1,19 +1,19 @@
+## Run compose               : docker-compose -f docker-compose.yml up -d
+## Check for typos           : docker-compose -f docker-compose.yml config
+## Cleanup unused images etc : sudo docker system prune --all --volumes --force
+### Note this will delete: stopped containers, the dangling or unused images, networks, non-persistent volumes and their btrfs subvolumes.
 version: "2.3"
+## Read the Docker Documentation! Most examples use 3.x.
+## Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm. 
+## Docker-Compose 2.x is for Compose.
 services:
-## Docker-Compose 3.x is for Docker Swarm, NOT Compose. Read the doc. Most examples use 3.x. That is not correct.
-## Docker-Compose 2.x is for Compose. 
-## Check file for errors: docker-compose -f docker-compose.yml config
-## Run this compose: docker-compose -f docker-compose.yml up -d
-## Regularly cleanup: sudo docker system prune --all --volumes --force
-### This will delete many BTRFS subvolumes, containing stopped containers, dangling/unused images, dangling/unused volumes. 
-##
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
     restart: always
-    networks: 
+    networks:
       - management
     command: -H unix:///var/run/docker.sock
     ports:
@@ -22,12 +22,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/portainer/data:/data
 ##
-##_____________________ Heimdall [Management/HOMEPAGE] 
+##_____________________ Heimdall [Management/HOMEPAGE]
   organizr:
     container_name: organizr
     image: organizr/organizr:latest
     restart: always
-    networks: 
+    networks:
       - management
     security_opt:
       - no-new-privileges:true
@@ -54,8 +54,8 @@ services:
     container_name: unbound
     image: mvance/unbound:latest
     restart: always
-    networks: 
-      - management  
+    networks:
+      - management
     volumes:
       - $DOCKERDIR/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
     ports:
@@ -68,7 +68,7 @@ services:
     image: goofball222/unifi
     mac_address: d0:ca:ab:cd:ef:03
     restart: always
-    networks: 
+    networks:
       - management
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -89,7 +89,7 @@ services:
     container_name: caddy-proxy
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
     restart: always
-    networks: 
+    networks:
       - web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -98,15 +98,15 @@ services:
     ports:
       - 80:80
       - 443:443
-##_____________________ Firefox Sync [CLOUD/Browser] 
-# note .env file contains secret token and how to generate such a token
+##_____________________ Firefox Sync [CLOUD/Browser]
+# generate secret.txt first see docker-config.sh
   firefox-syncserver:
     image: crazymax/firefox-syncserver:latest
     container_name: firefox_syncserver
     restart: always
-    networks: 
+    networks:
       - web-proxy
-    environment: 
+    environment:
       FF_SYNCSERVER_PUBLIC_URL: https://firefox.$DOMAIN
       FF_SYNCSERVER_SECRET: $FFSYNCSECRET
       FF_SYNCSERVER_FORWARDED_ALLOW_IPS: '*'
@@ -120,12 +120,12 @@ services:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
       caddy.tls: $EMAIL
-##_____________________ Bitwarden [CLOUD/Password-manager] 
+##_____________________ Bitwarden [CLOUD/Password-manager]
   bitwarden:
     image: bitwardenrs/server:latest
     container_name: bitwarden
     restart: always
-    networks: 
+    networks:
       - web-proxy
     volumes:
       - $DOCKERDIR/bitwarden:/data
@@ -151,7 +151,7 @@ services:
     container_name: syncthing
     image: syncthing/syncthing
     restart: always
-    networks: 
+    networks:
       - web-proxy
     volumes:
       - $DOCKERDIR/syncthing/config:/var/syncthing/config
@@ -170,7 +170,7 @@ services:
     image: afian/filerun
     container_name: filerun
     restart: always
-    networks: 
+    networks:
       - web-proxy
       - filerun
     environment:
@@ -191,19 +191,19 @@ services:
       - $DOCKERDIR/filerun/html:/var/www/html
       - $DATAPOOL/Users:/user-files:rw
       # Mount local host user containing family shared files, into home users folders
-      - $DATAPOOL/Users/Local/Asterix:/user-files/Local/$USER1/$USER
-      - $DATAPOOL/Users/Local/Asterix:/user-files/Local/$USER2/$USER
+      - $DATAPOOL/Users/Asterix:/user-files/$USER1/Asterix
+      - $DATAPOOL/Users/Asterix:/user-files/$USER2/Asterix
     labels:
       caddy: files.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
       caddy.tls: $EMAIL
       # Required extra headers
-      caddy.file_server: "" # required for FileRun
-      caddy.encode: gzip    # required for FileRun   
-      caddy.header.Strict-Transport-Security: '"max-age=31536000;"' # Required for FileRun+OnlyOffice 
-      caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Required for FileRun+OnlyOffice
-      caddy.header.X-Content-Type-Options: "nosniff"                # Required for FileRun+OnlyOffice
-      caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Required for FileRun+OnlyOffice
+      caddy.file_server: ""                                         # required for fileservers
+      caddy.encode: gzip                                            # required for fileservers
+      caddy.header.Strict-Transport-Security: '"max-age=31536000;"' # Recommended security hardening for fileservers
+      caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
+      caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
+      caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
     image: mariadb:10.1
@@ -250,7 +250,7 @@ services:
     container_name: onlyoffice
     stdin_open: 'true'
     restart: always
-    networks: 
+    networks:
       - web-proxy
     tty: 'true'
     volumes:
@@ -273,12 +273,12 @@ services:
 ##
 ##
 ##________MEDIA________
-##_____________________ Jellyfin [MEDIA/Library] 
+##_____________________ Jellyfin [MEDIA/Library]
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin
     restart: always
-    networks: 
+    networks:
       - media
     environment:
       PUID: $PUID
@@ -289,9 +289,9 @@ services:
       - 122
     volumes:
       - $DOCKERDIR/jellyfin/config:/config
-      - $DATAPOOL/Media/TV/Series:/data/tvshows
-      - $DATAPOOL/Media/TV/Movies:/data/movies
-      - $DATAPOOL/Media/Music:/data/music
+      - $DATAPOOL/TV/Series:/data/tvshows
+      - $DATAPOOL/TV/Movies:/data/movies
+      - $DATAPOOL/Music:/data/music
     ports:
       - 8096:8096
       - 8920:8920 #optional
@@ -305,7 +305,7 @@ services:
     container_name: VPN-proxy
     image: thrnz/docker-wireguard-pia
     restart: always
-    networks: 
+    networks:
       - vpn-proxy
     volumes:
       # Auth token is stored here
@@ -327,7 +327,7 @@ services:
       #KEEPALIVE: 25
       #VPNDNS: 8.8.8.8,8.8.4.4
       PORT_FORWARDING: 1
-      PORT_PERSIST: 
+      PORT_PERSIST:
       #WG_USERSPACE: 1
     privileged: 'true'
     sysctls:
@@ -364,13 +364,13 @@ services:
       PASS: $PW_MEDIA
     volumes:
       - $DOCKERDIR/transmission/config:/config
-      - $DATAPOOL/Media/TV/incoming:/Media/TV/incoming
+      - $DATAPOOL/TV/incoming:/TV/incoming
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:latest
-    networks: 
+    networks:
       - media
     depends_on:
       - transmission
@@ -382,7 +382,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $DOCKERDIR/sonarr/config:/config
-      - $DATAPOOL/Media/TV:/Media/TV
+      - $DATAPOOL/TV:/TV
     ports:
       - 8989:8989
 ##
@@ -390,7 +390,7 @@ services:
   jackett:
     container_name: jackett
     image: linuxserver/jackett
-    networks: 
+    networks:
       - media
     depends_on:
       - transmission
@@ -402,13 +402,13 @@ services:
     volumes:
       - $DOCKERDIR/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - $DATAPOOL/Media/TV/incoming:/Media/TV/incoming
+      - $DATAPOOL/TV/incoming:/TV/incoming
     ports:
       - 9117:9117
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
-    networks: 
+    networks:
       - media
     environment:
       - LOG_LEVEL=info
@@ -417,13 +417,13 @@ services:
       #- HARVESTER_ENDPOINT=https://127.0.0.1:5000/token
     ports:
       - 8191:8191
-    restart: unless-stopped 
+    restart: unless-stopped
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    networks: 
+    networks:
       - media
     depends_on:
       - transmission
@@ -435,7 +435,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - $DOCKERDIR/radarr/config:/config
-      - $DATAPOOL/Media/TV:/Media/TV
+      - $DATAPOOL/TV:/TV
     ports:
       - 7878:7878
 ##
@@ -443,7 +443,7 @@ services:
   bazarr:
     container_name: bazarr
     image: linuxserver/bazarr
-    networks: 
+    networks:
       - media
     depends_on:
        - sonarr
@@ -455,7 +455,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/bazarr/config:/config
-      - $DATAPOOL/Media/TV:/Media/TV
+      - $DATAPOOL/TV:/TV
     ports:
       - 6767:6767
 #
@@ -469,5 +469,5 @@ networks:
     driver: bridge
   vpn-proxy:
     driver: bridge
-  media: 
+  media:
     driver: bridge
