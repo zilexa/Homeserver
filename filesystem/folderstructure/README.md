@@ -4,7 +4,7 @@
 ### 1.1 Moving files to your server
 - To copy files from existing disks, connect them via USB. 
 - Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your SSD!
-- While copying via the file manager is an option I highly recommend using rsync as it will verify each disk read and write action, to ensure the files are copied correctly. Also it includes options to have 100% identical copy with all of your files metadata and attributes. This is the recommended command: 
+- While copying via the file manager is an option I highly recommend using rsync as it will verify each disk read and write action, to ensure the files are copied correctly. Also it includes options to have 100% identical copy with all of your files metadata and attributes. This is the recommended command (to copy to btrfs filesystem): 
 
 `rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
 - Alternatively, if you want to be able to do other things, interact with the filesystem or allow other apps to interact with the filesystem, use `nocache`, it has been installed via the server setup script: 
@@ -18,7 +18,7 @@ To move files within a subvolume, copy them first, note this action will be inst
 `cp --reflink=always /my/source /my/destination`
 
 Then when you are satisfied, delete the source folder/files. 
-Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. 
+Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. Note you can use mv also on subvolumes to rename them. 
 
 ## 2 Folder Structure Recommendations
 My folder structure is extremely simple, this supports easy backups and snapshots with a similar file structure. 
