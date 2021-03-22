@@ -21,7 +21,7 @@ Note: I had zero experience when I started and learned everything by googling, s
 1. Your router port forwarding:
     - The minimum set of services should be exposed via portforwarding to your server IP: **TCP ports 80 and 443** for remote HTTPS access, **UDP port 51820** for Wireguard-VPN access via PiVPN, **TCP and UDP port 22000** for syncing devices via Syncthing.
     - other containers, applications or services including SSH will only be accessible via VPN.
-2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide, get it via GoDaddy.com or Porkbun.com.
+2. Acquiring your own domain (mydomain.com) for easy and secure (TLS) HTTPS access. This is a requirement for this guide, get it via GoDaddy.com or Porkbun.com. Each exposed service will be accessible via subdomain.mydomain.com and the connection will be encrypted. The exposed services have proper authentication methods (2FA, FileRun and Bitwarden). 
 
 &nbsp;
 
