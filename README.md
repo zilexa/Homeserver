@@ -95,9 +95,9 @@ Mobile Apps: [WireGuard](https://play.google.com/store/apps/details?id=com.wireg
 _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker with _[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
 >Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting.\
 >AdGuardHome is a DNS based malware & ad filter. No more ads, malware, coinmining, phishing. All devices on your homenetwork are ad-free and protected, after filtering, the approved DNS requests are forwarded to Unbound, which chops it up in pieces and contacts the end-point DNS providers to get the necessary IP for you to visit the site.\
+
 >This way, not 1 company in the world has your complete DNS requests. With the popular encrypted DNS options (DoH), your request is decrypted at the provider and all end-point DNS providers see your un-encrypted request.\
->Can also be used remotely via split tunnel VPN. This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world (this requires the first DNS server, AdGuardHome, to be outside of Docker).\
->AdGuard Home runs natively otherwise you cannot use it as DNS server when you are remote away from home.
+>This setup can also be used used remotely via split tunnel VPN (see PiVPN). This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world.
 
 \
 _[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker\
@@ -116,8 +116,11 @@ Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.
 _[FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
 Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for phone backup).
 >FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes.\
->It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no calendar/contacts/calls etc features like Nextcloud. It does support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc.\
-> Although FileRun documentation recommends the Nextcloud mobile app, it is quite a useless and unfriendly app. CX File Explorer (4.8 stars) is a swift and friendly Android file manager that allows you to add your FileRun instance via WebDAV. It also allows SFTP access.\
+> FileRun support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc.\
+>Limits compared to Nextcloud: It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no calendar/contacts/calls etc features like Nextcloud.
+
+> The Nextcloud mobile app works with FileRun but CX File Explorer (4.8 stars) is so much better and easier to use. It is a swift and friendly Android file manager that allows you to add your FileRun instance via WebDAV. Compared to the Nextcloud app, it allows you to easily switch between your local storage and your cloud, copying files betweeen them.\
+
 > FolderSync is THE app for Android when you run your own filecloud, allowing you to sync the data of your apps (photos, chat apps, backup of your 2FA app (Aegis), home screen settings etc.) to your server, instead of to Google Drive. It also allows local sync: moving all app-specific backup files (like whatsapp\databases) to a single backup dir first before syncing it to your server.
 
 \
