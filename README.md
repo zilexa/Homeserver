@@ -72,25 +72,25 @@ _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Na
 
 >Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.
 
-\  
+
 _[Portainer](https://www.portainer.io/products/community-edition)_ - via Docker
->An complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.  
+>An complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
 
 \
 _[Organizr](https://github.com/causefx/Organizr)_ - via Docker
 >A a customisable homepage to have quick access to all your services/applications. 
 
-\
+
 ### _User Privacy & Network Security_
 
 _[Caddy](https://caddyserver.com/)_ - via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)
->reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc. Caddy already extremely simplifies the whole https process to allow browsers and apps A+ secure connection to your server. Docker Caddy Proxy goes one step further and allows you to set it up per container with just 2 lines! Alternatives like Traefik are needlessly complicated.   
+>reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc. Caddy already extremely simplifies the whole https process to allow browsers and apps A+ secure connection to your server. Docker Caddy Proxy goes one step further and allows you to set it up per container with just 2 lines! Alternatives like Traefik are needlessly complicated.
 
 \
 _[PiVPN](https://www.pivpn.io/)_ - via [Native Install](https://docs.pivpn.io/install/)\
 Mobile Apps: [WireGuard](https://play.google.com/store/apps/details?id=com.wireguard.android) + [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate)
 >Using the Wireguard VPN protocol, easy and secure access to your non-exposed applications (including SSH & SFTP) on your server.
->Allows you to always use your own DNS (AdGuard Home + Unbound), giving you the same ad-free, secure internet access while outside of your home network, while still allowing direct regular internet access (bypasses the tunnel, only DNS + server IP access goes via the tunnel). Optionally, when in a less secure public environment, let all traffic on your mobile go via the tunnel.  
+>Allows you to always use your own DNS (AdGuard Home + Unbound), giving you the same ad-free, secure internet access while outside of your home network, while still allowing direct regular internet access (bypasses the tunnel, only DNS + server IP access goes via the tunnel). Optionally, when in a less secure public environment, let all traffic on your mobile go via the tunnel.
 
 \
 _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker with _[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
