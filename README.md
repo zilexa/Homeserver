@@ -66,11 +66,9 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
 
 ### _Server Management & Monitoring_
 _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)
->Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info. 
-
->There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors. 
-
->Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.
+>Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info.\
+>There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors.\
+>Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.\
 
 
 _[Portainer](https://www.portainer.io/products/community-edition)_ - via Docker
