@@ -366,22 +366,6 @@ services:
       - $DOCKERDIR/transmission/config:/config
       - $DATAPOOL/Media/TV/incoming:/Media/TV/incoming
 ##
-##____________________ NZBget [MEDIA/download-client]
-  nzbget:
-    container_name: nzbget
-    image: linuxserver/nzbget:latest
-    network_mode: service:vpn
-    depends_on:
-      - vpn
-    restart: always
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/nzbget/config:/config
-      - $DATAPOOL/Media/TV/incoming/usenet:/Media/TV/incoming/usenet
-##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
