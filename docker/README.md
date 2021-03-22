@@ -1,5 +1,4 @@
-The overview of docker applications included in the compose yml:
-https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services
+Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose yml:
 
 If you have an understanding of Docker containerization and docker-compose to set it up, realise the following:\
 _Containers, Images and non-persistent Volumes are mostly expendable:\
