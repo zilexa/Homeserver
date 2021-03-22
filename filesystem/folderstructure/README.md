@@ -14,7 +14,9 @@
 
 ### 1.2 Move files within your filesystem
 To move files within a subvolume, copy them first, note this action will be instant on btrfs! Files won't be physically moved: 
+
 `cp --reflink=always /my/source /my/destination`
+
 Then when you are satisfied, delete the source folder/files. 
 Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. 
 
