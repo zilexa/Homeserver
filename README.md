@@ -97,14 +97,14 @@ Mobile Apps: [WireGuard](https://play.google.com/store/apps/details?id=com.wireg
 
 \
 _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker with _[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
->Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting.
+>Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting.\
+>AdGuardHome is a DNS based malware & ad filter, blocking ad requests but also blocking known malware, coinmining and phishing sites!
 
->AdGuardHome is a DNS based malware & ad filter, blocking ad requests but also blocking known malware, coinmining and phishing sites!\
->By blocking on DNS request level, you easily block 5-15% of internet traffic requests, significantly reducing the data needed to load websites, run apps and play games.
-
-All devices on your homenetwork are ad-free and protected, after filtering, the approved DNS requests are forwarded to Unbound, which chops it up in pieces and contacts the end-point DNS providers to get the necessary IP for you to visit the site.
+>After AGH filters the requests, the remaining DNS requests are forwarded to Unbound, which chops it up in pieces and contacts the end-point DNS providers to get the necessary IP for you to visit the site.\
 >This way, not 1 company in the world has your complete DNS requests. With the popular encrypted DNS options (DoH), your request is decrypted at the provider and all end-point DNS providers see your un-encrypted request.
 
+>By blocking on DNS request level, you easily block 5-15% of internet traffic requests, significantly reducing the data needed to load websites, run apps and play games.\
+>All devices connected to your router such as home speakers, smart devices, mediaplayer etc are automatically protected.\
 >This setup can also be used used remotely via split tunnel VPN (see PiVPN). This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world.
 
 
