@@ -89,7 +89,7 @@ _[Caddy](https://caddyserver.com/)_ - via [docker caddy proxy](https://github.co
 >reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc.\
 >Caddy already extremely simplifies the whole https process to allow browsers and apps A+ secure connection to your server. Docker Caddy Proxy goes one step further and allows you to set it up per container with just 2 lines! Alternatives like Traefik are needlessly complicated.
 
-> By default only the password manager (Bitwarden), file+Office cloud (FileRun, OnlyOffice), Firefox Sync server and syncthing webUI are accessible via web.\
+> By default only the password manager (Bitwarden), file+Office cloud (FileRun, OnlyOffice), Firefox Sync server and Syncthing are accessible via web.\
 > All other apps are only available via VPN or within your local network. You can easily expose other apps such as Jellyfin by adding a few labels to its container. 
 
 \
