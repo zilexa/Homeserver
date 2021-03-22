@@ -42,25 +42,16 @@ NOTES:
 [Create your folder structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure). Note my folder structure is simple.  
 
 ### Step 3. Prepare server and docker
-Install server essential tools and apply basic configuration + apply required stuff for specific docker services:
-If you haven't downloaded the file, use this command to do so: `wget https://github.com/zilexa/Homeserver/blob/master/prepare_server_docker.sh`
-execute it (no sudo): `bash prepare_server_docker.sh`
-Before you do, please open the file in your text editor (Pluma) first!
-The script has clear comments: remove the parts you don't need. For example, if you are not going to use FileRun, that section can be removed. If you ever will use it, make sure to execute those commands first. 
+Automatically install essential tools for your server, apply basic configuration + apply required stuff for specific docker services using a simple script that allows you to run each command yourself or run the script as a whole for automated setup. [docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker).\
+Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**_
 
-### Step 5. Docker-Compose configuration
-See the subguide for [Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker). _**this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**_
-
-### Step 6. Configure your Docker applications/services
-See the subguide for [Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker). 
-
-### Step 7. Maintenance
+### Step 4. Maintenance
 Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenance) of your server such as cleanup,  backup and disks protection tasks. 
 
-### Step 8. Local network shares
+### Step 5. Local network shares
 [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
-### Step 9. Configure remote VPN access
+### Step 6. Configure remote VPN access
 [VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
 
 &nbsp;
@@ -86,16 +77,13 @@ _[Portainer](https://www.portainer.io/products/community-edition)_ - via Docker
 _[Organizr](https://github.com/causefx/Organizr)_ - via Docker
 >A a customisable homepage to have quick access to all your services/applications. 
 
-_[Dozzle](https://dozzle.dev/)_ - via Docker
->WebUI to check your logs. 
-
 ### _User Privacy & Network Security_
 
 _[Caddy](https://caddyserver.com/)_ - via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)
 >reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc. Caddy already extremely simplifies the whole https process to allow browsers and apps A+ secure connection to your server. Docker Caddy Proxy goes one step further and allows you to set it up per container with just 2 lines! Alternatives like Traefik are needlessly complicated.   
 
-_[PiVPN](https://www.pivpn.io/)_ - via [Native Install](https://docs.pivpn.io/install/)
-Mobile Apps: [WireGuard](https://play.google.com/store/apps/details?id=com.wireguard.android) + [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate)
+_[PiVPN](https://www.pivpn.io/)_ - via [Native Install](https://docs.pivpn.io/install/)\
+Mobile Apps: [WireGuard](https://play.google.com/store/apps/details?id=com.wireguard.android) + [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate)\
 >Using the Wireguard VPN protocol, easy and secure access to your non-exposed applications (including SSH & SFTP) on your server.
 >Allows you to always use your own DNS (AdGuard Home + Unbound), giving you the same ad-free, secure internet access while outside of your home network, while still allowing direct regular internet access (bypasses the tunnel, only DNS + server IP access goes via the tunnel). Optionally, when in a less secure public environment, let all traffic on your mobile go via the tunnel.  
 
@@ -105,18 +93,18 @@ _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker 
 >Can also be used remotely via split tunnel VPN. This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world (this requires the first DNS server, AdGuardHome, to be outside of Docker). 
 >AdGuard Home runs natively otherwise you cannot use it as DNS server when you are remote away from home. 
 
-_[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker
-Mobile App: [Unifi Network](https://play.google.com/store/apps/details?id=com.ubnt.easyunifi)
+_[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker\
+Mobile App: [Unifi Network](https://play.google.com/store/apps/details?id=com.ubnt.easyunifi)\
 >Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
 
 ### _Cloud Experience_
 
-_[Bitwarden](https://github.com/dani-garcia/bitwarden_rs)_ - via Docker
-Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden) 
+_[Bitwarden](https://github.com/dani-garcia/bitwarden_rs)_ - via Docker\
+Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)\
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use. By using `bitwarden_rs`, written in the modern language RUST, it users exponentially less resources than the conventional Bitwarden-server. 
 
-_[FileRun](https://filerun.com/)_ instead of NextCloud - via Docker
-Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) (WebDAV) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for phone backup). 
+_[FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
+Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) (WebDAV) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for phone backup).\
 >FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes. 
 >It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no calendar/contacts/calls etc features like Nextcloud. It does support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc. 
  
@@ -135,8 +123,8 @@ _[Paperless](https://github.com/jonaswinkler/paperless-ng)_ - via Docker
 
 ### _Media Server_
 
-_[Jellyfin](https://jellyfin.org/)_ - via Docker
-Mobile & TV Apps: [Jellyfin clients](https://jellyfin.org/clients/) (for series/movies), [Gelli](https://github.com/dkanada/gelli/releases) (amazing Music Player)
+_[Jellyfin](https://jellyfin.org/)_ - via Docker\
+Mobile & TV Apps: [Jellyfin clients](https://jellyfin.org/clients/) (for series/movies), [Gelli](https://github.com/dkanada/gelli/releases) (amazing Music Player)\
 >A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do. Jellyfin is userfriendly and has easy features that you might miss from the streaming giants such as watched status management etc. 
 The mediaserver can transcode media on the fly to your clients, adjusting for available bandwith. It can use hardware encoding capabilities of your server.
 
