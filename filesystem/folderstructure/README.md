@@ -47,9 +47,11 @@ In the mountpoint of each cache/data disk, create the following subvolumes (for 
 - To copy files from existing disks, connect them via USB. 
 - Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your SSD!
 - While copying via the file manager is an option I highly recommend using rsync as it will verify each disk read and write action, to ensure the files are copied correctly. Also it includes options to have 100% identical copy with all of your files metadata and attributes. This is the recommended command: 
+
 `nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
 - Alternatively, if you want to be able to do other things, interact with the filesystem or allow other apps to interact with the filesystem, use `nocache`, it has been installed via the server setup script: 
-`# nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
+
+`nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
 - You can also install the rsync app: `sudo apt install grsync`. 
 
 &nbsp;
