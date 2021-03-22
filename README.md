@@ -103,9 +103,11 @@ Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use. By using `bitwarden_rs`, written in the modern language RUST, it users exponentially less resources than the conventional Bitwarden-server. 
 
 _[FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
-Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) (WebDAV) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for phone backup).
+Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for phone backup).
 >FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes. 
 >It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no calendar/contacts/calls etc features like Nextcloud. It does support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc. 
+> Although FileRun documentation recommends the Nextcloud mobile app, it is quite a useless and unfriendly app. CX File Explorer (4.8 stars) is a swift and friendly Android file manager that allows you to add your FileRun instance via WebDAV. It also allows SFTP access. 
+> FolderSync is THE app for Android when you run your own filecloud, allowing you to sync the data of your apps (photos, chat apps, backup of your 2FA app (Aegis), home screen settings etc.) to your server, instead of to Google Drive. It also allows local sync: moving all app-specific backup files (like whatsapp\databases) to a single backup dir first before syncing it to your server. 
 
 _[OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker
 >Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud. 
