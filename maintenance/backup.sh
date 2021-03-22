@@ -13,7 +13,12 @@ mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o subvolid=backup,de
 # BACKUP OF LOCAL USERS
 # ---------------------
 # first use rsync to backup from MergerFS pool to backup drive
-nocache rsync -azXA --progress --delete --inplace --numeric-ids --exclude 'Asterix/TV' /mnt/pool/Users/Local/ /mnt/disks/backup1/users.backup/ 
+nocache rsync -axHAXE --progress --no-whole-file --delete --inplace --numeric-ids --exclude 'Asterix/TV' /mnt/pool/Users/Local/ /mnt/disks/backup1/users.backup/ 
+
+# Manual secure copy (verify each read, verify each write), useful for archiving data, moving backups from/to non-btrfs: 
+# use "noache rsync" instead of "rsync" if you need the systems cache to be available for other apps/users. 
+# nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool 
+
 
 # Create snapshots of synced users data
 /usr/sbin/btrbk -c /home/$SUDO_USER/docker/HOST/users-backup.conf -v run
