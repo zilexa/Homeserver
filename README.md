@@ -104,7 +104,7 @@ _[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker\
 Mobile App: [Unifi Network](https://play.google.com/store/apps/details?id=com.ubnt.easyunifi)
 >Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once.
 
-\
+
 ### _Cloud Experience_
 _[Bitwarden](https://github.com/dani-garcia/bitwarden_rs)_ - via Docker\
 Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
