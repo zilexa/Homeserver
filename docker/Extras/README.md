@@ -11,7 +11,8 @@ Nextcloud has 2 versions: Apache/Nginx (default) and Nextcloud-FPM. FPM is the f
 
 **Grafana with Prometheus**\
 In my opinion, overkill for home use: it allows server monitoring with enterprise-grade dashboarding software. \
-I use Netdata (outside Docker) which works very good. It has no user-friendly option to personalise the dashboard/create dashboards.
+I use Netdata (outside Docker) which works very good. It has no user-friendly option to personalise the dashboard/create dashboards.\
+Note this still contains my old Traefikv2 labels, I highly recommend using Caddy instead as it is a much more simplified setup. 
 
 **PiHole**\
 After using PiHole and comparing with AdGuard Home, in my opinion AGH is the better option. It is also open-source and is just a single binary whereas PiHole is a mix of other tools.\
