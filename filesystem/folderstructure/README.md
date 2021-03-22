@@ -7,7 +7,7 @@
 - While copying via the file manager is an option I highly recommend using rsync as it will verify each disk read and write action, to ensure the files are copied correctly. Also it includes options to have 100% identical copy with all of your files metadata and attributes. This is the recommended command (to copy to btrfs filesystem): 
 
 `rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
-- Alternatively, if you want to be able to do other things, interact with the filesystem or allow other apps to interact with the filesystem, use `nocache`, it has been installed via the server setup script: 
+- Alternatively, if you want to simultaneously use the filesystem or allow other apps to use the filesystem, use `nocache`. This way the os/filesystem cache management system is bypassed and available for other activities. Nocache has been installed via the server setup script: 
 
 `nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
 - You can also install the rsync app: `sudo apt install grsync`. 
