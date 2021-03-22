@@ -71,7 +71,7 @@ _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Na
 >Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.
 
 _[Portainer](https://www.portainer.io/products/community-edition)_ - via Docker
->a Docker webUI to manage and update containers. Basically a ui of the Docker command. 
+>An complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.  
 
 _[Organizr](https://github.com/causefx/Organizr)_ - via Docker
 >A a customisable homepage to have quick access to all your services/applications. 
@@ -106,7 +106,6 @@ _[FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
 Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) (WebDAV) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for phone backup).
 >FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes. 
 >It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no calendar/contacts/calls etc features like Nextcloud. It does support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc. 
- 
 
 _[OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker
 >Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud. 
