@@ -42,7 +42,7 @@ NOTES:
 [Create your folder structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure). Note my folder structure is simple.  
 
 ### Step 3. Prepare server and docker
-Automatically install essential tools for your server, apply basic configuration + apply required stuff for specific docker services using a simple script that allows you to run each command yourself or run the script as a whole for automated setup. [docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker).\
+Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically (or run the commands manually one by one) install essential tools, apply basic configuration + required stuff for specific docker services.\
 Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**_
 
 ### Step 4. Maintenance
