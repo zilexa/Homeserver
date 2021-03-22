@@ -67,41 +67,53 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
 ### _Server Management & Monitoring_
 _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)
 >Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info. 
+
 >There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors. 
+
 >Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.
 
+\  
 _[Portainer](https://www.portainer.io/products/community-edition)_ - via Docker
 >An complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.  
 
+\
 _[Organizr](https://github.com/causefx/Organizr)_ - via Docker
 >A a customisable homepage to have quick access to all your services/applications. 
 
+\
 ### _User Privacy & Network Security_
 
 _[Caddy](https://caddyserver.com/)_ - via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)
 >reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc. Caddy already extremely simplifies the whole https process to allow browsers and apps A+ secure connection to your server. Docker Caddy Proxy goes one step further and allows you to set it up per container with just 2 lines! Alternatives like Traefik are needlessly complicated.   
 
+\
 _[PiVPN](https://www.pivpn.io/)_ - via [Native Install](https://docs.pivpn.io/install/)\
 Mobile Apps: [WireGuard](https://play.google.com/store/apps/details?id=com.wireguard.android) + [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate)
 >Using the Wireguard VPN protocol, easy and secure access to your non-exposed applications (including SSH & SFTP) on your server.
 >Allows you to always use your own DNS (AdGuard Home + Unbound), giving you the same ad-free, secure internet access while outside of your home network, while still allowing direct regular internet access (bypasses the tunnel, only DNS + server IP access goes via the tunnel). Optionally, when in a less secure public environment, let all traffic on your mobile go via the tunnel.  
 
+\
 _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker with _[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
->Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting. 
+>Unbound is a recursive DNS resolver. By using Unbound, not 1 ISP and DNS company will know the full URLs of the sites you are visiting.
+
 >AdGuardHome is a DNS based malware & ad filter. No more ads, malware, coinmining, phishing. All devices on your homenetwork are ad-free and protected, after filtering, the approved DNS requests are forwarded to Unbound, which chops it up in pieces and contacts the end-point DNS providers to get the necessary IP for you to visit the site. This way, not 1 company in the world has your complete DNS requests. With the popular encrypted DNS options (DoH), your request is decrypted at the provider and all end-point DNS providers see your un-encrypted request.
+
 >Can also be used remotely via split tunnel VPN. This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world (this requires the first DNS server, AdGuardHome, to be outside of Docker). 
+
 >AdGuard Home runs natively otherwise you cannot use it as DNS server when you are remote away from home. 
 
+\
 _[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker\
 Mobile App: [Unifi Network](https://play.google.com/store/apps/details?id=com.ubnt.easyunifi)
 >Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once. 
 
+\
 ### _Cloud Experience_
-
 _[Bitwarden](https://github.com/dani-garcia/bitwarden_rs)_ - via Docker\
 Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use. By using `bitwarden_rs`, written in the modern language RUST, it users exponentially less resources than the conventional Bitwarden-server. 
 
+\
 _[FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
 Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for phone backup).
 >FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes. 
@@ -112,28 +124,33 @@ Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=co
 
 > FolderSync is THE app for Android when you run your own filecloud, allowing you to sync the data of your apps (photos, chat apps, backup of your 2FA app (Aegis), home screen settings etc.) to your server, instead of to Google Drive. It also allows local sync: moving all app-specific backup files (like whatsapp\databases) to a single backup dir first before syncing it to your server. 
 
+\
 _[OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker
 >Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud. 
 
+\
 _[Syncthing](https://syncthing.net/)_ - via Docker
 >Syncthing is the fastest and most lightweight solution for 2-way syncing, allowing you to sync user files on your laptop or other users PC/laptops/NAS to your server.  FileRun (like Nextcloud) can also do syncing via WebDAV, but is more suitable to regularly backup your mobile devices to your server instead of constantly keeping an exact copy of your GB's of data on a PC or laptop. 
 
+\
 _[Firefox Sync](https://github.com/mozilla-services/syncserver)_ - via Docker
 >By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla. Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
 
 _[Paperless](https://github.com/jonaswinkler/paperless-ng)_ - via Docker
 >Scan files and auto-organise for your administration archive with a webUI to see and manage them. [Background](https://blog.kilian.io/paperless/) of Paperless. No more paper archives!
 
+\
 ### _Media Server_
-
 _[Jellyfin](https://jellyfin.org/)_ - via Docker\
 Mobile & TV Apps: [Jellyfin clients](https://jellyfin.org/clients/) (for series/movies), [Gelli](https://github.com/dkanada/gelli/releases) (amazing Music Player)
 >A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do. Jellyfin is userfriendly and has easy features that you might miss from the streaming giants such as watched status management etc. 
 The mediaserver can transcode media on the fly to your clients, adjusting for available bandwith. It can use hardware encoding capabilities of your server.
 
+\
 _[Sonarr (tvshows), Radarr (movies) Bazarr (subtitles), Jackett (torrentproxy)](https://wiki.servarr.com/Docker_Guide)_ - via Docker
 >A visual, user-friendly tool allowing you to search & add your favourite TV shows (Sonarr) or Movies (Radarr) and subtitles (Bazarr), see a schedule of when the next episodes will air and completely take care of obtaining the requires files (by searching magnets/torrents via Jackett, a proxy for all torrentsites) and organising them, all in order to get a full-blown Nextflix experience served by JellyFin.| For years I have messed with FlexGet, but it can't beat Sonarr.   
 
+\
 _[Transmission](https://hub.docker.com/r/linuxserver/transmission/)_ + [PIA Wireguard VPN](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_  - via Docker\
 Mobile App: [Transmission Remote](https://play.google.com/store/apps/details?id=net.yupol.transmissionremote.app)
 >Sonarr, Radarr, Jackett (automatically) add stuff to Transmission which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.  
