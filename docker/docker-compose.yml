@@ -1,20 +1,21 @@
-## Run compose               : docker-compose -f docker-compose.yml up -d
-## Check for typos           : docker-compose -f docker-compose.yml config
+## Run compose               : docker-compose -f docker-compose.yml up -d 
+## Check for typos           : docker-compose -f docker-compose.yml config 
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
-### Note this will delete stopped containers and everything linked to them.
+### Note this will delete stopped containers and everything linked to them. 
 #
 version: "2.3"
 ## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm.
 ## Docker-Compose 2.x is for Compose.
 #
 services:
+##
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
     restart: always
-    networks:
+    networks: 
       - management
     command: -H unix:///var/run/docker.sock
     ports:
@@ -23,12 +24,12 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/portainer/data:/data
 ##
-##_____________________ Heimdall [Management/HOMEPAGE]
+##_____________________ Heimdall [Management/HOMEPAGE] 
   organizr:
     container_name: organizr
     image: organizr/organizr:latest
     restart: always
-    networks:
+    networks: 
       - management
     security_opt:
       - no-new-privileges:true
@@ -55,8 +56,8 @@ services:
     container_name: unbound
     image: mvance/unbound:latest
     restart: always
-    networks:
-      - management
+    networks: 
+      - management  
     volumes:
       - $DOCKERDIR/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
     ports:
@@ -69,7 +70,7 @@ services:
     image: goofball222/unifi
     mac_address: d0:ca:ab:cd:ef:03
     restart: always
-    networks:
+    networks: 
       - management
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -90,25 +91,27 @@ services:
     container_name: caddy-proxy
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
     restart: always
-    networks:
+    networks: 
       - web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/caddy/caddy_data:/data
       - $DOCKERDIR/caddy/config:/config
+    labels:
+      caddy.email: $EMAIL
     ports:
       - 80:80
       - 443:443
-##_____________________ Firefox Sync [CLOUD/Browser]
+##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
   firefox-syncserver:
     image: crazymax/firefox-syncserver:latest
     container_name: firefox_syncserver
     restart: always
-    networks:
+    networks: 
       - web-proxy
-    environment:
-      FF_SYNCSERVER_PUBLIC_URL: https://firefox.$DOMAIN
+    environment: 
+      FF_SYNCSERVER_PUBLIC_URL: firefox.$DOMAIN
       FF_SYNCSERVER_SECRET: $FFSYNCSECRET
       FF_SYNCSERVER_FORWARDED_ALLOW_IPS: '*'
       FF_SYNCSERVER_FORCE_WSGI_ENVIRON: 'true'
@@ -119,26 +122,26 @@ services:
       - $DOCKERDIR/firefox-syncserver:/data
     labels:
       caddy: firefox.$DOMAIN
+#      caddy.tls: 
       caddy.reverse_proxy: "{{upstreams 5000}}"
-      caddy.tls: $EMAIL
-##_____________________ Bitwarden [CLOUD/Password-manager]
+##_____________________ Bitwarden [CLOUD/Password-manager] 
   bitwarden:
     image: bitwardenrs/server:latest
     container_name: bitwarden
     restart: always
-    networks:
+    networks: 
       - web-proxy
     volumes:
       - $DOCKERDIR/bitwarden:/data
     environment:
       WEBSOCKET_ENABLED: 'true'
-      DOMAIN: https://bw.$DOMAIN
+      DOMAIN: bw.$DOMAIN
       SIGNUPS_ALLOWED: 'false'
       ADMIN_TOKEN: $BITWARDENTOKEN
     labels:
       caddy: bw.$DOMAIN
+#      caddy.tls: $EMAIL
       caddy.reverse_proxy_0: "{{upstreams 80}}"
-      caddy.tls: $EMAIL
       # Required extra headers
       caddy.encode: gzip
       caddy.header.X-XSS-Protection: '"1; mode=block;"'
@@ -152,7 +155,7 @@ services:
     container_name: syncthing
     image: syncthing/syncthing
     restart: always
-    networks:
+    networks: 
       - web-proxy
     volumes:
       - $DOCKERDIR/syncthing/config:/var/syncthing/config
@@ -163,15 +166,14 @@ services:
       - "22000:22000/udp"
     labels:
       caddy: sync.$DOMAIN
+#      caddy.tls: $EMAIL
       caddy.reverse_proxy: "{{upstreams 8384}}"
-      caddy.tls: $EMAIL
-##
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
     image: afian/filerun
     container_name: filerun
     restart: always
-    networks:
+    networks: 
       - web-proxy
       - filerun
     environment:
@@ -192,12 +194,12 @@ services:
       - $DOCKERDIR/filerun/html:/var/www/html
       - $DATAPOOL/Users:/user-files:rw
       # Mount local host user containing family shared files, into home users folders
-      - $DATAPOOL/Users/Asterix:/user-files/$USER1/Asterix
-      - $DATAPOOL/Users/Asterix:/user-files/$USER2/Asterix
+      - $DATAPOOL/Users/Asterix:/user-files/$USER1/Asterix:rw
+      #- $DATAPOOL/Users/Asterix:/user-files/$USER2/Asterix:rw
     labels:
       caddy: files.$DOMAIN
+#      caddy.tls: $EMAIL
       caddy.reverse_proxy: "{{upstreams 80}}"
-      caddy.tls: $EMAIL
       # Required extra headers
       caddy.file_server: ""                                         # required for fileservers
       caddy.encode: gzip                                            # required for fileservers
@@ -251,7 +253,7 @@ services:
     container_name: onlyoffice
     stdin_open: 'true'
     restart: always
-    networks:
+    networks: 
       - web-proxy
     tty: 'true'
     volumes:
@@ -265,8 +267,8 @@ services:
       JWT_SECRET: $ONLYOFFICEJWT
     labels:
       caddy: office.$DOMAIN
+#      caddy.tls: $EMAIL
       caddy.reverse_proxy: "{{upstreams 80}}"
-      caddy.tls: $EMAIL
       # Required extra headers
       caddy.file_server: ""
       caddy.encode: gzip
@@ -274,12 +276,12 @@ services:
 ##
 ##
 ##________MEDIA________
-##_____________________ Jellyfin [MEDIA/Library]
+##_____________________ Jellyfin [MEDIA/Library] 
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin
     restart: always
-    networks:
+    networks: 
       - media
     environment:
       PUID: $PUID
@@ -306,7 +308,7 @@ services:
     container_name: VPN-proxy
     image: thrnz/docker-wireguard-pia
     restart: always
-    networks:
+    networks: 
       - vpn-proxy
     volumes:
       # Auth token is stored here
@@ -328,7 +330,7 @@ services:
       #KEEPALIVE: 25
       #VPNDNS: 8.8.8.8,8.8.4.4
       PORT_FORWARDING: 1
-      PORT_PERSIST:
+      PORT_PERSIST: 
       #WG_USERSPACE: 1
     privileged: 'true'
     sysctls:
@@ -371,7 +373,7 @@ services:
   sonarr:
     container_name: sonarr
     image: linuxserver/sonarr:latest
-    networks:
+    networks: 
       - media
     depends_on:
       - transmission
@@ -391,7 +393,7 @@ services:
   jackett:
     container_name: jackett
     image: linuxserver/jackett
-    networks:
+    networks: 
       - media
     depends_on:
       - transmission
@@ -409,7 +411,7 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
-    networks:
+    networks: 
       - media
     environment:
       - LOG_LEVEL=info
@@ -418,13 +420,13 @@ services:
       #- HARVESTER_ENDPOINT=https://127.0.0.1:5000/token
     ports:
       - 8191:8191
-    restart: unless-stopped
+    restart: unless-stopped 
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
     container_name: radarr
     image: linuxserver/radarr
-    networks:
+    networks: 
       - media
     depends_on:
       - transmission
@@ -444,7 +446,7 @@ services:
   bazarr:
     container_name: bazarr
     image: linuxserver/bazarr
-    networks:
+    networks: 
       - media
     depends_on:
        - sonarr
@@ -470,5 +472,6 @@ networks:
     driver: bridge
   vpn-proxy:
     driver: bridge
-  media:
+  media: 
     driver: bridge
+    
