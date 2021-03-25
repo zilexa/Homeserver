@@ -122,7 +122,6 @@ services:
       - $DOCKERDIR/firefox-syncserver:/data
     labels:
       caddy: firefox.$DOMAIN
-#      caddy.tls: 
       caddy.reverse_proxy: "{{upstreams 5000}}"
 ##_____________________ Bitwarden [CLOUD/Password-manager] 
   bitwarden:
@@ -140,7 +139,6 @@ services:
       ADMIN_TOKEN: $BITWARDENTOKEN
     labels:
       caddy: bw.$DOMAIN
-#      caddy.tls: $EMAIL
       caddy.reverse_proxy_0: "{{upstreams 80}}"
       # Required extra headers
       caddy.encode: gzip
@@ -166,7 +164,6 @@ services:
       - "22000:22000/udp"
     labels:
       caddy: sync.$DOMAIN
-#      caddy.tls: $EMAIL
       caddy.reverse_proxy: "{{upstreams 8384}}"
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
@@ -198,7 +195,6 @@ services:
       #- $DATAPOOL/Users/Asterix:/user-files/$USER2/Asterix:rw
     labels:
       caddy: files.$DOMAIN
-#      caddy.tls: $EMAIL
       caddy.reverse_proxy: "{{upstreams 80}}"
       # Required extra headers
       caddy.file_server: ""                                         # required for fileservers
@@ -267,7 +263,6 @@ services:
       JWT_SECRET: $ONLYOFFICEJWT
     labels:
       caddy: office.$DOMAIN
-#      caddy.tls: $EMAIL
       caddy.reverse_proxy: "{{upstreams 80}}"
       # Required extra headers
       caddy.file_server: ""
@@ -474,4 +469,3 @@ networks:
     driver: bridge
   media: 
     driver: bridge
-    
