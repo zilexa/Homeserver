@@ -49,8 +49,7 @@ Make a choice that makes sense for your situation. For me, /TV contains expendab
 All prequisities have been taken care of by the script from [Step 1:Filesystem](https://github.com/zilexa/Homeserver#step-1-filesystem): snapraid, snapraid-btrfs (requires snapper), nocache and btrbk should be installed. Also the default config of snapper `/etc/snapper/config-template/default` and the snapraid config `etc/snapraid.conf` have been replaced with slightly modified versions, to save you some time and prevent you from hitting walls.\
 
 _All you have to do:_
-If you haven't downloaded this repository yet: In the root of this repository, you will see a big green button "code", click it, select download as zip. Extract the contents of the `maintenance` folder to `$HOME/docker/HOST`.\
-Notice this way you have everything in 1 folder: you docker container volumes `$HOME/docker` with their config and data, your docker-compose.yml and environment file. And the `HOST` subdir containing essential maintenance config files for the host (your server). When your docker subvolume is snapshotted & backupped, so are the maintenance config files. 
+If you haven't executed that script, [open the script](https://github.com/zilexa/Homeserver/blob/master/filesystem/setup-storage.sh) and execute the commands to install the required tools and obtain the config files.  
 
 ## Snapraid setup
 #### Step 1: Create snapper config files
@@ -92,10 +91,32 @@ Now modify the conf file, section `[email]` to add your emailaddress, the "from"
 Run it to test it works: `python3 snapraid-btrfs-runner.py`
 
 ## Backup setup
-#### Step  First run of backup tasks
-The command for system backups: ``
-The command for user data backups: ``
-**The first run should be done manually because for user data it can take HOURS**, depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
+#### Step 1: Customise locations & retention policy
+- Download the config file: `cd $HOME/docker/HOST` and `wget -P https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/btrbk-backup.conf`
+- Open the file located in $HOME/docker/HOST/btrbk-backup.conf
+- Edit the default retention policy to your needs. Also edit the custom retention policy for your system disk subvolumes. 
+- Verify the locations of your disks, the chosen subvolume (Users) meet your needs. 
+- Remove the lines containing `/media/backup2/...` if you are not planning on connecting a USB disk occasionally. This will also prevent warnings/errors when the disk is not connected. 
+
+#### Step 2: Create the snapshot location and backup target location folders
+- Snapshots (timeline backups) of system will go in `/mnt/systemroot/timeline`. 
+- Snapshots of cache/data disk go to `.timeline` in the disk root, hidden for security. 
+- The target for backups is your `/mnt/backup1/`. 
+2.1. Mount the filesystem root of the system disk and the backup disk.  
+```
+sudo mount /dev/nvme0n1p2 /mnt/system-root -o subvolid=5,defaults,noatime,compress=lzo 
+sudo mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o subvolid=backup,defaults,noatime,compress=zstd:8 
+```` 
+
+2.2. Create destination folders: 
+For the system snapshots: `sudo mkdir /mnt/systemroot/timeline`
+For cache/data disks snapshots: `sudo mkdir /mnt/disks/cache/.timeline` and `sudo mkdir /mnt/disks/data1/.timeline` etc. 
+For backups: `sudo mkdir /mnt/disks/backup1/system`, `sudo mkdir /mnt/disks/backup1/cache`, `sudo mkdir /mnt/disks/backup1/data1` etc. 
+
+#### Step 3: Perform a dryrun
+A dryrun will not perform any actions: 
+`/usr/sbin/btrbk -c /home/$SUDO_USER/docker/HOST/backup.conf -n run`
+Note you should only see errors regarding `backup2` if it is not connected. Snapshots are still created and backups are made on the first target `backup1`. 
 
 ## Maintenance & scheduling 
 Depending on the purpose of your server, several maintenance tasks can be executed nightly, before the backup strategy is executed, to cleanup files first: 
@@ -105,7 +126,7 @@ Depending on the purpose of your server, several maintenance tasks can be execut
 - Cleaning up system cache is not necessary as those folders are already excluded since they are nested subvolumes: nested subvolumes are excluded when the parent subvol is snapshotted. 
 - 
 #### Choose # of days to keep files on cache.
-Open `/HOST/maintenance.sh` in Pluma/text editor. 
+Open `/HOST/run-cleanup.sh` in Pluma/text editor. 
 Under Cache Cleanup, change the # of days (30) to your needs. 
 
 #### Choose # of days to keep watched tv-media.
@@ -119,7 +140,7 @@ Now in terminal (CTRL+ALT+T) open Linux scheduler (no sudo): `crontab -e` and co
 # Disable errors appearing in syslog
 MAILTO=""
 # Nightly at 02.30h run maintenance (tv-media cleanup, cache archiver, snapraid-btrfs, snapraid-btrfs cleanup)
-30 2 * * * /usr/bin/bash /home/asterix/docker/HOST/maintenance.sh | gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' >> /home/asterix/docker/HOST/logs/maintenance.log 2>&1
+30 2 * * * /usr/bin/bash /home/asterix/docker/HOST/run-cleanup.sh | gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' >> /home/asterix/docker/HOST/logs/maintenance.log 2>&1
 #
 # Every 6hrs between 10.00-23.00 do additonal snapraid-btrfs runs
 0 10-23/6 * * * python3 snapraid-btrfs-runner.py
