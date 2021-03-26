@@ -20,22 +20,29 @@ If you have an understanding of Docker containerization and docker-compose to se
 5. If you want **email notifications** (recommended), create a feee account with an SMTP provider. I have bad experience with sendgrid.com, very good experience with smtp2go.com, it explains very well how to configure your domain to make sure emails do not end up in your Gmail/outlook.com junk folder.  
 
 &nbsp;
+## Docker Compose Guide 
+### Step 1 Prepare Docker: run the script
+Go through the script and execute what you need manually, or download and execute it: 
+`cd Downloads`
+`wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/prepare_server_docker.sh`
+`bash prepare_server_docker.sh`
+Note this will protect your $HOME/docker folder and take care or requirements for certain docker applications. If you do not need those applications, you can simply delete those application folders from $HOME/docker after the script is finished or remove those parts of the script. 
 
-#### Step 1 - Prepare your docker-compose.yml and personalise via environment variables
+#### Step 2 - Prepare your docker-compose.yml and personalise via environment variables
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
 Things you need to take care of:
-- get your own domain, required for secure https connections for your web applications.
-- link your domain to your IP via a dynamic DNS server, modern routers usually have this option.
-- set the env variables in the .env file, generate the required secret tokens with the given command.
-- in the compose file, make sure the volume mappings are correct.
-- if you remove certain applications, also remove the network that it belongs to, unless other apps use it.
-- notice the commands at the top of the compose file, for your convenience.
+- .env file: set the env variables in the .env file, generate the required secret tokens with the given command.
+- docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking.
+- docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
+- if you remove certain applications, at the bottom also remove unneccary networks.
+- notice the commands at the top of the compose file, for your convenience. 
  
-#### Step 2 - When you are ready for true action
-Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): docker-compose -f $HOME/docker/docker-compose.yml config
+#### Step 3 - When you are ready for true action
+`cd docker` (when you open terminal, you should already be in $HOME).
+Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): `docker-compose -f $HOME/docker/docker-compose.yml config` using -f to point to the location of your config files. 
 
 Before running docker-compose, make sure: 
-- all app-specific requirements are taken care of. 
+- all app-specific requirements are taken care of. The script from the 
 - the .env file is complete and correct.
 - the docker-compose.yml file is correct. 
 - Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
@@ -44,16 +51,16 @@ Before running docker-compose, make sure:
 All images will be downloaded, containers will be build and everything will start running. 
 Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
 
-#### Step 3 - Check everything is up and running
+#### Step 4 - Check everything is up and running
 5. Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
 6. To update an application in the future, click that container, hit `recreate` and check `pull new image`. 
 
-#### Step 4 - Docker Management
+## Frequent tasks
+**Docker Management** 
 Via Portainer, you can easily access each of your app by clicking on the ports. 
 Go ahead and configure each of your applications.
 I recommend configuring a dns record in your router OR use AdGuard Home > Settings > DNS rewrite to create easy urls like my.server to access all your services via my.server:portnumber and configure Organizr, so that you can access ALL services within your LAN and via VPN via 1 url. 
 
-## Frequent tasks
 **Check status of your apps/containers**
 A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.\
 B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.\
