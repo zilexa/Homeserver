@@ -7,10 +7,10 @@ Contents:
   3. [Online backup](https://github.com/zilexa/Homeserver/tree/master/maintenance#3-online-backup)
   4. [Replacing disks, restoring data](https://github.com/zilexa/Homeserver/tree/master/maintenance#4-replacing-disks-restoring-data)
 - Backup & Maintenance guide(https://github.com/zilexa/Homeserver/tree/master/maintenance#backup--maintenance-guide)
-  - Prerequisities(https://github.com/zilexa/Homeserver/tree/master/maintenance#prequisities)
-  - Snapraid setup(https://github.com/zilexa/Homeserver/tree/master/maintenance#snapraid-setup)
-  - btrbk setup(https://github.com/zilexa/Homeserver/tree/master/maintenance#backup-setup)
-  - Maintenance & scheduling(https://github.com/zilexa/Homeserver/tree/master/maintenance#maintenance-scheduling)
+  - [Prerequisities](https://github.com/zilexa/Homeserver/tree/master/maintenance#prequisities)
+  - [Snapraid setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#snapraid-setup)
+  - [btrbk setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#backup-setup)
+  - [Maintenance & scheduling](https://github.com/zilexa/Homeserver/tree/master/maintenance#maintenance--scheduling)
 
 # The 3-tier Backup Strategy outline
 ## 1. disk protection
@@ -85,16 +85,16 @@ Depending on the purpose of your server, several maintenance tasks can be execut
 - Cleanup docker: stopped containers, old images etc can be deleted. 
 - Cleaning up system cache is not necessary as those folders are already excluded since they are nested subvolumes: nested subvolumes are excluded when the parent subvol is snapshotted. 
 - 
-### Step 1: Choose # of days to keep files on cache.
+#### Choose # of days to keep files on cache.
 Open `/HOST/maintenance.sh` in Pluma/text editor. 
 Under Cache Cleanup, change the # of days (30) to your needs. 
 
-### Step 2: Choose # of days to keep watched tv-media.
+#### Choose # of days to keep watched tv-media.
 Open `HOST/media-cleaner/media_cleaner.conf`in Pluma/text editor. 
 Change the days to keep watched episodes/seasons/movies and choose whether to keep everything marked as favourite. Those will never be deleted automatically. 
 
 
-### Step 3: set schedule for maintenance tasks that do not need root (cleanup, snapraid)
+### Create schedule for maintenance tasks that do not need root (cleanup, snapraid)
 Now in terminal (CTRL+ALT+T) open Linux scheduler (no sudo): `crontab -e` and copy-paste the below into it. Make sure you replace MAILTO: 
 ```
 # Disable errors appearing in syslog
@@ -106,7 +106,7 @@ MAILTO=""
 0 10-23/6 * * * snapraid-btrfs sync | gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' >> $HOME/docker/HOST/logs/snapraid-btrfs.log 2>&1
 ```
 
-### Step 4: set schedule for tasks that do need root (docker cleanup, backups)
+### Create schedule for tasks that do need root (docker cleanup, backups)
 Note: The backup schedule requires root, as `btrbk` needs it. Root has its own scheduler. Do not mix up these two crontabs. 
 - In terminal (CTRL+ALT+T) open Linux scheduler: `sudo crontab -e` and copy-paste the below into it. Make sure you replace MAILTO: 
 
