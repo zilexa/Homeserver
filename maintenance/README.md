@@ -101,7 +101,8 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py`
 #### Step 2: Create the snapshot location and backup target location folders
 - For timeline backups of the system, snapshots will be stored in `/mnt/systemroot/timeline`. 
 - For timeline backups of the cache/data disks, snapshots will be stored in each disks root, `.timeline` folder, hidden for security. 
-- The target for backups is your disk mounted at `/mnt/backup1/`, it should not be part of your MergerFS pool. 
+- The target for backups is your disk mounted at `/mnt/backup1/`, it should not be part of your MergerFS pool.\
+
 2.1. Mount the filesystem root of the system disk and the backup disk.  
 ```
 sudo mount /dev/nvme0n1p2 /mnt/system-root -o subvolid=5,defaults,noatime,compress=lzo 
