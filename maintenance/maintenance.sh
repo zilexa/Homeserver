@@ -17,9 +17,7 @@ $HOME/docker/HOST/jellyfin-cleaner/media_cleaner.py >> $HOME/docker/HOST/logs/me
 # PROTECT DATA DRIVES - SnapRAID
 # ------------------------------
 # Run SnapRAID
-snapraid-btrfs sync >> $HOME/docker/HOST/logs/snapraid-btrfs.log 2>&1
-snapraid-btrfs cleanup
-
+python3 snapraid-btrfs-runner.py
 
 # Delete temp file, follow up tasks can continue
 rm /tmp/maintenance-is-running
