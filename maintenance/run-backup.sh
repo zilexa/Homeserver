@@ -1,5 +1,5 @@
 #!/bin/sh
-# Seperate config because btrbk requires sudo. 
+# btrbk requires sudo, schedule via sudo crontab -e 
 
 # Make sure maintenance is finished
 while [[ -f /tmp/maintenance-is-running ]] ; do
