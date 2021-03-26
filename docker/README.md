@@ -3,10 +3,10 @@ _**Check the homepage for [the overview of docker applications](https://github.c
 **Contents**
 1. [Configure router & domain](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#configure-router--domain)
 2. [Docker Compose Guide](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#docker-compose-guide)
-    - [Step 1: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1-prepare-docker-run-the-prep-script)
-    - [Step 2: Prepare Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-2---prepare-your-docker-composeyml-and-personalise-via-environment-variables)
+    - [Step 1: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---prepare-docker)
+    - [Step 2: Prepare Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-2---prepare-compose)
     - [Step 3: Run Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-3---run-docker-compose)
-    - [Step 4: Verification](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-4---check-everything-is-up-and-running)
+    - [Step 4: Verification](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-4---verify)
     - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
 
@@ -31,7 +31,7 @@ If you have an understanding of Docker containerization and docker-compose to se
 
 &nbsp;
 ## Docker Compose Guide 
-### Step 1 Prepare Docker
+### Step 1 - Prepare Docker
 A prep script, containing lots of info I gathered/learned via trial&error, can save you a lot of time. 
 Go through the script and execute what you need manually, or download and execute it: 
 `cd Downloads`
@@ -63,7 +63,7 @@ Before running docker-compose, make sure:
 All images will be downloaded, containers will be build and everything will start running. 
 Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
 
-#### Step 4 - Check everything is up and running
+#### Step 4 - Verify
 5. Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
 6. To update an application in the future, click that container, hit `recreate` and check `pull new image`. 
 
