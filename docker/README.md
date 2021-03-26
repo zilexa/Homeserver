@@ -7,7 +7,7 @@ Updating = pull new image, re-create container. Usually 1 command or 2 mouse-cli
 
 ### Network & domain requirements
 1. Your router port forwarding:
-  - The minimum set of services should be exposed via portforwarding to your server IP: **TCP ports 80 and 443** for Caddy which will take care of remote HTTPS access, **UDP port 51820** for Wireguard-VPN access via PiVPN, **TCP and UDP port 22000** for syncing devices via Syncthing.
+  -- The minimum set of services should be exposed via portforwarding to your server IP: **TCP ports 80 and 443** for Caddy which will take care of remote HTTPS access, **UDP port 51820** for Wireguard-VPN access via PiVPN, **TCP and UDP port 22000** for syncing devices via Syncthing.
   - other containers, applications or services including SSH will only be accessible via VPN.
 2. DynDNS: a url that links to your home IP, even when your ISP changes it. Most routers allow you to enable this and provide you with a URL. Otherwise, google how to do that. 
 3. Acquire your own domain (mydomain.com) and link it to that dynamic-dns url.  I recommend to buy your domain via porkbun.com or godaddy.com. 
