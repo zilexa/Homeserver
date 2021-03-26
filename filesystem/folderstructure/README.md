@@ -82,15 +82,17 @@ The issue: My partner and I share photo albums, administrative documents etc. Wi
 But your partner won't see those files on the local filesystem of your laptop, PC, workstation or server: only if she uses the web application (FileRun or NextCloud). As you will prefer to use the local files directly, this can be frustrating and annoying as she has to go find your folder with those files.
 
 #### Solution
-1. To keep the filesystem structure simple, we create a 3rd user, for example `asterix`. This is the same username as the server OS login user account for convenience. `Users/Asterix {Documents, Desktop, Photos}` contains our shared photo albums, shared documents etc. 
-2. This folder is _bind mounted_ into to `Users/Myusername` and `Users/Herusername`. By mounting this folder in both locations, both have access as if it is their folder and Docker applications will work well with this solution (FileRun, Nextcloud, symlink won't work). 
-3. Each one of our user folders is symlinked into `$HOME`.
-4. `Asterix/Documents` is also symlinked to `$HOME`, replacing the existing Documents folder. 
-5. In a similar way. `Asterix/Photos` is mounted in `$HOME`, replacing the Pictures folder. 
-6. Extra benefit: on a shared home laptop, you can syncthing the Documents and username folders, so that the laptop has an offline copy. You can mount the larger folders like Photos but also Media via NFS, allowing the same folder structure in $HOME on your laptop as on your server! 
+1. To keep the filesystem structure simple, we create a 3rd user, a `shareduser`, for example named `asterix`. For conveniency, this is the same username as the server OS login user account. 
+2. `/mnt/pool/Users/Asterix/{Documents, Desktop, Photos}` contains our shared photo albums, shared documents etc and symlinks to these folders replace the common personal folders in $HOME. 
+3. in $HOME, the common personal folders are replaced with symlinks to `Users/Myusername` and `Users/Herusername`. 
+4. Each one of our user folders (`/mnt/pool/Users/Myname` and `mnt/pool/Users/Hername` are also symlinked into `$HOME` and visible next to the symlinked Documents, Photos etc.
+7. Extra benefit: on a shared home laptop, via Syncthing you can have a copy of yours and her Users/ folders via (Syncthing manages a realtime 2-way sync of folders) and you can sync the Documents, Desktop etc folder as well. 
+  - This way, whether you work on your server or laptop, you will have the same files. And you can work offline on those files (syncthing will sync when there is a connection). 
+  - You can have the same desktop/documents etc folders on multiple systems. 
+  - You can mount folders that are too large for the laptop like Photosvia NFS, allowing the exact same folder structure (and files) in $HOME on your laptop as on your server! 
 
 ## How to use the setup-folderstructure script
-I hope this makes sense. The script prep-folderstructure.sh will create the folder structure as described AND map those `shareduser` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it.\
+The script prep-folderstructure.sh will create the folder structure as described AND map those `shareduser` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it.\
 1. Get the script: 
 `cd Downloads`
 `wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/create_folderstructure.sh`
