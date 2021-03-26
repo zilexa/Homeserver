@@ -45,6 +45,7 @@ In my examples, I have 3 subvolumes (/Users, /TV, /Music), I am not protecting _
 # Backup & Maintenance guide
 ### Prequisities
 All prequisities have been taken care of by the script from [Step 1:Filesystem](https://github.com/zilexa/Homeserver#step-1-filesystem): snapraid, snapraid-btrfs (requires snapper), nocache and btrbk should be installed. Also the default config of snapper `/etc/snapper/config-template/default` and the snapraid config `etc/snapraid.conf` have been replaced with slightly modified versions, to save you some time and prevent you from hitting walls.\
+
 _All you have to do:_
 If you haven't downloaded this repository yet: In the root of this repository, you will see a big green button "code", click it, select download as zip. Extract the contents of the `maintenance` folder to `$HOME/docker/HOST`.\
 Notice this way you have everything in 1 folder: you docker container volumes `$HOME/docker` with their config and data, your docker-compose.yml and environment file. And the `HOST` subdir containing essential maintenance config files for the host (your server). When your docker subvolume is snapshotted & backupped, so are the maintenance config files. 
