@@ -77,6 +77,20 @@ Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on
 
 The maintenance script will run this command every 6 hours (you can change it). `snapraid-btrfs cleanup` will run afterwards to remove all snapshots except for the last one. 
 
+#### Step 5: (optional) Install the Runner script
+A script exists that takes care of running the sync command, logging the output, clean up snapshots, scrub the data and send email notifications. 
+Follow the steps to get the script, it will run from $HOME/docker/HOST/snapraid-btrfs-runner. 
+```
+cd $HOME/docker/HOST
+wget https://github.com/fmoledina/snapraid-btrfs-runner/archive/refs/heads/master.zip
+unzip master
+rm master.zip
+mv snapraid-btrfs-runner-master snapraid-btrfs-runner
+```
+Now modify the conf file, section [email] to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and the smtp provider server details:\
+`nano snapraid-btrfs-runner/snapraid-btrfs-runner.conf`\
+Save changes with CTRL+C and CTRL+O
+Run it to test it works: `python3 snapraid-btrfs-runner.py`
 
 ## Backup setup
 #### Step  First run of backup tasks
