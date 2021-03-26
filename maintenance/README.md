@@ -22,9 +22,9 @@ To protect against disk failure, snapraid is used to protect essential data & la
     - The downside of scheduled parity versus realtime (like raid1 or like duplication): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). But with BTRFS we overcome that issue by creating a read-only snapshot and create parity of that instead. Now, the live data can be modified between snapraid runs, but you will always be able to restore a disk. This is taken care of by `snapraid-btrfs` wrapper of `snapraid`. 
 
 ### 2. Timeline backups
-The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives such as Snapper are more deeply integrated and too limiting for backup purposes. Timeshift is very user friendly, mac-like Timemachine (installed and configured via my post-install script) but not suited to backup personal data. 
+The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives such as Snapper are more deeply integrated and too limiting for backup purposes. Timeshift is very user friendly, mac-like Timemachine (installed and configured via my [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script) for laptops and desktops) but not suited to backup personal data. 
 With btrbk: 
-- important subvolumes (system ssd: /, /docker, /home and cache+data disks: /Users, /Music) will be snapshotted with a chosen retention policy on their respective disks in a root folder (for example /mnt/disks/data1/.backups). 
+- The system subvolumes (`/`, `/docker`, `/home`) and subvolumes on cache/data disks (`/Users`, `/Music`) will be snapshotted with a chosen retention policy on their respective disks in a root folder (for example /mnt/disks/data1/.backups). 
 - In addition, using BTRFS native send/receive mechanism the snapshots are efficiently and securely copied to a seperate backup disk (`mnt/disks/backup1`).
 - For both system subvolume backups and Users data backup, you have a nice time-line like overview of snapshots (folders) on the backup disk.
 - btrbk will manage the retention policy and cleanup of both snapshots and backups. 
@@ -34,7 +34,7 @@ With btrbk:
 We can use other tools to periodically send encrypted versions of snapshots to a cloud storage. I haven't figured this part out yet, but I did buy a pcloud.com lifetime subscription for €245 during december discounts (recommended). Most likely, this will be done via a docker container (duplicacy or duplicati or similar). 
 
 ### 4. Replacing disks, restoring data
-- In case of disk failure:  insert a replacement disk and restore the data on it easily via snapraid. You can also use snapraid to restore individual files.  
+- In case of disk failure:  insert a replacement disk and restore the data ([Snapraid manual section 4.4](https://www.snapraid.it/manual)) on it easily via snapraid. You can also use snapraid to restore individual files ([Snapraid manual section 4.3](https://www.snapraid.it/manual)) Use `snapraid-btrfs fix` instead of `snapraid fix` ([read here](https://github.com/automorphism88/snapraid-btrfs#q-can-i-restore-a-previous-snapshot)) unless your last sync was done via the latter.  
 - To access the timeline backup: Make a MergerFS mount point at `/mnt/pool-backup` combining `/mnt/disks/backup1/cache.users`, `/mnt/disks/backup1/data1.users`, `/mnt/disks/backup1/data2.users` to have a single Users folder in `mnt/pool-backup/` with your entire timeline of backups and copy files from it :)
 - Or btrfs send/receive an entire snapshot of a specific day in the past from `backup1` to the corresponding disks and rename it to replace the live subvolume. 
 
