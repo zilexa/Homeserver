@@ -1,4 +1,5 @@
 #!/bin/sh
+# These tasks should not require sudo, schedule via command: crontab -e
 
 # Create a temp file to indicate maintenance is running
 touch /tmp/maintenance-is-running
