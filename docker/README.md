@@ -42,6 +42,7 @@ Note this will protect your $HOME/docker folder and take care or requirements fo
 
 #### Step 2 - Prepare Compose
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
+Notice this folder and its contents are read-only, you need elevated root rights to edit the files. 
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
 Things you need to take care of:
 - .env file: set the env variables in the .env file, generate the required secret tokens with the given command.
