@@ -95,7 +95,13 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py`
 &nbsp;
 
 ## Backup setup
-#### Step 1: Customise locations & retention policy
+The btrbk config file has been carefully created and tested:\
+It will create snapshots in the root of the disks to give you a "timeline", date & time stamped view of all available backups in the `timeline` folder of each disk.\
+Incremental backups will be sent to your internal backup disk and, if a USB disk is connected (!), the incremental backups are also sent to that disk.\
+No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs.\
+It was a HELL to figure out though, as the `btrk` guide assumes you are a pro. 
+
+#### Step 1: Get the configuration & adjust settings, retention policy to your needs
 - Download the config file: `cd $HOME/docker/HOST` and `wget -P https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/btrbk-backup.conf`
 - Open the file located in $HOME/docker/HOST/btrbk-backup.conf
 - Edit the default retention policy to your needs. Also edit the custom retention policy for your system disk subvolumes. 
