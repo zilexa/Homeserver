@@ -19,7 +19,7 @@ To protect against disk failure, snapraid is used to protect essential data & la
   - It will sync every 6 hours: you can loose max 6 hours of data if a single disk fails. You can run it more or less frequently.
   - You can easily protect 4 disks with just 1 parity disk, because the parity data uses much less space than your actual data. 
     - The concept of parity simplified: assign a number to each data disk sector, like "3" to disk1-sector1 and "4" to disk2-sector1. Calculate parity: 3+4=7. Now if disk1 fails, you can restore it from parity, since 7-4=3.
-    - The downside of scheduled parity versus realtime (like raid1 or like duplication): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). But with BTRFS we overcome that issue by creating a read-only snapshot and create parity of that instead. Now, the live data can be modified between snapraid runs, but you will always be able to restore a disk. This is taken care of by `snapraid-btrfs` wrapper of `snapraid`. 
+    - The downside of scheduled parity versus realtime (like raid1 or like duplication): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). Snapraid-btrfs leverages the BTRFS filesystem to overcome that issue by creating a read-only snapshot and create parity of that instead. Now, the live data can be modified between snapraid runs, but you will always be able to restore a disk. This is taken care of by `snapraid-btrfs` wrapper of `snapraid`. 
 
 ### 2. Timeline backups
 The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives such as Snapper are more deeply integrated and too limiting for backup purposes. Timeshift is very user friendly, mac-like Timemachine (installed and configured via my [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script) for laptops and desktops) but not suited to backup personal data. 
@@ -40,7 +40,7 @@ We can use other tools to periodically send encrypted versions of snapshots to a
 
 _**In conclusion: (1) we protect entire disks via snapraid (if you use only a single subvolume per disk) and on top of that (2) backup important subvolumes to a seperate internal disk and (3) periodically to an external disk. Besides that we upload encrypted backups to a 3rd party cloud service**_
 
-***downside of Snapraid & Btrfs***: Because of btrfs snapshot feature, you can always restore, even if files changed between syncs. But snapraid does not support btrfs subvolumes: it thinks they are seperate disks.\
+***downside of Snapraid & Btrfs***: Although we leverage BTRFS filesystem snapshot feature here,  snapraid does not support btrfs subvolumes: it thinks they are seperate disks.\
 Until Snapraid supports subvolumes properly, you can only include [1 subvolume per disk](https://github.com/automorphism88/snapraid-btrfs/issues/15#issuecomment-805783287).\
 I choose `/Users`, to protect that data via snapraid & via backups & via online backup. This means `/TV` is not protected in any way, since it is most likely too big to backup to your backup disk, unlike /Music.\
 Make a choice that makes sense for your situation. For me, /TV contains expendable (can be redownloaded) data, it's a pity it cannot be protected, but it's also not a big issue. 
