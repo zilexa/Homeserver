@@ -40,8 +40,7 @@ We can use other tools to periodically send encrypted versions of snapshots to a
 
 _**In conclusion: (1) we protect entire disks via snapraid (if you use only a single subvolume per disk) and on top of that (2) backup important subvolumes to a seperate internal disk and (3) periodically to an external disk. Besides that we upload encrypted backups to a 3rd party cloud service**_
 
-***downside of Snapraid & Btrfs***: Although we leverage BTRFS filesystem snapshot feature here,  snapraid does not support btrfs subvolumes: it thinks they are seperate disks.\
-Until Snapraid supports subvolumes properly, you can only include [1 subvolume per disk](https://github.com/automorphism88/snapraid-btrfs/issues/15#issuecomment-805783287).\
+**downside of Snapraid & Btrfs**: Although we leverage BTRFS filesystem snapshot feature here,  snapraid does not support btrfs subvolumes: it thinks they are seperate disks. Until Snapraid supports subvolumes properly, you can only include [1 subvolume per disk](https://github.com/automorphism88/snapraid-btrfs/issues/15#issuecomment-805783287).\
 I choose `/Users`, to protect that data via snapraid & via backups & via online backup. This means `/TV` is not protected in any way, since it is most likely too big to backup to your backup disk, unlike /Music.\
 Make a choice that makes sense for your situation. For me, /TV contains expendable (can be redownloaded) data, it's a pity it cannot be protected, but it's also not a big issue. 
 
