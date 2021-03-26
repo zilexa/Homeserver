@@ -5,12 +5,12 @@ Contents:
   1. [Disk protection](https://github.com/zilexa/Homeserver/tree/master/maintenance#1-disk-protection)
   2. [Timeline backups](https://github.com/zilexa/Homeserver/tree/master/maintenance#2-timeline-backups)
   3. [Online backup](https://github.com/zilexa/Homeserver/tree/master/maintenance#3-online-backup)
-  4. Replacing disks, restoring data
-- Backup & Maintenance guide
-  - Prerequisities
-  - Snapraid setup
-  - btrbk setup
-  - Maintenance tasks & scheduling
+  4. [Replacing disks, restoring data](https://github.com/zilexa/Homeserver/tree/master/maintenance#4-replacing-disks-restoring-data)
+- Backup & Maintenance guide(https://github.com/zilexa/Homeserver/tree/master/maintenance#backup--maintenance-guide)
+  - Prerequisities(https://github.com/zilexa/Homeserver/tree/master/maintenance#prequisities)
+  - Snapraid setup(https://github.com/zilexa/Homeserver/tree/master/maintenance#snapraid-setup)
+  - btrbk setup(https://github.com/zilexa/Homeserver/tree/master/maintenance#backup-setup)
+  - Maintenance & scheduling(https://github.com/zilexa/Homeserver/tree/master/maintenance#maintenance-scheduling)
 
 # The 3-tier Backup Strategy outline
 ## 1. disk protection
@@ -48,7 +48,7 @@ _All you have to do:_
 If you haven't downloaded this repository yet: In the root of this repository, you will see a big green button "code", click it, select download as zip. Extract the contents of the `maintenance` folder to `$HOME/docker/HOST`.\
 Notice this way you have everything in 1 folder: you docker container volumes `$HOME/docker` with their config and data, your docker-compose.yml and environment file. And the `HOST` subdir containing essential maintenance config files for the host (your server). When your docker subvolume is snapshotted & backupped, so are the maintenance config files. 
 
-## Snapraid configuration
+## Snapraid setup
 ### Step 1: Create snapper config files
 Snapper is unfortunately required for snapraid when using btrfs. A modified default template should be on your system already. You need to create config files (which will be based on the default) per subvolume you want to protect. Snapper also requires a root config, which we create but will never use: 
 `snapper `
@@ -72,13 +72,13 @@ Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on
 The maintenance script will run this command every 6 hours. `snapraid-btrfs cleanup` will run afterwards to remove all snapshots except for the last one. 
 
 
-## btrbk backup configuration
+## Backup setup
 ### Step  First run of backup tasks
 The command for system backups: ``
 The command for user data backups: ``
 **The first run should be done manually because for user data it can take HOURS**, depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
 
-## Maintenance configuration 
+## Maintenance & scheduling 
 Depending on the purpose of your server, several maintenance tasks can be executed nightly, before the backup strategy is executed, to cleanup files first: 
 - Delete watched tv shows, episodes, seasons and movies xx days after they have been watched. 
 - Unload SSD cache: move files not modified for 30 days to the hard disks (from ssd to /mnt/pool-nocache). Since `pool-nocache` = `pool-nocache` without the SSD, the path to the moved files is the same, they are still in `/mnt/pool`, they are only moved to a different underlying disk. 
