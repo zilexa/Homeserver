@@ -5,6 +5,22 @@ _Containers, Images and non-persistent Volumes are mostly expendable:\
 You can delete them all (basically delete contents of /var/lib/docker), run docker-compose and it will pull all images online, create containers and use your persistent volumes ($HOME/docker/...): the applications should be in the same state as they were before deletion (unless you didn't make the required volumes persistent via compose)._ This makes Docker the most simple, easy and fast way to deploy applications and maintain them.\
 Updating = pull new image, re-create container. Usually 1 command or 2 mouse-clicks. 
 
+### Network & domain requirements
+1. Your router port forwarding:
+  - The minimum set of services should be exposed via portforwarding to your server IP: **TCP ports 80 and 443** for Caddy which will take care of remote HTTPS access, **UDP port 51820** for Wireguard-VPN access via PiVPN, **TCP and UDP port 22000** for syncing devices via Syncthing.
+  - other containers, applications or services including SSH will only be accessible via VPN.
+2. DynDNS: a url that links to your home IP, even when your ISP changes it. Most routers allow you to enable this and provide you with a URL. Otherwise, google how to do that. 
+3. Acquire your own domain (mydomain.com) and link it to that dynamic-dns url.  I recommend to buy your domain via porkbun.com or godaddy.com. 
+  - This is a requirement to be able to access your files (FileRun & OnlyOffice), sync your browser between devices (Firefox-Sync), use the best password manager (Bitwarden) and manage synced PCs (Syncthing) as those services need to be exposed online. 
+  - The connection will only allow TLS/HTTPS encrypted connections, meaning your information is protected in transit. 
+  - At the configuration panel of your domain provider, create: 
+    - an ALIAS dns record to your dyndns (ALIAS - mydomain.com - mydyndnsurl). 
+    - an ALIAS dns record from www to your domain (ALIAS - www.mydomain.com - mydomain.com).
+    - a CNAME dns record registering subdomains to your domain for each subdomain in your docker-compose.yml (CNAME - subdomain.domain.com - mydomain.com).  
+4. If you want email notifications (recommended), create a feee account with an SMTP provider. I have bad experience with sendgrid.com, very good experience with smtp2go.com. 
+
+&nbsp;
+
 ### Step 1 - Prepare your docker-compose.yml and personalise via environment variables
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
 Things you need to take care of:
