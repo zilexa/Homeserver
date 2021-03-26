@@ -52,8 +52,11 @@ mkdir -p /mnt/pool/Music
 mkdir -p /mnt/pool/TV/{Series,Movies,incoming}
 mkdir -p /mnt/pool/TV/incoming/{complete,blackhole}
 
-# To prevent defragmentation due to downloading, place the incomplete dir used during downloading (temp files) in a seperate subvolume. 
-# When a download is finished, it will be copied as a whole into the complete dir. This is a trick to get massively reduce fragmentation :)
+# To prevent defragmentation due to downloading, make sure your download client downloads to this incomplete dir.
+# By creating a subvolume for it now, when a file is finished downloading, it will be copied as a whole into the complete dir, because it's coming from a different subvol.
+# Although this is more intensive then simply changing the location, since the file needs to be copied, it will massively reduce fragmentation and also disk I/O when
+# reading (especially during seeding!) that file. Sonarr can still hardlink from the complete dir to the actual Movies or Series dir. 
+# Especially for btrfs, this is highly recommended!
 btrfs subvolume create /mnt/disks/cache/TV/incoming/incomplete
 btrfs subvolume create /mnt/disks/data1/TV/incoming/incomplete
 btrfs subvolume create /mnt/disks/data2/TV/incoming/incomplete
