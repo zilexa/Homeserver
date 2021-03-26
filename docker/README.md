@@ -11,12 +11,12 @@ Updating = pull new image, re-create container. Usually 1 command or 2 mouse-cli
     - other containers, applications or services including SSH will only be accessible via VPN.
 2. DynDNS: a url that links to your home IP, even when your ISP changes it. Most routers allow you to enable this and provide you with a URL. Otherwise, google how to do that. 
 3. Acquire your own domain (mydomain.com) and link it to that dynamic-dns url.  I recommend to buy your domain via porkbun.com or godaddy.com. 
-  - This is a requirement to be able to access your files (FileRun & OnlyOffice), sync your browser between devices (Firefox-Sync), use the best password manager (Bitwarden) and manage synced PCs (Syncthing) as those services need to be exposed online. 
-  - The connection will only allow TLS/HTTPS encrypted connections, meaning your information is protected in transit. 
-  - At the configuration panel of your domain provider, create: 
-    - an ALIAS dns record to your dyndns (ALIAS - mydomain.com - mydyndnsurl). 
-    - an ALIAS dns record from www to your domain (ALIAS - www.mydomain.com - mydomain.com).
-    - a CNAME dns record registering subdomains to your domain for each subdomain in your docker-compose.yml (CNAME - subdomain.domain.com - mydomain.com).  
+    - This is a requirement to be able to access your files (FileRun & OnlyOffice), sync your browser between devices (Firefox-Sync), use the best password manager (Bitwarden) and manage synced PCs (Syncthing) as those services need to be exposed online. 
+    - The connection will only allow TLS/HTTPS encrypted connections, meaning your information is protected in transit. 
+    - At the configuration panel of your domain provider, create: 
+      - an ALIAS dns record to your dyndns (ALIAS - mydomain.com - mydyndnsurl). 
+      - an ALIAS dns record from www to your domain (ALIAS - www.mydomain.com - mydomain.com).
+      - a CNAME dns record registering subdomains to your domain for each subdomain in your docker-compose.yml (CNAME - subdomain.domain.com - mydomain.com).  
 4. If you want email notifications (recommended), create a feee account with an SMTP provider. I have bad experience with sendgrid.com, very good experience with smtp2go.com. 
 
 &nbsp;
