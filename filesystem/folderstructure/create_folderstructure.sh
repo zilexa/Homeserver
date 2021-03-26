@@ -18,17 +18,18 @@ echo "==========================================================================
 read -p "Read between the lines then HIT CTRL+C to stop the script here or hit ENTER to start, you will be asked to enter names.. "
 echo "==========================================================================================================="
 echo "Enter your name followed by ENTER. First letter capital, this will be /mnt/pool/Users/Yourname and a symlink will be added to the $HOME folder:"
-read NAME1
-echo USER1='"'$NAME1'"' >> /etc/environment
+read -p "Enter your name: " NAME1
+echo "you entered $NAME1"
 echo "-----------------------------------------------------------------------------------------------------------"
 echo "Now enter the name of your partner or other person that can use this workstation, same actions will be performed:"
-read NAME2
-echo USER2='"'$NAME2'"' >> /etc/environment
+read -p "Enter your fam member name: " NAME2
+echo "you entered $NAME2"
 echo "-----------------------------------------------------------------------------------------------------------"
 echo "Now come up with a name for the shared user folder, for example Batman." 
 echo "This workstation common personal folders (Desktop, Documents etc) will be moved to the pool and symlinked back to the $HOME folder:"
-read NAME2
-echo SHAREDUSER='"'$SHAREDUSER'"' >> /etc/environment
+read -p "Enter a name: " SHAREDUSER
+echo "you entered $SHAREDUSER"
+read -p "if you are satisfied, hit a key to continue or CTRL+C to abort, no changes to your system have been made."
 
 # This folder will contain files of all users. Each folder is the private cloud of each user. These folders can be synced and/or easily accessed via apps. 
 # Collections can be made available as subdirs within each User folder, via symlink (we will get there). 
