@@ -39,8 +39,12 @@ We can use other tools to periodically send encrypted versions of snapshots to a
 - Or btrfs send/receive an entire snapshot of a specific day in the past from `backup1` to the corresponding disks and rename it to replace the live subvolume. 
 
 _**In conclusion: (1) we protect entire disks via snapraid (if you use only a single subvolume per disk) and on top of that (2) backup important subvolumes to a seperate internal disk and (3) periodically to an external disk. Besides that we upload encrypted backups to a 3rd party cloud service**_
-Downside: Snapraid limited support for btrfs: if you use multiple subvolumes on your cache+data disks, you can only protect 1 subvolume per disk. 
-In my examples, I have 3 subvolumes (/Users, /TV, /Music), I am not protecting _/mnt/pool/TV_ at all (I would if snapraid could do it). It is expendable data: I could re-download stuff easily because I can see in Sonarr what files are missing (although I would need to check Jellyfin what I have already watched). This is a choice I made. You can choose differently. I am hoping for proper btrfs support by Snapraid in the future (wishful thinking). 
+
+***downside of Snapraid & Btrfs***
+because of btrfs snapshot feature, you can always restore, even if files changed between syncs. But snapraid does not support btrfs subvolumes: it thinks they are seperate disks.\ Until Snapraid supports subvolumes properly, you can only include [1 subvolume per disk](https://github.com/automorphism88/snapraid-btrfs/issues/15#issuecomment-805783287).\
+
+I choose `/Users`, to protect that data via snapraid & via backups & via online backup. This means `/TV` is not protected in any way, since it is most likely too big to backup to your backup disk, unlike /Music.\
+Make a choice that makes sense for your situation. For me, /TV contains expendable (can be redownloaded) data, it's a pity it cannot be protected, but it's also not a big issue. 
 
 # Backup & Maintenance guide
 ### Prequisities
@@ -52,12 +56,13 @@ Notice this way you have everything in 1 folder: you docker container volumes `$
 
 ## Snapraid setup
 #### Step 1: Create snapper config files
-Snapper is unfortunately required for snapraid when using btrfs. A modified default template should be on your system already. You need to create config files (which will be based on the default) per subvolume you want to protect. Snapper also requires a root config, which we create but will never use: 
-`sudo snapper create-config /`
-`sudo snapper -c Users0 create-config /mnt/disks/cache/Users`
-`sudo snapper -c Users1 create-config /mnt/disks/disk1/Users`
-`sudo snapper -c Users1 create-config /mnt/disks/disk2/Users`
-`sudo snapper -c Users1 create-config /mnt/disks/disk3/Users`
+Snapper is unfortunately required for snapraid when using btrfs. A modified default template should be on your system already. You need to create config files (which will be based on the default) one-by-one per subvolume you want to protect. Snapper also requires a root config, which we create but will never use: 
+```sudo snapper create-config /
+sudo snapper -c Users0 create-config /mnt/disks/cache/Users
+sudo snapper -c Users1 create-config /mnt/disks/disk1/Users
+sudo snapper -c Users1 create-config /mnt/disks/disk2/Users
+sudo snapper -c Users1 create-config /mnt/disks/disk3/Users
+```
 
 #### Step 2: Adjust snapraid config file
 Open /etc/snapraid.conf in an editor and adjust the lines that say "ADJUST THIS.." to your situation. 
