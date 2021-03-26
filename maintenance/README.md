@@ -1,8 +1,8 @@
 # Server Backup & Maintenance
 
 Contents: 
-- 3-tier Backup strategy & tools explained
-  1. Disk protection
+- The 3-tier Backup Strategy outline
+  1. [Disk protection](https://github.com/zilexa/Homeserver/tree/master/maintenance#1-disk-protection)
   2. Timeline backups 
   3. Online backup
   4. Replacing disks, restoring data
@@ -12,6 +12,7 @@ Contents:
   - btrbk setup
   - Maintenance tasks & scheduling
 
+# The 3-tier Backup Strategy outline
 ## 1. disk protection
 To protect against disk failure, snapraid is used to protect essential data & largest data folders. 
   - It will sync every 6 hours: you can loose max 6 hours of data if a single disk fails. 
