@@ -9,7 +9,7 @@ echo "Solve this by creating an extra user folder, besides the folders of you an
 echo "This script will create the user folders for you, your partner and that made up user." 
 echo "Next, it will create the common personal folders inside the made up user folder." 
 echo "Then it will replace the common personal documents in your Home folder with links to this virtual user in your pool." 
-echo "This virtual user folder can be seen as the shared folder, you can map it via Docker Compose (FileRun, see example in compose) to both of your user folders. 
+echo "This virtual user folder can be seen as the shared folder, you can map it via Docker Compose (FileRun, see example in compose) to both of your user folders."
 echo "You can even share tis virtual user folder over the LAN network via SMB or NFS." 
 echo " "
 echo "The benefit is that you maintain 1 single folder structure for all users, making backup organisation, filesystem organisation" 
