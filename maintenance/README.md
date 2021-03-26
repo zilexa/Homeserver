@@ -6,6 +6,7 @@ Contents:
   2. [Timeline backups](https://github.com/zilexa/Homeserver/tree/master/maintenance#2-timeline-backups)
   3. [Online backup](https://github.com/zilexa/Homeserver/tree/master/maintenance#3-online-backup)
   4. [Replacing disks, restoring data](https://github.com/zilexa/Homeserver/tree/master/maintenance#4-replacing-disks-restoring-data)
+
 - [Backup & Maintenance guide](https://github.com/zilexa/Homeserver/tree/master/maintenance#backup--maintenance-guide)
   - [Prerequisities](https://github.com/zilexa/Homeserver/tree/master/maintenance#prequisities)
   - [Snapraid setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#snapraid-setup)
