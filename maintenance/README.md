@@ -43,30 +43,30 @@ Downside: Snapraid limited support for btrfs: if you use multiple subvolumes on 
 In my examples, I have 3 subvolumes (/Users, /TV, /Music), I am not protecting _/mnt/pool/TV_ at all (I would if snapraid could do it). It is expendable data: I could re-download stuff easily because I can see in Sonarr what files are missing (although I would need to check Jellyfin what I have already watched). This is a choice I made. You can choose differently. I am hoping for proper btrfs support by Snapraid in the future (wishful thinking). 
 
 # Backup & Maintenance guide
-## Prequisities
+### Prequisities
 All prequisities have been taken care of by the script from [Step 1](https://github.com/zilexa/Homeserver#step-1-filesystem): snapraid, snapraid-btrfs (requires snapper), nocache and btrbk should be installed. Also the default config of snapper `/etc/snapper/config-template/default` and the snapraid config `etc/snapraid.conf` have been replaced with slightly modified versions, to save you some time and prevent you from hitting walls. 
 _All you have to do:_
 If you haven't downloaded this repository yet: In the root of this repository, you will see a big green button "code", click it, select download as zip. Extract the contents of the `maintenance` folder to `$HOME/docker/HOST`.\
 Notice this way you have everything in 1 folder: you docker container volumes `$HOME/docker` with their config and data, your docker-compose.yml and environment file. And the `HOST` subdir containing essential maintenance config files for the host (your server). When your docker subvolume is snapshotted & backupped, so are the maintenance config files. 
 
 ## Snapraid setup
-### Step 1: Create snapper config files
+#### Step 1: Create snapper config files
 Snapper is unfortunately required for snapraid when using btrfs. A modified default template should be on your system already. You need to create config files (which will be based on the default) per subvolume you want to protect. Snapper also requires a root config, which we create but will never use: 
 `snapper `
 `snapper `
 `snapper `
 `snapper `
 
-### Step 2: Adjust snapraid config file
+#### Step 2: Adjust snapraid config file
 Open /etc/snapraid.conf in an editor and adjust the lines that say "ADJUST THIS.." to your situation. 
 
-### Step 3: Test the above 2 steps.
+#### Step 3: Test the above 2 steps.
 `snapraid-btrfs ls` (no sudo). Notice 3 things: 
 - A confirmation it found snapper configs for each data disk in your snapraid.conf files. 
 - A warning about non-existing snapraid.content files: that is correct, they will be automatically created during first sync. 
 - A warning about UUIDs that cannot be used. Correct, because Snapraid will sync snapshots, not the actual subvolumes. 
 
-### Step 4: Run the first sync!
+#### Step 4: Run the first sync!
 Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
 - If you have big file changes, you can run `snapraid sync`, now you will sync the live data instead of the snapshots but it will be much more efficient because UUIDs can be used. Make sure you run a `snapraid-btrfs sync` after it finished (should be quick). 
 
@@ -74,7 +74,7 @@ The maintenance script will run this command every 6 hours. `snapraid-btrfs clea
 
 
 ## Backup setup
-### Step  First run of backup tasks
+#### Step  First run of backup tasks
 The command for system backups: ``
 The command for user data backups: ``
 **The first run should be done manually because for user data it can take HOURS**, depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
@@ -95,7 +95,7 @@ Open `HOST/media-cleaner/media_cleaner.conf`in Pluma/text editor.
 Change the days to keep watched episodes/seasons/movies and choose whether to keep everything marked as favourite. Those will never be deleted automatically. 
 
 
-### Create schedule for maintenance tasks that do not need root (cleanup, snapraid)
+#### Create schedule for maintenance tasks that do not need root (cleanup, snapraid)
 Now in terminal (CTRL+ALT+T) open Linux scheduler (no sudo): `crontab -e` and copy-paste the below into it. Make sure you replace MAILTO: 
 ```
 # Disable errors appearing in syslog
@@ -107,7 +107,7 @@ MAILTO=""
 0 10-23/6 * * * snapraid-btrfs sync | gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' >> $HOME/docker/HOST/logs/snapraid-btrfs.log 2>&1
 ```
 
-### Create schedule for tasks that do need root (docker cleanup, backups)
+#### Create schedule for tasks that do need root (docker cleanup, backups)
 Note: The backup schedule requires root, as `btrbk` needs it. Root has its own scheduler. Do not mix up these two crontabs. 
 - In terminal (CTRL+ALT+T) open Linux scheduler: `sudo crontab -e` and copy-paste the below into it. Make sure you replace MAILTO: 
 
