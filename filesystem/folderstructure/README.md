@@ -1,10 +1,10 @@
 # Migrate data to your server & Folder Structure Recommendations
 
 **Contents**
-1. Data Migration(https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
-2. Folder Structure Recommendations(https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#2-folder-structure-recommendations)
-3. Extra's(https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
-4. How to use the setup-folderstructure script(https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#action-to-take)
+1. [Data Migration](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
+2. p[Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#2-folder-structure-recommendations)
+3. [Extra's](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
+4. p[How to use the setup-folderstructure script](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#action-to-take)
 
 ## 1. Data migration 
 ### 1.1 Moving files to your server
@@ -90,9 +90,11 @@ But your partner won't see those files on the local filesystem of your laptop, P
 6. Extra benefit: on a shared home laptop, you can syncthing the Documents and username folders, so that the laptop has an offline copy. You can mount the larger folders like Photos but also Media via NFS, allowing the same folder structure in $HOME on your laptop as on your server! 
 
 ## How to use the setup-folderstructure script
-I hope this makes sense. The script prep-folderstructure.sh will create the folder structure as described AND map those `shareduser` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it.
-Before you run it, make sure you have the right permissions. Notice commands to change permissions are mentioned at the top of the script. 
+I hope this makes sense. The script prep-folderstructure.sh will create the folder structure as described AND map those `shareduser` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it.\
+1. Get the script: 
 `cd Downloads`
 `wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/create_folderstructure.sh`
-Now fix permissions first, open the script in a text editor and use the top commands. Also make changes/remove parts you do not want. Then: 
-`bash create_folderstructure.sh`
+2.Before you run it, open it open the script in a text editor
+  - Use the top commands and fix the permissions, change `asterix` to your user account.
+  - Also make changes/remove parts you do not want.
+3. Run the script via `bash create_folderstructure.sh`. Do not use sudo. if you get permission denied errrors, you have to fix those first. 
