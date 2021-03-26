@@ -63,19 +63,19 @@ sudo snapper -c Users1 create-config /mnt/disks/disk3/Users
 ```
 
 #### Step 2: Adjust snapraid config file
-Open /etc/snapraid.conf in an editor and adjust the lines that say "ADJUST THIS.." to your situation. 
+Open `/etc/snapraid.conf` in an editor and adjust the lines that say "ADJUST THIS.." to your situation. 
 
 #### Step 3: Test the above 2 steps.
-`snapraid-btrfs ls` (no sudo!). Notice 3 things: 
-- A confirmation it found snapper configs for each data disk in your snapraid.conf files. 
-- A warning about non-existing snapraid.content files: that is correct, they will be automatically created during first sync. 
-- A warning about UUIDs that cannot be used. Correct, because Snapraid will sync snapshots, not the actual subvolumes. 
+Run `snapraid-btrfs ls` (no sudo!). Notice & verify 3 things: 
+- A confirmation it found snapper configs for each(!) data disk in your snapraid.conf file. 
+- A (correct) warning about non-existing snapraid.content files for each content-file location you defined in snapraid.conf, they will be automatically created during first sync. 
+- A warning about UUIDs that cannot be used. Correct, because Snapraid will sync snapshots, not the actual subvolumes. You won't get this errror if you sync the live filesystem with `snapraid sync`. 
 
 #### Step 4: Run the first sync!
 Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
 - If you have big file changes, you can run `snapraid sync`, now you will sync the live data instead of the snapshots but it will be much more efficient because UUIDs can be used. Make sure you run a `snapraid-btrfs sync` after it finished (should be quick). 
 
-The maintenance script will run this command every 6 hours. `snapraid-btrfs cleanup` will run afterwards to remove all snapshots except for the last one. 
+The maintenance script will run this command every 6 hours (you can change it). `snapraid-btrfs cleanup` will run afterwards to remove all snapshots except for the last one. 
 
 
 ## Backup setup
