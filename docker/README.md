@@ -1,4 +1,13 @@
 Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose yml:
+Contents
+1. Configure router & domain()
+2. Docker Compose Guide()
+    - Step 1: Prepare Docker()
+    - Step 2: prep Docker-compose.yml()
+    - Step 3: Check config & run it()
+    - Step 4: Verification()
+    - Common docker management tasks()
+
 
 If you have an understanding of Docker containerization and docker-compose to set it up, realise the following:
 - _Containers, Images and non-persistent Volumes are mostly expendable:_
@@ -6,7 +15,7 @@ If you have an understanding of Docker containerization and docker-compose to se
 - _This makes Docker the most simple, easy and fast way to deploy applications and maintain them._
   - Updating = pull new image, re-create container. Usually 1 command or 2 mouse-clicks. Deletion of a container/image does not delete its config/data. 
 
-### Network & domain requirements
+## Configure router & domain
 1. Your router port forwarding:
     - The minimum set of services should be exposed via portforwarding to your server IP: **TCP ports 80 and 443** for Caddy which will take care of remote HTTPS access, **UDP port 51820** for Wireguard-VPN access via PiVPN, **TCP and UDP port 22000** for syncing devices via Syncthing
     - other containers, applications or services including SSH will **only be accessible via VPN**.
@@ -21,7 +30,7 @@ If you have an understanding of Docker containerization and docker-compose to se
 
 &nbsp;
 ## Docker Compose Guide 
-### Step 1 Prepare Docker: run the script
+### Step 1 Prepare Docker: run the prep script
 Go through the script and execute what you need manually, or download and execute it: 
 `cd Downloads`
 `wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/prepare_server_docker.sh`
@@ -37,7 +46,7 @@ Things you need to take care of:
 - if you remove certain applications, at the bottom also remove unneccary networks.
 - notice the commands at the top of the compose file, for your convenience. 
  
-#### Step 3 - When you are ready for true action
+#### Step 3 - Run Docker Compose UP
 `cd docker` (when you open terminal, you should already be in $HOME).
 Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): `docker-compose -f $HOME/docker/docker-compose.yml config` using -f to point to the location of your config files. 
 
@@ -55,7 +64,7 @@ Run again in case you ran into time-outs, this can happen, as a server hosting t
 5. Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
 6. To update an application in the future, click that container, hit `recreate` and check `pull new image`. 
 
-## Frequent tasks
+## Common Docker management tasks
 **Docker Management** 
 Via Portainer, you can easily access each of your app by clicking on the ports. 
 Go ahead and configure each of your applications.
