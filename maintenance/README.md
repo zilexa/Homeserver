@@ -16,7 +16,7 @@ Contents:
 ## The 3-tier Backup Strategy outline
 ### 1. disk protection
 To protect against disk failure, snapraid is used to protect essential data & largest data folders. 
-  - It will sync every 6 hours: you can loose max 6 hours of data if a single disk fails. 
+  - It will sync every 6 hours: you can loose max 6 hours of data if a single disk fails. You can run it more or less frequently.
   - You can easily protect 4 disks with just 1 parity disk, because the parity data uses much less space than your actual data. 
     - The concept of parity simplified: assign a number to each data disk sector, like "3" to disk1-sector1 and "4" to disk2-sector1. Calculate parity: 3+4=7. Now if disk1 fails, you can restore it from parity, since 7-4=3.
     - The downside of scheduled parity versus realtime (like raid1 or like duplication): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). But with BTRFS we overcome that issue by creating a read-only snapshot and create parity of it. Now, the live data can be modified between snapraid runs, but you will always be able to restore a disk. This is taken care of by `snapraid-btrfs` wrapper of `snapraid`. 
