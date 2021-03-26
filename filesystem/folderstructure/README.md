@@ -42,7 +42,7 @@ On the OS system SSD:
 - `/system-snapshots` --> the location of snapshots. Exclude.\
 
 **About the Docker subvolume**:\
-**This folder is precious and non-expendable! Will be backupped to backup disk just like your system disk and home folder.**
+***This folder is precious and non-expendable! Will be backupped to backup disk just like your system disk and home folder.***
 - a folder per container for app data/config data. 
 - docker-compose.yml and .env files in the root of the folder.
 - HOST folder: containing configs and scripts for maintenance, cleanup, backup. This way, you backup a single folder, /docker == equals backup of your complete server configuration. 
@@ -54,7 +54,7 @@ On the OS system SSD:
   - `/mnt/disks/backup1` mounted only during backup run. 
 - `/mnt/pool` --> the union of all files/folders on cache/data disks. the single access point to your data.
 
-**Helper folders:**
+***Helper folders:***
 - `/mnt/pool-nocache` --> the union but excluding the cache, required to offload the cache on a scheduled basis. 
 - `/mnt/pool-backup` --> the union of cache/data disk backup snapshots on backupdisk. They are seperately backupped on the backupdisk. Not auto-mounted. Create this mount yourself when needed. 
 - `/mnt/btrfs-root` --> used during initial setup and during nightly backup. Not auto-mounted.
@@ -96,7 +96,7 @@ The script prep-folderstructure.sh will create the folder structure as described
 1. Get the script: 
 `cd Downloads`
 `wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/create_folderstructure.sh`
-2.Before you run it, open it open the script in a text editor
+2. Before you run it, open it open the script in a text editor
   - Use the top commands and fix the permissions, change `asterix` to your user account.
   - Also make changes/remove parts you do not want.
 3. Run the script via `bash create_folderstructure.sh`. Do not use sudo. if you get permission denied errrors, you have to fix those first. 
