@@ -15,7 +15,7 @@ Updating = pull new image, re-create container. Usually 1 command or 2 mouse-cli
     - The connection will only allow TLS/HTTPS encrypted connections, meaning your information is protected in transit. 
     - At the configuration panel of your domain provider, create: 
       - an ALIAS dns record to your dyndns (ALIAS - mydomain.com - mydyndnsurl). 
-      - an ALIAS dns record from www to your domain (ALIAS - www.mydomain.com - mydomain.com).
+      - an ALIAS dns record from www to your domain (ALIAS - www mydomain.com - mydomain.com).
       - a CNAME dns record registering subdomains to your domain for each subdomain in your docker-compose.yml (CNAME - subdomain.domain.com - mydomain.com).  
 4. If you want email notifications (recommended), create a feee account with an SMTP provider. I have bad experience with sendgrid.com, very good experience with smtp2go.com. 
 
