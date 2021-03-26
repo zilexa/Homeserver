@@ -3,8 +3,8 @@
 Contents: 
 - The 3-tier Backup Strategy outline
   1. [Disk protection](https://github.com/zilexa/Homeserver/tree/master/maintenance#1-disk-protection)
-  2. Timeline backups 
-  3. Online backup
+  2. [Timeline backups](https://github.com/zilexa/Homeserver/tree/master/maintenance#2-timeline-backups)
+  3. [Online backup](https://github.com/zilexa/Homeserver/tree/master/maintenance#3-online-backup)
   4. Replacing disks, restoring data
 - Backup & Maintenance guide
   - Prerequisities
