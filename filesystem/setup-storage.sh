@@ -38,6 +38,9 @@ sudo apt -y update
 sudo apt -y install snapper
 sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/snapraid-btrfs/snapper/default
 
+# Install snapraid-btrfs-runner (auto logging, email notification, cleanup etc)
+# Cannot do, since it will run from the docker subvolume that does not exist yet!
+
 # install nocache - required to move files from pool to pool-nocache with rsync
 # ---------------
 sudo apt -y install nocache
