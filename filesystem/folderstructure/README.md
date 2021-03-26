@@ -92,7 +92,7 @@ But your partner won't see those files on the local filesystem of your laptop, P
   - You can mount folders that are too large for the laptop like Photosvia NFS, allowing the exact same folder structure (and files) in $HOME on your laptop as on your server! 
 
 ## How to use the setup-folderstructure script
-The script prep-folderstructure.sh will create the folder structure as described AND map those `shareduser` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it.\
+The script prep-folderstructure.sh will create the folder structure as described AND map those `shareduser` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it.
 1. Get the script: 
 `cd Downloads`
 `wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/create_folderstructure.sh`
