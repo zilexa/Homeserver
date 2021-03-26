@@ -47,6 +47,10 @@ Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenan
 ### Step 6. Configure remote VPN access
 [VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
 
+### Step 7. Configure your apps & services
+The Docker guide explains how to access your services. Configuring & using your services is not covered by this guide. 
+The overview of Docker applications below will contain some foldable sections with hints. 
+
 &nbsp;
 
 
