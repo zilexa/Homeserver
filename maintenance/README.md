@@ -78,7 +78,7 @@ Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on
 The maintenance script will run this command every 6 hours (you can change it). `snapraid-btrfs cleanup` will run afterwards to remove all snapshots except for the last one. 
 
 #### Step 5: (optional) Install the Runner script
-A script exists that takes care of running the sync command, logging the output, clean up snapshots, scrub the data and send email notifications. 
+A script exists that takes care of running the sync command, scrub data (verifies parity file), clean up all but the latest snapshots, log everything to file and send email notifications when done. 
 Follow the steps to get the script, it will run from $HOME/docker/HOST/snapraid-btrfs-runner. 
 ```
 cd $HOME/docker/HOST
