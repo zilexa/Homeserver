@@ -3,7 +3,7 @@ _**Check the homepage for [the overview of docker applications](https://github.c
 \
 **Contents**
 1. [Configure router & domain](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#configure-router--domain)
-2. [Docker Compose Guide](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#docker-compose-guide)
+2. [The Docker Compose Guide](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#the-docker-compose-guide)
     - [Step 1: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---prepare-docker)
     - [Step 2: Prepare Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-2---prepare-compose)
     - [Step 3: Run Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-3---run-docker-compose)
@@ -31,7 +31,7 @@ If you have an understanding of Docker containerization and docker-compose to se
 5. If you want **email notifications** (recommended), create a feee account with an SMTP provider. I have bad experience with sendgrid.com, very good experience with smtp2go.com, it explains very well how to configure your domain to make sure emails do not end up in your Gmail/outlook.com junk folder.  
 
 &nbsp;
-## Docker Compose Guide 
+## The Docker Compose Guide 
 ### Step 1 - Prepare Docker
 A prep script, containing lots of info I gathered/learned via trial&error, can save you a lot of time. 
 Go through the script and execute what you need manually, or download and execute it: 
