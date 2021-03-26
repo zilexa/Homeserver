@@ -1,5 +1,6 @@
-Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose yml:
-Contents
+_**Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose file.**_ 
+\
+**Contents**
 1. [Configure router & domain](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#configure-router--domain)
 2. [Docker Compose Guide](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#docker-compose-guide)
     - [Step 1: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1-prepare-docker-run-the-prep-script)
