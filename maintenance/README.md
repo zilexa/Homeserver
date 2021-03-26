@@ -99,9 +99,9 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py`
 - Remove the lines containing `/media/backup2/...` if you are not planning on connecting a USB disk occasionally. This will also prevent warnings/errors when the disk is not connected. 
 
 #### Step 2: Create the snapshot location and backup target location folders
-- Snapshots (timeline backups) of system will go in `/mnt/systemroot/timeline`. 
-- Snapshots of cache/data disk go to `.timeline` in the disk root, hidden for security. 
-- The target for backups is your `/mnt/backup1/`. 
+- For timeline backups of the system, snapshots will be stored in `/mnt/systemroot/timeline`. 
+- For timeline backups of the cache/data disks, snapshots will be stored in each disks root, `.timeline` folder, hidden for security. 
+- The target for backups is your disk mounted at `/mnt/backup1/`, it should not be part of your MergerFS pool. 
 2.1. Mount the filesystem root of the system disk and the backup disk.  
 ```
 sudo mount /dev/nvme0n1p2 /mnt/system-root -o subvolid=5,defaults,noatime,compress=lzo 
