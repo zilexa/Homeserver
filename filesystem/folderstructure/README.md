@@ -2,7 +2,7 @@
 
 **Contents**
 1. [Data Migration](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
-2. p[Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#2-folder-structure-recommendations)
+2. [Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#2-folder-structure-recommendations)
 3. [Extra's](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
 4. [How to use the setup-folderstructure script](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
 
