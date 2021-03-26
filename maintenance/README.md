@@ -53,16 +53,17 @@ Notice this way you have everything in 1 folder: you docker container volumes `$
 ## Snapraid setup
 #### Step 1: Create snapper config files
 Snapper is unfortunately required for snapraid when using btrfs. A modified default template should be on your system already. You need to create config files (which will be based on the default) per subvolume you want to protect. Snapper also requires a root config, which we create but will never use: 
-`snapper `
-`snapper `
-`snapper `
-`snapper `
+`sudo snapper create-config /`
+`sudo snapper -c Users0 create-config /mnt/disks/cache/Users`
+`sudo snapper -c Users1 create-config /mnt/disks/disk1/Users`
+`sudo snapper -c Users1 create-config /mnt/disks/disk2/Users`
+`sudo snapper -c Users1 create-config /mnt/disks/disk3/Users`
 
 #### Step 2: Adjust snapraid config file
 Open /etc/snapraid.conf in an editor and adjust the lines that say "ADJUST THIS.." to your situation. 
 
 #### Step 3: Test the above 2 steps.
-`snapraid-btrfs ls` (no sudo). Notice 3 things: 
+`snapraid-btrfs ls` (no sudo!). Notice 3 things: 
 - A confirmation it found snapper configs for each data disk in your snapraid.conf files. 
 - A warning about non-existing snapraid.content files: that is correct, they will be automatically created during first sync. 
 - A warning about UUIDs that cannot be used. Correct, because Snapraid will sync snapshots, not the actual subvolumes. 
