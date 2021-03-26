@@ -21,7 +21,7 @@ Updating = pull new image, re-create container. Usually 1 command or 2 mouse-cli
 
 &nbsp;
 
-### Step 1 - Prepare your docker-compose.yml and personalise via environment variables
+#### Step 1 - Prepare your docker-compose.yml and personalise via environment variables
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
 Things you need to take care of:
 - get your own domain, required for secure https connections for your web applications.
@@ -31,7 +31,7 @@ Things you need to take care of:
 - if you remove certain applications, also remove the network that it belongs to, unless other apps use it.
 - notice the commands at the top of the compose file, for your convenience.
  
-### When you are ready
+#### Step 2 - When you are ready for true action
 Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): docker-compose -f $HOME/docker/docker-compose.yml config
 
 Before running docker-compose, make sure: 
@@ -44,25 +44,32 @@ Before running docker-compose, make sure:
 All images will be downloaded, containers will be build and everything will start running. 
 Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
 
-### Step 2 - Check everything is up and running
+#### Step 3 - Check everything is up and running
 5. Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
 6. To update an application in the future, click that container, hit `recreate` and check `pull new image`. 
 
-### Step 3 - Docker Management
+#### Step 4 - Docker Management
 Via Portainer, you can easily access each of your app by clicking on the ports. 
 Go ahead and configure each of your applications.
-
+I recommend configuring a dns record in your router OR use AdGuard Home > Settings > DNS rewrite to create easy urls like my.server to access all your services via my.server:portnumber and configure Organizr, so that you can access ALL services within your LAN and via VPN via 1 url. 
 
 ## Frequent tasks
-### Check status of your apps/containers
+**Check status of your apps/containers**
 A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.\
 B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.\
 C. If needed, you can even access the terminal of the container and check files/logs directly. But an easier way is to go to those files in $HOME/docker/yourcontainer. Only persistent volumes (mapped via docker-compose.yml) are there. Expendable data (containers, volumes, images) is in/var/lib/docker/.  
 
-### Update apps
+**Cleanup docker**
+To remove unused containers (be careful, this means any stopped container) and dangling images, non-persistent volumes: 
+ `sudo docker system prune --all --volumes --force`
+ Note this will be done automatically via the scheduled maintenance (next guide). 
+ 
+**Update apps**
 In Portainer, click on a container, then select _Recreate_ and check the box to re-download the image. 
 The latest image will be downloaded and a new container will be created with it. 
 It will still use your persistent volume mappings: your configuration and persistent data remains. Just like a normal application update. 
+Note: Monitorr can be used to be notified of updates + update automatically (by default don't do that for all services).  
 
-Issues:
+**Issues:** 
 Permission issues can be solved with the chown and chmod commands.
+For example Filerun needs you to own the very root of the user folder (/mnt/pool/Users), not root. 
