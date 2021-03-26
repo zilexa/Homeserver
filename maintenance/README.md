@@ -101,7 +101,7 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py`
 #### Step 2: Create the snapshot location and backup target location folders
 - For timeline backups of the system, snapshots will be stored in `/mnt/systemroot/timeline`. 
 - For timeline backups of the cache/data disks, snapshots will be stored in each disks root, `.timeline` folder, hidden for security. 
-- The target for backups is your disk mounted at `/mnt/backup1/`, it should not be part of your MergerFS pool.\
+- The target for backups is your disk mounted at `/mnt/backup1/`, it should not be part of your MergerFS pool.
 
 2.1. Mount the filesystem root of the system disk and the backup disk.  
 ```
@@ -110,9 +110,9 @@ sudo mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o subvolid=back
 ```` 
 
 2.2. Create destination folders: 
-For the system snapshots: `sudo mkdir /mnt/systemroot/timeline`
-For cache/data disks snapshots: `sudo mkdir /mnt/disks/cache/.timeline` and `sudo mkdir /mnt/disks/data1/.timeline` etc. 
-For backups: `sudo mkdir /mnt/disks/backup1/system`, `sudo mkdir /mnt/disks/backup1/cache`, `sudo mkdir /mnt/disks/backup1/data1` etc. 
+- For the system snapshots: `sudo mkdir /mnt/systemroot/timeline`
+- For cache/data disks snapshots: `sudo mkdir /mnt/disks/cache/.timeline` and `sudo mkdir /mnt/disks/data1/.timeline` etc. 
+- For backups: `sudo mkdir /mnt/disks/backup1/system`, `sudo mkdir /mnt/disks/backup1/cache`, `sudo mkdir /mnt/disks/backup1/data1` etc. 
 
 #### Step 3: Perform a dryrun
 A dryrun will not perform any actions: 
