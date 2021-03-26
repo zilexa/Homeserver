@@ -97,6 +97,6 @@ The script prep-folderstructure.sh will create the folder structure as described
 `cd Downloads`
 `wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/create_folderstructure.sh`
 2. Before you run it, open it open the script in a text editor
-  - Use the top commands and fix the permissions, change `asterix` to your user account.
-  - Also make changes/remove parts you do not want.
+   - Use the top commands and fix the permissions, change `asterix` to your user account.
+   - Also make changes/remove parts you do not want.
 3. Run the script via `bash create_folderstructure.sh`. Do not use sudo. if you get permission denied errrors, you have to fix those first. 
