@@ -13,15 +13,15 @@ Contents:
   - [btrbk setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#backup-setup)
   - [Maintenance & scheduling](https://github.com/zilexa/Homeserver/tree/master/maintenance#maintenance--scheduling)
 
-# The 3-tier Backup Strategy outline
-## 1. disk protection
+## The 3-tier Backup Strategy outline
+### 1. disk protection
 To protect against disk failure, snapraid is used to protect essential data & largest data folders. 
   - It will sync every 6 hours: you can loose max 6 hours of data if a single disk fails. 
   - You can easily protect 4 disks with just 1 parity disk, because the parity data uses much less space than your actual data. 
     - The concept of parity simplified: assign a number to each data disk sector, like "3" to disk1-sector1 and "4" to disk2-sector1. Calculate parity: 3+4=7. Now if disk1 fails, you can restore it from parity, since 7-4=3.
     - The downside of scheduled parity versus realtime (like raid1 or like duplication): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). But with BTRFS we overcome that issue by creating a read-only snapshot and create parity of it. Now, the live data can be modified between snapraid runs, but you will always be able to restore a disk. This is taken care of by `snapraid-btrfs` wrapper of `snapraid`. 
 
-## 2. Timeline backups
+### 2. Timeline backups
 The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives such as Snapper are more deeply integrated and too limiting for backup purposes. Timeshift is very user friendly, mac-like Timemachine (installed and configured via my post-install script) but not suited to backup personal data. 
 With btrbk: 
 - important subvolumes (system ssd: /, /docker, /home and cache+data disks: /Users, /Music) will be snapshotted with a chosen retention policy on their respective disks in a root folder (for example /mnt/disks/data1/.backups). 
@@ -30,10 +30,10 @@ With btrbk:
 - btrbk will manage the retention policy and cleanup of both snapshots and backups. 
 - Periodically (once a month or so), we connect a btrfs formatted usb-disk with label `backup2` and leave it connected for the night: btrbk will notice and send backups to both internal `backup1` and external `backup2`. How cool is that!
 
-## 3. Online backup
+### 3. Online backup
 We can use other tools to periodically send encrypted versions of snapshots to a cloud storage. I haven't figured this part out yet, but I did buy a pcloud.com lifetime subscription for €245 during december discounts (recommended). Most likely, this will be done via a docker container (duplicacy or duplicati or similar). 
 
-## 4. Replacing disks, restoring data
+### 4. Replacing disks, restoring data
 - In case of disk failure:  insert a replacement disk and restore the data on it easily via snapraid. You can also use snapraid to restore individual files.  
 - To access the timeline backup: Make a MergerFS mount point at `/mnt/pool-backup` combining `/mnt/disks/backup1/cache.users`, `/mnt/disks/backup1/data1.users`, `/mnt/disks/backup1/data2.users` to have a single Users folder in `mnt/pool-backup/` with your entire timeline of backups and copy files from it :)
 - Or btrfs send/receive an entire snapshot of a specific day in the past from `backup1` to the corresponding disks and rename it to replace the live subvolume. 
