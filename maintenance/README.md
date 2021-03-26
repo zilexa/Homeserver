@@ -44,6 +44,8 @@ _**In conclusion: (1) we protect entire disks via snapraid (if you use only a si
 I choose `/Users`, to protect that data via snapraid & via backups & via online backup. This means `/TV` is not protected in any way, since it is most likely too big to backup to your backup disk, unlike /Music.\
 Make a choice that makes sense for your situation. For me, /TV contains expendable (can be redownloaded) data, it's a pity it cannot be protected, but it's also not a big issue. 
 
+&nbsp;
+
 # Backup & Maintenance guide
 ### Prequisities
 All prequisities have been taken care of by the script from [Step 1:Filesystem](https://github.com/zilexa/Homeserver#step-1-filesystem): snapraid, snapraid-btrfs (requires snapper), nocache and btrbk should be installed. Also the default config of snapper `/etc/snapper/config-template/default` and the snapraid config `etc/snapraid.conf` have been replaced with slightly modified versions, to save you some time and prevent you from hitting walls.\
@@ -90,6 +92,8 @@ Now modify the conf file, section `[email]` to add your emailaddress, the "from"
 `nano snapraid-btrfs-runner/snapraid-btrfs-runner.conf`, save changes with CTRL+C and CTRL+O.\
 Run it to test it works: `python3 snapraid-btrfs-runner.py`
 
+&nbsp;
+
 ## Backup setup
 #### Step 1: Customise locations & retention policy
 - Download the config file: `cd $HOME/docker/HOST` and `wget -P https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/btrbk-backup.conf`
@@ -116,8 +120,14 @@ sudo mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o subvolid=back
 
 #### Step 3: Perform a dryrun
 A dryrun will not perform any actions: 
-`/usr/sbin/btrbk -c /home/$SUDO_USER/docker/HOST/backup.conf -n run`
+`btrbk -n -c /home/$SUDO_USER/docker/HOST/backup.conf run`
 Note you should only see errors regarding `backup2` if it is not connected. Snapshots are still created and backups are made on the first target `backup1`. 
+
+#### Step 4: Run initial backups
+Do this manually before activating the schedules in the next steps. The first time can take hours depending on your data. 
+`btrbk-c /home/$SUDO_USER/docker/HOST/backup.conf run`
+
+&nbsp;
 
 ## Maintenance & scheduling 
 Depending on the purpose of your server, several maintenance tasks can be executed nightly, before the backup strategy is executed, to cleanup files first: 
