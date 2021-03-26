@@ -10,7 +10,7 @@ Contents:
 - [Backup & Maintenance guide](https://github.com/zilexa/Homeserver/tree/master/maintenance#backup--maintenance-guide)
   - [Prerequisities](https://github.com/zilexa/Homeserver/tree/master/maintenance#prequisities)
   - [Snapraid setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#snapraid-setup)
-  - [btrbk setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#backup-setup)
+  - [Backup setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#backup-setup)
   - [Maintenance & scheduling](https://github.com/zilexa/Homeserver/tree/master/maintenance#maintenance--scheduling)
 
 ## The 3-tier Backup Strategy outline
