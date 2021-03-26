@@ -87,7 +87,7 @@ unzip master
 rm master.zip
 mv snapraid-btrfs-runner-master snapraid-btrfs-runner
 ```
-Now modify the conf file, section [email] to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and the smtp provider server details:\
+Now modify the conf file, section `[email]` to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and add the smtp provider server details:\
 `nano snapraid-btrfs-runner/snapraid-btrfs-runner.conf`, save changes with CTRL+C and CTRL+O.\
 Run it to test it works: `python3 snapraid-btrfs-runner.py`
 
