@@ -23,7 +23,7 @@ rm -rf snapraid*
 # Get drive IDs
 #ls -la /dev/disk/by-id/ | grep part1  | cut -d " " -f 11-20
 # get SnapRAID config
-sudo wget -P /etc https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
+sudo wget -O /etc/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
 # SnapRAID create path for local content file
 sudo mkdir -p /var/snapraid/
 
@@ -36,6 +36,7 @@ echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu
 curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbuntu_20.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/filesystems_snapper.gpg > /dev/null
 sudo apt -y update
 sudo apt -y install snapper
+sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/snapraid-btrfs/snapper/default
 
 # install nocache - required to move files from pool to pool-nocache with rsync
 # ---------------
