@@ -17,7 +17,7 @@ echo "and local and online sharing just as easy as it is for all other users (1 
 echo "==========================================================================================================="
 read -p "Read between the lines then HIT CTRL+C to stop the script here or hit ENTER to start, you will be asked to enter names.. "
 echo "==========================================================================================================="
-echo "Enter your name followed by ENTER. First letter capital, this will be /mnt/pool/Users/Yourname and a symlink will be added to the $HOME folder:"
+echo "Enter your name followed by ENTER. First letter capital, this will be /mnt/pool/Users/Yourname and a symlink will be added to your home/user/ folder:"
 read -p "Enter your name: " NAME1
 echo "you entered $NAME1"
 echo "-----------------------------------------------------------------------------------------------------------"
@@ -26,7 +26,7 @@ read -p "Enter your fam member name: " NAME2
 echo "you entered $NAME2"
 echo "-----------------------------------------------------------------------------------------------------------"
 echo "Now come up with a name for the shared user folder, for example Batman." 
-echo "This workstation common personal folders (Desktop, Documents etc) will be moved to the pool and symlinked back to the $HOME folder:"
+echo "This workstation common personal folders (Desktop, Documents etc) will be moved to the pool and symlinked back to the home/user/ folder:"
 read -p "Enter a name: " SHAREDUSER
 echo "you entered $SHAREDUSER"
 read -p "if you are satisfied, hit a key to continue or CTRL+C to abort, no changes to your system have been made."
@@ -43,17 +43,13 @@ mkdir -p /mnt/pool/Users/$SHAREDUSER/{Documents,Photos,Desktop,Downloads}
 
 # If you plan to download series/movies, create a seperate folder structure for it as the material is not unique and not bound to a user and does not require extensive backups. 
 # Note the subdirs have been specifically chosen this way to work perfectly with common download tools. Recommend to stick to it exactly.
-# NOTE: recently I chose to use the Asterix account for this, instead of a seperate /Media folder next to the /Users folder.
-# This reduces the complexity of the folder structure to an absolute minium. 
-# Note this does not mean tvseries/movies will be backupped. There is a common list of stuff that should never be backupped (OS system files that are scattered throughout user folders). 
-# The TV dir is simply added to that list. 
 mkdir -p /mnt/pool/Music
 mkdir -p /mnt/pool/TV{Series,Movies,incoming}
 mkdir -p /mnt/pool/TV/incoming/{complete,blackhole}
 btrfs subvolume create /mnt/pool/TV/incoming/incomplete
 
 # (optional) if you plan to use this server as workstation/desktop, you will use the Home/Username/ personal folders. 
-# This means you need to map the fictious Asterix users' personal folders to the OS $HOME directory.. That's easy and pretty common on Linux: replace the folders for symbolic links.
+# This means you need to map the fictious/shared users' personal folders to the OS $HOME directory.. That's easy and pretty common on Linux: replace the folders for symbolic links.
 # In case you already have data in those folders, move it to the pool: 
 mv $HOME/Documents/* /mnt/pool/Users/$SHAREDUSER/Documents/
 mv $HOME/Desktop/* /mnt/pool/Users/$SHAREDUSER/Desktop/
@@ -63,10 +59,10 @@ mv $HOME/Music/* /mnt/pool/Music/
 mv $HOME/Videos/* /mnt/pool/TV/
 
 # Note I did not delete Documents, because we can use that folder as a 'container' for the 2 (or more) users sharing this workstation/desktop. 
-# If you prefer you can delete Documents and replace it with a symbolic link to your user folder /Asterix/Documents.
+# If you prefer you can delete Documents and replace it with a symbolic link to your user folder /shareduser/Documents.
 
-# Now create several links, remember, the login account is actually Asterix in this example, so now we will link Asterix sub folders when available. 
-# $HOME = a system variable and short for /home/asterix or whatever username you choose during OS installation. 
+# Now create several links, remember, the login account is actually shareduser in this example, so now we will link shareduser sub folders when available. 
+# $HOME = a system variable and short for /home/shareduser or whatever username you choose during OS installation. 
 ln -s /mnt/pool/Music $HOME/
 ln -s /mnt/pool/TV $HOME/
 ln -s /mnt/pool/Users/$NAME1 $HOME/
