@@ -1,12 +1,12 @@
 Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose yml:
 Contents
-1. Configure router & domain()
-2. Docker Compose Guide()
-    - Step 1: Prepare Docker()
-    - Step 2: prep Docker-compose.yml()
-    - Step 3: Check config & run it()
-    - Step 4: Verification()
-    - Common docker management tasks()
+1. [Configure router & domain](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#configure-router--domain)
+2. [Docker Compose Guide](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#docker-compose-guide)
+    - [Step 1: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1-prepare-docker-run-the-prep-script)
+    - [Step 2: Prepare Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-2---prepare-your-docker-composeyml-and-personalise-via-environment-variables)
+    - [Step 3: Run Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-3---run-docker-compose)
+    - [Step 4: Verification](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-4---check-everything-is-up-and-running)
+    - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
 
 If you have an understanding of Docker containerization and docker-compose to set it up, realise the following:
@@ -30,14 +30,16 @@ If you have an understanding of Docker containerization and docker-compose to se
 
 &nbsp;
 ## Docker Compose Guide 
-### Step 1 Prepare Docker: run the prep script
+### Step 1 Prepare Docker
+A prep script, containing lots of info I gathered/learned via trial&error, can save you a lot of time. 
 Go through the script and execute what you need manually, or download and execute it: 
 `cd Downloads`
 `wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/prepare_server_docker.sh`
 `bash prepare_server_docker.sh`
 Note this will protect your $HOME/docker folder and take care or requirements for certain docker applications. If you do not need those applications, you can simply delete those application folders from $HOME/docker after the script is finished or remove those parts of the script. 
 
-#### Step 2 - Prepare your docker-compose.yml and personalise via environment variables
+#### Step 2 - Prepare Compose
+Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
 Things you need to take care of:
 - .env file: set the env variables in the .env file, generate the required secret tokens with the given command.
@@ -46,7 +48,7 @@ Things you need to take care of:
 - if you remove certain applications, at the bottom also remove unneccary networks.
 - notice the commands at the top of the compose file, for your convenience. 
  
-#### Step 3 - Run Docker Compose UP
+#### Step 3 - Run Docker Compose
 `cd docker` (when you open terminal, you should already be in $HOME).
 Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): `docker-compose -f $HOME/docker/docker-compose.yml config` using -f to point to the location of your config files. 
 
