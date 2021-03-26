@@ -1,5 +1,11 @@
 # Migrate data to your server & Folder Structure Recommendations
 
+**Contents**
+1. Data Migration(https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
+2. Folder Structure Recommendations(https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#2-folder-structure-recommendations)
+3. Extra's(https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
+4. How to use the setup-folderstructure script(https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#action-to-take)
+
 ## 1. Data migration 
 ### 1.1 Moving files to your server
 - To copy files from existing disks, connect them via USB. 
@@ -83,5 +89,10 @@ But your partner won't see those files on the local filesystem of your laptop, P
 5. In a similar way. `Asterix/Photos` is mounted in `$HOME`, replacing the Pictures folder. 
 6. Extra benefit: on a shared home laptop, you can syncthing the Documents and username folders, so that the laptop has an offline copy. You can mount the larger folders like Photos but also Media via NFS, allowing the same folder structure in $HOME on your laptop as on your server! 
 
-## Action to take
-I hope this makes sense. The script prep-folderstructure.sh will create the folder structure as described AND map those `asterix` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it. 
+## How to use the setup-folderstructure script
+I hope this makes sense. The script prep-folderstructure.sh will create the folder structure as described AND map those `shareduser` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it.
+Before you run it, make sure you have the right permissions. Notice commands to change permissions are mentioned at the top of the script. 
+`cd Downloads`
+`wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/create_folderstructure.sh`
+Now fix permissions first, open the script in a text editor and use the top commands. Also make changes/remove parts you do not want. Then: 
+`bash create_folderstructure.sh`
