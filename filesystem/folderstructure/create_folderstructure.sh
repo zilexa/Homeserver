@@ -1,7 +1,12 @@
 #!/bin/bash
 # Permissions can be fixed as follows (this makes sure the personal folder cannot be deleted by the main user, but gives full access to the main user to the contents of the folder. 
-# sudo chown asterix:asterix $NAME
-# sudo chmod u+rwx -R $NAME
+# sudo chown asterix:asterix /mnt/pool/Users
+# sudo chown asterix:asterix /mnt/pool/Music
+# sudo chown asterix:asterix /mnt/pool/TV
+# sudo chmod 775 -R /mnt/pool/Users
+# sudo chmod 775 -R /mnt/pool/Music
+# sudo chmod 775 -R /mnt/pool/TV
+# note to self: figure out difference between 775 and u+rwx -R $NAME
 echo "==========================================================================================================="
 echo "If you are part of a family that has shared files, like Photo albums, Documents, files on Desktop, Downloads..." 
 echo "they can be hard to incorporate in your folder structure." 
