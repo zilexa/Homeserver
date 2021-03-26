@@ -51,7 +51,19 @@ mkdir -p /mnt/pool/Users/$SHAREDUSER/{Documents,Photos,Desktop,Downloads}
 mkdir -p /mnt/pool/Music
 mkdir -p /mnt/pool/TV/{Series,Movies,incoming}
 mkdir -p /mnt/pool/TV/incoming/{complete,blackhole}
-btrfs subvolume create /mnt/pool/TV/incoming/incomplete
+
+# To prevent defragmentation due to downloading, place the incomplete dir used during downloading (temp files) in a seperate subvolume. 
+# When a download is finished, it will be copied as a whole into the complete dir. This is a trick to get massively reduce fragmentation :)
+btrfs subvolume create /mnt/disks/cache/TV/incoming/incomplete
+btrfs subvolume create /mnt/disks/data1/TV/incoming/incomplete
+btrfs subvolume create /mnt/disks/data2/TV/incoming/incomplete
+btrfs subvolume create /mnt/disks/data3/TV/incoming/incomplete
+# Disable copy-on-write for this dir (otherwise it will constantly rewrite the whole file during downloading) on all disks and the pool: 
+chattr -R +C /mnt/disks/cache/TV/incoming/incomplete
+chattr -R +C /mnt/disks/data1/TV/incoming/incomplete
+chattr -R +C /mnt/disks/data2/TV/incoming/incomplete
+chattr -R +C /mnt/disks/data3/TV/incoming/incomplete
+chattr -R +C /mnt/pool/TV/incoming/incomplete
 
 # (optional) if you plan to use this server as workstation/desktop, you will use the Home/Username/ personal folders. 
 # This means you need to map the fictious/shared users' personal folders to the OS $HOME directory.. That's easy and pretty common on Linux: replace the folders for symbolic links.
