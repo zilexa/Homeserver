@@ -49,7 +49,7 @@ mkdir -p /mnt/pool/Users/$SHAREDUSER/{Documents,Photos,Desktop,Downloads}
 # If you plan to download series/movies, create a seperate folder structure for it as the material is not unique and not bound to a user and does not require extensive backups. 
 # Note the subdirs have been specifically chosen this way to work perfectly with common download tools. Recommend to stick to it exactly.
 mkdir -p /mnt/pool/Music
-mkdir -p /mnt/pool/TV{Series,Movies,incoming}
+mkdir -p /mnt/pool/TV/{Series,Movies,incoming}
 mkdir -p /mnt/pool/TV/incoming/{complete,blackhole}
 btrfs subvolume create /mnt/pool/TV/incoming/incomplete
 
