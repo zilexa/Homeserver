@@ -8,7 +8,7 @@ done
 
 # Mount systemdrive btrfs-root and the backup disk
 mount /dev/nvme0n1p2 /mnt/system-root -o subvolid=5,defaults,noatime,compress=lzo 
-mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o subvolid=backup,defaults,noatime,compress=zstd:8
+mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o defaults,noatime,compress=zstd:8
 
 # Run backups
 /usr/sbin/btrbk -c /home/$SUDO_USER/docker/HOST/backup.conf -v run
