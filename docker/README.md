@@ -35,9 +35,11 @@ If you have an understanding of Docker containerization and docker-compose to se
 ### Step 1 - Prepare Docker
 A prep script, containing lots of info I gathered/learned via trial&error, can save you a lot of time. 
 Go through the script and execute what you need manually, or download and execute it: 
-`cd Downloads`\
-`wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/prepare_server_docker.sh`\
-`bash prepare_server_docker.sh`
+```
+cd Downloads
+wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/prepare_server_docker.sh
+bash prepare_server_docker.sh
+```
 Note this will protect your $HOME/docker folder and take care or requirements for certain docker applications. If you do not need those applications, you can simply delete those application folders from $HOME/docker after the script is finished or remove those parts of the script. 
 
 #### Step 2 - Prepare Compose
