@@ -48,9 +48,8 @@ mkdir -p /mnt/pool/Users/$SHAREDUSER/{Documents,Photos,Desktop,Downloads}
 
 # If you plan to download series/movies, create a seperate folder structure for it as the material is not unique and not bound to a user and does not require extensive backups. 
 # Note the subdirs have been specifically chosen this way to work perfectly with common download tools. Recommend to stick to it exactly.
-mkdir -p /mnt/pool/Music
-mkdir -p /mnt/pool/TV/{Series,Movies,incoming}
-mkdir -p /mnt/pool/TV/incoming/{complete,blackhole}
+mkdir -p /mnt/pool/Media/{Shows,Movies,Music,incoming}
+mkdir -p /mnt/pool/Media/incoming/{complete,watch}
 
 # To prevent defragmentation due to downloading, make sure your download client downloads to this incomplete dir.
 # By creating a subvolume for it now, when a file is finished downloading, it will be copied as a whole into the complete dir, because it's coming from a different subvol.
@@ -75,8 +74,8 @@ mv $HOME/Documents/* /mnt/pool/Users/$SHAREDUSER/Documents/
 mv $HOME/Desktop/* /mnt/pool/Users/$SHAREDUSER/Desktop/
 mv $HOME/Downloads/* /mnt/pool/Users/$SHAREDUSER/Downloads/
 mv $HOME/Pictures/* /mnt/pool/Users/$SHAREDUSER/Photos/
-mv $HOME/Music/* /mnt/pool/Music/
-mv $HOME/Videos/* /mnt/pool/TV/
+mv $HOME/Music/* /mnt/pool/Media/Music/
+mv $HOME/Videos/* /mnt/pool/Media/
 
 # Note I did not delete Documents, because we can use that folder as a 'container' for the 2 (or more) users sharing this workstation/desktop. 
 # If you prefer you can delete Documents and replace it with a symbolic link to your user folder /shareduser/Documents.
