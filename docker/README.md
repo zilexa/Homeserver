@@ -40,7 +40,7 @@ cd Downloads
 wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/prepare_server_docker.sh
 bash prepare_server_docker.sh
 ```
-Note this will protect your $HOME/docker folder and take care or requirements for certain docker applications. If you do not need those applications, you can simply delete those application folders from $HOME/docker after the script is finished or remove those parts of the script. 
+Note this will protect your $HOME/docker folder and create specific files and folders required for certain applications before they are run. If you do not need those applications, you can simply delete those application folders from $HOME/docker after the script is finished or remove those parts of the script. Don't forget to also remove them from the Compose file in the next step.
 
 #### Step 2 - Prepare Compose
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
