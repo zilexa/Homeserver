@@ -56,16 +56,16 @@ mkdir -p /mnt/pool/Media/incoming/{complete,watch}
 # Although this is more intensive then simply changing the location, since the file needs to be copied, it will massively reduce fragmentation and also disk I/O when
 # reading (especially during seeding!) that file. Sonarr can still hardlink from the complete dir to the actual Movies or Series dir. 
 # Especially for btrfs, this is highly recommended!
-btrfs subvolume create /mnt/disks/cache/TV/incoming/incomplete
-btrfs subvolume create /mnt/disks/data1/TV/incoming/incomplete
-btrfs subvolume create /mnt/disks/data2/TV/incoming/incomplete
-btrfs subvolume create /mnt/disks/data3/TV/incoming/incomplete
+btrfs subvolume create /mnt/disks/cache/Media/incoming/incomplete
+btrfs subvolume create /mnt/disks/data1/Media/incoming/incomplete
+btrfs subvolume create /mnt/disks/data2/Media/incoming/incomplete
+btrfs subvolume create /mnt/disks/data3/Media/incoming/incomplete
 # Disable copy-on-write for this dir (otherwise it will constantly rewrite the whole file during downloading) on all disks and the pool: 
-chattr -R +C /mnt/disks/cache/TV/incoming/incomplete
-chattr -R +C /mnt/disks/data1/TV/incoming/incomplete
-chattr -R +C /mnt/disks/data2/TV/incoming/incomplete
-chattr -R +C /mnt/disks/data3/TV/incoming/incomplete
-chattr -R +C /mnt/pool/TV/incoming/incomplete
+chattr -R +C /mnt/disks/cache/Media/incoming/incomplete
+chattr -R +C /mnt/disks/data1/Media/incoming/incomplete
+chattr -R +C /mnt/disks/data2/Media/incoming/incomplete
+chattr -R +C /mnt/disks/data3/Media/incoming/incomplete
+chattr -R +C /mnt/pool/Media/incoming/incomplete
 
 # (optional) if you plan to use this server as workstation/desktop, you will use the Home/Username/ personal folders. 
 # This means you need to map the fictious/shared users' personal folders to the OS $HOME directory.. That's easy and pretty common on Linux: replace the folders for symbolic links.
