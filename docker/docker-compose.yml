@@ -2,11 +2,10 @@
 ## Check for typos           : docker-compose -f docker-compose.yml config 
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them. 
-#
+#  
 version: "2.3"
 ## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm.
 ## Docker-Compose 2.x is for Compose.
-#
 services:
 ##
 ##_____MANAGEMENT_____
@@ -67,22 +66,23 @@ services:
 ##____________________ Unifi Controller [NETWORK/Wifi]
   unifi:
     container_name: unifi
-    image: goofball222/unifi
-    mac_address: d0:ca:ab:cd:ef:03
+    image: ghcr.io/linuxserver/unifi-controller
+    #mac_address: d0:ca:ab:cd:ef:03
     restart: always
     networks: 
       - management
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      MEM_LIMIT: 512M #optional
     volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $DOCKERDIR/unifi/cert:/usr/lib/unifi/cert
-      - $DOCKERDIR/unifi/data:/usr/lib/unifi/data
-      - $DOCKERDIR/unifi/logs:/usr/lib/unifi/logs
+      - $DOCKERDIR/unifi/config:/config
     ports:
+      - 10001:10001/udp
       - 3478:3478/udp
       - 8080:8080
       - 8443:8443
-      - 8001:8880
-      - 8843:8843
+      #- 1900:1900/udp
 ##
 ##
 ##________CLOUD________
@@ -151,13 +151,18 @@ services:
 ##____________________ Syncthing [CLOUD/Sync]
   syncthing:
     container_name: syncthing
-    image: syncthing/syncthing
+    image: ghcr.io/linuxserver/syncthing
     restart: always
     networks: 
       - web-proxy
+    hostname: Obelix
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
     volumes:
-      - $DOCKERDIR/syncthing/config:/var/syncthing/config
-      - $DATAPOOL/Users:/var/syncthing
+      - $DOCKERDIR/syncthing/config:/config
+      - $DATAPOOL/Users:/data1
     ports:
       #- "8384:8384"
       - "22000:22000/tcp"
@@ -194,8 +199,9 @@ services:
       - $DATAPOOL/Users/Asterix:/user-files/$USER1/Asterix:rw
       #- $DATAPOOL/Users/Asterix:/user-files/$USER2/Asterix:rw
     labels:
-      caddy: files.$DOMAIN
+      caddy: files.$DOMAIN, drive.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.reverse_proxy.header_up: "Host files.$DOMAIN"
       # Required extra headers
       caddy.file_server: ""                                         # required for fileservers
       caddy.encode: gzip                                            # required for fileservers
@@ -287,9 +293,7 @@ services:
       - 122
     volumes:
       - $DOCKERDIR/jellyfin/config:/config
-      - $DATAPOOL/TV/Series:/data/tvshows
-      - $DATAPOOL/TV/Movies:/data/movies
-      - $DATAPOOL/Music:/data/music
+      - $DATAPOOL/Media:/data
     ports:
       - 8096:8096
       - 8920:8920 #optional
@@ -342,47 +346,25 @@ services:
       timeout: 10s
       retries: 3
     ports:
-      - 9091:9091 #Transmission
+      - 9092:3000 #rflood
       - 6789:6789 #NZBget
 ##
-##____________________ Transmission [MEDIA/download-client]
-  transmission:
-    image: linuxserver/transmission
-    container_name: transmission
+##____________________ rTorrent+Flood [MEDIA/download-client]
+  rflood:
+    container_name: rflood
+    image: hotio/rflood
     network_mode: service:vpn
     depends_on:
       - vpn
-    restart: always
     environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
-      TRANSMISSION_WEB_HOME: /transmission-web-control/
-      USER: $USER
-      PASS: $PW_MEDIA
+      - PUID=$PUID
+      - PGID=$PGID
+      - UMASK=002
+      - TZ=$TZ
+      - FLOOD_AUTH=true
     volumes:
-      - $DOCKERDIR/transmission/config:/config
-      - $DATAPOOL/TV/incoming:/TV/incoming
-##
-##____________________ Sonarr [MEDIA/PVR-TVshows]
-  sonarr:
-    container_name: sonarr
-    image: linuxserver/sonarr:latest
-    networks: 
-      - media
-    depends_on:
-      - transmission
-    restart: always
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $DOCKERDIR/sonarr/config:/config
-      - $DATAPOOL/TV:/TV
-    ports:
-      - 8989:8989
+      - $DOCKERDIR/rflood/config:/config
+      - $DATAPOOL/Media/incoming:/Media/incoming
 ##
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
@@ -400,7 +382,7 @@ services:
     volumes:
       - $DOCKERDIR/jackett/config:/config
       - /etc/localtime:/etc/localtime:ro
-      - $DATAPOOL/TV/incoming:/TV/incoming
+      - $DATAPOOL/Media/incoming:/Media/incoming
     ports:
       - 9117:9117
   flaresolverr:
@@ -416,6 +398,26 @@ services:
     ports:
       - 8191:8191
     restart: unless-stopped 
+##
+##____________________ Sonarr [MEDIA/PVR-TVshows]
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr:latest
+    networks: 
+      - media
+    depends_on:
+      - transmission
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $DOCKERDIR/sonarr/config:/config
+      - $DATAPOOL/Media:/Media
+    ports:
+      - 8989:8989
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
@@ -433,7 +435,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - $DOCKERDIR/radarr/config:/config
-      - $DATAPOOL/TV:/TV
+      - $DATAPOOL/Media:/Media
     ports:
       - 7878:7878
 ##
@@ -453,9 +455,28 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/bazarr/config:/config
-      - $DATAPOOL/TV:/TV
+      - $DATAPOOL/Media:/Media
     ports:
       - 6767:6767
+##
+##____________________ Lidarr [MEDIA/PVR-Music]
+  lidarr:
+    container_name: lidarr
+    image: linuxserver/lidarr
+    networks: 
+      - media
+    depends_on:
+      - transmission
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/lidarr/config:/config
+      - $DATAPOOL/Media:/Media
+    ports:
+      - 8686::8686
 #
 #
 networks:
