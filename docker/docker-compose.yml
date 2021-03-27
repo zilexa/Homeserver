@@ -346,24 +346,26 @@ services:
       timeout: 10s
       retries: 3
     ports:
-      - 9092:3000 #rflood
+      - 9091:9091 #rflood
       - 6789:6789 #NZBget
 ##
-##____________________ rTorrent+Flood [MEDIA/download-client]
-  rflood:
-    container_name: rflood
-    image: hotio/rflood
+##____________________ Transmission [MEDIA/download-client]
+  transmission:
+    container_name: transmission
+    image: linuxserver/transmission
     network_mode: service:vpn
     depends_on:
       - vpn
+    restart: always
     environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - UMASK=002
-      - TZ=$TZ
-      - FLOOD_AUTH=true
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      TRANSMISSION_WEB_HOME: /transmission-web-control/
+      USER: $USER
+      PASS: $PW_MEDIA
     volumes:
-      - $DOCKERDIR/rflood/config:/config
+      - $DOCKERDIR/transmission/config:/config
       - $DATAPOOL/Media/incoming:/Media/incoming
 ##
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
