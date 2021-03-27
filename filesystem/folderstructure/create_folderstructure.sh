@@ -82,8 +82,8 @@ mv $HOME/Videos/* /mnt/pool/Media/
 
 # Now create several links, remember, the login account is actually shareduser in this example, so now we will link shareduser sub folders when available. 
 # $HOME = a system variable and short for /home/shareduser or whatever username you choose during OS installation. 
-ln -s /mnt/pool/Music $HOME/
-ln -s /mnt/pool/TV $HOME/
+ln -s /mnt/pool/Media/Music $HOME/
+ln -s /mnt/pool/Media $HOME/
 ln -s /mnt/pool/Users/$NAME1 $HOME/
 ln -s /mnt/pool/Users/$NAME2 $HOME/
 ln -s /mnt/pool/Users/$SHAREDUSER/Documents $HOME/
