@@ -195,7 +195,7 @@ services:
     volumes:
       - $DOCKERDIR/filerun/html:/var/www/html
       - $DATAPOOL/Users:/user-files
-      # Mount local host user containing family shared files, into home users folders
+      # Mount shareduser folder (mnt/pool/$SHAREDUSER) containing family shared files, into the home users folders
       - $DATAPOOL/Users/$SHAREDUSER:/user-files/$USER1/$SHAREDUSER
       - $DATAPOOL/Users/$SHAREDUSER:/user-files/$USER2/$SHAREDUSER
     labels:
