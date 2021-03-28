@@ -182,11 +182,11 @@ services:
       FR_DB_HOST: filerun-db
       FR_DB_PORT: 3306
       FR_DB_NAME: filerundb
-      FR_DB_USER: $USER
+      FR_DB_USER: $USERNAME
       FR_DB_PASS: $PW_INT
-      APACHE_RUN_USER: $USER
+      APACHE_RUN_USER: $USERNAME
       APACHE_RUN_USER_ID: $PUID
-      APACHE_RUN_GROUP: $USER
+      APACHE_RUN_GROUP: $USERNAME
       APACHE_RUN_GROUP_ID: $PGID
     depends_on:
       - filerun-db
@@ -194,10 +194,10 @@ services:
       - filerun-search
     volumes:
       - $DOCKERDIR/filerun/html:/var/www/html
-      - $DATAPOOL/Users:/user-files:rw
+      - $DATAPOOL/Users:/user-files
       # Mount local host user containing family shared files, into home users folders
-      - $DATAPOOL/Users/Asterix:/user-files/$USER1/Asterix:rw
-      #- $DATAPOOL/Users/Asterix:/user-files/$USER2/Asterix:rw
+      - $DATAPOOL/Users/$SHAREDUSER:/user-files/$USER1/$SHAREDUSER
+      - $DATAPOOL/Users/$SHAREDUSER:/user-files/$USER2/$SHAREDUSER
     labels:
       caddy: files.$DOMAIN, drive.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
@@ -362,7 +362,7 @@ services:
       PGID: $PGID
       TZ: $TZ
       TRANSMISSION_WEB_HOME: /transmission-web-control/
-      USER: $USER
+      USER: $USERNAME
       PASS: $PW_MEDIA
     volumes:
       - $DOCKERDIR/transmission/config:/config
