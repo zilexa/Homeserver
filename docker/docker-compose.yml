@@ -152,7 +152,7 @@ services:
   syncthing:
     container_name: syncthing
     image: ghcr.io/linuxserver/syncthing
-    restart: always
+    restart: 'no'
     networks: 
       - web-proxy
     hostname: Obelix
@@ -162,7 +162,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/syncthing/config:/config
-      - $DATAPOOL/Users:/data1
+      - $DATAPOOL/Users:/Users
     ports:
       #- "8384:8384"
       - "22000:22000/tcp"
