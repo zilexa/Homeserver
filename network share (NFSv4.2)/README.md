@@ -79,7 +79,7 @@ This is NOT necessary if you will never share more than a single folder via NFS.
 
 - Create a folder for each subfolder you want to share. We will 'link' those folders to this location. In this example I want to share 2 folders: /mnt/pool/Local and /mnt/pool/Media.  
 `sudo mkdir -p /srv/nfs/Photos`  
-`sudo mkdir -p /srv/nfs/Music`
+`sudo mkdir -p /srv/nfs/Media`
 
 - Now edit your fstab file..
 `sudo nano /etc/fstab`
@@ -87,7 +87,7 @@ This is NOT necessary if you will never share more than a single folder via NFS.
 - ..and create the mounts by copy pasting the following, then save and close the file:
 ```
 /mnt/pool/Users/Asterix/Photos  /srv/nfs/Photos none rbind 0 0
-/mnt/pool/Music                 /srv/nfs/Music none rbind 0 0
+/mnt/pool/Media                 /srv/nfs/Media none rbind 0 0
 ```
 
 - now activate the mounts (note everything in /etc/fstab will be automatically mounted at boot):
@@ -103,7 +103,7 @@ Add the following line, note the IP address range might be different depending o
 ```
 /srv/nfs         192.168.88.0/24(rw,async,fsid=0,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
 /srv/nfs/Photos  192.168.88.0/24(rw,async,fsid=1,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
-/srv/nfs/Music   192.168.88.0/24(rw,async,fsid=2,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
+/srv/nfs/Media   192.168.88.0/24(rw,async,fsid=2,crossmnt,nohide,all_squash,no_subtree_check,anonuid=1000,anongid=1000)
 ```
 
 #### Now do the following to get this change activated:
