@@ -158,6 +158,7 @@ _**MergerFS Notes:**_
 4. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-nocache.
+
 &nbsp;
 
 ### Good practices
