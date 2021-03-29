@@ -162,9 +162,9 @@ The combined data of your data disks should be in /mnt/pool and also (excluding 
 &nbsp;
 
 ### Good practices
-**Harddisk power management**
+**Harddisk power management**\
 Some harddisks (Seagate) spindown/power down immediately when there is no activity, even if a standby timout of XX minutes has been set. This will wear out the disk _fast_.\
-Via the Disks app, you can check disk properties and poweer settings. Note a value of 127 is common but also the culprit here. Changing it to 129 allows the standby timout to work:
+Via the Disks app, you can check disk properties and power settings. Note a value of 127 is common but also the culprit here. Changing it to 129 allows the standby timout to work:
 ```
 sudo hdparm -S 240 -B 129 /dev/sdX
 ```
