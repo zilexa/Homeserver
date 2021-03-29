@@ -107,10 +107,10 @@ sudo mkdir -p $HOME/docker
 sudo setfacl -Rdm g:docker:rwx ~/docker
 sudo chmod -R 755 ~/docker
 # Get environment variables to be used by Docker (i.e. requires TZ in quotes)
-sudo wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/.env
+sudo wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
 
 # Get docker compose file
-sudo wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/master/docker-compose.yml
+sudo wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
 
 
 # __________________________________________________________________________________
