@@ -1,13 +1,9 @@
 #!/bin/bash
-## Before you run this script, your filesystem and folder structures need to be installed and configured !!
+## Before you run this script, your filesystem (the docker subvolume part) needs to be configured !!
 ## After you run this script, you can run docker-compose.yml and enjoy your server!
 #
 # See https://github.com/zilexa/Homeserver
-# tba: snapraid-btrfs
-# tba: config of nightly scripts
-# tba: backup script
-# tba: syncthing-backup script (not finished yet)
-
+sudo apt -y update
 # ____________________
 # Install server tools
 # ____________________
@@ -19,7 +15,6 @@ sudo ufw allow ssh
 
 # Install lm-sensors
 sudo apt install lm-sensors
-sudo sensors-detect --auto
 
 # Install Powertop
 sudo apt -y install powertop
@@ -36,18 +31,56 @@ ExecStart=/usr/sbin/powertop --auto-tune
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
-systemctl enable powertop.service
+# Enable the service
+sudo systemctl daemon-reload
+sudo systemctl enable powertop.service
 # Tune system now
 sudo powertop --auto-tune
+# Start the service
+sudo systemctl start powertop.service
+
 
 # NFS Server - 15%-30% faster than SAMBA/SMB shares
 sudo apt -y install nfs-server
-read -p "for further instructions to enable NFSv4.2 go to https://github.com/zilexa/Homeserver/blob/master/NetworkFileSystem/NFSv4.2-How-To.md"
 
+echo "========================================================================="
+echo "                                                                         "
+echo "               The following tools have been installed:                  "
+echo "                                                                         "
+echo "                SSH - secure terminal & sftp connection                  "
+echo "           POWERTOP - to optimise power management automatically         "
+echo "               A systemd service to run Powertop at boot                 "
+echo "          LMSENSORS - for the OS to access its diagnostic sensors        "
+echo "           NFS - the fastest network protocol to share folders           "
+echo "                                                                         "
+echo "========================================================================="
+echo "to configure NFSv4.2 with server-side copy:
+echo "(save this URL and hit a key to continue): 
+read -p "https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)"
+echo "                                                               "
+echo "==============================================================="
+echo "                                                               "
+echo "lmsensors will now scan & configure your sensors:              " 
+echo "Just accept & confirm everything!                              "
+echo "---------------------------------------------------------------"
+read -p "hit a key to start... "
+echo  sudo sensors-detect --auto"
+echo "==============================================================="
+echo "                                                               "
+echo "PiVPN install wizard will be downloaded & started, a few hints:"
+echo "1) Select Wireguard.                                           "
+echo "2) Plan on running AdGuard Home with/without Unbound?          "
+echo "Then fill in your own server LAN IP as the DNS server.         "
+echo "If not, e select Quad9 or similar DNS server.                  "
+echo "---------------------------------------------------------------"
+read -p "hit a key to start... "
 # PiVPN ~ Install & configure wizard
 curl -L https://install.pivpn.io | bash  
-
+echo "==============================================================="
+echo "                                                               "
+echo "Netdata monitoring tool install wizard will start              "
+echo "---------------------------------------------------------------"
+read -p  hit a key to start... "
 # Netdata ~ install wizard
 bash <(curl -Ss https://my-netdata.io/kickstart.sh)
 
@@ -83,20 +116,6 @@ sudo wget -P $HOME/docker https://raw.githubusercontent.com/zilexa/Homeserver/ma
 # __________________________________________________________________________________
 # Docker per-application configuration, required before starting the apps container
 # ----------------------------------------------------------------------------------
-# HTTPS reverse proxy: Traefik ~ Create Traefik files and set permissions
-sudo mkdir -p $HOME/docker/traefik
-sudo touch $HOME/docker/traefik/traefik.log
-sudo chmod 600 $HOME/docker/traefik/traefik.log
-sudo touch $HOME/docker/traefik/acme.json
-sudo chmod 600 $HOME/docker/traefik/acme.json
-# Download Traefik settings
-sudo wget -P $HOME/docker/traefik https://raw.githubusercontent.com/zilexa/Mediaserver/master/traefik/traefik.toml
-
-# Firefox Sync ~ Generate secret
-# ------------------------------------------------
-sudo mkdir -p $HOME/docker/firefox-syncserver/secret
-sudo touch $HOME/docker/firefox-syncserver/secret/secret.txt
-sudo head -c 20 /dev/urandom | sha1sum | awk '{print $1}' >> $HOME/docker/firefox-syncserver/secret/secret.txt
 
 # FileRun & ElasticSearch ~ requirements
 # ---------------------------------------------
@@ -118,8 +137,13 @@ sudo sh -c "echo 'vm.max_map_count=262144' >> /etc/sysctl.conf"
 sudo systemctl disable systemd-resolved.service
 sudo systemctl stop systemd-resolved.service
 echo "dns=default" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
-echo "Move dns=default to the [MAIN] section by manually deleting it and typing it. Hit CTRL+O to save, CTRL+X to exit and continue."
+echo "----------------------------------------------------------------------------------"
+echo "To support running your own DNS server on Ubuntu, via docker or bare, disable Ubuntu's built in DNS resolver now."
+echo "----------------------------------------------------------------------------------"
+echo "Move dns=default to the [MAIN] section by manually deleting it and typing it."
+echo "AFTER you have done that, save changes via CTRL+O, exit the editor via CTRL+X."
 read -p "ready to do this? Hit a key..."
 sudo nano /etc/NetworkManager/NetworkManager.conf
 sudo rm /etc/resolv.conf
 sudo systemctl restart NetworkManager.service
+echo "All done, if there were errors, go through the script manually, find and execute the failed commands."
