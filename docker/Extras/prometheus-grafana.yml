@@ -1,3 +1,14 @@
+#To prep for Traefik (I recommend Caddy as all of this is unneccessary, Traefik labels are also overly complex):
+## HTTPS reverse proxy: Traefik ~ Create Traefik files and set permissions
+#sudo mkdir -p $HOME/docker/traefik
+#sudo touch $HOME/docker/traefik/traefik.log
+#sudo chmod 600 $HOME/docker/traefik/traefik.log
+#sudo touch $HOME/docker/traefik/acme.json
+#sudo chmod 600 $HOME/docker/traefik/acme.json
+# Download Traefik settings
+#sudo wget -P $HOME/docker/traefik https://raw.githubusercontent.com/zilexa/Mediaserver/master/traefik/traefik.toml
+
+
 ##____________________ Prometheus [Monitoring/Logging]
   prometheus:
     container_name: prometheus
