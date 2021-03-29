@@ -42,10 +42,10 @@ bash prepare_server_docker.sh
 ```
 Actions: 
 1. Read the questions, follow the install wizards of PiVPN, Netdata and allow lm-sensors to scan & configure your systems diagnostic sensors: 
-  - PiVPN: choose Wireguard and when asked which DNS server you want, choose custom and fill in your own server LAN IP if you plan on running AdGuard Home/Unbound. Otherwise select Quad9 or similar. 
-  - lm-sensors: just select yes everywhere and let it do its thing. Don't mind the warnings here. 
-  - Netdata: just follow the wizard. 
-  - NFSv4.2: read more about it here: https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)
+    - PiVPN: choose Wireguard and when asked which DNS server you want, choose custom and fill in your own server LAN IP if you plan on running AdGuard Home/Unbound. Otherwise select Quad9 or similar. 
+    - lm-sensors: just select yes everywhere and let it do its thing. Don't mind the warnings here. 
+   - Netdata: just follow the wizard. 
+   - NFSv4.2: read more about it here: https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)
 
 The script will also: 
   - Set permissions (root only) to your $HOME/docker folder and create specific files and folders required for Filerun to run. 
