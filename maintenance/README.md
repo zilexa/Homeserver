@@ -51,7 +51,12 @@ Make a choice that makes sense for your situation. For me, /TV contains expendab
 All prequisities have been taken care of by the script from [Step 1:Filesystem](https://github.com/zilexa/Homeserver#step-1-filesystem): snapraid, snapraid-btrfs (requires snapper), nocache and btrbk should be installed. Also the default config of snapper `/etc/snapper/config-template/default` and the snapraid config `etc/snapraid.conf` have been replaced with slightly modified versions, to save you some time and prevent you from hitting walls.\
 
 _All you have to do:_
-If you haven't executed that script, [open the script](https://github.com/zilexa/Homeserver/blob/master/filesystem/setup-storage.sh) and execute the commands to install the required tools and obtain the config files.  
+- If you haven't executed that script, [open the script](https://github.com/zilexa/Homeserver/blob/master/filesystem/setup-storage.sh) and execute the commands to install the required tools and obtain the config files.  
+- It is good practice to configure your disks to not sleep immediately (annoying behavior of some disks) as this will wear out the disks very fast. A power management value of 127 in the disk properties (via DISKS utility) is default. This will wear out the disks (SMART: LCC value, load cycle count). Change it to 129 to prevent it from happening and enable the standby timer to actually work. With this command, standby time is 20 min (240). 30 min would be 241 for example. 
+```
+sudo hdparm -S 240 -B 129 /dev/sdX
+```
+
 
 ## Snapraid setup
 #### Step 1: Create snapper config files
