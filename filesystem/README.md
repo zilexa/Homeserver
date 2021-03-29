@@ -157,7 +157,7 @@ _**MergerFS Notes:**_
 3. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
 4. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
-The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-nocache.\
+The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-nocache.\  
 
 ### Good practices
 **Harddisk power management**
