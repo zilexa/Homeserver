@@ -40,7 +40,18 @@ cd Downloads
 wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/prepare_server_docker.sh
 bash prepare_server_docker.sh
 ```
-Note this will protect your $HOME/docker folder and create specific files and folders required for certain applications before they are run. If you do not need those applications, you can simply delete those application folders from $HOME/docker after the script is finished or remove those parts of the script. Don't forget to also remove them from the Compose file in the next step.
+Actions: 
+1. Read the questions, follow the install wizards of PiVPN, Netdata and allow lm-sensors to scan & configure your systems diagnostic sensors: 
+    - PiVPN: choose Wireguard and when asked which DNS server you want, choose custom and fill in your own server LAN IP if you plan on running AdGuard Home/Unbound. Otherwise select Quad9 or similar. 
+    - lm-sensors: just select yes everywhere and let it do its thing. Don't mind the warnings here. 
+    - Netdata: just follow the wizard. 
+    - NFSv4.2: read more about it here: https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)
+
+The script will also: 
+- Set permissions (root only) to your $HOME/docker folder and create specific files and folders required for Filerun to run. 
+- If you will not use Filerun/Elasticsearch, remove its folder from the docker folder when done. 
+- Install docker via repository (auto-update) and related dependencies. 
+- Get the docker-compose.yml file and its .env file from this repository. 
 
 #### Step 2 - Prepare Compose
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
