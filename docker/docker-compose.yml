@@ -1,5 +1,5 @@
-## Run compose               : docker-compose -f docker-compose.yml up -d 
-## Check for typos           : docker-compose -f docker-compose.yml config 
+## Run compose               : docker-compose up -d 
+## Check for typos           : docker-compose config 
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them. 
 #  
@@ -199,7 +199,7 @@ services:
       - $DATAPOOL/Users/$SHAREDUSER:/user-files/$USER1/$SHAREDUSER
       - $DATAPOOL/Users/$SHAREDUSER:/user-files/$USER2/$SHAREDUSER
     labels:
-      caddy: files.$DOMAIN, drive.$DOMAIN
+      caddy: files.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
       caddy.reverse_proxy.header_up: "Host files.$DOMAIN"
       # Required extra headers
@@ -262,7 +262,7 @@ services:
       - $DOCKERDIR/onlyoffice/data:/var/www/onlyoffice/Data
       - $DOCKERDIR/onlyoffice/log:/var/log/onlyoffice
       - $DOCKERDIR/onlyoffice/database:/var/lib/postgresql
-      - $DOCKERDIR/onlyoffice/fonts:/usr/share/fonts
+      - /usr/share/fonts:/usr/share/fonts
     dns: 9.9.9.9
     environment:
       JWT_ENABLED: 'true'
