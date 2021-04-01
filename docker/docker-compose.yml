@@ -33,7 +33,7 @@ services:
     security_opt:
       - no-new-privileges:true
     ports:
-     - "8000:80"
+     - "80:80"
     volumes:
       - $DOCKERDIR/organizr:/config
     environment:
@@ -100,7 +100,6 @@ services:
     labels:
       caddy.email: $EMAIL
     ports:
-      - 80:80
       - 443:443
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
