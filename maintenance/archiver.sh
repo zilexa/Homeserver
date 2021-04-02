@@ -14,4 +14,4 @@ N=${3}
 SCRIPTDIR="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
 # Find access time of files in cache pool, move with rsync if >N, log to a file next to script.
-find "${CACHE}" -type f -atime +${N} -printf '%P\n' | nocache rsync --exclude="$CACHE"/Local/Asterix/TV --files-from=- -axHAXWES --progress --preallocate --remove-source-files "${CACHE}/" "${BACKING}/" >> /home/asterix/docker/HOST/logs/cache_archiver.log 2>&1
+find "${CACHE}" -type f -atime +${N} -printf '%P\n' | nocache rsync -axHAXWES --progress --files-from=- --exclude-from="${SCRIPTDIR}"/archiver_exclude.txt --preallocate --remove-source-files "${CACHE}/" "${BACKING}/" >> $HOME/docker/HOST/logs/archiver.log 2>&1
