@@ -137,7 +137,10 @@ Do this manually before activating the schedules in the next steps. The first ti
 ## Maintenance & scheduling 
 Depending on the purpose of your server, several maintenance tasks can be executed nightly, before the backup strategy is executed, to cleanup files first: 
 - Delete watched tv shows, episodes, seasons and movies xx days after they have been watched. 
-- Unload SSD cache: move files not modified for 30 days to the hard disks (from ssd to /mnt/pool-nocache). Since `pool-nocache` = `pool-nocache` without the SSD, the path to the moved files is the same, they are still in `/mnt/pool`, they are only moved to a different underlying disk. 
+- Unload SSD cache: move _Users_ files not modified for 30 days to the hard disks (from ssd to /mnt/pool-nocache). Since `pool-nocache` = `pool without the SSD`, the path to the moved files is the same, they are still in `/mnt/pool`, they are only moved to a different underlying disk. 
+    - Exceptions to this task: Keep thumbnails created by FileRun and DigiKam (photo management software) on the SSD, for performance and power consumption purposes (the HDDs won't turn on when you scroll through your photos via FileRun). 
+    - Also do not move files moved to trash.
+    - do not attempt to move snapshots.  
 - Cleanup docker: stopped containers, old images etc can be deleted. 
 - Cleaning up system cache is not necessary as those folders are already excluded since they are nested subvolumes: nested subvolumes are excluded when the parent subvol is snapshotted. 
 - 
