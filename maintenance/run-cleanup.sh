@@ -13,7 +13,7 @@ $HOME/docker/HOST/jellyfin-cleaner/media_cleaner.py >> $HOME/docker/HOST/logs/me
 # CLEANUP CACHE
 # -------------
 # files >30d moved to data drives on pool-archive
-/usr/bin/bash $HOME/docker/HOST/cache_archiver.sh /mnt/disks/cache/Users /mnt/pool-archive/Users 30
+/usr/bin/bash $HOME/docker/HOST/archiver.sh /mnt/disks/cache/Users /mnt/pool-nocache/Users 30
 
 # FileRun 
 # -------
