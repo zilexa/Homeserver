@@ -22,9 +22,8 @@ docker exec -w /var/www/html/cron -it filerun php empty_trash.php -days 30
 docker exec -w /var/www/html/cron -it filerun php paths_cleanup.php
 docker exec -w /var/www/html/cron -it filerun php metadata_index.php
 docker exec -w /var/www/html/cron -it filerun php make_thumbs.php
+docker exec -w /var/www/html/cron -it filerun php index_filenames.php /user-files true
 docker exec -w /var/www/html/cron -it filerun php process_search_index_queue.php
-docker exec -w /var/www/html/cron -it filerun php index_filenames.php true
-
 
 # Delete temp file, follow up tasks can continue
 rm /tmp/maintenance-is-running
