@@ -13,10 +13,7 @@ services:
       - web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $DOCKERDIR/caddy/caddy_data:/data
-      - $DOCKERDIR/caddy/config:/config
-      - $DOCKERDIR/nextcloud/var/www/html:/nextcloud/var/www/html
-      - $DOCKERDIR/nextcloud/var/data:/nextcloud/var/nextdata
+      - ./caddy/caddy_data:/data
     ports:
       - 80:80
       - 443:443
@@ -53,11 +50,13 @@ services:
       SMTP_PORT: 587
     volumes:
         # the actual data of the Nextcloud:
-      - $DOCKERDIR/nextcloud/var/nextdata:/var/nextdata
-        # Main folder needed for updating:
-      - $DOCKERDIR/nextcloud/var/www/html:/var/www/html
+      - ./nextcloud/nextcloud:/var/www/html
+        # Main folder needed for the apps:
+      - ./nextcloud/apps:/var/www/html/custom_apps
+        # Main folder needed for the datas:
+      - ./nextcloud/data:/var/www/html/data
         # local configuration
-      - $DOCKERDIR/nextcloud/var/www/html/config:/var/www/html/config
+      - ./nextcloud/config:/var/www/html/config
         # Custom settings for php fpm to make nextcloud work. The default settings resulted in the error:
         # WARNING: [pool www] server reached pm.max_children setting (5), consider raising it
       - $DOCKERDIR/nextcloud/etc/www-custom.ini:/usr/local/etc/php-fpm.d/zz-custom.conf
