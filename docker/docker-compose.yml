@@ -13,7 +13,7 @@
 ## ToDO: Will look into using Hotio QFlood image instead, the UI is much nicer but seems to lack important settings to increase disk cache etc.
 # REMOVED unneccessary port binds: 80 for Caddy is not used. Now used for Organizr to access server homepage via url (use your servers /etc/hosts file to set an url). 
 ## ToDO: Will look into registering https for LAN only, to access all services via https organizr url (not sure if it makes sense to go this far). 
-#
+# CHANGED: pia wireguard vpn to swiss instead of nine eyes Germany.
 # NOTE: I stopped using Syncthing due to this issue (my laptop SSD filled up within 30min): https://forum.syncthing.net/t/problems-with-renamed-directory/16611
 ## I might try Resilio instead or see if the dev is helpful to figure out the issue, if it isn't "by design".
 #
@@ -350,7 +350,7 @@ services:
       #- /dev/net/tun:/dev/net/tun
     environment:
       LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
-      LOC: de-frankfurt
+      LOC: swiss
       USER: $VPN_USER_PIA
       PASS: $VPN_PW_PIA
       #KEEPALIVE: 25
