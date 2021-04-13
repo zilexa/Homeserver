@@ -1,8 +1,7 @@
-## 2021-04-13
 ## Run compose               : docker-compose up -d 
 ## Check for typos           : docker-compose config 
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
-### Note this will delete stopped containers and everything linked to them. 
+### Note this will delete stopped containers and everything linked to them.  
 #  
 # CHANGELOG 2021-04-13
 # ADDED Guacamole! Now you can open your browser and access the desktop of your server. The image works, still have to test Guacamole. 
@@ -397,7 +396,7 @@ services:
     networks: 
       - media
     depends_on:
-      - transmission
+      - qbittorrent
     restart: always
     environment:
       PUID: $PUID
@@ -430,7 +429,7 @@ services:
     networks: 
       - media
     depends_on:
-      - transmission
+      - qbittorrent
     restart: always
     environment:
       PUID: $PUID
@@ -450,7 +449,7 @@ services:
     networks: 
       - media
     depends_on:
-      - transmission
+      - qbittorrent
     restart: always
     environment:
       PUID: $PUID
@@ -490,7 +489,7 @@ services:
     networks: 
       - media
     depends_on:
-      - transmission
+      - qbittorrent
     restart: always
     environment:
       PUID: $PUID
