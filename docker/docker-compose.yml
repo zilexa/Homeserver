@@ -1,8 +1,22 @@
+## 2021-04-13
 ## Run compose               : docker-compose up -d 
 ## Check for typos           : docker-compose config 
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them. 
 #  
+# CHANGELOG 2021-04-13
+# ADDED Guacamole! Now you can open your browser and access the desktop of your server. The image works, still have to test Guacamole. 
+# Removed Transmission as nobody seems to use it anymore, even though it had full Sonarr compatibility, it is riddled with config issues:
+## temp folder will never be used with Sonarr/Radarr, making the filesystem optimisations (disabling CoW & seperate subvolume for incomplete dir)
+## Completely useless, allowing fragmentation. Also, the complete dir is changed during downloading via Sonarr. Devs believe this is all normal behaviour.
+# ADDED QBittorrent, not from Linuxserver as it is 360MB versus this 150MB image. 
+## ToDO: Will look into using Hotio QFlood image instead, the UI is much nicer but seems to lack important settings to increase disk cache etc.
+# REMOVED unneccessary port binds: 80 for Caddy is not used. Now used for Organizr to access server homepage via url (use your servers /etc/hosts file to set an url). 
+## ToDO: Will look into registering https for LAN only, to access all services via https organizr url (not sure if it makes sense to go this far). 
+#
+# NOTE: I stopped using Syncthing due to this issue (my laptop SSD filled up within 30min): https://forum.syncthing.net/t/problems-with-renamed-directory/16611
+## I might try Resilio instead or see if the dev is helpful to figure out the issue, if it isn't "by design".
+#
 version: "2.3"
 ## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm.
 ## Docker-Compose 2.x is for Compose.
@@ -38,6 +52,20 @@ services:
       - $DOCKERDIR/organizr:/config
     environment:
       - fpm=true
+##
+##____________________ Guacamole [Management/web-desktopsharing]
+  guacamole:
+    container_name: guacamole
+    image: oznu/guacamole
+    restart: always
+    networks: 
+      - management
+    ports:
+     - "8000:8080"
+    volumes:
+      - $DOCKERDIR/guacamole:/config
+    environment:
+      EXTENSIONS: auth-quickconnect
 ##
 ##
 ##______NETWORK_______
@@ -80,7 +108,7 @@ services:
     ports:
       - 10001:10001/udp
       - 3478:3478/udp
-      - 8080:8080
+      - 8080:8080 #to auto-find your APs
       - 8443:8443
       #- 1900:1900/udp
 ##
@@ -345,27 +373,22 @@ services:
       timeout: 10s
       retries: 3
     ports:
-      - 9091:9091 #rflood
-      - 6789:6789 #NZBget
+      - 9090:9090 #Qbittorrent webUI
 ##
 ##____________________ Transmission [MEDIA/download-client]
-  transmission:
-    container_name: transmission
-    image: linuxserver/transmission
+  qbittorrent:
+    image: emmercm/qbittorrent:latest
+    container_name: qbittorrent
     network_mode: service:vpn
     depends_on:
       - vpn
     restart: always
     environment:
-      PUID: $PUID
-      PGID: $PGID
       TZ: $TZ
-      TRANSMISSION_WEB_HOME: /transmission-web-control/
-      USER: $USERNAME
-      PASS: $PW_MEDIA
     volumes:
-      - $DOCKERDIR/transmission/config:/config
+      - $DOCKERDIR/qbittorrent/config:/config
       - $DATAPOOL/Media/incoming:/Media/incoming
+      - $DOCKERDIR/qbittorrent/data:/data
 ##
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
