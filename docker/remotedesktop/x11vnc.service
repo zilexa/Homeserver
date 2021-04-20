@@ -1,0 +1,12 @@
+[Unit]
+Description=x11vnc service
+After=display-manager.service network.target syslog.target
+
+[Service]
+ExecStart=/usr/bin/x11vnc -display :0 -skip_lockkeys -auth /var/run/lightdm/root/:0
+ExecStop=/usr/bin/killall x11vnc
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
