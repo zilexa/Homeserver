@@ -19,18 +19,7 @@ sudo apt install lm-sensors
 # Install Powertop
 sudo apt -y install powertop
 # Create a service file to run powertop --auto-tune at boot
-sudo tee -a /etc/systemd/system/powertop.service << EOF
-[Unit]
-Description=PowerTOP auto tune
-
-[Service]
-Type=idle
-Environment="TERM=dumb"
-ExecStart=/usr/sbin/powertop --auto-tune
-
-[Install]
-WantedBy=multi-user.target
-EOF
+sudo wget -O /etc/systemd/system/powertop.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/powertop/powertop.service
 # Enable the service
 sudo systemctl daemon-reload
 sudo systemctl enable powertop.service
@@ -42,6 +31,18 @@ sudo systemctl start powertop.service
 
 # NFS Server - 15%-30% faster than SAMBA/SMB shares
 sudo apt -y install nfs-server
+
+
+# Remote Desktop share - access your local desktop session remotely within your LAN (use VPN outside LAN)
+sudo apt -y install x11vnc
+sudo apt -y install xrdp
+## Get xrdp.ini config with desktop share via x11vnc enabled
+sudo wget -O /etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/guacamole/xrdp.ini
+## Autostart x11vnc at boot via systemd service file (only for x11vnc as xrdp already installed its systemd service during install)
+sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/guacamole/x11vnc.service
+sudo systemctl daemon-reload
+sudo systemctl enable x11vnc
+sudo systemctl start x11vnc
 
 echo "========================================================================="
 echo "                                                                         "
