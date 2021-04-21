@@ -20,7 +20,7 @@ Between btrfs disks, if your data is in a subvolume, create a read-only snapshot
 Then send it to the destination:\
 `sudo btrfs send /media/myname/usbdrive/mysubvol | sudo btrfs receive /mnt/disks/data1`\
 If you are paranoid, verify the data is identical by doing a dryrun with rsync (nothing will be modified) to list files that are missing/different:\
-`rsync -rvnc --delete ${SOURCE}/ ${DEST}`
+`rsync -rvnc --delete ${SOURCE}/ ${DEST}` more info in the [rsync manpage](https://linux.die.net/man/1/rsync). 
 
 #### 1.2 Move files within your filesystem
 To move files within a subvolume, copy them first, note this action will be instant on btrfs! Files won't be physically moved:\
