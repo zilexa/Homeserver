@@ -37,9 +37,9 @@ sudo apt -y install nfs-server
 sudo apt -y install x11vnc
 sudo apt -y install xrdp
 ## Get xrdp.ini config with desktop share via x11vnc enabled
-sudo wget -O /etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/guacamole/xrdp.ini
+sudo wget -O /etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/xrdp.ini
 ## Autostart x11vnc at boot via systemd service file (only for x11vnc as xrdp already installed its systemd service during install)
-sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/guacamole/x11vnc.service
+sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/x11vnc.service
 sudo systemctl daemon-reload
 sudo systemctl enable x11vnc
 sudo systemctl start x11vnc
@@ -49,8 +49,8 @@ echo "                                                                         "
 echo "               The following tools have been installed:                  "
 echo "                                                                         "
 echo "                SSH - secure terminal & sftp connection                  "
-echo "           POWERTOP - to optimise power management automatically         "
-echo "               A systemd service to run Powertop at boot                 "
+echo "           X11VNC & XRDP - fastest remote desktop sharing                "
+echo "           POWERTOP - to optimise power management at boot               "
 echo "          LMSENSORS - for the OS to access its diagnostic sensors        "
 echo "           NFS - the fastest network protocol to share folders           "
 echo "                                                                         "
