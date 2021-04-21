@@ -23,12 +23,10 @@ If you are paranoid, verify the data is identical by doing a dryrun (nothing wil
 `rsync -rvnc --delete ${SOURCE}/ ${DEST}`
 
 #### 1.2 Move files within your filesystem
-To move files within a subvolume, copy them first, note this action will be instant on btrfs! Files won't be physically moved: 
+To move files within a subvolume, copy them first, note this action will be instant on btrfs! Files won't be physically moved:\
+`cp --reflink=always /my/source /my/destination`\
 
-`cp --reflink=always /my/source /my/destination`
-
-Then when you are satisfied, delete the source folder/files. 
-Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. Note you can use mv also on subvolumes to rename them. 
+Then when you are satisfied, delete the source folder/files. Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. Note you can use mv also on subvolumes to rename them. 
 
 ## 2 Folder Structure Recommendations
 My folder structure is extremely simple, this supports easy backups and snapshots with a similar file structure. 
