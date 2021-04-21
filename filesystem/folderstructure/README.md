@@ -12,15 +12,15 @@
 - Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your SSD!
 - While copying via the file manager is an option I highly recommend using rsync as it will verify each disk read and write action, to ensure the files are copied correctly. Also it includes options to have 100% identical copy with all of your files metadata and attributes. 
 
-From non-btrfs disk to btrfs disk (For a GUI, install the Grsync app: `sudo apt install grsync`):
-`nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
+From non-btrfs disk to btrfs disk (For a GUI, install the Grsync app: `sudo apt install grsync`):\
+`nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`\
 
-Between btrfs disks, if your data is in a subvolume, create a read-only snapshot first: 
-`sudo btrfs subvolume snapshot -r /media/myname/usbdrive/mysubvol /media/myname/usbdrive/mysnapshot`
-Then send it to the destination: 
-`sudo btrfs send /media/myname/usbdrive/mysubvol | sudo btrfs receive /mnt/disks/data1`
-If you are paranoid, verify the data is identical by doing a dryrun (nothing will be modified) and list files that are missing/different: 
-`rsync -rvnc --delete ${SOURCE}/ ${DEST}`
+Between btrfs disks, if your data is in a subvolume, create a read-only snapshot first:\
+`sudo btrfs subvolume snapshot -r /media/myname/usbdrive/mysubvol /media/myname/usbdrive/mysnapshot`\
+Then send it to the destination:\
+`sudo btrfs send /media/myname/usbdrive/mysubvol | sudo btrfs receive /mnt/disks/data1`\
+If you are paranoid, verify the data is identical by doing a dryrun (nothing will be modified) and list files that are missing/different:\
+`rsync -rvnc --delete ${SOURCE}/ ${DEST}
 
 #### 1.2 Move files within your filesystem
 To move files within a subvolume, copy them first, note this action will be instant on btrfs! Files won't be physically moved: 
