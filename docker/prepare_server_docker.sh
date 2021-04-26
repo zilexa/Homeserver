@@ -1,15 +1,12 @@
 #!/bin/bash
 # See https://github.com/zilexa/Homeserver
-## Before you run this script, your filesystem needs to be configured !!
-## After you run this script, you can run docker-compose.yml and enjoy your server!
 sudo apt -y update
 # ___________________
-# Create folder on docker subvolume to store system config files.
+# System files go here
+sudo mkdir -p $HOME/docker/HOST/system/etc
 # these files will be symlinked back to /system/etc.
 # ___________________
-## This way you have a single place that contains files that deviate from clean OS install.
-## This way you have 1 single place with your entire server configuration + docker setup + container volumes. 
-sudo mkdir -p $HOME/docker/HOST/system/etc
+## This way, 1 folder ($HOME/docker) contains system config, docker config and container volumes. 
 
 # ____________________
 # Install server tools
@@ -56,18 +53,18 @@ sudo systemctl start x11vnc
 
 # Enable system to send emails without using postfix (heavy)
 sudo apt -y install msmtp s-nail
+# link sendmail to msmtp
 sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
 sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
-## Get configuration file to setup external smtp provider
-sudo wget -O $HOME/docker/HOST/system/etc/msmtprc
-## Get configuration file to link sendmail to msmtp
-sudo wget -O $HOME/docker/HOST/system/etc/mail.rc
-## Apply permissions and link to /etc/system
-sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
-sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
+sudo echo "set mta=/usr/bin/msmtp" | sudo tee -a $HOME/docker/HOST/system/etc/mail.rc
+## Get simplest example config file for your external SMTP provider
+sudo wget -O $HOME/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/msmtprc
+# Link files to system/etc
 sudo ln -s $HOME/docker/HOST/system/etc/msmtprc /etc/msmtprc
 sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
-
+## Apply permissions
+sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
+sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
 
 echo "========================================================================="
 echo "                                                                         "
@@ -78,6 +75,7 @@ echo "           X11VNC & XRDP - fastest remote desktop sharing                "
 echo "           POWERTOP - to optimise power management at boot               "
 echo "          LMSENSORS - for the OS to access its diagnostic sensors        "
 echo "           NFS - the fastest network protocol to share folders           "
+echo "           MSMTP - to allow the system to send emails                    " 
 echo "                                                                         "
 echo "========================================================================="
 echo "to configure NFSv4.2 with server-side copy:
