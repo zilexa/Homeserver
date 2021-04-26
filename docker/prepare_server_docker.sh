@@ -1,31 +1,37 @@
 #!/bin/bash
-## Before you run this script, your filesystem (the docker subvolume part) needs to be configured !!
-## After you run this script, you can run docker-compose.yml and enjoy your server!
-#
 # See https://github.com/zilexa/Homeserver
+## Before you run this script, your filesystem needs to be configured !!
+## After you run this script, you can run docker-compose.yml and enjoy your server!
 sudo apt -y update
+# ___________________
+# Create folder on docker subvolume to store system config files.
+# these files will be symlinked back to /system/etc.
+# ___________________
+## This way you have a single place that contains files that deviate from clean OS install.
+## This way you have 1 single place with your entire server configuration + docker setup + container volumes. 
+sudo mkdir -p $HOME/docker/HOST/system/etc
+
 # ____________________
 # Install server tools
 # ____________________
-# SSH
+# SSH - remote terminal & SFTP
 sudo apt -y install ssh
 sudo systemctl enable --now ssh
-# firewall of Ubuntu is disabled by default, I keep it like that but do add the rule in case fw is activated in the future.
 sudo ufw allow ssh 
 
-# Install lm-sensors
+# Install lm-sensors - required to read out temperature sensors
 sudo apt install lm-sensors
 
-# Install Powertop
+# Install Powertop - required to autotune power management
 sudo apt -y install powertop
-# Create a service file to run powertop --auto-tune at boot
+## Create a service file to run powertop --auto-tune at boot
 sudo wget -O /etc/systemd/system/powertop.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/powertop/powertop.service
-# Enable the service
+## Enable the service
 sudo systemctl daemon-reload
 sudo systemctl enable powertop.service
-# Tune system now
+## Tune system now
 sudo powertop --auto-tune
-# Start the service
+## Start the service
 sudo systemctl start powertop.service
 
 
@@ -33,16 +39,35 @@ sudo systemctl start powertop.service
 sudo apt -y install nfs-server
 
 
-# Remote Desktop share - access your local desktop session remotely within your LAN (use VPN outside LAN)
+# Enable sharing desktop remotely - xRDP is faster than VNC but requires x11vnc to share current local desktop session
 sudo apt -y install x11vnc
 sudo apt -y install xrdp
 ## Get xrdp.ini config with desktop share via x11vnc enabled
-sudo wget -O /etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/xrdp.ini
+sudo wget -O $HOME/docker/HOST/system/etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/xrdp.ini
+# link the system file to the system folder
+sudo rm /etc/xrdp/xrdp.ini
+sudo ln -s $HOME/docker/HOST/system/etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
+
 ## Autostart x11vnc at boot via systemd service file (only for x11vnc as xrdp already installed its systemd service during install)
 sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/x11vnc.service
 sudo systemctl daemon-reload
 sudo systemctl enable x11vnc
 sudo systemctl start x11vnc
+
+# Enable system to send emails without using postfix (heavy)
+sudo apt -y install msmtp s-nail
+sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
+sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
+## Get configuration file to setup external smtp provider
+sudo wget -O $HOME/docker/HOST/system/etc/msmtprc
+## Get configuration file to link sendmail to msmtp
+sudo wget -O $HOME/docker/HOST/system/etc/mail.rc
+## Apply permissions and link to /etc/system
+sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
+sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
+sudo ln -s $HOME/docker/HOST/system/etc/msmtprc /etc/msmtprc
+sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
+
 
 echo "========================================================================="
 echo "                                                                         "
