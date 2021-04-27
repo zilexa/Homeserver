@@ -22,7 +22,19 @@ sudo apt install lm-sensors
 # Install Powertop - required to autotune power management
 sudo apt -y install powertop
 ## Create a service file to run powertop --auto-tune at boot
-sudo wget -O /etc/systemd/system/powertop.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/powertop/powertop.service
+sudo tee -a /etc/systemd/system/powertop.service << EOF
+[Unit]
+Description=PowerTOP auto tune
+
+[Service]
+Type=idle
+Environment="TERM=dumb"
+ExecStart=/usr/sbin/powertop --auto-tune
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 ## Enable the service
 sudo systemctl daemon-reload
 sudo systemctl enable powertop.service
