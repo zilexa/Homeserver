@@ -33,11 +33,11 @@ If you have an understanding of Docker containerization and docker-compose to se
 &nbsp;
 ## The Docker Compose Guide 
 ### Step 1 - Prepare Docker
-A prep script, containing lots of info I gathered/learned via trial&error, can save you a lot of time. 
+The [PREP_SERVER+DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script, containing lots of info I gathered/learned via trial&error, can save you a lot of time. 
 Go through the script and execute what you need manually, or download and execute it: 
 ```
 cd Downloads
-wget https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/prepare_server_docker.sh
+wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prepare-server-docker.sh
 bash prepare_server_docker.sh
 ```
 What the script will do for you, automatically: 
