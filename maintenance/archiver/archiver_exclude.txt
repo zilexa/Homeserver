@@ -1,5 +1,0 @@
-.snapshots/**
-.filerun.thumbnails/**
-.filerun.trash/**
-digikam-db/**
-.stignore
