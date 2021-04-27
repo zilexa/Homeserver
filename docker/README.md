@@ -38,7 +38,7 @@ Go through the script and execute what you need manually, or download and execut
 ```
 cd Downloads
 wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prepare-server-docker.sh
-bash prepare_server_docker.sh
+bash prepare-server-docker.sh
 ```
 What the script will do for you, automatically: 
   - Set permissions (root only) to your $HOME/docker folder and create specific files and folders required for Filerun to run. 
