@@ -1,5 +1,5 @@
 #!/bin/bash
-# See https://github.com/zilexa/Homeserver
+# PREPARE FILESYSTEM & FOLDERSTRUCTURE FIRST! GO TO https://github.com/zilexa/Homeserver/tree/master/filesystem
 sudo apt -y update
 # ___________________
 # System files go here
