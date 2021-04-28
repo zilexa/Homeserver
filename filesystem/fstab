@@ -9,14 +9,14 @@
 # Mount System disk ~ subvolumes
 #--------------------------------
 # Mount root subvolume @docker
-UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home/asterix/docker  btrfs   defaults,noatime,compress=zstd:1,subvol=@docker 0       2
+UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home/asterix/docker  btrfs   defaults,noatime,subvol=@docker 0       2
 #
 # Mount DATA disks
 # ----------------- 
 UUID=!ADD YOUR CACHE SSD UUID HERE! /mnt/disks/cache btrfs defaults,noatime,compress=zstd:3 0 0
-UUID=!ADD YOUR DATA DISK1 UUID HERE! /mnt/disks/data1 btrfs defaults,noatime,compress=zstd:8 0 0
-UUID=!ADD YOUR DATA DISK2 UUID HERE! /mnt/disks/data2 btrfs defaults,noatime,compress=zstd:8 0 0
-UUID=!ADD YOUR DATA DISK3 UUID HERE! /mnt/disks/data3 btrfs defaults,noatime,compress=zstd:8 0 0
+UUID=!ADD YOUR DATA DISK1 UUID HERE! /mnt/disks/data1 btrfs defaults,noatime,compress=zstd:5 0 0
+UUID=!ADD YOUR DATA DISK2 UUID HERE! /mnt/disks/data2 btrfs defaults,noatime,compress=zstd:5 0 0
+UUID=!ADD YOUR DATA DISK3 UUID HERE! /mnt/disks/data3 btrfs defaults,noatime,compress=zstd:5 0 0
 #
 # MergerFS ~ POOL & pool-archive
 # ------------------------------
@@ -33,7 +33,7 @@ UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 ext4 defaults,noatime 
 # Mount BACKUP disk(s) ~ for regular backups
 # ------------------------------------------------
 # No need to mount at boot/have always mounted (commented out), it will be temporarily mounted by backup.sh. Do add the UUID, for your reference!
-# UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs defaults,noatime,compress=zstd:8 0 0
+# UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs defaults,noatime,compress=zstd:5 0 0
 #
 #
 # NFS ~ home network shares  
