@@ -4,11 +4,10 @@
 ### Note this will delete stopped containers and everything linked to them.  
 #  
 # CHANGELOG 2021-04-28
+## REMOVED: Watchtower. Replaced with Pullio bash script. For a weekly update check, running a daemon like Watchtower makes no sense. 
 ## CHANGED: VPN-proxy back to Frankfurt, for some reason Swiss doesn't work, the server TLS certificate is outdated. 
 ## REPLACED IMAGE: QBittorrent image with the one from Hotio because it has unrar and doesn't create files with root-only access.
 ## REPLACED ALL MEDIA RELATED IMAGES: all images are now from Hotio.
-## CHANGED: Watchtower variables + added labels to all containers to get notified of updates, without updating them automatically. 
-## CHANGED: Watchtower will update automatically containers that miss the label, currently only Jackett/Sonarr/Radarr/Lidarr/Bazarr. 
 ## CHANGED: Scrutiny requires a yaml config file to recognise NVME drives. see my github for an example. 
 ## CHANGED: Ports of VPN-proxy to allow access to QBittorrent as it listens on a different port for the webUI.  
 #
@@ -45,30 +44,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/portainer/data:/data
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
-##____________________ Watchtower [Management/Updates]
-  watchtower:
-    container_name: watchtower
-    image: containrrr/watchtower
-    restart: always
-    networks: 
-      - management
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      TZ: $TZ
-      WATCHTOWER_SCHEDULE: "0 0 * * 7" #  every sunday at midnight, see https://crontab.guru
-      WATCHTOWER_CLEANUP: 'true'
-      WATCHTOWER_LABEL_ENABLE: 'true'
-      WATCHTOWER_NOTIFICATIONS: email
-      WATCHTOWER_NOTIFICATION_EMAIL_FROM: $EMAIL
-      WATCHTOWER_NOTIFICATION_EMAIL_TO: $RECIPIENT
-      WATCHTOWER_NOTIFICATION_EMAIL_SERVER: $SMTP
-      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT: 587
-      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER: $SMTPUSER
-      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD: $SMTPPASS
-      WATCHTOWER_NOTIFICATION_EMAIL_DELAY: 2
-
+      org.hotio.pullio.notify: 'true'
+##
 ##_____________________ Heimdall [Management/HOMEPAGE] 
   organizr:
     container_name: organizr
@@ -85,7 +62,7 @@ services:
     environment:
       fpm: 'true'
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ Guacamole [Management/remote-desktop]
   guacamole:
@@ -101,7 +78,7 @@ services:
     environment:
       EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ Scrutiny [Management/monitoring]
   scrutiny:
@@ -132,7 +109,7 @@ services:
       - /run/udev:/run/udev:ro
       - $DOCKERDIR/scrutiny/config:/config
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##
 ##______NETWORK_______
@@ -146,7 +123,7 @@ services:
        - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
        - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
@@ -160,7 +137,7 @@ services:
       - 5335:53/tcp
       - 5335:53/udp
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ Unifi Controller [NETWORK/Wifi]
   unifi:
@@ -182,7 +159,7 @@ services:
       - 8443:8443 #to access webUI
       - 1900:1900/udp #to auto-discover this Controller in your app
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##
 ##________CLOUD________
@@ -203,7 +180,8 @@ services:
       caddy.email: $EMAIL
       caddy.log: ""
       #caddy.log.output: file /data/access.log
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+    labels: 
+      org.hotio.pullio.notify: 'true'
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
   firefox-syncserver:
@@ -225,7 +203,7 @@ services:
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##_____________________ Bitwarden [CLOUD/Password-manager] 
   bitwarden:
     image: bitwardenrs/server:latest
@@ -250,7 +228,7 @@ services:
       caddy.header.X-Content-Type-Options: "none"
       caddy.reverse_proxy_1: "/notifications/hub/negotiate {{upstreams 80}}"
       caddy.reverse_proxy_2: "/notifications/hub {{upstreams 3012}}"
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ Syncthing [CLOUD/Sync]
   syncthing:
@@ -274,7 +252,7 @@ services:
     labels:
       caddy: sync.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 8384}}"
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
     image: afian/filerun
@@ -314,7 +292,7 @@ services:
       caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
       caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
       caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
     image: mariadb:10.1
@@ -329,8 +307,6 @@ services:
       MYSQL_DATABASE: filerundb
     volumes:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
-    labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##____________________ FileRun Tikaserver [CLOUD/FileRun/tika]
   filerun-tika:
     image: logicalspark/docker-tikaserver
@@ -338,8 +314,8 @@ services:
     restart: always
     networks:
       - filerun
-    labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+    labels:
+      org.hotio.pullio.notify: 'true'
 ##____________________ FileRun ElasticSearch [CLOUD/FileRun/search]
   filerun-search:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
@@ -358,8 +334,8 @@ services:
     mem_limit: 1g
     volumes:
       - $DOCKERDIR/filerun/esearch:/usr/share/elasticsearch/data
-    labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+    labels:
+      org.hotio.pullio.notify: 'true'
 ##
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
@@ -386,7 +362,7 @@ services:
       caddy.file_server: ""
       caddy.encode: gzip
       caddy.header.X-Content-Type-Options: "nosniff"
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##
 ##________MEDIA________
@@ -412,7 +388,7 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
   vpn-proxy:
@@ -460,7 +436,7 @@ services:
     ports:
       - 9090:8080 #Qbittorrent webUI
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ Transmission [MEDIA/download-client]
   qbittorrent:
@@ -478,7 +454,8 @@ services:
       - $DOCKERDIR/qbittorrent:/config
       - $DATAPOOL/Media/incoming:/Media/incoming
     labels: 
-      com.centurylinklabs.watchtower.monitor-only: 'true'
+      org.hotio.pullio.notify: 'true'
+      org.hotio.pullio.update: 'true'
 ##
 ##____________________ Unpackerr [MEDIA/download-unpack]
 #  unpackerr:
@@ -526,7 +503,10 @@ services:
       #- HARVESTER_ENDPOINT=https://127.0.0.1:5000/token
     ports:
       - 8191:8191
-    restart: unless-stopped 
+    restart: unless-stopped
+    labels: 
+      org.hotio.pullio.notify: 'true'
+      org.hotio.pullio.update: 'true'
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
@@ -547,6 +527,9 @@ services:
       - $DATAPOOL/Media:/Media
     ports:
       - 8989:8989
+    labels: 
+      org.hotio.pullio.notify: 'true'
+      org.hotio.pullio.update: 'true'
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
@@ -567,6 +550,9 @@ services:
       - $DATAPOOL/Media:/Media
     ports:
       - 7878:7878
+    labels: 
+      org.hotio.pullio.notify: 'true'
+      org.hotio.pullio.update: 'true'
 ##
 ##____________________ Bazarr [MEDIA/subtitles]
   bazarr:
@@ -588,6 +574,9 @@ services:
       - $DATAPOOL/Media:/Media
     ports:
       - 6767:6767
+    labels: 
+      org.hotio.pullio.notify: 'true'
+      org.hotio.pullio.update: 'true'
 ##
 ##____________________ Lidarr [MEDIA/PVR-Music]
   lidarr:
@@ -608,6 +597,9 @@ services:
       - $DATAPOOL/Media:/Media
     ports:
       - 8686:8686
+    labels: 
+      org.hotio.pullio.notify: 'true'
+      org.hotio.pullio.update: 'true'
 #
 #
 networks:
