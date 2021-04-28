@@ -14,35 +14,34 @@ Contents:
   - [Maintenance & scheduling](https://github.com/zilexa/Homeserver/tree/master/maintenance#maintenance--scheduling)
 
 ## The 3-tier Backup Strategy outline
-### 1. disk protection
+### 1. disk protection 
 To protect against disk failure, snapraid is used to protect essential data & largest data folders. 
-  - It will sync every 6 hours: you can loose max 6 hours of data if a single disk fails. You can run it more or less frequently.
-  - You can easily protect 4 disks with just 1 parity disk, because the parity data uses much less space than your actual data. 
-    - The concept of parity simplified: assign a number to each data disk sector, like "3" to disk1-sector1 and "4" to disk2-sector1. Calculate parity: 3+4=7. Now if disk1 fails, you can restore it from parity, since 7-4=3.
-    - The downside of scheduled parity versus realtime (like raid1 or like duplication): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). Snapraid-btrfs leverages the BTRFS filesystem to overcome that issue by creating a read-only snapshot and create parity of that instead. Now, the live data can be modified between snapraid runs, but you will always be able to restore a disk. This is taken care of by `snapraid-btrfs` wrapper of `snapraid`. 
+  - It does not duplicate files to a backup location, instead it will calculate parity for the selected subvolumes. 
+  - This way with a single parity disk you can protect 4 data disks against single-disk failure. 
+  - Parity is updated/synced on a schedule that you choose (once a day at night or every 6 hrs). 
+  - The downside of scheduled parity versus realtime (like traditional raid): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). Snapraid-btrfs leverages the BTRFS filesystem to overcome that issue by creating a read-only snapshot and create parity of that instead of the live filesytem. Now, the live data can be modified between snapraid runs, but you will always be able to restore a subvolume to its latest state. This is taken care of by `snapraid-btrfs` wrapper of `snapraid`.
+  - The `snapraid-btrfs-runner` script wraps around that to send email notifications.  
+  - LIMITAION: you can only configure 1 subvolume per disk. If you store /Media and /Users on the same disk, the logical choice would be /Users. I now have disks that only contain /Media and disks that only contain /Users. This way Snapraid can protect them all. 
 
 ### 2. Timeline backups
-The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives such as Snapper are more deeply integrated and too limiting for backup purposes. Timeshift is very user friendly, mac-like Timemachine (installed and configured via my [post-install script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script) for laptops and desktops) but not suited to backup personal data. 
-With btrbk: 
-- The system subvolumes (`/`, `/docker`, `/home`) and subvolumes on cache/data disks (`/Users`, `/Music`) will be snapshotted with a chosen retention policy on their respective disks in a root folder (for example /mnt/disks/data1/.backups). 
+The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives: Snapper, does not do backups, only snapshots and creates them against logic within the snapshotted subvolume. Timeshift is very user friendly but again only snapshots, does not take care of backing up to other location. Timeshift is recommended for laptops and personal computers.  
+With [btrbk](https://digint.ch/btrbk): 
+- The system subvolumes (`/`, `/docker`, `/home`) and subvolumes on data disks (`/Users`) can be snapshotted with a chosen retention policy on their respective disks in a root folder (for example `/mnt/disks/data1/.timeline`). 
 - In addition, using BTRFS native send/receive mechanism the snapshots are efficiently and securely copied to a seperate backup disk (`mnt/disks/backup1`).
-- For both system subvolume backups and Users data backup, you have a nice time-line like overview of snapshots (folders) on the backup disk.
+- For all snapshots/backups, you have a nice timeline-like overview of snapshots (folders) on the backup disk and in the `.timeline` folder of each disk. 
 - btrbk will manage the retention policy and cleanup of both snapshots and backups. 
-- Periodically (once a month or so), we connect a btrfs formatted usb-disk with label `backup2` and leave it connected for the night: btrbk will notice and send backups to both internal `backup1` and external `backup2`. How cool is that!
+- Periodically, connect a USB disk (`backup2`, `backup3`), btrbk will notice and immediately send all backups from the backup disk to the connected disk. This is called archiving. Note the UUID of the connected USB disk needs to be configured in the system first.
 
 ### 3. Online backup
 We can use other tools to periodically send encrypted versions of snapshots to a cloud storage. I haven't figured this part out yet, but I did buy a pcloud.com lifetime subscription for €245 during december discounts (recommended). Most likely, this will be done via a docker container (duplicacy or duplicati or similar). 
 
 ### 4. Replacing disks, restoring data
+- btrfs has its own `replace` command that should be used to replace disks, unless the disk has failed. 
 - In case of disk failure:  insert a replacement disk and restore the data ([Snapraid manual section 4.4](https://www.snapraid.it/manual)) on it easily via snapraid. You can also use snapraid to restore individual files ([Snapraid manual section 4.3](https://www.snapraid.it/manual)) Use `snapraid-btrfs fix` instead of `snapraid fix` ([read here](https://github.com/automorphism88/snapraid-btrfs#q-can-i-restore-a-previous-snapshot)) unless your last sync was done via the latter.  
-- To access the timeline backup: Make a MergerFS mount point at `/mnt/pool-backup` combining `/mnt/disks/backup1/cache.users`, `/mnt/disks/backup1/data1.users`, `/mnt/disks/backup1/data2.users` to have a single Users folder in `mnt/pool-backup/` with your entire timeline of backups and copy files from it :)
+- To access all the disks timeline backups in 1 overview: create a MergerFS mount point (`/mnt/pool-backup`) combining `/mnt/disks/backup1/cache.users`, `/mnt/disks/backup1/data1.users`, `/mnt/disks/backup1/data2.users` to have a single Users folder in `mnt/pool-backup/` with your entire timeline of backups and copy files from it :)
 - Or btrfs send/receive an entire snapshot of a specific day in the past from `backup1` to the corresponding disks and rename it to replace the live subvolume. 
 
-_**In conclusion: (1) we protect entire disks via snapraid (if you use only a single subvolume per disk) and on top of that (2) backup important subvolumes to a seperate internal disk and (3) periodically to an external disk. Besides that we upload encrypted backups to a 3rd party cloud service**_
-
-**The limitation of snapraid**: Although we leverage BTRFS filesystem snapshot feature to always allow restoring from parity, snapraid does not support btrfs subvolumes: it thinks they are seperate disks. Until Snapraid supports subvolumes properly, you can only include [1 subvolume per disk](https://github.com/automorphism88/snapraid-btrfs/issues/15#issuecomment-805783287).\
-I choose `/Users`, to protect that data via snapraid & via backups & via online backup. This means `/TV` is not protected in any way, since it is most likely too big to backup to your backup disk, unlike /Music.\
-Make a choice that makes sense for your situation. For me, /TV contains expendable (can be redownloaded) data, it's a pity it cannot be protected, but it's also not a big issue. 
+_**In conclusion: (1) protect all subvolumes (`/Media` and `/Users`) using parity via SnapRAID-btrfs (2) backup non-expendable subvolumes (`/Users`) to a seperate internal disk and (3) periodically archive backups to an external disk automatically and 4) we upload encrypted backups (`/Users`) to a 3rd party cloud service**_
 
 &nbsp;
 
