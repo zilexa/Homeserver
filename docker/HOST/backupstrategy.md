@@ -1,10 +1,11 @@
 Contents: 
 - The 3-tier Backup Strategy outline
-  1. [Disk protection](https://github.com/zilexa/Homeserver/tree/master/docker/HOST#1-disk-protection)
-  2. [Timeline backups](https://github.com/zilexa/Homeserver/tree/master/maintenance#2-timeline-backups)
-  3. [Online backup](https://github.com/zilexa/Homeserver/tree/master/maintenance#3-online-backup)
-  4. [Replacing disks, restoring data](https://github.com/zilexa/Homeserver/tree/master/maintenance#4-replacing-disks-restoring-data)
-  5. 
+  1. [Disk protection](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/backupstrategy.md#1-disk-protection)
+  2. [Timeline backups](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/backupstrategy.md#2-timeline-backups)
+  3. [Online backup](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/backupstrategy.md#3-online-backup)
+  4. [Replacing disks, restoring data](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/backupstrategy.md#4-replacing-disks-restoring-data)
+
+
 ## The 3-tier Backup Strategy outline
 ### 1. disk protection 
 To protect against disk failure, snapraid is used to protect essential data & largest data folders. 
