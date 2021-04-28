@@ -1,5 +1,4 @@
 Contents: 
-- The 3-tier Backup Strategy outline
   1. [Disk protection](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/backupstrategy.md#1-disk-protection)
   2. [Timeline backups](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/backupstrategy.md#2-timeline-backups)
   3. [Online backup](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/backupstrategy.md#3-online-backup)
