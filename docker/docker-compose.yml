@@ -3,17 +3,26 @@
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them.  
 #  
+# CHANGELOG 2021-04-28
+## CHANGED: VPN-proxy back to Frankfurt, for some reason Swiss doesn't work, the server TLS certificate is outdated. 
+## REPLACED IMAGE: QBittorrent image with the one from Hotio because it has unrar and doesn't create files with root-only access.
+## REPLACED ALL MEDIA RELATED IMAGES: all images are now from Hotio.
+## CHANGED: Watchtower variables + added labels to all containers to get notified of updates, without updating them automatically. 
+## CHANGED: Watchtower will update automatically containers that miss the label, currently only Jackett/Sonarr/Radarr/Lidarr/Bazarr. 
+## CHANGED: Scrutiny requires a yaml config file to recognise NVME drives. see my github for an example. 
+## CHANGED: Ports of VPN-proxy to allow access to QBittorrent as it listens on a different port for the webUI.  
+#
 # CHANGELOG 2021-04-13
-# ADDED Guacamole! Now you can open your browser and access the desktop of your server. The image works, still have to test Guacamole. 
-# Removed Transmission as nobody seems to use it anymore, even though it had full Sonarr compatibility, it is riddled with config issues:
+## ADDED Guacamole! Now you can open your browser and access the desktop of your server. The image works, still have to test Guacamole. 
+## Removed Transmission as nobody seems to use it anymore, even though it had full Sonarr compatibility, it is riddled with config issues:
 ## temp folder will never be used with Sonarr/Radarr, making the filesystem optimisations (disabling CoW & seperate subvolume for incomplete dir)
 ## Completely useless, allowing fragmentation. Also, the complete dir is changed during downloading via Sonarr. Devs believe this is all normal behaviour.
-# ADDED QBittorrent, not from Linuxserver as it is 360MB versus this 150MB image. 
+## ADDED QBittorrent, not from Linuxserver as it is 360MB versus this 150MB image. 
 ## ToDO: Will look into using Hotio QFlood image instead, the UI is much nicer but seems to lack important settings to increase disk cache etc.
-# REMOVED unneccessary port binds: 80 for Caddy is not used. Now used for Organizr to access server homepage via url (use your servers /etc/hosts file to set an url). 
+## REMOVED unneccessary port binds: 80 for Caddy is not used. Now used for Organizr to access server homepage via url (use your servers /etc/hosts file to set an url). 
 ## ToDO: Will look into registering https for LAN only, to access all services via https organizr url (not sure if it makes sense to go this far). 
-# CHANGED: pia wireguard vpn to swiss instead of nine eyes Germany.
-# NOTE: I stopped using Syncthing due to this issue (my laptop SSD filled up within 30min): https://forum.syncthing.net/t/problems-with-renamed-directory/16611
+## CHANGED: pia wireguard vpn to swiss instead of nine eyes Germany.
+## NOTE: I stopped using Syncthing due to this issue (my laptop SSD filled up within 30min): https://forum.syncthing.net/t/problems-with-renamed-directory/16611
 ## I might try Resilio instead or see if the dev is helpful to figure out the issue, if it isn't "by design".
 #
 version: "2.3"
@@ -35,7 +44,31 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/portainer/data:/data
-##
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
+##____________________ Watchtower [Management/Updates]
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: always
+    networks: 
+      - management
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: $TZ
+      WATCHTOWER_SCHEDULE: "0 0 * * 7" #  every sunday at midnight, see https://crontab.guru
+      WATCHTOWER_CLEANUP: 'true'
+      WATCHTOWER_LABEL_ENABLE: 'true'
+      WATCHTOWER_NOTIFICATIONS: email
+      WATCHTOWER_NOTIFICATION_EMAIL_FROM: $EMAIL
+      WATCHTOWER_NOTIFICATION_EMAIL_TO: $RECIPIENT
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER: $SMTP
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT: 587
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER: $SMTPUSER
+      WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD: $SMTPPASS
+      WATCHTOWER_NOTIFICATION_EMAIL_DELAY: 2
+
 ##_____________________ Heimdall [Management/HOMEPAGE] 
   organizr:
     container_name: organizr
@@ -50,9 +83,11 @@ services:
     volumes:
       - $DOCKERDIR/organizr:/config
     environment:
-      - fpm=true
+      fpm: 'true'
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
-##____________________ Guacamole [Management/web-desktopsharing]
+##____________________ Guacamole [Management/remote-desktop]
   guacamole:
     container_name: guacamole
     image: oznu/guacamole
@@ -64,7 +99,40 @@ services:
     volumes:
       - $DOCKERDIR/guacamole:/config
     environment:
-      EXTENSIONS: auth-quickconnect
+      EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
+##
+##____________________ Scrutiny [Management/monitoring]
+  scrutiny:
+    container_name: scrutiny
+    image: hotio/scrutiny
+    restart: always
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
+    devices:
+      - "/dev/nvme0n1"
+      - "/dev/nvme1n1"
+      - "/dev/sda"
+      - "/dev/sdb"
+      - "/dev/sdc"
+      - "/dev/sdd"
+      - "/dev/sde" 
+    networks: 
+      - management
+    environment: 
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    ports:
+      - "8001:8080"
+    volumes:
+      - /run/udev:/run/udev:ro
+      - $DOCKERDIR/scrutiny/config:/config
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
 ##
 ##______NETWORK_______
@@ -77,6 +145,8 @@ services:
     volumes:
        - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
        - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
@@ -89,6 +159,8 @@ services:
     ports:
       - 5335:53/tcp
       - 5335:53/udp
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
 ##____________________ Unifi Controller [NETWORK/Wifi]
   unifi:
@@ -105,11 +177,12 @@ services:
     volumes:
       - $DOCKERDIR/unifi/config:/config
     ports:
-      - 10001:10001/udp
-      - 3478:3478/udp
-      - 8080:8080 #to auto-find your APs
-      - 8443:8443
-      #- 1900:1900/udp
+      - 10001:10001/udp #to auto-discover your Access Points
+      - 8080:8080 # Controller communication with Access Points and vice versa
+      - 8443:8443 #to access webUI
+      - 1900:1900/udp #to auto-discover this Controller in your app
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
 ##
 ##________CLOUD________
@@ -124,10 +197,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/caddy/caddy_data:/data
       - $DOCKERDIR/caddy/config:/config
-    labels:
-      caddy.email: $EMAIL
     ports:
       - 443:443
+    labels:
+      caddy.email: $EMAIL
+      caddy.log: ""
+      #caddy.log.output: file /data/access.log
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
   firefox-syncserver:
@@ -149,6 +225,7 @@ services:
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##_____________________ Bitwarden [CLOUD/Password-manager] 
   bitwarden:
     image: bitwardenrs/server:latest
@@ -173,6 +250,7 @@ services:
       caddy.header.X-Content-Type-Options: "none"
       caddy.reverse_proxy_1: "/notifications/hub/negotiate {{upstreams 80}}"
       caddy.reverse_proxy_2: "/notifications/hub {{upstreams 3012}}"
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
 ##____________________ Syncthing [CLOUD/Sync]
   syncthing:
@@ -196,6 +274,7 @@ services:
     labels:
       caddy: sync.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 8384}}"
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
     image: afian/filerun
@@ -231,10 +310,11 @@ services:
       # Required extra headers
       caddy.file_server: ""                                         # required for fileservers
       caddy.encode: gzip                                            # required for fileservers
-      caddy.header.Strict-Transport-Security: '"max-age=31536000;"' # Recommended security hardening for fileservers
+      caddy.header.Strict-Transport-Security: '"max-age=15768000;"' # Recommended security hardening for fileservers
       caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
       caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
       caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
     image: mariadb:10.1
@@ -249,6 +329,8 @@ services:
       MYSQL_DATABASE: filerundb
     volumes:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##____________________ FileRun Tikaserver [CLOUD/FileRun/tika]
   filerun-tika:
     image: logicalspark/docker-tikaserver
@@ -256,6 +338,8 @@ services:
     restart: always
     networks:
       - filerun
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##____________________ FileRun ElasticSearch [CLOUD/FileRun/search]
   filerun-search:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
@@ -274,6 +358,8 @@ services:
     mem_limit: 1g
     volumes:
       - $DOCKERDIR/filerun/esearch:/usr/share/elasticsearch/data
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
@@ -300,13 +386,14 @@ services:
       caddy.file_server: ""
       caddy.encode: gzip
       caddy.header.X-Content-Type-Options: "nosniff"
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
 ##
 ##________MEDIA________
 ##_____________________ Jellyfin [MEDIA/Library] 
   jellyfin:
     container_name: jellyfin
-    image: linuxserver/jellyfin
+    image: hotio/jellyfin
     restart: always
     networks: 
       - media
@@ -314,23 +401,22 @@ services:
       PUID: $PUID
       PGID: $PGID
       TZ: $TZ
-      UMASK_SET: 022 #optional
-    group_add:
-      - 122
+      UMASK_SET: 002 #optional
     volumes:
       - $DOCKERDIR/jellyfin/config:/config
       - $DATAPOOL/Media:/data
     ports:
       - 8096:8096
-      - 8920:8920 #optional
     # Required for Intel QuickSync/VAAPI hardware accelerated video encoding/transcoding
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
 ##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
-  vpn:
-    container_name: VPN-proxy
+  vpn-proxy:
+    container_name: vpn-proxy
     image: thrnz/docker-wireguard-pia
     restart: always
     networks: 
@@ -349,7 +435,7 @@ services:
       #- /dev/net/tun:/dev/net/tun
     environment:
       LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
-      LOC: swiss
+      LOC: de-frankfurt
       USER: $VPN_USER_PIA
       PASS: $VPN_PW_PIA
       #KEEPALIVE: 25
@@ -372,27 +458,48 @@ services:
       timeout: 10s
       retries: 3
     ports:
-      - 9090:9090 #Qbittorrent webUI
+      - 9090:8080 #Qbittorrent webUI
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
 ##
 ##____________________ Transmission [MEDIA/download-client]
   qbittorrent:
-    image: emmercm/qbittorrent:latest
+    image: hotio/qbittorrent
     container_name: qbittorrent
-    network_mode: service:vpn
     depends_on:
-      - vpn
+      - vpn-proxy
+    network_mode: service:vpn-proxy
     restart: always
     environment:
+      PUID: $PUID
+      PGID: $PGID
       TZ: $TZ
     volumes:
-      - $DOCKERDIR/qbittorrent/config:/config
+      - $DOCKERDIR/qbittorrent:/config
       - $DATAPOOL/Media/incoming:/Media/incoming
-      - $DOCKERDIR/qbittorrent/data:/data
+    labels: 
+      com.centurylinklabs.watchtower.monitor-only: 'true'
+##
+##____________________ Unpackerr [MEDIA/download-unpack]
+#  unpackerr:
+#    container_name: unpackerr
+#    image: hotio/unpackerr
+#    networks: 
+#      - media
+#    restart: always
+#    environment:
+#      PUID: $PUID
+#      PGID: $PGID
+#      UMASK: 002
+#      TZ: $TZ
+#    volumes:
+#      - $DOCKERDIR/unpacker/config:/config
+#      - $DATAPOOL/Media:/Media
 ##
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
     container_name: jackett
-    image: linuxserver/jackett
+    image: hotio/jackett
     networks: 
       - media
     depends_on:
@@ -401,10 +508,9 @@ services:
     environment:
       PUID: $PUID
       PGID: $PGID
-      TZ: $TZ
+      UMASK: 002
     volumes:
       - $DOCKERDIR/jackett/config:/config
-      - /etc/localtime:/etc/localtime:ro
       - $DATAPOOL/Media/incoming:/Media/incoming
     ports:
       - 9117:9117
@@ -425,7 +531,7 @@ services:
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
-    image: linuxserver/sonarr:latest
+    image: hotio/sonarr
     networks: 
       - media
     depends_on:
@@ -434,9 +540,9 @@ services:
     environment:
       PUID: $PUID
       PGID: $PGID
+      UMASK: 002
       TZ: $TZ
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - $DOCKERDIR/sonarr/config:/config
       - $DATAPOOL/Media:/Media
     ports:
@@ -445,7 +551,7 @@ services:
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
     container_name: radarr
-    image: linuxserver/radarr
+    image: hotio/radarr
     networks: 
       - media
     depends_on:
@@ -454,18 +560,18 @@ services:
     environment:
       PUID: $PUID
       PGID: $PGID
+      UMASK: 002
       TZ: $TZ
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - $DOCKERDIR/radarr/config:/config
       - $DATAPOOL/Media:/Media
     ports:
       - 7878:7878
 ##
-##____________________ Bazarr [MEDIA/subtitle-proxy for Sonarr&Radarr]
+##____________________ Bazarr [MEDIA/subtitles]
   bazarr:
     container_name: bazarr
-    image: linuxserver/bazarr
+    image: hotio/bazarr
     networks: 
       - media
     depends_on:
@@ -475,6 +581,7 @@ services:
     environment:
       PUID: $PUID
       PGID: $PGID
+      UMASK: 002
       TZ: $TZ
     volumes:
       - $DOCKERDIR/bazarr/config:/config
@@ -485,7 +592,7 @@ services:
 ##____________________ Lidarr [MEDIA/PVR-Music]
   lidarr:
     container_name: lidarr
-    image: linuxserver/lidarr
+    image: hotio/lidarr
     networks: 
       - media
     depends_on:
@@ -494,12 +601,13 @@ services:
     environment:
       PUID: $PUID
       PGID: $PGID
+      UMASK: 002
       TZ: $TZ
     volumes:
       - $DOCKERDIR/lidarr/config:/config
       - $DATAPOOL/Media:/Media
     ports:
-      - 8686::8686
+      - 8686:8686
 #
 #
 networks:
