@@ -1,10 +1,10 @@
 # Server Backup & Maintenance
 
 Contents:
-  - [Prerequisities](https://github.com/zilexa/Homeserver/tree/master/docker#prequisities)
-  - [Snapraid setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#snapraid-setup)
-  - [Backup setup](https://github.com/zilexa/Homeserver/tree/master/maintenance#backup-setup)
-  - [Maintenance & scheduling](https://github.com/zilexa/Homeserver/tree/master/maintenance#maintenance--scheduling)
+  - [Prerequisities](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#prequisities)
+  - [Snapraid setup](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/README.md#snapraid-setup)
+  - [Backup setup](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/README.md#backup-setup)
+  - [Maintenance & scheduling](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/README.md#maintenance--scheduling)
 
 
 # Backup & Maintenance guide
