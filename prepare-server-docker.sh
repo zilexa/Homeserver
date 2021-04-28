@@ -78,6 +78,46 @@ sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
 sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
 sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
 
+# install SnapRAID
+# ----------------
+sudo apt -y install gcc git make
+wget https://github.com/amadvance/snapraid/releases/download/v11.5/snapraid-11.5.tar.gz
+tar xzvf snapraid*.tar.gz
+cd snapraid-11.5/
+./configure
+make
+make check
+make install
+cd $HOME/Downloads
+rm -rf snapraid*
+# Get drive IDs
+#ls -la /dev/disk/by-id/ | grep part1  | cut -d " " -f 11-20
+# get SnapRAID config
+sudo wget -O $HOME/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
+# SnapRAID create path for local content file
+# this part is not finished
+
+# Get snapraid-btrfs script and make it executable
+sudo wget -P /etc https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
+sudo chmod +x /etc/snapraid-btrfs
+
+# Get snapraid-btrfs-runner
+todo 
+
+# Install snapper, required for snapraid-btrfs 
+echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu_20.10/ /' | sudo tee /etc/apt/sources.list.d/filesystems:snapper.list
+curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbuntu_20.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/filesystems_snapper.gpg > /dev/null
+sudo apt -y update
+sudo apt -y install snapper
+sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/snapraid-btrfs/snapper/default
+
+# Install btrbk
+todo
+
+# install nocache - required to move files from pool to pool-nocache with rsync
+# ---------------
+sudo apt -y install nocache
+
 echo "========================================================================="
 echo "                                                                         "
 echo "               The following tools have been installed:                  "
@@ -88,6 +128,8 @@ echo "           POWERTOP - to optimise power management at boot               "
 echo "          LMSENSORS - for the OS to access its diagnostic sensors        "
 echo "           NFS - the fastest network protocol to share folders           "
 echo "           MSMTP - to allow the system to send emails                    " 
+echo "               BTRBK - THE tool to automate backups                      "
+echo "                 SNAPRAID-BTRFS - backup via parity                      "
 echo "                                                                         "
 echo "========================================================================="
 echo "to configure NFSv4.2 with server-side copy:
