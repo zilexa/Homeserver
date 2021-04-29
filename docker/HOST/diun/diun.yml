@@ -1,0 +1,16 @@
+notif:
+  mail:
+    host: 
+    port: 587
+    ssl: false
+    insecureSkipVerify: true
+    username: 
+    password: 
+    from: 
+    to: 
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    watchByDefault: true
+    watchStopped: true
