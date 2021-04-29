@@ -14,20 +14,16 @@ All prequisities have been taken care of by the script from [Step 3:Prepare Serv
 - By storing these files outside of your OS system dir (`etc/system`) you have your entire configuration independent of OS and backupped as a whole (`HOME/docker`). The files are symlinked into the system folder.  
 
 _All you have to do:_
-- If you haven't executed that script, [open the script](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) and execute the commands to install the required tools and obtain the config files, or go back and perform [step 3](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) first. 
+- Make sure you have done [step 3](https://github.com/zilexa/Homeserver/blob/master/docker) first or select the essential parts of the [prepare-server-docker.sh](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script and execute the commands to install the required tools and obtain the config files, or go back and perform first. 
 
 ## Snapraid setup
 #### Step 1: Create snapper config files
 Snapper is unfortunately required for snapraid when using btrfs. A modified default template should be on your system already. You need to create config files (which will be based on the default) one-by-one per subvolume you want to protect. Snapper also requires a root config, which we create but will never use: 
-```sudo snapper create-config /
-sudo snapper -c Users0 create-config /mnt/disks/cache/Users
-sudo snapper -c Users1 create-config /mnt/disks/disk1/Users
-sudo snapper -c Users1 create-config /mnt/disks/disk2/Users
-sudo snapper -c Users1 create-config /mnt/disks/disk3/Users
-```
+`sudo snapper create-config /` \
+Now go ahead and create the Snapper config for each subvolume (max 1 per disk!). For example: `sudo snapper -c data0 create-config /mnt/disks/data0/Media` and `sudo snapper -c data1 create-config /mnt/disks/data1/Users` and `sudo snapper -c data2 create-config /mnt/disks/data2/Users`.
 
 #### Step 2: Adjust snapraid config file
-Open `/etc/snapraid.conf` in an editor and adjust the lines that say "ADJUST THIS.." to your situation. 
+Open `/etc/snapraid.conf` in an editor and adjust the lines that say "ADJUST THIS.." to your situation. Note for each data disk, a snapper-config from the prev step must exist.
 
 #### Step 3: Test the above 2 steps.
 Run `snapraid-btrfs ls` (no sudo!). Notice & verify 3 things: 
@@ -37,23 +33,12 @@ Run `snapraid-btrfs ls` (no sudo!). Notice & verify 3 things:
 
 #### Step 4: Run the first sync!
 Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
-- If you have big file changes, you can run `snapraid sync`, now you will sync the live data instead of the snapshots but it will be much more efficient because UUIDs can be used. Make sure you run a `snapraid-btrfs sync` after it finished (should be quick). 
 
-The maintenance script will run this command every 6 hours (you can change it). `snapraid-btrfs cleanup` will run afterwards to remove all snapshots except for the last one. 
-
-#### Step 5: (optional) Install the Runner script
+#### Step 5: Configure mail notifications
 A script exists that takes care of running the sync command, scrub data (verifies parity file), clean up all but the latest snapshots, log everything to file and send email notifications when done. 
-Follow the steps to get the script, it will run from $HOME/docker/HOST/snapraid-btrfs-runner. 
-```
-cd $HOME/docker/HOST
-wget https://github.com/fmoledina/snapraid-btrfs-runner/archive/refs/heads/master.zip
-unzip master
-rm master.zip
-mv snapraid-btrfs-runner-master snapraid-btrfs-runner
-```
-Now modify the conf file, section `[email]` to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and add the smtp provider server details:\
-`nano snapraid-btrfs-runner/snapraid-btrfs-runner.conf`, save changes with CTRL+C and CTRL+O.\
-Run it to test it works: `python3 snapraid-btrfs-runner.py`
+- Modify `$HOME/docker/HOST/snapraid-btrfs-runner` section `[email]` to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and add the smtp provider server details:\
+Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snapraid-btrfs sync just like in step 3 and send you an email when done. 
+- Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` command for `s-nail` otherwise you need to do a whole lot more configuration (Postfix) to support `mail` on your system. 
 
 &nbsp;
 
