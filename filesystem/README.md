@@ -1,4 +1,4 @@
-## A Modern Homeserver _filesystem_
+## STEP 1: A Modern Homeserver _filesystem_
 
 # SYNOPSIS
 Technologies used: 
