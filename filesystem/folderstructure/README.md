@@ -1,4 +1,4 @@
-# Migrate data to your server & Folder Structure Recommendations
+# STEP 2: Folder Structure Recommendations & Data Migration
 
 **Contents**
 1. [Data Migration](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
