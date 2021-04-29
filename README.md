@@ -38,8 +38,8 @@ Move files to your server data pool and [create your folder structure](https://g
 ### Step 3. Prepare server and docker
 Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for specific docker services. Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**_
 
-### Step 4. Maintenance
-Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenance) of your server such as cleanup,  backup and disks protection tasks. 
+### Step 4. Configure & schedule Backups & Maintenance
+Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/docker/HOST) of your server such as cleanup, backup and disks protection tasks. 
 
 ### Step 5. Local network shares
 [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
