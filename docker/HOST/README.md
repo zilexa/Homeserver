@@ -9,7 +9,7 @@ Contents:
 
 # Backup & Maintenance guide
 ### Prequisities
-All prequisities have been taken care of by the script from [Step 3:Prepare Server & Docker](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh).\
+All prequisities have been taken care of by the script from [Step 3:Prepare Server & Docker](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh).
 - This script installed the tools (btrbk for backups, snapraid/snapraid-btrfs/snapraid-btrf-runner for backups and additional tools) but more importantly also added configuration files (based on the tools default example) that are almost ready to use. The script downloaded them from this folder to your `$HOME/docker/HOST/` folder. 
 - By storing these files outside of your OS system dir (`etc/system`) you have your entire configuration independent of OS and backupped as a whole (`HOME/docker`). The files are symlinked into the system folder.  
 
