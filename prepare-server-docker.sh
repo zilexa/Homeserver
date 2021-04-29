@@ -95,14 +95,15 @@ rm -rf snapraid*
 # get SnapRAID config
 sudo wget -O $HOME/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
 # SnapRAID create path for local content file
-# this part is not finished
-
+# NOT FINISHED YET
 # Get snapraid-btrfs script and make it executable
 sudo wget -P /etc https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
 sudo chmod +x /etc/snapraid-btrfs
-
 # Get snapraid-btrfs-runner
-todo 
+wget -O $HOME/docker/HOST/snapraid/master.zip https://github.com/fmoledina/snapraid-btrfs-runner/archive/refs/heads/master.zip
+unzip master.zip
+rm master.zip
+mv snapraid-btrfs-runner-master snapraid-btrfs-runner
 
 # Install snapper, required for snapraid-btrfs 
 echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu_20.10/ /' | sudo tee /etc/apt/sources.list.d/filesystems:snapper.list
