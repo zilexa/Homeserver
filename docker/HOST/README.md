@@ -1,5 +1,5 @@
 # Server Backup & Maintenance
-# SYNOPSIS: [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/backupstrategy.md)
+## SYNOPSIS: [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/backupstrategy.md)
 
 Contents:
   - [Prerequisities](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#prequisities)
