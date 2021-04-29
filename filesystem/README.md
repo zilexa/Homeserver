@@ -1,6 +1,6 @@
-## STEP 1: A Modern Homeserver _filesystem_
+# STEP 1: A Modern Homeserver _filesystem_
 
-# SYNOPSIS
+## SYNOPSIS
 Technologies used: 
 - [BtrFS](https://linuxhint.com/btrfs-filesystem-beginner-guide/), an advanced filesystem. 
 - [MergerFS](https://github.com/trapexit/mergerfs#description) Allows to add a fast cache to your drive pool. Explaination here: [Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching). This way, [you can choose to use](https://github.com/zilexa/Homeserver/blob/master/Hardware%20recommendations.md) small 2.5" disk drives with very low power consumption and don't worry about speed (disk speed is not very important in a homeserver anyway).  
