@@ -71,12 +71,12 @@ sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
 sudo echo "set mta=/usr/bin/msmtp" | sudo tee -a $HOME/docker/HOST/system/etc/mail.rc
 ## Get simplest example config file for your external SMTP provider
 sudo wget -O $HOME/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/msmtprc
-# Link files to system/etc
-sudo ln -s $HOME/docker/HOST/system/etc/msmtprc /etc/msmtprc
-sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
 ## Apply permissions
 sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
 sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
+# Link conf files into system/etc
+sudo ln -s $HOME/docker/HOST/system/etc/msmtprc /etc/msmtprc
+sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
 
 # install SnapRAID
 # ----------------
