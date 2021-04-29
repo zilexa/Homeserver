@@ -190,6 +190,22 @@ sudo wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserv
 # Get docker compose file
 sudo wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
 
+# ______________________________________________________________
+# Install Diun (Docker Image Update Notifier)
+# --------------------------------------------------------------
+cd $HOME/Downloads
+wget -qO- https://github.com/crazy-max/diun/releases/download/v4.15.2/diun_4.15.2_linux_x86_64.tar.gz | tar -zxvf - diun
+sudo mkdir -p /var/lib/diun
+sudo chmod -R 750 /var/lib/diun/
+sudo mkdir /etc/diun
+sudo chmod 770 /etc/diun
+sudo cp diun /usr/local/bin/diun
+rm diun_4.15.2_linux_x86_64.tar.gz
+rm diun
+# Get Diun conf file
+wget -O $HOME/docker/HOST/diun/diun.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/diun/diun.yml
+sudo ln -s $HOME/docker/HOST/diun/diun.yml /etc/diun/diun.yml
+sudo chmod 770 $HOME/docker/HOST/diun/diun.yml
 
 # __________________________________________________________________________________
 # Docker per-application configuration, required before starting the apps container
