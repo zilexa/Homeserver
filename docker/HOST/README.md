@@ -14,7 +14,7 @@ All prequisities have been taken care of by the script from [Step 3:Prepare Serv
 - By storing these files outside of your OS system dir (`etc/system`) you have your entire configuration independent of OS and backupped as a whole (`HOME/docker`). The files are symlinked into the system folder.  
 
 _All you have to do:_
-- If you haven't executed that script, [open the script](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) and execute the commands to install the required tools and obtain the config files, or go back and perform [step 3](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh)](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) first. 
+- If you haven't executed that script, [open the script](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) and execute the commands to install the required tools and obtain the config files, or go back and perform [step 3](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) first. 
 
 ## Snapraid setup
 #### Step 1: Create snapper config files
