@@ -1,4 +1,5 @@
 # Server Backup & Maintenance
+# SYNOPSIS: [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/backupstrategy.md)
 
 Contents:
   - [Prerequisities](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#prequisities)
@@ -7,7 +8,6 @@ Contents:
   - [Maintenance & scheduling](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/README.md#maintenance--scheduling)
 
 
-# Backup & Maintenance guide
 ### Prequisities
 All prequisities have been taken care of by the script from [Step 3:Prepare Server & Docker](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh).
 - This script installed the tools (btrbk for backups, snapraid/snapraid-btrfs/snapraid-btrf-runner for backups and additional tools) but more importantly also added configuration files (based on the tools default example) that are almost ready to use. The script downloaded them from this folder to your `$HOME/docker/HOST/` folder. 
