@@ -69,6 +69,7 @@ sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
 sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
 sudo echo "set mta=/usr/bin/msmtp" | sudo tee -a $HOME/docker/HOST/system/etc/mail.rc
 ## Get simplest example config file for your external SMTP provider
+mkdir $HOME/docker/HOST/system/etc
 sudo wget -O $HOME/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/msmtprc
 ## Apply permissions
 sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
@@ -203,6 +204,7 @@ sudo cp diun /usr/local/bin/diun
 rm diun_4.15.2_linux_x86_64.tar.gz
 rm diun
 # Get Diun conf file
+mkdir $HOME/docker/HOST/diun
 wget -O $HOME/docker/HOST/diun/diun.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/diun/diun.yml
 sudo ln -s $HOME/docker/HOST/diun/diun.yml /etc/diun/diun.yml
 sudo chmod 770 $HOME/docker/HOST/diun/diun.yml
