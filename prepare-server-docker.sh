@@ -34,7 +34,6 @@ ExecStart=/usr/sbin/powertop --auto-tune
 [Install]
 WantedBy=multi-user.target
 EOF
-
 ## Enable the service
 sudo systemctl daemon-reload
 sudo systemctl enable powertop.service
