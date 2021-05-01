@@ -3,6 +3,13 @@
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them.  
 #  
+# CHANGELOG 2021-05-01
+# REMOVED: PULLIO notify labels. It cannot send email notifications, only Discord which I and most people I believe don't use. 
+## KEPT: PULLIO update labels, for media/download related containers, to update all of them with 1 command (manually or scheduled). 
+# CHANGED: Scrutiny, an attempt to disable its interval based SMART scan, so that this can be done via the NIGHTLY, script.
+## REASON: It will spin up all drives just for the SMART scan. Better to do this when they are already spinning. 
+# CLEANUP: Changed order of values, to have consistency for each and every container.
+#
 # CHANGELOG 2021-04-28
 ## REMOVED: Watchtower. Replaced with Pullio bash script. For a weekly update check, running a daemon like Watchtower makes no sense. 
 ## CHANGED: VPN-proxy back to Frankfurt, for some reason Swiss doesn't work, the server TLS certificate is outdated. 
@@ -38,13 +45,11 @@ services:
     networks: 
       - management
     command: -H unix:///var/run/docker.sock
-    ports:
-      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/portainer/data:/data
-    labels: 
-      org.hotio.pullio.notify: 'true'
+    ports:
+      - "9000:9000"
 ##
 ##_____________________ Heimdall [Management/HOMEPAGE] 
   organizr:
@@ -55,14 +60,12 @@ services:
       - management
     security_opt:
       - no-new-privileges:true
-    ports:
-     - "80:80"
-    volumes:
-      - $DOCKERDIR/organizr:/config
     environment:
       fpm: 'true'
-    labels: 
-      org.hotio.pullio.notify: 'true'
+    volumes:
+      - $DOCKERDIR/organizr:/config
+    ports:
+     - "80:80"
 ##
 ##____________________ Guacamole [Management/remote-desktop]
   guacamole:
@@ -71,14 +74,12 @@ services:
     restart: always
     networks: 
       - management
-    ports:
-     - "8000:8080"
-    volumes:
-      - $DOCKERDIR/guacamole:/config
     environment:
       EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
-    labels: 
-      org.hotio.pullio.notify: 'true'
+    volumes:
+      - $DOCKERDIR/guacamole:/config
+    ports:
+     - "8000:8080"
 ##
 ##____________________ Scrutiny [Management/monitoring]
   scrutiny:
@@ -98,18 +99,19 @@ services:
       - "/dev/sde" 
     networks: 
       - management
-    environment: 
+    #entrypoint: CMD
+    environment:
+      mode: web
       PUID: $PUID
       PGID: $PGID
       UMASK: 002
       TZ: $TZ
-    ports:
-      - "8001:8080"
+      API_ENDPOINT: http://scrutiny-web:8080
     volumes:
       - /run/udev:/run/udev:ro
       - $DOCKERDIR/scrutiny/config:/config
-    labels: 
-      org.hotio.pullio.notify: 'true'
+    ports:
+      - "8001:8080"
 ##
 ##
 ##______NETWORK_______
@@ -122,8 +124,6 @@ services:
     volumes:
        - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
        - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
-    labels: 
-      org.hotio.pullio.notify: 'true'
 ##____________________ Unbound [NETWORK/noads-dnsserver]
   unbound:
     container_name: unbound
@@ -136,8 +136,6 @@ services:
     ports:
       - 5335:53/tcp
       - 5335:53/udp
-    labels: 
-      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ Unifi Controller [NETWORK/Wifi]
   unifi:
@@ -158,8 +156,6 @@ services:
       - 8080:8080 # Controller communication with Access Points and vice versa
       - 8443:8443 #to access webUI
       - 1900:1900/udp #to auto-discover this Controller in your app
-    labels: 
-      org.hotio.pullio.notify: 'true'
 ##
 ##
 ##________CLOUD________
@@ -174,14 +170,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/caddy/caddy_data:/data
       - $DOCKERDIR/caddy/config:/config
-    ports:
-      - 443:443
     labels:
       caddy.email: $EMAIL
       caddy.log: ""
       #caddy.log.output: file /data/access.log
-    labels: 
-      org.hotio.pullio.notify: 'true'
+    ports:
+      - 443:443
+##
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
   firefox-syncserver:
@@ -203,7 +198,7 @@ services:
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
-      org.hotio.pullio.notify: 'true'
+##
 ##_____________________ Bitwarden [CLOUD/Password-manager] 
   bitwarden:
     image: bitwardenrs/server:latest
@@ -228,7 +223,6 @@ services:
       caddy.header.X-Content-Type-Options: "none"
       caddy.reverse_proxy_1: "/notifications/hub/negotiate {{upstreams 80}}"
       caddy.reverse_proxy_2: "/notifications/hub {{upstreams 3012}}"
-      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ Syncthing [CLOUD/Sync]
   syncthing:
@@ -245,14 +239,14 @@ services:
     volumes:
       - $DOCKERDIR/syncthing/config:/config
       - $DATAPOOL/Users:/Users
+    labels:
+      caddy: sync.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 8384}}"
     ports:
       #- "8384:8384"
       - "22000:22000/tcp"
       - "22000:22000/udp"
-    labels:
-      caddy: sync.$DOMAIN
-      caddy.reverse_proxy: "{{upstreams 8384}}"
-      org.hotio.pullio.notify: 'true'
+##
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
     image: afian/filerun
@@ -292,7 +286,6 @@ services:
       caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
       caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
       caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
-      org.hotio.pullio.notify: 'true'
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
     image: mariadb:10.1
@@ -314,8 +307,6 @@ services:
     restart: always
     networks:
       - filerun
-    labels:
-      org.hotio.pullio.notify: 'true'
 ##____________________ FileRun ElasticSearch [CLOUD/FileRun/search]
   filerun-search:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
@@ -334,9 +325,6 @@ services:
     mem_limit: 1g
     volumes:
       - $DOCKERDIR/filerun/esearch:/usr/share/elasticsearch/data
-    labels:
-      org.hotio.pullio.notify: 'true'
-##
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
     image: onlyoffice/documentserver
@@ -362,7 +350,6 @@ services:
       caddy.file_server: ""
       caddy.encode: gzip
       caddy.header.X-Content-Type-Options: "nosniff"
-      org.hotio.pullio.notify: 'true'
 ##
 ##
 ##________MEDIA________
@@ -373,6 +360,9 @@ services:
     restart: always
     networks: 
       - media
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
     environment:
       PUID: $PUID
       PGID: $PGID
@@ -381,14 +371,9 @@ services:
     volumes:
       - $DOCKERDIR/jellyfin/config:/config
       - $DATAPOOL/Media:/data
+    # Required for Intel QuickSync/VAAPI hardware accelerated video encoding/transcoding
     ports:
       - 8096:8096
-    # Required for Intel QuickSync/VAAPI hardware accelerated video encoding/transcoding
-    devices:
-      - /dev/dri/renderD128:/dev/dri/renderD128
-      - /dev/dri/card0:/dev/dri/card0
-    labels: 
-      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
   vpn-proxy:
@@ -397,11 +382,6 @@ services:
     restart: always
     networks: 
       - vpn-proxy
-    volumes:
-      # Auth token is stored here
-      - $DOCKERDIR/vpn/pia:/pia
-      # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
-      - $DOCKERDIR/vpn/pia-shared:/pia-shared
     cap_add:
       - NET_ADMIN
       #- SYS_MODULE might not be needed with a 5.6+ kernel?
@@ -409,6 +389,19 @@ services:
       # Mounting the tun device may be necessary for userspace implementations
       #devices:
       #- /dev/net/tun:/dev/net/tun
+    privileged: 'true'
+    sysctls:
+      # wg-quick fails to set this without --privileged, so set it here instead if needed
+      - net.ipv4.conf.all.src_valid_mark=1
+      # May as well disable ipv6. Should be blocked anyway.
+      - net.ipv6.conf.default.disable_ipv6=1
+      - net.ipv6.conf.all.disable_ipv6=1
+      - net.ipv6.conf.lo.disable_ipv6=1
+    healthcheck:
+      test: ping -c 1 www.google.com || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
       LOC: de-frankfurt
@@ -419,24 +412,14 @@ services:
       PORT_FORWARDING: 1
       PORT_PERSIST: 
       #WG_USERSPACE: 1
-    privileged: 'true'
-    sysctls:
-      # wg-quick fails to set this without --privileged, so set it here instead if needed
-      - net.ipv4.conf.all.src_valid_mark=1
-      # May as well disable ipv6. Should be blocked anyway.
-      - net.ipv6.conf.default.disable_ipv6=1
-      - net.ipv6.conf.all.disable_ipv6=1
-      - net.ipv6.conf.lo.disable_ipv6=1
+    volumes:
+      # Auth token is stored here
+      - $DOCKERDIR/vpn/pia:/pia
+      # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
+      - $DOCKERDIR/vpn/pia-shared:/pia-shared
     # The container has no recovery logic. Use a healthcheck to catch disconnects.
-    healthcheck:
-      test: ping -c 1 www.google.com || exit 1
-      interval: 30s
-      timeout: 10s
-      retries: 3
     ports:
       - 9090:8080 #Qbittorrent webUI
-    labels: 
-      org.hotio.pullio.notify: 'true'
 ##
 ##____________________ Transmission [MEDIA/download-client]
   qbittorrent:
@@ -454,7 +437,6 @@ services:
       - $DOCKERDIR/qbittorrent:/config
       - $DATAPOOL/Media/incoming:/Media/incoming
     labels: 
-      org.hotio.pullio.notify: 'true'
       org.hotio.pullio.update: 'true'
 ##
 ##____________________ Unpackerr [MEDIA/download-unpack]
@@ -494,6 +476,7 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
+    restart: always
     networks: 
       - media
     environment:
@@ -503,9 +486,7 @@ services:
       #- HARVESTER_ENDPOINT=https://127.0.0.1:5000/token
     ports:
       - 8191:8191
-    restart: unless-stopped
     labels: 
-      org.hotio.pullio.notify: 'true'
       org.hotio.pullio.update: 'true'
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
@@ -528,7 +509,6 @@ services:
     ports:
       - 8989:8989
     labels: 
-      org.hotio.pullio.notify: 'true'
       org.hotio.pullio.update: 'true'
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
@@ -551,7 +531,6 @@ services:
     ports:
       - 7878:7878
     labels: 
-      org.hotio.pullio.notify: 'true'
       org.hotio.pullio.update: 'true'
 ##
 ##____________________ Bazarr [MEDIA/subtitles]
@@ -575,7 +554,6 @@ services:
     ports:
       - 6767:6767
     labels: 
-      org.hotio.pullio.notify: 'true'
       org.hotio.pullio.update: 'true'
 ##
 ##____________________ Lidarr [MEDIA/PVR-Music]
@@ -598,7 +576,6 @@ services:
     ports:
       - 8686:8686
     labels: 
-      org.hotio.pullio.notify: 'true'
       org.hotio.pullio.update: 'true'
 #
 #
