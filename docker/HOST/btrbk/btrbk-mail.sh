@@ -7,7 +7,7 @@ now=$(date +%Y%m%d)
 #####  start config section  #####
 
 # Email recipients, separated by whitespace:
-mailto="YOUR EMAIL ADDRESS"
+mailto=default
 
 # Email subject:
 mail_subject_prefix="backup of ${HOSTNAME:-localhost}"
