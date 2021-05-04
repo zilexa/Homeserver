@@ -12,14 +12,17 @@ sudo mkdir -p $HOME/docker/HOST/system/etc
 # Install server tools
 # ____________________
 # SSH - remote terminal & SFTP
+# ---
 sudo apt -y install ssh
 sudo systemctl enable --now ssh
 sudo ufw allow ssh 
 
 # Install lm-sensors - required to read out temperature sensors
+# -----------------
 sudo apt install lm-sensors
 
 # Install Powertop - required to autotune power management
+# ---------------
 sudo apt -y install powertop
 ## Create a service file to run powertop --auto-tune at boot
 sudo tee -a /etc/systemd/system/powertop.service << EOF
@@ -42,12 +45,12 @@ sudo powertop --auto-tune
 ## Start the service
 sudo systemctl start powertop.service
 
-
 # NFS Server - 15%-30% faster than SAMBA/SMB shares
+# ----------
 sudo apt -y install nfs-server
 
-
 # Enable sharing desktop remotely - xRDP is faster than VNC but requires x11vnc to share current local desktop session
+# ------------------------------
 sudo apt -y install x11vnc
 sudo apt -y install xrdp
 ## Get xrdp.ini config with desktop share via x11vnc enabled
@@ -62,7 +65,8 @@ sudo systemctl daemon-reload
 sudo systemctl enable x11vnc
 sudo systemctl start x11vnc
 
-# Enable system to send emails without using postfix (heavy)
+# Enable system to send emails without using postfix
+# ----------------------------
 sudo apt -y install msmtp s-nail
 # link sendmail to msmtp
 sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
