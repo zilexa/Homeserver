@@ -1,10 +1,9 @@
 #!/bin/sh
-# In other scripts, use this to check if nightly tasks are running and wait for it. 
-#while [[ -f /tmp/backup-is-running ]] ; do
-#   sleep 10 ;
-#done
-# Create a temp file to indicate maintenance is running
-touch ${SCRIPTDIR}/running-tasks
+# Wait for other tasks to finish
+while [[ -f /tmp/running-tasks ]] ; do
+   sleep 10 ;
+done
+
 # Get this script folder path
 SCRIPTDIR="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
@@ -18,10 +17,10 @@ echo "$now" >> ${SCRIPTDIR}/logs/monthly.txt
 # CLEANUP - OS, local apps, user profile 
 # --------------------------------------
 sudo bleachbit --preset --clean
-# Keep only the summary (last 4 lines) of Bleachbit output in email file
+# Keep only the summary of Bleachbit
 tail -n 4 ${SCRIPTDIR}/logs/monthly.txt > ${SCRIPTDIR}/logs/monthly.tmp
 mv -f ${SCRIPTDIR}/logs/monthly.tmp ${SCRIPTDIR}/logs/monthly.txt
-# Add a header to this output
+# Add header to this task
 sed -i '1iCLEANUP of OS, local apps and user profile..\n' ${SCRIPTDIR}/logs/monthly.txt
 
 # CLEANUP - unused docker images and volumes 
@@ -32,7 +31,8 @@ echo -e "\nCLEANUP unused docker volumes..\n" >> ${SCRIPTDIR}/logs/monthly.txt
 docker volume prune -f |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 echo -e "\nFor a full cleanup, remember to regularly run this command after verifying all your containers are running: docker system prune --all --volumes -f\n" >> ${SCRIPTDIR}/logs/monthly.txt
 
-# Check Docker registry for image updates and send notifications
+
+# Check docker registry for image updates and send notifications
 # --------------------------------------------------------------
 diun
 
@@ -60,7 +60,6 @@ sudo btrfs balance start -v -dusage=20 -musage=10 /dev/sdd |& tee -a ${SCRIPTDIR
 sudo btrfs balance start -dusage=10 -musage=5 /dev/sdb |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs balance start -v -dusage=20 -musage=10 /dev/sdb |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
-
 # Send email
 # ---------------------------------
 s-nail -s "Obelix monthly tasks" < $HOME/docker/HOST/logs/monthly.txt default
@@ -71,7 +70,3 @@ s-nail -s "Obelix monthly tasks" < $HOME/docker/HOST/logs/monthly.txt default
 touch ${SCRIPTDIR}/logs/monthly.log
 sudo cat ${SCRIPTDIR}/logs/monthly.txt >> ${SCRIPTDIR}/logs/monthly.log
 rm ${SCRIPTDIR}/logs/monthly.txt
-
-
-# Delete temp file, follow up tasks can continue
-rm ${SCRIPTDIR}/running-tasks
