@@ -129,7 +129,14 @@ sudo apt -y install snapper
 sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/snapraid-btrfs/snapper/default
 
 # Install btrbk
-todo
+wget https://digint.ch/download/btrbk/releases/btrbk-0.31.2.tar.xz
+tar xf btrbk*.tar.xz
+mv btrbk*/ btrbk
+cd btrbk
+sudo make install
+cd $HOME/Downloads
+rm btrbk*.tar.xz
+rm -rf $HOME/Downloads/btrbk
 
 # install nocache - required to move files from pool to pool-nocache with rsync
 # ---------------
