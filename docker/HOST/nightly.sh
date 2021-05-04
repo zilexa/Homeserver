@@ -14,12 +14,14 @@ touch ${SCRIPTDIR}/running-tasks
 # CLEANUP WATCHED TVSHOWS & MOVIES
 # --------------------------------
 # delete if watched x days ago
-${SCRIPTDIR}/jellyfin-cleaner/media_cleaner.py >> ${SCRIPTDIR}/logs/media_cleaner.log
+${SCRIPTDIR}/media-cleaner/media_cleaner.py >> ${SCRIPTDIR}/logs/media_cleaner.log
+
 
 # CLEANUP CACHE
 # -------------
 # User files >30d moved to data drives on pool-archive
 #/usr/bin/bash ${SCRIPTDIR}/archiver.sh /mnt/disks/cache/Users /mnt/pool-nocache/Users 30
+
 
 # FileRun 
 # -------
@@ -37,15 +39,25 @@ docker exec -w /var/www/html/cron -it filerun php make_thumbs.php
 # usr/bin/docker exec -w /var/www/html/cron -it filerun php process_search_index_queue.php
 
 
-# BACKUP  
-# ------
+# SUBVOLUMES BACKUP  
+# -----------------
 /usr/bin/bash ${SCRIPTDIR}/btrbk/btrbk-mail.sh
 
-# PARITY
-# ------
+
+# S.M.A.R.T. disk health scan
+# --------------------------
+mount /mnt/disks/backup1
 mount /mnt/disks/parity1
-/usr/bin/python3 ${SCRIPTDIR}/snapraid/snapraid-btrfs-runner.py -c ${SCRIPTDIR}/snapraid/snapraid-btrfs-runner.conf
+sleep 10
+docker exec scrutiny /app/scrutiny-collector-metrics run
+umount /mnt/disks/backup1
+
+
+# PARITY-BASED BACKUP 
+# -------------------
+python3 ${SCRIPTDIR}/snapraid/snapraid-btrfs-runner.py -c ${SCRIPTDIR}/snapraid/snapraid-btrfs-runner.conf
 umount /mnt/disks/parity1
+
+
 # Delete temp file, follow up tasks can continue
 rm ${SCRIPTDIR}/running-tasks
-
