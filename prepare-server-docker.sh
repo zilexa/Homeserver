@@ -84,6 +84,12 @@ sudo ln -s $HOME/docker/HOST/system/etc/user.msmtprc $HOME/.msmtprc
 sudo chown ${USER}:${USER} $HOME/.msmtprc
 sudo chmod 600 $HOME/.msmtprc
 
+# Create aliases file, you need to put your email address in there
+# This will be used by both root and current user. 
+sudo tee -a /etc/aliases << EOF
+default:myemail@address.com
+EOF
+
 # install SnapRAID
 # ----------------
 sudo apt -y install gcc git make
