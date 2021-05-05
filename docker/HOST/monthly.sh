@@ -1,5 +1,5 @@
 #!/bin/sh
-# Wait for other tasks to finish
+# Wait for other tasks (nightly.sh) to finish
 while [[ -f /tmp/running-tasks ]] ; do
    sleep 10 ;
 done
@@ -35,11 +35,14 @@ echo -e "\nFor a full cleanup, remember to regularly run this command after veri
 
 # Check docker registry for image updates and send notifications
 # --------------------------------------------------------------
-sudo diun
-
+diun
+echo -e "\nDOCKER UPDATES - See DIUN email\n" >> ${SCRIPTDIR}/logs/monthly.txt
+echo -e "\nAuto-updating images pullio label.. \n" >> ${SCRIPTDIR}/logs/monthly.txt
+pullio  |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
 # Run btrfs scrub monthly
 # -----------------------
+echo -e "\n FILESTEM housekeeping.." >> ${SCRIPTDIR}/logs/monthly.txt
 echo -e "\nScrub btrfs filesystems..\n" >> ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs scrub start -Bd -c 2 -n 4 /dev/nvme0n1p2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs scrub start -Bd -c 2 -n 4 /dev/nvme1n1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
