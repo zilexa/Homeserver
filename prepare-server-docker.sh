@@ -5,9 +5,9 @@ sudo apt -y update
 # System files go here
 mkdir -p $HOME/docker/HOST/system/etc
 # these files will be symlinked back to /system/etc.
-# ___________________
 ## This way, 1 folder ($HOME/docker) contains system config, docker config and container volumes. 
-
+# ___________________
+cd $HOME/Downloads
 # ____________________
 # Install server tools
 # ____________________
@@ -64,6 +64,11 @@ sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.c
 sudo systemctl daemon-reload
 sudo systemctl enable x11vnc
 sudo systemctl start x11vnc
+
+# install run-if-today to simplify scheduling weekly or monthly tasks (example: every last sunday of the month)
+# --------------------
+sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
+sudo chmod +x /usr/bin/run-if-today
 
 # Enable system to send emails without using postfix
 # ----------------------------
