@@ -3,7 +3,7 @@
 sudo apt -y update
 # ___________________
 # System files go here
-sudo mkdir -p $HOME/docker/HOST/system/etc
+mkdir -p $HOME/docker/HOST/system/etc
 # these files will be symlinked back to /system/etc.
 # ___________________
 ## This way, 1 folder ($HOME/docker) contains system config, docker config and container volumes. 
@@ -54,10 +54,10 @@ sudo apt -y install nfs-server
 sudo apt -y install x11vnc
 sudo apt -y install xrdp
 ## Get xrdp.ini config with desktop share via x11vnc enabled
-sudo wget -O $HOME/docker/HOST/system/etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/xrdp.ini
+wget -O /home/${USER}/docker/HOST/system/etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/xrdp.ini
 # link the system file to the system folder
 sudo rm /etc/xrdp/xrdp.ini
-sudo ln -s $HOME/docker/HOST/system/etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
+sudo ln -s /home/${USER}/docker/HOST/system/etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
 
 ## Autostart x11vnc at boot via systemd service file (only for x11vnc as xrdp already installed its systemd service during install)
 sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/x11vnc.service
@@ -71,19 +71,18 @@ sudo apt -y install msmtp s-nail
 # link sendmail to msmtp
 sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
 sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
-sudo echo "set mta=/usr/bin/msmtp" | sudo tee -a $HOME/docker/HOST/system/etc/mail.rc
-sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
+echo "set mta=/usr/bin/msmtp" | tee -a $HOME/docker/HOST/system/etc/mail.rc
+sudo ln -s /home/${USER}/docker/HOST/system/etc/mail.rc /etc/mail.rc
 ## Get simplest example config file for your external SMTP provider
-mkdir $HOME/docker/HOST/system/etc
-sudo wget -O $HOME/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/msmtprc
+sudo wget -O /home/${USER}/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/msmtprc
 
 ## link mailconfig to /etc/ - allow root to send emails
-sudo ln -s $HOME/docker/HOST/system/etc/msmtprc /etc/msmtprc
-sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
+sudo chmod 644 /home/${USER}/docker/HOST/system/etc/msmtprc
+sudo ln -s /home/${USER}/docker/HOST/system/etc/msmtprc /etc/msmtprc
 
 # link copy of mailconfig to $HOME - allow current user (non-root) to send emails
-sudo cp $HOME/docker/HOST/system/etc/msmtprc $HOME/docker/HOST/system/etc/user.msmtprc 
-sudo ln -s $HOME/docker/HOST/system/etc/user.msmtprc $HOME/.msmtprc
+sudo cp /home/${USER}/docker/HOST/system/etc/msmtprc /home/${USER}/docker/HOST/system/etc/user.msmtprc 
+sudo ln -s /home/${USER}/docker/HOST/system/etc/user.msmtprc /home/${USER}/.msmtprc
 ## This is why a copy is needed, user needs to be owner and strict permissions. 
 sudo chown ${USER}:${USER} $HOME/.msmtprc
 sudo chmod 600 $HOME/.msmtprc
@@ -93,6 +92,8 @@ sudo chmod 600 $HOME/.msmtprc
 sudo tee -a /etc/aliases << EOF
 default:myemail@address.com
 EOF
+#MANUALLY: put your email address in /etc/aliases
+#MANUALLY: put your smtp provider details and credentials in both $HOME/docker/HOST/system/etc/msmtprc and user.msmtprc 
 
 # install SnapRAID
 # ----------------
@@ -101,25 +102,27 @@ wget https://github.com/amadvance/snapraid/releases/download/v11.5/snapraid-11.5
 tar xzvf snapraid*.tar.gz
 cd snapraid-11.5/
 ./configure
-make
-make check
-make install
+sudo make
+sudo make check
+sudo make install
 cd $HOME/Downloads
 rm -rf snapraid*
 # Get drive IDs
 #ls -la /dev/disk/by-id/ | grep part1  | cut -d " " -f 11-20
 # get SnapRAID config
-sudo wget -O $HOME/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
-# SnapRAID create path for local content file
-# NOT FINISHED YET
+sudo wget -O /home/${USER}/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
+sudo ln -s /home/${USER}/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
+# MANUALLY: Create a root subvolume on your fastest disks named .snapraid, this wil contain snapraid content file. 
+# MANUALLY: customise the $HOME/docker/HOST/snapraid/snapraid.conf file to your needs. 
 # Get snapraid-btrfs script and make it executable
 sudo wget -P /etc https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
 sudo chmod +x /etc/snapraid-btrfs
 # Get snapraid-btrfs-runner
 wget -O $HOME/docker/HOST/snapraid/master.zip https://github.com/fmoledina/snapraid-btrfs-runner/archive/refs/heads/master.zip
+mv snapraid-btrfs-runner-master snapraid-btrfs-runner
 unzip master.zip
 rm master.zip
-mv snapraid-btrfs-runner-master snapraid-btrfs-runner
+
 
 # Install snapper, required for snapraid-btrfs 
 echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu_20.10/ /' | sudo tee /etc/apt/sources.list.d/filesystems:snapper.list
@@ -127,6 +130,7 @@ curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbunt
 sudo apt -y update
 sudo apt -y install snapper
 sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/snapraid-btrfs/snapper/default
+# MANUALLY: Create a root subvolume .snapshots within the subvolumes you want to protect. 
 
 # Install btrbk
 wget https://digint.ch/download/btrbk/releases/btrbk-0.31.2.tar.xz
@@ -137,6 +141,12 @@ sudo make install
 cd $HOME/Downloads
 rm btrbk*.tar.xz
 rm -rf $HOME/Downloads/btrbk
+sudo ln -s /usr/sbin/btrbk /usr/bin/btrbk
+## Get config and email script
+wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
+wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
+sudo ln -s /home/${USER}/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
+# MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
 
 # install nocache - required to move files from pool to pool-nocache with rsync
 # ---------------
@@ -205,14 +215,14 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo usermod -aG docker ${USER}
 
 # Create the docker folder
-sudo mkdir -p $HOME/docker
+sudo mkdir -p /home/${USER}/docker
 sudo setfacl -Rdm g:docker:rwx ~/docker
 sudo chmod -R 755 ~/docker
 # Get environment variables to be used by Docker (i.e. requires TZ in quotes)
-sudo wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
+sudo wget -O /home/{$USER}/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
 
 # Get docker compose file
-sudo wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
+sudo wget -O /home/{USER}/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
 
 # ______________________________________________________________
 # Install Diun (Docker Image Update Notifier)
@@ -229,8 +239,8 @@ rm diun
 # Get Diun conf file
 mkdir $HOME/docker/HOST/diun
 wget -O $HOME/docker/HOST/diun/diun.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/diun/diun.yml
-sudo ln -s $HOME/docker/HOST/diun/diun.yml /etc/diun/diun.yml
-sudo chmod 770 $HOME/docker/HOST/diun/diun.yml
+sudo ln -s /home/${USER}/docker/HOST/diun/diun.yml /etc/diun/diun.yml
+sudo chmod 770 /home/${USER}/docker/HOST/diun/diun.yml
 
 # __________________________________________________________________________________
 # Docker per-application configuration, required before starting the apps container
@@ -239,13 +249,13 @@ sudo chmod 770 $HOME/docker/HOST/diun/diun.yml
 # FileRun & ElasticSearch ~ requirements
 # ---------------------------------------------
 # Create folder and set permissions
-sudo mkdir -p $HOME/docker/filerun/esearch
+sudo mkdir -p /home/${USER}/docker/filerun/esearch
 sudo chown -R $USER:$USER $HOME/docker/filerun/esearch
-sudo chmod 777 $HOME/docker/filerun/esearch
+sudo chmod 755 /home/${USER}/docker/filerun/esearch
 # IMPORTANT! Should be the same user:group as the owner of the personal data you access via FileRun!
-sudo mkdir -p $HOME/docker/html
-sudo chown -R $USER:$USER $HOME/docker/html
-sudo chmod 755 $HOME/docker/filerun/esearch
+sudo mkdir -p /home/${USER}/docker/filerun/html
+sudo chown -R $USER:$USER $HOME/docker/filerun/html
+sudo chmod 755 $HOME/docker/filerun/html
 # Change OS virtual mem allocation as it is too low by default for ElasticSearch
 sudo sysctl -w vm.max_map_count=262144
 # Make this change permanent
