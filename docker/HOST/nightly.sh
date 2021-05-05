@@ -42,12 +42,13 @@ docker exec -w /var/www/html/cron -it filerun php make_thumbs.php
 # SUBVOLUMES BACKUP  
 # -----------------
 /usr/bin/bash ${SCRIPTDIR}/btrbk/btrbk-mail.sh
-# Perform monthtly maintenance on backup disk
-sudo run-if-today L Sun && mount /mnt/disks/backup1
-sudo run-if-today L Sun && sleep 10
-sudo run-if-today L Sun && btrfs balance start -dusage=10 -musage=5 /mnt/disks/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo run-if-today L Sun && btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo run-if-today L Sun && btrfs scrub start -Bd -c 2 -n 4 /dev/sdb |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+# Perform monthtly maintenance on backup disk 
+# MANUALY CHANGE "zo" to your version of 2 or 3 letter day of the week, for example Sun, check with command: date +%a
+sudo run-if-today L zo && mount /mnt/disks/backup1
+sudo run-if-today L zo && sleep 10
+sudo run-if-today L zo && btrfs balance start -dusage=10 -musage=5 /mnt/disks/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo run-if-today L zo && btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo run-if-today L zo && btrfs scrub start -Bd -c 2 -n 4 /dev/sdb |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
 
 # S.M.A.R.T. disk health scan on ALL disks (now that Backup1 is still spinning)
