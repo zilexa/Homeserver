@@ -40,6 +40,7 @@ echo -e "\nDOCKER UPDATES - See DIUN email\n" >> ${SCRIPTDIR}/logs/monthly.txt
 echo -e "\nAuto-updating images pullio label.. \n" >> ${SCRIPTDIR}/logs/monthly.txt
 pullio  |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
+
 # Run btrfs scrub monthly
 # -----------------------
 echo -e "\n FILESTEM housekeeping.." >> ${SCRIPTDIR}/logs/monthly.txt
