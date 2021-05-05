@@ -1,63 +1,70 @@
 #!/bin/sh
-# In other scripts, use this to check if nightly tasks are running and wait for it. 
-#while [[ -f /tmp/backup-is-running ]] ; do
-#   sleep 10 ;
-#done
+# Wait for other tasks to finish
+while [[ -f /tmp/running-tasks ]] ; do
+   sleep 10 ;
+done
 
 # Get this script folder path
 SCRIPTDIR="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
-# Create a temp file to indicate maintenance is running
-touch ${SCRIPTDIR}/running-tasks
+
+# Create monthly email body, add title and current date
+# -----------------------------------------------------
+install -b -m 750 /dev/null ${SCRIPTDIR}/logs/monthly.txt
+echo -e "\nMONTHLY HOUSEKEEPING TASKS\n" >> ${SCRIPTDIR}/logs/monthly.txt
+date >> ${SCRIPTDIR}/logs/monthly.txt
 
 
-# CLEANUP WATCHED TVSHOWS & MOVIES
-# --------------------------------
-# delete if watched x days ago
-${SCRIPTDIR}/media-cleaner/media_cleaner.py >> ${SCRIPTDIR}/logs/media_cleaner.log
+# CLEANUP - OS, local apps, user profile 
+# --------------------------------------
+sudo bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp
+# Add the summary of Bleachbit output to our monthly mail
+echo -e "\BLEACHBIT - Cleanup of OS, local apps and user profile..\n" >> ${SCRIPTDIR}/logs/monthly.txt
+tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.txt
+sudo rm ${SCRIPTDIR}/logs/bleachbit.tmp
+
+# CLEANUP - unused docker images and volumes 
+# ----------------------------------------
+echo -e "\nCLEANUP of unused docker images..\n" >> ${SCRIPTDIR}/logs/monthly.txt
+docker image prune -a -f |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+echo -e "\nCLEANUP of unused docker volumes..\n" >> ${SCRIPTDIR}/logs/monthly.txt
+docker volume prune -f |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+echo -e "\nFor a full cleanup, remember to regularly run this command after verifying all your containers are running: docker system prune --all --volumes -f\n" >> ${SCRIPTDIR}/logs/monthly.txt
 
 
-# CLEANUP CACHE
-# -------------
-# User files >30d moved to data drives on pool-archive
-#/usr/bin/bash ${SCRIPTDIR}/archiver.sh /mnt/disks/cache/Users /mnt/pool-nocache/Users 30
+# Check docker registry for image updates and send notifications
+# --------------------------------------------------------------
+sudo diun
 
 
-# FileRun 
-# -------
-# Empty trash >30 days old files
-docker exec -w /var/www/html/cron -it filerun php empty_trash.php -days 30
-# Clear db of files/folders that no longer exist
-docker exec -w /var/www/html/cron -it filerun php paths_cleanup.php --deep
-# Index filenames for files created outside FileRun
-docker exec -w /var/www/html/cron -it filerun php index_filenames.php /user-files true
-# Read metadata of files created outside FileRun, the UI adjusts to photos (GPS), videos etc and has specific options per filetype
-docker exec -w /var/www/html/cron -it filerun php metadata_index.php
-# Create thumbnails for photos - allows instant scrolling through photos
-docker exec -w /var/www/html/cron -it filerun php make_thumbs.php
-# Index content of files, extracting text, to allow searching within files - not recommended
-# usr/bin/docker exec -w /var/www/html/cron -it filerun php process_search_index_queue.php
+# Run btrfs scrub monthly
+# -----------------------
+echo -e "\nScrub btrfs filesystems..\n" >> ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs scrub start -Bd -c 2 -n 4 /dev/nvme0n1p2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs scrub start -Bd -c 2 -n 4 /dev/nvme1n1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sdc |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sdd |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+
+# Run btrfs balance monthly, first 10% data, then try 20%
+# -------------------------
+echo -e "\nBalance btrfs filesystems in 2 runs each.. \n" >> ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 -musage=5 / |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 -musage=10 / |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
 
-# SUBVOLUMES BACKUP  
-# -----------------
-/usr/bin/bash ${SCRIPTDIR}/btrbk/btrbk-mail.sh
+# Send email
+# ---------------------------------
+s-nail -s "Obelix Server - monthly housekeeping" < ${SCRIPTDIR}/logs/monthly.txt default
 
 
-# S.M.A.R.T. disk health scan
-# --------------------------
-mount /mnt/disks/backup1
-mount /mnt/disks/parity1
-sleep 10
-docker exec scrutiny /app/scrutiny-collector-metrics run
-umount /mnt/disks/backup1
-
-
-# PARITY-BASED BACKUP 
-# -------------------
-python3 ${SCRIPTDIR}/snapraid/snapraid-btrfs-runner.py -c ${SCRIPTDIR}/snapraid/snapraid-btrfs-runner.conf
-umount /mnt/disks/parity1
-
-
-# Delete temp file, follow up tasks can continue
-rm ${SCRIPTDIR}/running-tasks
+# Append email to monthly logfile and delete email
+# ------------------------------------------------
+touch ${SCRIPTDIR}/logs/monthly.log
+sudo cat ${SCRIPTDIR}/logs/monthly.txt >> ${SCRIPTDIR}/logs/monthly.log
+rm ${SCRIPTDIR}/logs/monthly.txt
