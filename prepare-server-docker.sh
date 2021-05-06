@@ -255,6 +255,17 @@ sudo ln -s /home/${USER}/docker/HOST/updater/pullio /usr/local/bin/pullio
 # Docker per-application configuration, required before starting the apps container
 # ----------------------------------------------------------------------------------
 
+# Scrutiny (S.M.A.R.T. disk health monitoring)
+# --------------------------------------------
+# Required to scan NVME drives. MANUALLY ADJUST TO YOUR SYSTEM
+sudo mkdir -p /home/${USER}/docker/scrutiny/config
+sudo chown ${USER}:${USER} /home/${USER}/docker/scrutiny/config
+wget -O $HOME/docker/scrutiny/config/collector.yaml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/scrutiny/collector.yaml
+sudo chmod 644 /home/${USER}/docker/scrutiny/config/collector.yaml
+
+# QBittorrent
+sudo mkdir -p /home/${USER}/docker/qbittorrent/config
+
 # FileRun & ElasticSearch ~ requirements
 # ---------------------------------------------
 # Create folder and set permissions
