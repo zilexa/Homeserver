@@ -19,10 +19,10 @@ cd $HOME/Downloads
 sudo apt -y install x11vnc
 sudo apt -y install xrdp
 ## Get xrdp.ini config with desktop share via x11vnc enabled
-wget -O /home/${USER}/docker/HOST/system/etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/xrdp.ini
+wget -O $HOME/docker/HOST/system/etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/xrdp.ini
 # link the system file to the system folder
 sudo rm /etc/xrdp/xrdp.ini
-sudo ln -s /home/${USER}/docker/HOST/system/etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
+sudo ln -s $HOME/docker/HOST/system/etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
 
 ## Autostart x11vnc at boot via systemd service file (only for x11vnc as xrdp already installed its systemd service during install)
 sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/x11vnc.service
@@ -42,17 +42,17 @@ sudo apt -y install msmtp s-nail
 sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
 sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
 echo "set mta=/usr/bin/msmtp" | tee -a $HOME/docker/HOST/system/etc/mail.rc
-sudo ln -s /home/${USER}/docker/HOST/system/etc/mail.rc /etc/mail.rc
+sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
 ## Get simplest example config file for your external SMTP provider
-sudo wget -O /home/${USER}/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/msmtprc
+sudo wget -O $HOME/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/msmtprc
 
 ## link mailconfig to /etc/ - allow root to send emails
-sudo chmod 644 /home/${USER}/docker/HOST/system/etc/msmtprc
-sudo ln -s /home/${USER}/docker/HOST/system/etc/msmtprc /etc/msmtprc
+sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
+sudo ln -s $HOME/docker/HOST/system/etc/msmtprc /etc/msmtprc
 
 # link copy of mailconfig to $HOME - allow current user (non-root) to send emails
-sudo cp /home/${USER}/docker/HOST/system/etc/msmtprc /home/${USER}/docker/HOST/system/etc/user.msmtprc 
-sudo ln -s /home/${USER}/docker/HOST/system/etc/user.msmtprc /home/${USER}/.msmtprc
+sudo cp $HOME/docker/HOST/system/etc/msmtprc $HOME/docker/HOST/system/etc/user.msmtprc 
+sudo ln -s $HOME/docker/HOST/system/etc/user.msmtprc $HOME/.msmtprc
 ## This is why a copy is needed, user needs to be owner and strict permissions. 
 sudo chown ${USER}:${USER} $HOME/.msmtprc
 sudo chmod 600 $HOME/.msmtprc
@@ -80,8 +80,8 @@ rm -rf snapraid*
 # Get drive IDs
 #ls -la /dev/disk/by-id/ | grep part1  | cut -d " " -f 11-20
 # get SnapRAID config
-sudo wget -O /home/${USER}/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
-sudo ln -s /home/${USER}/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
+sudo wget -O $HOME/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
+sudo ln -s $HOME/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
 # MANUALLY: Create a root subvolume on your fastest disks named .snapraid, this wil contain snapraid content file. 
 # MANUALLY: customise the $HOME/docker/HOST/snapraid/snapraid.conf file to your needs. 
 # Get snapraid-btrfs script and make it executable
@@ -116,7 +116,7 @@ sudo ln -s /usr/sbin/btrbk /usr/local/bin/btrbk
 ## Get config and email script
 wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
 wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
-sudo ln -s /home/${USER}/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
+sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
 # MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
 
 # install nocache - required to move files from pool to pool-nocache with rsync
@@ -144,20 +144,20 @@ echo "========================================================================="
 mkdir -P $HOME/docker/HOST/updater
 cd $HOME/Downloads
 wget -qO- https://github.com/crazy-max/diun/releases/download/v4.15.2/diun_4.15.2_linux_x86_64.tar.gz | tar -zxvf - diun
-sudo cp diun /home/${USER}/docker/HOST/updater/
-sudo ln -s /home/${USER}/docker/HOST/updater/diun /usr/local/bin/diun
+sudo cp diun $HOME/docker/HOST/updater/
+sudo ln -s $HOME/docker/HOST/updater/diun /usr/local/bin/diun
 rm diun_4.15.2_linux_x86_64.tar.gz
 rm diun
 # Get Diun conf file
 wget -O $HOME/docker/HOST/updater/diun.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/diun/diun.yml
-sudo chmod 770 /home/${USER}/docker/HOST/updater/diun.yml
+sudo chmod 770 $HOME/docker/HOST/updater/diun.yml
 sudo mkdir /etc/diun
 sudo chmod 770 /etc/diun
-sudo ln -s /home/${USER}/docker/HOST/updater/diun.yml /etc/diun/diun.yml
+sudo ln -s $HOME/docker/HOST/updater/diun.yml /etc/diun/diun.yml
 # Install Pullio to auto update a few services
-sudo wget -O /home/${USER}/docker/HOST/updater/pullio https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
-sudo chmod +x /home/${USER}/docker/HOST/updater/pullio
-sudo ln -s /home/${USER}/docker/HOST/updater/pullio /usr/local/bin/pullio
+sudo wget -O $HOME/docker/HOST/updater/pullio https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
+sudo chmod +x $HOME/docker/HOST/updater/pullio
+sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
 
 # ___________________________
 #  Container-specific configs
@@ -165,25 +165,25 @@ sudo ln -s /home/${USER}/docker/HOST/updater/pullio /usr/local/bin/pullio
 # Scrutiny (S.M.A.R.T. disk health monitoring)
 # --------------------------------------------
 # Required to scan NVME drives. MANUALLY ADJUST TO YOUR SYSTEM
-sudo mkdir -p /home/${USER}/docker/scrutiny/config
-sudo chown ${USER}:${USER} /home/${USER}/docker/scrutiny/config
+sudo mkdir -p $HOME/docker/scrutiny/config
+sudo chown ${USER}:${USER} $HOME/docker/scrutiny/config
 wget -O $HOME/docker/scrutiny/config/collector.yaml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/scrutiny/collector.yaml
-sudo chmod 644 /home/${USER}/docker/scrutiny/config/collector.yaml
+sudo chmod 644 $HOME/docker/scrutiny/config/collector.yaml
 
 # QBittorrent
 # -----------
-sudo mkdir -p /home/${USER}/docker/qbittorrent/config
-sudo chown ${USER}:${USER} /home/${USER}/docker/qbittorrent/config
+sudo mkdir -p $HOME/docker/qbittorrent/config
+sudo chown ${USER}:${USER} $HOME/docker/qbittorrent/config
 wget -O $HOME/docker/qbittorrent/config/qBittorrent.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/qbittorrent/config/qBittorrent.conf
-sudo chmod 644 /home/${USER}/docker/qbittorrent/config/qBittorrent.conf
+sudo chmod 644 $HOME/docker/qbittorrent/config/qBittorrent.conf
 
 # Organizr
 # --------
 # Not sure if this works, it will download my config, a homepage with all services. MANUALLY via the Organizr settings, add the credentials and change the ip:port for each.
 # Just to get you started with a homepage instead of the basic blank stuff. 
 # MANUALLY stop the container, delete these files and restart if Organizr doesn't work. 
-sudo mkdir -p /home/${USER}/docker/organizr/www/organizr/api/config
-sudo chown -R ${USER}:${USER} /home/${USER}/docker/organizr
+sudo mkdir -p $HOME/docker/organizr/www/organizr/api/config
+sudo chown -R ${USER}:${USER} $HOME/docker/organizr
 wget -O $HOME/docker/organizr/www/organizr/api/config/config.php https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/organizr/www/organizr/api/config/config.php
 wget -O $HOME/docker/organizr/www/organizr/organizrdb.db https://github.com/zilexa/Homeserver/blob/master/docker/organizr/www/organizr/organizrdb.db?raw=true
 
