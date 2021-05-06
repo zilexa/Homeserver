@@ -29,9 +29,9 @@ host:
 # type can be a 'string' or a 'list'
 devices:
   - device: /dev/nvme0n1
-    type: 'sat,auto'
+    type: 'auto'
   - device: /dev/nvme1n1
-    type: 'sat,auto'
+    type: 'auto'
 #  # example for forcing device type detection for a single disk
 #  - device: /dev/sda
 #    type: 'sat'
