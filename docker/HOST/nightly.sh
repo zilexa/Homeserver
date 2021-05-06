@@ -52,8 +52,9 @@ sudo run-if-today L zo && btrfs scrub start -Bd -c 2 -n 4 /dev/sdb |& tee -a ${S
 
 
 # S.M.A.R.T. disk health scan on ALL disks (now that Backup1 is still spinning)
-# --------------------------
+# ----------------------
 mount /mnt/disks/parity1
+mount /mnt/disks/backup1
 sleep 10
 docker exec scrutiny /app/scrutiny-collector-metrics run
 sleep 10
