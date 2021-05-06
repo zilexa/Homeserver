@@ -159,4 +159,31 @@ sudo wget -O /home/${USER}/docker/HOST/updater/pullio https://raw.githubusercont
 sudo chmod +x /home/${USER}/docker/HOST/updater/pullio
 sudo ln -s /home/${USER}/docker/HOST/updater/pullio /usr/local/bin/pullio
 
+# ___________________________
+#  Container-specific configs
+# ----------------------------
+# Scrutiny (S.M.A.R.T. disk health monitoring)
+# --------------------------------------------
+# Required to scan NVME drives. MANUALLY ADJUST TO YOUR SYSTEM
+sudo mkdir -p /home/${USER}/docker/scrutiny/config
+sudo chown ${USER}:${USER} /home/${USER}/docker/scrutiny/config
+wget -O $HOME/docker/scrutiny/config/collector.yaml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/scrutiny/collector.yaml
+sudo chmod 644 /home/${USER}/docker/scrutiny/config/collector.yaml
+
+# QBittorrent
+# -----------
+sudo mkdir -p /home/${USER}/docker/qbittorrent/config
+sudo chown ${USER}:${USER} /home/${USER}/docker/qbittorrent/config
+wget -O $HOME/docker/qbittorrent/config/qBittorrent.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/qbittorrent/config/qBittorrent.conf
+sudo chmod 644 /home/${USER}/docker/qbittorrent/config/qBittorrent.conf
+
+# Organizr
+# --------
+# Not sure if this works, it will download my config, a homepage with all services. MANUALLY via the Organizr settings, add the credentials and change the ip:port for each.
+# Just to get you started with a homepage instead of the basic blank stuff. 
+# MANUALLY stop the container, delete these files and restart if Organizr doesn't work. 
+sudo mkdir -p /home/${USER}/docker/organizr/www/organizr/api/config
+sudo chown -R ${USER}:${USER} /home/${USER}/docker/organizr
+wget -O $HOME/docker/organizr/www/organizr/api/config/config.php https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/organizr/www/organizr/api/config/config.php
+wget -O $HOME/docker/organizr/www/organizr/organizrdb.db https://github.com/zilexa/Homeserver/blob/master/docker/organizr/www/organizr/organizrdb.db?raw=true
 
