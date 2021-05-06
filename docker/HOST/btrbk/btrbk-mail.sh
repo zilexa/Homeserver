@@ -10,7 +10,7 @@ now=$(date +%Y%m%d)
 mailto=default
 
 # Email subject:
-mail_subject_prefix="backup of ${HOSTNAME:-localhost}"
+mail_subject_prefix="Obelix Backups: BTRBK"
 
 # Add summary and/or detail (rsync/btrbk command output) to mail body.
 # If both are not set, a mail is only sent on errors.
@@ -256,7 +256,7 @@ ebegin "Running btrbk"
 run_cmd btrbk ${btrbk_opts:-} ${btrbk_command}
 exitcode=$?
 case $exitcode in
-    0)  status="All backups successful"
+    0)  status=" succesfully backupped all subvolumes"
         ;;
     3)  status="Another instance of btrbk is running, no backup tasks performed!"
         ;;
