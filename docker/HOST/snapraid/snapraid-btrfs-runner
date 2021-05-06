@@ -34,7 +34,7 @@ maxsize = 5000
 sendon = success,error
 ; set to false to get full programm output via email
 short = true
-subject = SnapRAID Status Report
+subject = MYSERVERNAME backups: SnapRAID
 from = 
 to = 
 ; maximum email size in KiB
