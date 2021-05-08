@@ -120,13 +120,13 @@ sudo ln -s $HOME/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
 # MANUALLY: Create a root subvolume on your fastest disks named .snapraid, this wil contain snapraid content file. 
 # MANUALLY: customise the $HOME/docker/HOST/snapraid/snapraid.conf file to your needs. 
 # Get snapraid-btrfs script and make it executable
-sudo wget -P /etc https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
+sudo wget -O /usr/bin/snapraid-btrfs https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
 sudo chmod +x /etc/snapraid-btrfs
 # Get snapraid-btrfs-runner
 wget -O $HOME/docker/HOST/snapraid/master.zip https://github.com/fmoledina/snapraid-btrfs-runner/archive/refs/heads/master.zip
-mv snapraid-btrfs-runner-master snapraid-btrfs-runner
-unzip master.zip
-rm master.zip
+unzip $HOME/docker/HOST/snapraid/master.zip
+mv $HOME/docker/HOST/snapraid/snapraid-btrfs-runner-master $HOME/docker/HOST/snapraid/snapraid-btrfs-runner
+rm $HOME/docker/HOST/snapraid/master.zip
 
 
 # Install snapper, required for snapraid-btrfs 
