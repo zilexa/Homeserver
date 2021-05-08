@@ -43,45 +43,36 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snap
 &nbsp;
 
 ## Backup setup
-The btrbk config file has been carefully created and tested:\
-It will create snapshots in the root of the disks to give you a "timeline", date & time stamped view of all available backups in the `timeline` folder of each disk. Incremental backups will be sent to your internal backup disk and, if a USB disk is connected (!), the incremental backups are also sent to that disk.\
+The btrbk config file has been carefully created and tested to:\
+- Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `timeline` folder of each disk. 
+- Incremental backups will be sent to your internal backup disk, multiple disks can be added.
+- Allows you to run a backup actions manually for multiple subvolumes by using groups. 
+- Allows you to archive (copy) backups to BTRFS USB disks easily. 
 No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs.\
-It was a HELL to figure out though, as the `btrk` guide assumes you are a pro. 
 
-#### Step 1: Get the configuration & adjust settings, retention policy to your needs
-- Download the config file: `cd $HOME/docker/HOST` and `wget -P https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/btrbk-backup.conf`
-- Open the file located in $HOME/docker/HOST/btrbk-backup.conf
+#### Step 1: Create the snapshot location and backup target location folders
+- We need access to the OS disk filesystem root and the backup disk, mount both:
+  - `sudo mount /mnt/disks/backup1` 
+  - `sudo mount /mnt/system` 
+- Create the folder to store snapshots of the OS disk: `sudo mkdir /mnt/system/timeline`
+- Similarly, create a `.timeline` (note the dot) folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/.timeline`
+- In `/mnt/disks/backup1/`, create a folder for system and each data disk, for example via: `sudo mkdir /mnt/disks/backup1/{system,data1,data2,cache}`
+
+#### Step 2: Get the configuration & adjust settings, retention policy to your needs
+- Open the file located in `$HOME/docker/HOST/btrbk/btrbk.conf`
 - Edit the default retention policy to your needs. Also edit the custom retention policy for your system disk subvolumes. 
-- Verify the locations of your disks, the chosen subvolume (Users) meet your needs. 
-- Remove the lines containing `/media/backup2/...` if you are not planning on connecting a USB disk occasionally. This will also prevent warnings/errors when the disk is not connected. 
-
-#### Step 2: Create the snapshot location and backup target location folders
-- For timeline backups of the system, snapshots will be stored in `/mnt/systemroot/timeline`. 
-- For timeline backups of the cache/data disks, snapshots will be stored in each disks root, `.timeline` folder, hidden for security. 
-- The target for backups is your disk mounted at `/mnt/backup1/`, it should not be part of your MergerFS pool.
-
-2.1. Mount the filesystem root of the system disk and the backup disk.  
-```
-sudo mount /dev/nvme0n1p2 /mnt/system-root -o subvolid=5,defaults,noatime,compress=lzo 
-sudo mount -U !!!UUID OF BACKUPDRIVE HERE!!! /mnt/disks/backup1 -o subvolid=backup,defaults,noatime,compress=zstd:8 
-```` 
-
-2.2. Create destination folders: 
-- For the system snapshots: `sudo mkdir /mnt/systemroot/timeline`
-- For cache/data disks snapshots: `sudo mkdir /mnt/disks/cache/.timeline` and `sudo mkdir /mnt/disks/data1/.timeline` etc. 
-- For backups: `sudo mkdir /mnt/disks/backup1/system`, `sudo mkdir /mnt/disks/backup1/cache`, `sudo mkdir /mnt/disks/backup1/data1` etc. 
+- Verify the locations of your disks, the chosen subvolume (Users) meet your needs.  
+- Edit the file `$HOME/docker/HOST/btrbk/btrbk-mail.sh` and: 1) change the email subject to your server name and 2) make sure the mount targets are correct, see the example fstab: you should have a mount for the backup disk and a mount for the btrfs-root of your system OS disk.  
 
 #### Step 3: Perform a dryrun
-A dryrun will not perform any actions: 
-`btrbk -n -c /home/$SUDO_USER/docker/HOST/backup.conf run`
-Note you should only see errors regarding `backup2` if it is not connected. Snapshots are still created and backups are made on the first target `backup1`. 
-
-#### Step 4: Run initial backups
-Do this manually before activating the schedules in the next steps. The first time can take hours depending on your data. 
-`btrbk-c /home/$SUDO_USER/docker/HOST/backup.conf run`
+When you think your btrbk.conf file is correct, do a dryrun, it will not perform a simulation: 
+`sudo btrbk -n run`
+When all is well, run the same command without "-n", this will perform all snapshot and backup actions, first time can take lots of time, after that, backups will be incremental. 
 
 &nbsp;
 
+
+THE BELOW IS OUTDATED. WILL BE FIXED NEXT WEEK. THE UP TO DATE NIGHTLY.SH AND MONTHLY.SH ARE AVAILABLE IN THIS REPOSITORY.
 ## Maintenance & scheduling 
 Depending on the purpose of your server, several maintenance tasks can be executed nightly, before the backup strategy is executed, to cleanup files first: 
 - Delete watched tv shows, episodes, seasons and movies xx days after they have been watched. 
