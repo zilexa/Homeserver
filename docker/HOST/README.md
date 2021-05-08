@@ -3,10 +3,10 @@
 
 Contents:
   - [Prerequisities](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#prequisities)
-  - [I. Configure parity-based backups](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/README.md#snapraid-setup)
-  - [II. Configure subvolume backups](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/README.md#backup-setup)
-  - III. Configure auto-archiving to USB disk((https://github.com/zilexa/Homeserver/tree/master/docker/HOST/README.md)
-  - [Maintenance & scheduling](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/README.md#maintenance--scheduling)
+  - [I. Configure parity-based backups](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#i-configure-parity-based-backups-via-snapraid-btrfs)
+  - [II. Configure subvolume backups](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#ii-configure-subvolume-backups-via-btrbk)
+  - [III. Configure auto-archiving to USB disk](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#iii-configure-auto-archiving-to-usb-disk-via-btrbk)
+  - IV. Configure encrypted backups to a trusted online location (to-do)
 
 
 ### Prequisities
@@ -17,7 +17,7 @@ All prequisities have been taken care of by the script from [Step 3:Prepare Serv
 _All you have to do:_
 - Make sure you have done [step 3](https://github.com/zilexa/Homeserver/blob/master/docker) first or select the essential parts of the [prepare-server-docker.sh](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script and execute the commands to install the required tools and obtain the config files, or go back and perform first. 
 
-## I: Configure parity-based backups _via snapraid-btrfs_
+## I. Configure parity-based backups _via snapraid-btrfs_
 #### Step 1: Create snapper config files
 Snapper is unfortunately required for snapraid when using btrfs. A modified default template should be on your system already. You need to create config files (which will be based on the default) one-by-one per subvolume you want to protect. Snapper also requires a root config, which we create but will never use: 
 `sudo snapper create-config /` \
@@ -43,7 +43,7 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snap
 
 &nbsp;
 
-## II: Configure subvolume backups _via btrbk_
+## II. Configure subvolume backups _via btrbk_
 The btrbk config file has been carefully created and tested to:
 - Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `timeline` folder of each disk. 
 - Incremental backups will be sent to your internal backup disk, multiple disks can be added.
@@ -73,6 +73,8 @@ When all is well, run the same command without "-n", this will perform all snaps
 &nbsp;
 
 ## III. Configure auto-archiving to USB disk _via btrbk_
+
+## III. CIV. Configure encrypted backups to a trusted online location _via rclone_
 
 
 THE BELOW IS OUTDATED. WILL BE FIXED NEXT WEEK. THE UP TO DATE NIGHTLY.SH AND MONTHLY.SH ARE AVAILABLE IN THIS REPOSITORY.
