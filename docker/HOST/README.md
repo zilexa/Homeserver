@@ -74,7 +74,7 @@ When all is well, run the same command without "-n", this will perform all snaps
 
 ## III. Configure auto-archiving to USB disk _via btrbk_
 
-## III. CIV. Configure encrypted backups to a trusted online location _via rclone_
+## IV. Configure encrypted backups to a trusted online location _via rclone_
 
 
 THE BELOW IS OUTDATED. WILL BE FIXED NEXT WEEK. THE UP TO DATE NIGHTLY.SH AND MONTHLY.SH ARE AVAILABLE IN THIS REPOSITORY.
