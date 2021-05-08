@@ -32,7 +32,7 @@ UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 ext4 defaults,noatime,
 #
 # Mount BACKUP disk(s) ~ for regular backups
 # ------------------------------------------------
-# UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs defaults,noatime,noauto,compress-force=zstd:5 0 0
+UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs defaults,noatime,noauto,compress-force=zstd:5 0 0
 #
 #
 # NFS ~ home network shares  
