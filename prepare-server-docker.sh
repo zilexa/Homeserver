@@ -54,13 +54,13 @@ sudo apt -y install nfs-server
 sudo apt -y install x11vnc
 sudo apt -y install xrdp
 ## Get xrdp.ini config with desktop share via x11vnc enabled
-wget -O $HOME/docker/HOST/system/etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/xrdp.ini
+wget -O $HOME/docker/HOST/system/etc/xrdp/xrdp.ini https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/xrdp/xrdp.ini
 # link the system file to the system folder
 sudo rm /etc/xrdp/xrdp.ini
 sudo ln -s $HOME/docker/HOST/system/etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini
 
 ## Autostart x11vnc at boot via systemd service file (only for x11vnc as xrdp already installed its systemd service during install)
-sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/x11vnc.service
+sudo wget -O  /etc/systemd/system/x11vnc.service https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/x11vnc.service
 sudo systemctl daemon-reload
 sudo systemctl enable x11vnc
 sudo systemctl start x11vnc
@@ -79,7 +79,7 @@ sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
 echo "set mta=/usr/bin/msmtp" | tee -a $HOME/docker/HOST/system/etc/mail.rc
 sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
 ## Get simplest example config file for your external SMTP provider
-sudo wget -O $HOME/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/system/msmtprc
+sudo wget -O $HOME/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/msmtprc
 
 ## link mailconfig to /etc/ - allow root to send emails
 sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
@@ -115,7 +115,7 @@ rm -rf snapraid*
 # Get drive IDs
 #ls -la /dev/disk/by-id/ | grep part1  | cut -d " " -f 11-20
 # get SnapRAID config
-sudo wget -O $HOME/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/snapraid/snapraid.conf
+sudo wget -O $HOME/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapraid.conf
 sudo ln -s $HOME/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
 # MANUALLY: Create a root subvolume on your fastest disks named .snapraid, this wil contain snapraid content file. 
 # MANUALLY: customise the $HOME/docker/HOST/snapraid/snapraid.conf file to your needs. 
@@ -134,7 +134,7 @@ echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu
 curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbuntu_20.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/filesystems_snapper.gpg > /dev/null
 sudo apt -y update
 sudo apt -y install snapper
-sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/maintenance/snapraid-btrfs/snapper/default
+sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default
 # MANUALLY: Create a root subvolume .snapshots within the subvolumes you want to protect. 
 
 # Install btrbk
