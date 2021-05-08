@@ -43,7 +43,7 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snap
 &nbsp;
 
 ## Backup setup
-The btrbk config file has been carefully created and tested to:\
+The btrbk config file has been carefully created and tested to:
 - Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `timeline` folder of each disk. 
 - Incremental backups will be sent to your internal backup disk, multiple disks can be added.
 - Allows you to run a backup actions manually for multiple subvolumes by using groups. 
@@ -56,12 +56,12 @@ No other tool allows you to do all that automatically. The config file is also e
   - `sudo mount /mnt/system` 
 - Create the folder to store snapshots of the OS disk: `sudo mkdir /mnt/system/timeline`
 - Similarly, create a `.timeline` (note the dot) folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/.timeline`
-- In `/mnt/disks/backup1/`, create a folder for system and each data disk, for example via: `sudo mkdir /mnt/disks/backup1/{system,data1,data2,cache}`
+- In `/mnt/disks/backup1/`, create all destination folders for system and each data disk, for example via: `sudo mkdir /mnt/disks/backup1/{system,data1,data2,cache}`
 
 #### Step 2: Get the configuration & adjust settings, retention policy to your needs
 - Open the file located in `$HOME/docker/HOST/btrbk/btrbk.conf`
-- Edit the default retention policy to your needs. Also edit the custom retention policy for your system disk subvolumes. 
-- Verify the locations of your disks, the chosen subvolume (Users) meet your needs.  
+- Read and understand the taxonomy, the order and the hierarchy. Change to your disk situation (verify paths of volumes, subvols, targets) Do not change the order or the indentation! 
+- Edit the default retention policy used for data disks and the system-specific retention policy to your needs. Understand there are limits: if you create 10 snapshots of 1TB of data right now, it costs you 1TB in total. But when you start making big changes to your data and regular snapshots, this will cost lots of space as it deviates more and more from your oldest snapshot and backup. 
 - Edit the file `$HOME/docker/HOST/btrbk/btrbk-mail.sh` and: 1) change the email subject to your server name and 2) make sure the mount targets are correct, see the example fstab: you should have a mount for the backup disk and a mount for the btrfs-root of your system OS disk.  
 
 #### Step 3: Perform a dryrun
