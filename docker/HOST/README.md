@@ -19,7 +19,7 @@ _All you have to do:_
 
 ## I. Configure parity-based backups _via snapraid-btrfs_
 #### Step 1: Create snapper config files
-- A modified default template should be on your system already, otherwise do:\ 
+- A modified default template should be on your system already, otherwise do: \ 
 `sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default`
 - Create snapper config files for the root filesystem and each subvolume (max 1 per disk) you want to protect with snapraid: 
 `sudo snapper create-config /` \
