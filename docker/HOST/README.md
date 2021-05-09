@@ -19,9 +19,12 @@ _All you have to do:_
 
 ## I. Configure parity-based backups _via snapraid-btrfs_
 #### Step 1: Create snapper config files
-Snapper is unfortunately required for snapraid when using btrfs. A modified default template should be on your system already. You need to create config files (which will be based on the default) one-by-one per subvolume you want to protect. Snapper also requires a root config, which we create but will never use: 
+- A modified default template should be on your system already, otherwise do:\ 
+`sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default`
+- Create snapper config files for the root filesystem and each subvolume (max 1 per disk) you want to protect with snapraid: 
 `sudo snapper create-config /` \
-Now go ahead and create the Snapper config for each subvolume (max 1 per disk!). For example: `sudo snapper -c data0 create-config /mnt/disks/data0/Media` and `sudo snapper -c data1 create-config /mnt/disks/data1/Users` and `sudo snapper -c data2 create-config /mnt/disks/data2/Users`.
+`sudo snapper -c data1 create-config /mnt/disks/data1/Users`
+- verify "timeline_create" is set to "no" in each file. 
 
 #### Step 2: Adjust snapraid config file
 Open `/etc/snapraid.conf` in an editor and adjust the lines that say "ADJUST THIS.." to your situation. Note for each data disk, a snapper-config from the prev step must exist.
