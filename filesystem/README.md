@@ -16,6 +16,7 @@ rm mergerfs*.deb
 ```
 
 &nbsp;
+
 --> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". Otherwise ignore those steps. 
 
 ### Step 1A: Identify your disks
