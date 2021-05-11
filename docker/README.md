@@ -36,7 +36,7 @@ If you have an understanding of Docker containerization and docker-compose to se
 ## The Docker Compose Guide 
 ### Step 1 - Create Docker subvolume
 All your application data and server config files should be stored on a seperate btrfs subvolume. This allows extremely easy snapshotting, backup and restore in case of server issues or if you need to migrate to a new machine. All you have to do is install Docker Compose, mount this subvolume, run docker-compose up -d and your applications are up-and-running with their entire configuration!\
-1. Mount the os disk filesystem root to /mnt/system:/  
+1. Mount the os disk filesystem root to /mnt/system:  
 `sudo mount -o subvolid=5 /dev/nvme0n1p2 /mnt/system`
 2. Create subvolume
 `sudo btrfs subvolume create /mnt/system/@docker` 
@@ -47,7 +47,7 @@ Now copy paste following
 UUID=YOUR-OS-DISK-UUID /home/YOURUSERNAME/docker  btrfs   defaults,noatime,subvol=@docker 0       2
 ```
 Make sure to copy/paste the UUID from `/` and `/home` in there, save via CTRL+O, exit via CTRL+X.\
-Then mount via `sudo mount -a`
+Then mount via `sudo mount -a`.
 
 ### Step 2 - Prepare Docker
 The [PREP_SERVER+DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script, containing lots of info I gathered/learned via trial&error, it will save you a lot of time. 
