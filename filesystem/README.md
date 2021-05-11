@@ -18,9 +18,10 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 4. In the next steps, know `-L name` is how you label your disks. 
 
 ### STEP 1B: Create the permanent mount points
-1. Create mount point for the pool: `sudo mkdir -p /mnt/pool`
-2. For the SSD cache: to be able to unload the cache to the disks, also create a mountpoint excluding your cache`sudo mkdir -p /mnt/pool-nocache`. 
-3. Create mount point for every disk at once: `sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` (change to reflect the # of drives you have for data, parity and backup.)
+1. Create mountpoint for the OS disk filesystem root, to be used on-demand: `sudo mkdir /mnt/system`
+2. Create mount point for the pool: `sudo mkdir -p /mnt/pool`
+3. For the SSD cache: to be able to unload the cache to the disks, also create a mountpoint excluding your cache`sudo mkdir -p /mnt/pool-nocache`. 
+4. Create mount point for every disk at once: `sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` (change to reflect the # of drives you have for data, parity and backup.)
 
 <details>
   <summary>### practical commands you might need before step 2A: wipe the disk, delete partitions</summary>
@@ -61,6 +62,9 @@ _**Script notes:**_
 - The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).
 - **The script does everything for you except adding your disks to the systems mount config file (/etc/fstab), it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**
 
+### Step 4: edit fstab
+`sudo nano /etc/fstab` 
+Add your disks etc to the file, use [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) in this repository as reference. 
 _**Example fstab notes:**_
 - There is a line for each system subvolume to mount it to a specific location.
 - There is a line for each data disk to mount it to a location.
@@ -81,7 +85,7 @@ _**MergerFS Notes:**_
 - [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
 - When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
 
-## Step 4: Mount the disks and pools!
+## Step 5: Mount the disks and pools!
 1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media.
 2. Make sure each mount point is an empty folder after unmounting.
 3. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
