@@ -14,6 +14,7 @@ wget https://github.com/trapexit/mergerfs/releases/download/2.32.2/mergerfs_2.32
 sudo apt -y install ./mergerfs*.deb
 rm mergerfs*.deb
 ```
+
 &nbsp;
 --> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". Otherwise ignore those steps. 
 
