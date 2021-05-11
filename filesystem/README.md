@@ -6,7 +6,14 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 ## Requirements: 
 1. The OS disk should be BtrFS: [OS Installation](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/tree/master/OS-installation) shows how to do that.
 2. Your system root folder `/` and `/home` folder should be root subvolumes. This is common practice for Ubuntu (Budgie) when you installed it on a BtrFS disk. 
-3. With BtrFS it is highly recommended & common practice to create nested subvolumes for systemfolders `/tmp`  and `$HOME/.cache`. The `setup-storage.sh` (Step 2) will do that, plus a root subvolume, mounted at `$HOME/docker`. Check the file and remove the sections if you already have those subvolumes.
+3. With BtrFS it is highly recommended & common practice to create nested subvolumes for systemfolders `/tmp`  and `$HOME/.cache`. Note the [Ubuntu Budgie Post Install Script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script) does that automatically but you can do it yourself easily, the required actions are detailed in that script. 
+4. Install mergerFS: 
+```
+sudo apt -y install mergerfs
+wget https://github.com/trapexit/mergerfs/releases/download/2.32.2/mergerfs_2.32.2.ubuntu-focal_amd64.deb
+sudo apt -y install ./mergerfs*.deb
+rm mergerfs*.deb
+```
 
 --> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_".\
 --> Otherwise ignore those steps. 
