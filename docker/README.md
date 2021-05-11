@@ -34,9 +34,22 @@ If you have an understanding of Docker containerization and docker-compose to se
 
 &nbsp;
 ## The Docker Compose Guide 
+### Step 1 - Create Docker subvolume
+All your application data and server config files should be stored on a seperate btrfs subvolume. This allows extremely easy snapshotting, backup and restore in case of server issues or if you need to migrate to a new machine. All you have to do is install Docker Compose, mount this subvolume, run docker-compose up -d and your applications are up-and-running with their entire configuration!
+1. Mount the os disk filesystem root to /mnt/system:/  
+`sudo mount -o subvolid=5 /dev/nvme0n1p2 /mnt/system`
+2. Create subvolume
+`sudo btrfs subvolume create /mnt/system/@docker` 
+3. Add this line to your fstab, make sure to add the UUID of your OS disk, which you can find via `sudo blkid` 
+```
+# Mount DOCKER subvolume: @docker
+UUID=YOUR-OS-DISK-UUID /home/asterix/docker  btrfs   defaults,noatime,subvol=@docker 0       2
+```
+Then mount via `sudo mount -a`
+
 ### Step 1 - Prepare Docker
-The [PREP_SERVER+DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script, containing lots of info I gathered/learned via trial&error, can save you a lot of time. 
-Go through the script and execute what you need manually, or download and execute it: 
+The [PREP_SERVER+DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script, containing lots of info I gathered/learned via trial&error, it will save you a lot of time. 
+Download and execute it or edit the file to your liking before executing:
 ```
 cd Downloads
 wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prepare-server-docker.sh
