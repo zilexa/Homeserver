@@ -153,6 +153,12 @@ wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/
 sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
 # MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
 
+# install MergerFS
+# -----------------
+wget https://github.com/trapexit/mergerfs/releases/download/2.32.4/mergerfs_2.32.4.ubuntu-focal_amd64.deb
+sudo apt -y install ./mergerfs*.deb
+rm mergerfs*.deb
+
 # install nocache - required to move files from pool to pool-nocache with rsync
 # ---------------
 sudo apt -y install nocache
