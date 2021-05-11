@@ -35,19 +35,21 @@ If you have an understanding of Docker containerization and docker-compose to se
 &nbsp;
 ## The Docker Compose Guide 
 ### Step 1 - Create Docker subvolume
-All your application data and server config files should be stored on a seperate btrfs subvolume. This allows extremely easy snapshotting, backup and restore in case of server issues or if you need to migrate to a new machine. All you have to do is install Docker Compose, mount this subvolume, run docker-compose up -d and your applications are up-and-running with their entire configuration!
+All your application data and server config files should be stored on a seperate btrfs subvolume. This allows extremely easy snapshotting, backup and restore in case of server issues or if you need to migrate to a new machine. All you have to do is install Docker Compose, mount this subvolume, run docker-compose up -d and your applications are up-and-running with their entire configuration!\
 1. Mount the os disk filesystem root to /mnt/system:/  
 `sudo mount -o subvolid=5 /dev/nvme0n1p2 /mnt/system`
 2. Create subvolume
 `sudo btrfs subvolume create /mnt/system/@docker` 
-3. Add this line to your fstab, make sure to add the UUID of your OS disk, which you can find via `sudo blkid` 
+3. Add to fstab: `sudo nano /etc/fstab` 
+Now copy paste following
 ```
 # Mount DOCKER subvolume: @docker
-UUID=YOUR-OS-DISK-UUID /home/asterix/docker  btrfs   defaults,noatime,subvol=@docker 0       2
+UUID=YOUR-OS-DISK-UUID /home/YOURUSERNAME/docker  btrfs   defaults,noatime,subvol=@docker 0       2
 ```
+Make sure to copy/paste the UUID from `/` and `/home` in there, save via CTRL+O, exit via CTRL+X.\
 Then mount via `sudo mount -a`
 
-### Step 1 - Prepare Docker
+### Step 2 - Prepare Docker
 The [PREP_SERVER+DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script, containing lots of info I gathered/learned via trial&error, it will save you a lot of time. 
 Download and execute it or edit the file to your liking before executing:
 ```
@@ -68,7 +70,7 @@ What you have to do yourself during execution:
     - Netdata: just follow the wizard. 
     - NFSv4.2: read more about it here: https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)
 
-#### Step 2 - Prepare Compose
+#### Step 3 - Prepare Compose
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
 Notice this folder and its contents are read-only, you need elevated root rights to edit the files. 
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
@@ -79,7 +81,7 @@ Things you need to take care of:
 - if you remove certain applications, at the bottom also remove unneccary networks.
 - notice the commands at the top of the compose file, for your convenience. 
  
-#### Step 3 - Run Docker Compose
+#### Step 4 - Run Docker Compose
 `cd docker` (when you open terminal, you should already be in $HOME).
 Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): `docker-compose -f $HOME/docker/docker-compose.yml config` using -f to point to the location of your config files. 
 
@@ -93,7 +95,7 @@ Before running docker-compose, make sure:
 All images will be downloaded, containers will be build and everything will start running. 
 Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
 
-#### Step 4 - Verify
+#### Step 5 - Verify
 5. Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
 6. To update an application in the future, click that container, hit `recreate` and check `pull new image`. 
 
