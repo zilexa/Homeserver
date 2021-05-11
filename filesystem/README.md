@@ -1,6 +1,6 @@
 # STEP 1: A Modern Homeserver _filesystem_
 
-# SYNOPSIS: [Filesystem explained](https://github.com/zilexa/Homeserver/master/filesystem/FILESYSTEM-EXPLAINED.md)_
+# SYNOPSIS: [Filesystem explained](https://github.com/zilexa/Homeserver/master/filesystem/FILESYSTEM-EXPLAINED.md)
 _Read the Synopsis before continuing with this guide, to understand what you are about to do._
 
 ## Requirements: 
