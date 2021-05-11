@@ -53,16 +53,7 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 </details>
 
 &nbsp;
-
-### Step 3: Run the script & use the fstab example file
-_Read the notes in this step first_
-1. To run the script, `cd $HOME/Downloads` and run it via `bash setup-storage.sh`, follow the steps laid out during execution.\
-
-_**Script notes:**_
-- The script will install tools, create (on system disk) the subvolume for Docker persistent volumes and a subvolume for OS drive backup purposes (system-snapshots).
-- **The script does everything for you except adding your disks to the systems mount config file (/etc/fstab), it helps you find them and copy them to the `fstab`file, which is a system file that tells the system how and where to mount your disks.**
-
-### Step 4: edit fstab
+### Step 3: edit fstab
 `sudo nano /etc/fstab` 
 Add your disks etc to the file, use [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) in this repository as reference. 
 _**Example fstab notes:**_
