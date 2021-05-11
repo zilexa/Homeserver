@@ -14,9 +14,8 @@ wget https://github.com/trapexit/mergerfs/releases/download/2.32.2/mergerfs_2.32
 sudo apt -y install ./mergerfs*.deb
 rm mergerfs*.deb
 ```
-
+&nbsp;
 --> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". Otherwise ignore those steps. 
-
 
 ### Step 1A: Identify your disks
 Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
@@ -60,7 +59,6 @@ Note this will delete your data. To convert EXT4 disks without loosing data or a
 - _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
 </details>
 
-&nbsp;
 ### Step 3: edit fstab
 `sudo nano /etc/fstab` 
 Add your disks etc to the file, use [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) in this repository as reference. 
