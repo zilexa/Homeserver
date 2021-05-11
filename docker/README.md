@@ -37,7 +37,7 @@ If you have an understanding of Docker containerization and docker-compose to se
 ### Step 1 - Create Docker subvolume
 All your application data and server config files should be stored on a seperate btrfs subvolume. This allows extremely easy snapshotting, backup and restore in case of server issues or if you need to migrate to a new machine. All you have to do is install Docker Compose, mount this subvolume, run docker-compose up -d and your applications are up-and-running with their entire configuration!\
 1. Mount the os disk filesystem root to /mnt/system:  
-`sudo mount -o subvolid=5 /dev/nvme0n1p2 /mnt/system`
+`sudo mount /mnt/system`
 2. Create subvolume
 `sudo btrfs subvolume create /mnt/system/@docker` 
 3. Add to fstab: `sudo nano /etc/fstab` 
