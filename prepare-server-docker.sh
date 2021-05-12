@@ -1,12 +1,12 @@
 #!/bin/bash
 # PREPARE FILESYSTEM & FOLDERSTRUCTURE FIRST! GO TO https://github.com/zilexa/Homeserver/tree/master/filesystem
-sudo apt -y update
 # ___________________
 # System files go here
 mkdir -p $HOME/docker/HOST/system/etc
 # these files will be symlinked back to /system/etc.
 ## This way, 1 folder ($HOME/docker) contains system config, docker config and container volumes. 
 # ___________________
+sudo apt -y update
 cd $HOME/Downloads
 # ____________________
 # Install server tools
@@ -16,10 +16,6 @@ cd $HOME/Downloads
 sudo apt -y install ssh
 sudo systemctl enable --now ssh
 sudo ufw allow ssh 
-
-# Install lm-sensors - required to read out temperature sensors
-# -----------------
-sudo apt install lm-sensors
 
 # Install Powertop - required to autotune power management
 # ---------------
@@ -86,11 +82,11 @@ sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
 sudo ln -s $HOME/docker/HOST/system/etc/msmtprc /etc/msmtprc
 
 # link copy of mailconfig to $HOME - allow current user (non-root) to send emails
+# For non-root user, sending mails will only work with permissions 600
 sudo cp $HOME/docker/HOST/system/etc/msmtprc $HOME/docker/HOST/system/etc/user.msmtprc 
-sudo ln -s $HOME/docker/HOST/system/etc/user.msmtprc $HOME/.msmtprc
-## This is why a copy is needed, user needs to be owner and strict permissions. 
 sudo chown ${USER}:${USER} $HOME/.msmtprc
-sudo chmod 600 $HOME/.msmtprc
+sudo chmod 600 $HOME/docker/HOST/system/etc/user.msmtprc 
+sudo ln -s $HOME/docker/HOST/system/etc/user.msmtprc $HOME/.msmtprc
 
 # Create aliases file, you need to put your email address in there
 # This will be used by both root and current user. 
@@ -120,8 +116,8 @@ sudo ln -s $HOME/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
 # MANUALLY: Create a root subvolume on your fastest disks named .snapraid, this wil contain snapraid content file. 
 # MANUALLY: customise the $HOME/docker/HOST/snapraid/snapraid.conf file to your needs. 
 # Get snapraid-btrfs script and make it executable
-sudo wget -O /usr/bin/snapraid-btrfs https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
-sudo chmod +x /etc/snapraid-btrfs
+sudo wget -O /usr/local/bin/snapraid-btrfs https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
+sudo chmod +x /usr/local/bin/snapraid-btrfs
 # Get snapraid-btrfs-runner
 wget -O $HOME/docker/HOST/snapraid/master.zip https://github.com/fmoledina/snapraid-btrfs-runner/archive/refs/heads/master.zip
 unzip $HOME/docker/HOST/snapraid/master.zip
@@ -130,8 +126,8 @@ rm $HOME/docker/HOST/snapraid/master.zip
 
 
 # Install snapper, required for snapraid-btrfs 
-echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu_20.10/ /' | sudo tee /etc/apt/sources.list.d/filesystems:snapper.list
-curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbuntu_20.10/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/filesystems_snapper.gpg > /dev/null
+echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu_21.04/ /' | sudo tee /etc/apt/sources.list.d/filesystems:snapper.list
+curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbuntu_21.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/filesystems_snapper.gpg > /dev/null
 sudo apt -y update
 sudo apt -y install snapper
 sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default
@@ -153,12 +149,6 @@ wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/
 sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
 # MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
 
-# install MergerFS
-# -----------------
-wget https://github.com/trapexit/mergerfs/releases/download/2.32.4/mergerfs_2.32.4.ubuntu-focal_amd64.deb
-sudo apt -y install ./mergerfs*.deb
-rm mergerfs*.deb
-
 # install nocache - required to move files from pool to pool-nocache with rsync
 # ---------------
 sudo apt -y install nocache
@@ -177,17 +167,9 @@ echo "               BTRBK - THE tool to automate backups                      "
 echo "                 SNAPRAID-BTRFS - backup via parity                      "
 echo "                                                                         "
 echo "========================================================================="
-echo "to configure NFSv4.2 with server-side copy:
-echo "(save this URL and hit a key to continue): 
+echo "to configure NFSv4.2 with server-side copy:"
+echo "(save this URL and hit a key to continue): "
 read -p "https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)"
-echo "                                                               "
-echo "==============================================================="
-echo "                                                               "
-echo "lmsensors will now scan & configure your sensors:              " 
-echo "Just accept & confirm everything!                              "
-echo "---------------------------------------------------------------"
-read -p "hit a key to start... "
-echo  sudo sensors-detect --auto"
 echo "==============================================================="
 echo "                                                               "
 echo "PiVPN install wizard will be downloaded & started, a few hints:"
@@ -198,12 +180,12 @@ echo "If not, e select Quad9 or similar DNS server.                  "
 echo "---------------------------------------------------------------"
 read -p "hit a key to start... "
 # PiVPN ~ Install & configure wizard
-curl -L https://install.pivpn.io | bash  
+curl -L https://install.pivpn.io | bash
 echo "==============================================================="
 echo "                                                               "
 echo "Netdata monitoring tool install wizard will start              "
 echo "---------------------------------------------------------------"
-read -p  hit a key to start... "
+read -p  "hit a key to start... "
 # Netdata ~ install wizard
 bash <(curl -Ss https://my-netdata.io/kickstart.sh)
 
@@ -217,6 +199,7 @@ sudo apt -y update
 sudo apt -y install docker-ce docker-ce-cli containerd.io
 sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo curl -L https://raw.githubusercontent.com/docker/compose/1.26.2/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # ______________________________________________________________
 # Configure Docker
@@ -243,7 +226,7 @@ cd $HOME/Downloads
 wget -qO- https://github.com/crazy-max/diun/releases/download/v4.15.2/diun_4.15.2_linux_x86_64.tar.gz | tar -zxvf - diun
 sudo cp diun $HOME/docker/HOST/updater/
 sudo ln -s $HOME/docker/HOST/updater/diun /usr/local/bin/diun
-rm diun_4.15.2_linux_x86_64.tar.gz
+rm diun*.gz
 rm diun
 # Get Diun conf file
 wget -O $HOME/docker/HOST/updater/diun.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/diun/diun.yml
