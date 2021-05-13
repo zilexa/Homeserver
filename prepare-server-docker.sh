@@ -106,6 +106,7 @@ cd snapraid-11.5/
 sudo make
 sudo make check
 sudo make install
+sudo ln -s /usr/bin/snapraid /usr/local/bin/snapraid
 cd $HOME/Downloads
 rm -rf snapraid*
 # Get drive IDs
@@ -116,8 +117,9 @@ sudo ln -s $HOME/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
 # MANUALLY: Create a root subvolume on your fastest disks named .snapraid, this wil contain snapraid content file. 
 # MANUALLY: customise the $HOME/docker/HOST/snapraid/snapraid.conf file to your needs. 
 # Get snapraid-btrfs script and make it executable
-sudo wget -O /usr/local/bin/snapraid-btrfs https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
-sudo chmod +x /usr/local/bin/snapraid-btrfs
+sudo wget -O /usr/bin/snapraid-btrfs https://raw.githubusercontent.com/automorphism88/snapraid-btrfs/master/snapraid-btrfs
+sudo chmod +x /usr/bin/snapraid-btrfs
+sudo ln -s /usr/bin/snapraid-btrfs /usr/local/bin/snapraid-btrfs
 # Get snapraid-btrfs-runner
 wget -O $HOME/docker/HOST/snapraid/master.zip https://github.com/fmoledina/snapraid-btrfs-runner/archive/refs/heads/master.zip
 unzip $HOME/docker/HOST/snapraid/master.zip
@@ -131,7 +133,7 @@ curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbunt
 sudo apt -y update
 sudo apt -y install snapper
 sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default
-# MANUALLY: Create a root subvolume .snapshots within the subvolumes you want to protect. 
+# MANUALLY: follow instructions in the guide 
 
 # Install btrbk
 wget https://digint.ch/download/btrbk/releases/btrbk-0.31.2.tar.xz
@@ -142,7 +144,7 @@ sudo make install
 cd $HOME/Downloads
 rm btrbk*.tar.xz
 rm -rf $HOME/Downloads/btrbk
-sudo ln -s /usr/sbin/btrbk /usr/local/bin/btrbk
+sudo ln -s /usr/bin/btrbk /usr/local/bin/btrbk
 ## Get config and email script
 wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
 wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
