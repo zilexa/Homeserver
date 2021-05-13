@@ -128,9 +128,6 @@ rm $HOME/docker/HOST/snapraid/master.zip
 
 
 # Install snapper, required for snapraid-btrfs 
-echo 'deb http://download.opensuse.org/repositories/filesystems:/snapper/xUbuntu_21.04/ /' | sudo tee /etc/apt/sources.list.d/filesystems:snapper.list
-curl -fsSL https://download.opensuse.org/repositories/filesystems:snapper/xUbuntu_21.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/filesystems_snapper.gpg > /dev/null
-sudo apt -y update
 sudo apt -y install snapper
 sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default
 # MANUALLY: follow instructions in the guide 
