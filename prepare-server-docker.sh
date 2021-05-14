@@ -66,22 +66,22 @@ sudo systemctl start x11vnc
 sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
 sudo chmod +x /usr/bin/run-if-today
 
-# Enable system to send emails without using postfix
+# ____________________________________________
+# System emails support without heavy postfix
+# ___________________________________________
 # ----------------------------
 sudo apt -y install msmtp s-nail
 # link sendmail to msmtp
 sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
 sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
+# set msmtp as mta
 echo "set mta=/usr/bin/msmtp" | sudo tee -a /etc/mail.rc
-## Get simplest example config file for your external SMTP provider
+## Get config file, MANUALLY add your smtp provider credentials
 sudo wget -O /etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/msmtprc
-
-# Create aliases file, you need to put your email address in there. 
+# Create aliases file, MANUALLY edit file and replace with your emailaddress 
 sudo tee -a /etc/aliases << EOF
 default:myemail@address.com
 EOF
-#MANUALLY: put your email address in /etc/aliases
-#MANUALLY: put your smtp provider details and credentials in etc/msmtprc
 
 # install SnapRAID
 # ----------------
