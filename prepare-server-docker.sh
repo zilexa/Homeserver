@@ -72,29 +72,16 @@ sudo apt -y install msmtp s-nail
 # link sendmail to msmtp
 sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
 sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
-echo "set mta=/usr/bin/msmtp" | tee -a $HOME/docker/HOST/system/etc/mail.rc
-sudo ln -s $HOME/docker/HOST/system/etc/mail.rc /etc/mail.rc
+echo "set mta=/usr/bin/msmtp" | sudo tee -a /etc/mail.rc
 ## Get simplest example config file for your external SMTP provider
-sudo wget -O $HOME/docker/HOST/system/etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/msmtprc
+sudo wget -O /etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/msmtprc
 
-## link mailconfig to /etc/ - allow root to send emails
-sudo chmod 644 $HOME/docker/HOST/system/etc/msmtprc
-sudo ln -s $HOME/docker/HOST/system/etc/msmtprc /etc/msmtprc
-
-# link copy of mailconfig to $HOME - allow current user (non-root) to send emails
-# For non-root user, sending mails will only work with permissions 600
-sudo cp $HOME/docker/HOST/system/etc/msmtprc $HOME/docker/HOST/system/etc/user.msmtprc 
-sudo chown ${USER}:${USER} $HOME/.msmtprc
-sudo chmod 600 $HOME/docker/HOST/system/etc/user.msmtprc 
-sudo ln -s $HOME/docker/HOST/system/etc/user.msmtprc $HOME/.msmtprc
-
-# Create aliases file, you need to put your email address in there
-# This will be used by both root and current user. 
+# Create aliases file, you need to put your email address in there. 
 sudo tee -a /etc/aliases << EOF
 default:myemail@address.com
 EOF
 #MANUALLY: put your email address in /etc/aliases
-#MANUALLY: put your smtp provider details and credentials in both $HOME/docker/HOST/system/etc/msmtprc and user.msmtprc 
+#MANUALLY: put your smtp provider details and credentials in etc/msmtprc
 
 # install SnapRAID
 # ----------------
