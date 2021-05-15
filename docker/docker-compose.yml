@@ -5,7 +5,9 @@
 #  
 # CHANGELOG 2021-05-15
 # CHANGED: Bitwarden_rs has been renamed by the developer to Vaultwarden, renamed the image, volume path, env variable
-
+# ADDED: RESILIO, to see if it works better than Syncthing, the sync subdomain is now used for Resilio admin panel. 
+# CHANGED: The Filerun volume to map path of shared folder, as I now distinguish between local home users (/Users/intern) and friends/other family (/Users/extern)
+#
 # CHANGELOG 2021-05-01
 # REMOVED: PULLIO notify labels. It cannot send email notifications, only Discord which I and most people I believe don't use. 
 ## KEPT: PULLIO update labels, for media/download related containers, to update all of them with 1 command (manually or scheduled). 
