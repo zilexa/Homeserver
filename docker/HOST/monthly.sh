@@ -1,11 +1,11 @@
 #!/bin/sh
-# Wait for other tasks to finish
-while [[ -f /tmp/running-tasks ]] ; do
-   sleep 10 ;
-done
-
 # Get this script folder path
 SCRIPTDIR="$(dirname "$(readlink -f "$BASH_SOURCE")")"
+
+# Wait for other tasks to finish
+while [[ -f ${SCRIPTDIR}/running-tasks ]] ; do
+   sleep 10 ;
+done
 
 
 # Create monthly email body, add title and current date
@@ -20,6 +20,7 @@ printf "\n" >> ${SCRIPTDIR}/logs/monthly.txt
 # --------------------------------------
 echo -e "\nBLEACHBIT - Cleanup of OS, local apps and user profile..\n" >> ${SCRIPTDIR}/logs/monthly.txt
 sudo bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp
+bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp
 # Add the summary of Bleachbit output to our monthly mail
 tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.txt
 sudo rm ${SCRIPTDIR}/logs/bleachbit.tmp
@@ -35,7 +36,7 @@ echo -e "\nFor a full cleanup, remember to regularly run this command after veri
 
 # Check docker registry for image updates and send notifications
 # --------------------------------------------------------------
-diun
+${SCRIPTDIR}/updater/diun
 echo -e "\nDOCKER UPDATES - See DIUN email\n" >> ${SCRIPTDIR}/logs/monthly.txt
 echo -e "\nAuto-updating images pullio label.. \n" >> ${SCRIPTDIR}/logs/monthly.txt
 pullio  |& tee -a ${SCRIPTDIR}/logs/monthly.txt
@@ -45,7 +46,6 @@ pullio  |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 echo -e "\n FILESTEM housekeeping.." >> ${SCRIPTDIR}/logs/monthly.txt
 echo -e "\nScrub btrfs filesystems..\n" >> ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs scrub start -Bd -c 2 -n 4 /dev/nvme0n1p2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs scrub start -Bd -c 2 -n 4 /dev/nvme1n1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sdc |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sdd |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
@@ -58,8 +58,8 @@ sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data0 |& tee -a ${SCRIP
 sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+##sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+##sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
 
 # Send email
