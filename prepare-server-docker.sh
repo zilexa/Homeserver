@@ -8,6 +8,9 @@ mkdir -p $HOME/docker/HOST/system/etc
 # ___________________
 sudo apt -y update
 cd $HOME/Downloads
+
+# Install packages required to build applications from source
+sudo apt -y install build-essential
 # ____________________
 # Install server tools
 # ____________________
@@ -130,6 +133,7 @@ rm btrbk*.tar.xz
 rm -rf $HOME/Downloads/btrbk
 sudo ln -s /usr/bin/btrbk /usr/local/bin/btrbk
 ## Get config and email script
+mkdir $HOME/docker/HOST/btrbk
 wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
 wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
 sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
