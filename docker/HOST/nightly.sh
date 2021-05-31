@@ -32,9 +32,14 @@ docker exec -w /var/www/html/cron filerun php paths_cleanup.php --deep
 # Index filenames for files created outside FileRun
 docker exec -w /var/www/html/cron filerun php index_filenames.php /user-files true
 # Read metadata of files created outside FileRun, the UI adjusts to photos (GPS), videos etc and has specific options per filetype
-docker exec -w /var/www/html/cron filerun php metadata_index.php
-# Create thumbnails for photos - allows instant scrolling through photos
+docker exec -w /var/www/html/cron filerun php metadata_index.php 
+# Create thumbnails for files - allows instant scrolling through photos
 docker exec -w /var/www/html/cron filerun php make_thumbs.php
+# Create previews for files - allows instant previews for photos
+docker exec -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
+docker exec -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
+docker exec -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
+docker exec -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
 # Index content of files, extracting text, to allow searching within files - not recommended
 # usr/bin/docker exec -w /var/www/html/cron -it filerun php process_search_index_queue.php
 
@@ -42,8 +47,7 @@ docker exec -w /var/www/html/cron filerun php make_thumbs.php
 # SUBVOLUMES BACKUP  
 # -----------------
 /usr/bin/bash ${SCRIPTDIR}/btrbk/btrbk-mail.sh
-# Perform monthtly maintenance on backup disk 
-# MANUALY CHANGE "zo" to your version of 2 or 3 letter day of the week, for example Sun, check with command: date +%a
+# Perform monthtly maintenance on backup disk
 sudo run-if-today L zo && mount /mnt/disks/backup1
 sudo run-if-today L zo && sleep 10
 sudo run-if-today L zo && btrfs balance start -dusage=10 -musage=5 /mnt/disks/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
@@ -53,8 +57,8 @@ sudo run-if-today L zo && btrfs scrub start -Bd -c 2 -n 4 /dev/sdb |& tee -a ${S
 
 # S.M.A.R.T. disk health scan on ALL disks (now that Backup1 is still spinning)
 # ----------------------
-mount /mnt/disks/parity1
 mount /mnt/disks/backup1
+mount /mnt/disks/parity1
 sleep 10
 docker exec scrutiny /app/scrutiny-collector-metrics run
 sleep 10
