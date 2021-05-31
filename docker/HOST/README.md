@@ -129,3 +129,7 @@ MAILTO=""
 --> To modify the retention policy, edit the `system-backup.conf` and `users-backup.conf` files in $HOME/docker/HOST/ using the [documentation of btrbk](https://digint.ch/btrbk/doc/btrbk.conf.5.html).\
 --> Notice the first part sets the schedule, second part is the actual task, what follows is mumbo jumbo to get nice timestamps, and store the output of the tasks in in logs.\
 --> If `maintenance.sh` is still running when `backup.sh` is triggered, the backup script will wait nicely for maintenance to finish before starting its run.
+
+MAILTO=""
+30 5 * * * /usr/bin/bash /home/asterix/docker/HOST/nightly.sh
+50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/asterix/docker/HOST/monthly.sh
