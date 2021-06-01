@@ -1,0 +1,22 @@
+##____________________ Syncthing [CLOUD/Sync]
+  syncthing:
+    container_name: syncthing
+    image: ghcr.io/linuxserver/syncthing
+    restart: 'no'
+    networks: 
+      - web-proxy
+    hostname: Obelix
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/syncthing/config:/config
+      - $DATAPOOL/Users:/Users
+    ports:
+      - "8384:8384" # comment out when enabling caddy
+      - "22000:22000/tcp"
+      - "22000:22000/udp"
+   # labels:
+    #  caddy: sync.$DOMAIN
+     # caddy.reverse_proxy: "{{upstreams 8384}}"
