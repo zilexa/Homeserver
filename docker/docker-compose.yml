@@ -8,7 +8,7 @@
 ## for Android devices, use the FolderSync app for syncing, consider CX File Explorer as file manager.
 ## For desktops, use Nextcloud Desktop Client for syncing (Windows, Linux, MacOS) or OCSMOUNT for MacOS. For non-syncing, consider WebDAVFS for Linux and similar tools for other OS. 
 # ADDED: wg-easy, uninstall pivpn first (and reboot) before running the container. It allows you to run Wireguard VPN server and create/manager client profiles.
-# REMOVED: in the .env file, removed a few unused variables. 
+# REMOVED: in the .env file, renamed PW_INT to PW_DB since it is only used for databases.  
 #
 # CHANGELOG 2021-05-15
 # CHANGED: Bitwarden_rs has been renamed by the developer to Vaultwarden, renamed the image, volume path, env variable
