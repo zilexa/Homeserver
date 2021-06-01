@@ -2,11 +2,15 @@
 ## Check for typos           : docker-compose config 
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them.  
-#  
+#
+# CHANGELOG 2021-06-01
+# REMOVED: Syncthing, Resilio. Since you can better do syncing with clients via FileRun/webDAV, it prevents sync issues and you benefit from all FileRun goodies such as file indexing, thumbnails, previews etc. 
+## for Android devices, use the FolderSync app for syncing, consider CX File Explorer as file manager.
+## For desktops, use Nextcloud Desktop Client for syncing (Windows, Linux, MacOS) or OCSMOUNT for MacOS. For non-syncing, consider WebDAVFS for Linux and similar tools for other OS. 
+# ADDED: wg-easy, uninstall pivpn first (and reboot) before running the container. It allows you to run Wireguard VPN server and create/manager client profiles.
+#
 # CHANGELOG 2021-05-15
 # CHANGED: Bitwarden_rs has been renamed by the developer to Vaultwarden, renamed the image, volume path, env variable
-# ADDED: RESILIO, to see if it works better than Syncthing, the sync subdomain is now used for Resilio admin panel. 
-# CHANGED: The Filerun volume to map path of shared folder, as I now distinguish between local home users (/Users/intern) and friends/other family (/Users/extern)
 #
 # CHANGELOG 2021-05-01
 # REMOVED: PULLIO notify labels. It cannot send email notifications, only Discord which I and most people I believe don't use. 
@@ -88,6 +92,32 @@ services:
     ports:
      - "8000:8080"
 ##
+##____________________ WG-easy [Management/VPN]
+  VPN-wg-easy:
+    container_name: VPN-wg-easy
+    image: weejewel/wg-easy
+    restart: always
+    networks: 
+      - management
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+    environment:
+      WG_HOST: $DOMAIN
+      PASSWORD: $PW_EXT
+      WG_DEFAULT_ADDRESS: 10.6.0.x
+      WG_DEFAULT_DNS: 192.168.88.2
+      WG_PORT: 51822
+    volumes:
+      - $DOCKERDIR/VPN-wg-easy:/etc/wireguard
+    ports:
+      - 51822:51820/udp
+      - 5100:51821/tcp
+    restart: unless-stopped
+##
 ##____________________ Scrutiny [Management/monitoring]
   scrutiny:
     container_name: scrutiny
@@ -98,7 +128,6 @@ services:
       - SYS_ADMIN
     devices:
       - "/dev/nvme0n1"
-      - "/dev/nvme1n1"
       - "/dev/sda"
       - "/dev/sdb"
       - "/dev/sdc"
@@ -149,7 +178,6 @@ services:
     container_name: unifi
     image: ghcr.io/linuxserver/unifi-controller
     #mac_address: d0:ca:ab:cd:ef:03
-    restart: always
     networks: 
       - management
     environment:
@@ -243,7 +271,7 @@ services:
       FR_DB_PORT: 3306
       FR_DB_NAME: filerundb
       FR_DB_USER: $USERNAME
-      FR_DB_PASS: $PW_INT
+      FR_DB_PASS: $PW_DB
       APACHE_RUN_USER: $USERNAME
       APACHE_RUN_USER_ID: $PUID
       APACHE_RUN_GROUP: $USERNAME
@@ -277,9 +305,9 @@ services:
     networks:
       - filerun
     environment:
-      MYSQL_ROOT_PASSWORD: $PW_INT
+      MYSQL_ROOT_PASSWORD: $PW_DB
       MYSQL_USER: $USER
-      MYSQL_PASSWORD: $PW_INT
+      MYSQL_PASSWORD: $PW_DB
       MYSQL_DATABASE: filerundb
     volumes:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
@@ -333,48 +361,6 @@ services:
       caddy.file_server: ""
       caddy.encode: gzip
       caddy.header.X-Content-Type-Options: "nosniff"
-##
-##____________________ Resilio [CLOUD/Sync]
-  resilio:
-    image: ghcr.io/linuxserver/resilio-sync
-    container_name: resilio
-    restart: always
-    networks: 
-      - web-proxy
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/resilio/config:/config
-      - $DATAPOOL/Users:/sync
-    ports:
-      - 55555:55555
-    labels:
-      caddy: sync.$DOMAIN
-      caddy.reverse_proxy: "{{upstreams 8888}}"
-##____________________ Syncthing [CLOUD/Sync]
-  syncthing:
-    container_name: syncthing
-    image: ghcr.io/linuxserver/syncthing
-    restart: 'no'
-    networks: 
-      - web-proxy
-    hostname: Obelix
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/syncthing/config:/config
-      - $DATAPOOL/Users:/Users
-    ports:
-      - "8384:8384" # comment out when enabling caddy
-      - "22000:22000/tcp"
-      - "22000:22000/udp"
-   # labels:
-    #  caddy: sync.$DOMAIN
-     # caddy.reverse_proxy: "{{upstreams 8384}}"
 ##
 ##
 ##________MEDIA________
