@@ -19,6 +19,8 @@ rm mergerfs*.deb
 
 --> If you prefer Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". Otherwise ignore those steps. 
 
+
+
 ### Step 1A: Identify your disks
 Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
 1. unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)` or use the Disks utility via Budgie menu and hit the stop button for each disk. 
@@ -95,6 +97,12 @@ The combined data of your data disks should be in /mnt/pool and also (excluding 
 &nbsp;
 
 ### Good practices
+** SSD with duplicate metadata**
+By default BTRFS formats SSDs with single metadata. After reading mailinglists and discussions between devs, the conclusion is it cannot do harm to enable duplicate metadata and it could possibly save you when data becomes corrupted. To convert an existing  btrfs SSD, for example your system disk from single to dup:  \
+`sudo mount /mnt/disks/system`  \
+`sudo btrfs balance start -mconvert=dup /mnt/disks/system`  \
+Just be patient, when done unmount the root filesystem: `sudo umount /mnt/disks/system`  \
+
 **Harddisk power management**\
 Some harddisks (Seagate) spindown/power down immediately when there is no activity, even if a standby timout of XX minutes has been set. This will wear out the disk _fast_.\
 Via the Disks app, you can check disk properties and power settings. Note a value of 127 is common but also the culprit here. Changing it to 129 allows the standby timout to work:
