@@ -266,7 +266,7 @@ case ${answer:0:1} in
 esac
 
 
-echo "-------------------------------------------"
+echo "--------------------------------------------------------------------------------------------------------------"
 echo "Download recommended/best-practices configuration for QBittorrent: to download media, torrents? (recommend: y)" 
 read -p "y or n ?" answer
 case ${answer:0:1} in
@@ -282,7 +282,7 @@ case ${answer:0:1} in
 esac
 
 
-echo "----------------------------------------------------------------"
+echo "---------------------------------------------------------------------------------------------"
 echo "Download preconfigured Organizr config: your portal to all your apps and services? (optional)" 
 read -p "y or n ?" answer
 case ${answer:0:1} in
@@ -338,11 +338,14 @@ case ${answer:0:1} in
         sudo systemctl disable systemd-resolved.service
         sudo systemctl stop systemd-resolved.service
         echo "dns=default" | sudo tee -a /etc/NetworkManager/NetworkManager.conf
-        echo "----------------------------------------------------------------------------------"
-        echo "To support running your own DNS server on Ubuntu, via docker or bare, disable Ubuntu's built in DNS resolver now."
-        echo "----------------------------------------------------------------------------------"
-        echo "Move dns=default to the [MAIN] section by manually deleting it and typing it."
-        echo "AFTER you have done that, save changes via CTRL+O, exit the editor via CTRL+X."
+        echo "-------------------------------------------------------------------------------"
+        echo "You need to do the next step yourself, please read carefully before continuing!"
+        echo "-------------------------------------------------------------------------------"
+        echo "A text file will open when you hit a key. Please do the following:             "
+        echo "Move dns=default to the [MAIN] section by manually deleting it and typing it.  "
+        echo "You can also copy with mouse, delete it and paste it below [MAIN]              "
+        echo "AFTER you have done that, save changes via CTRL+O, exit the editor via CTRL+X. "
+        echo "                                                                               "
         read -p "ready to do this? Hit a key..."
         sudo nano /etc/NetworkManager/NetworkManager.conf
         sudo rm /etc/resolv.conf
