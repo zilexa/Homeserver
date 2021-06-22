@@ -101,7 +101,7 @@ rm btrbk*.tar.xz
 rm -rf $HOME/Downloads/btrbk
 sudo ln -s /usr/bin/btrbk /usr/local/bin/btrbk
 ## Get config and email script
-mkdir $HOME/docker/HOST/btrbk
+mkdir -p $HOME/docker/HOST/btrbk
 wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
 wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
 sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
@@ -214,10 +214,10 @@ sudo mkdir -p $HOME/docker
 sudo setfacl -Rdm g:docker:rwx ~/docker
 sudo chmod -R 755 ~/docker
 # Get environment variables to be used by Docker (i.e. requires TZ in quotes)
-sudo wget -O /home/{$USER}/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
+sudo wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
 
 # Get docker compose file
-sudo wget -O /home/{USER}/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
+sudo wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
 
 echo "__________________________________________________________________________"
 echo "Diun (notify of docker apps updates) & Pullio (auto-install selected apps)"
