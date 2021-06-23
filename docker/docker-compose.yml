@@ -3,6 +3,10 @@
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them.  
 #
+# CHANGELOG: 2021-06-23
+# SOLVED: /var/log/syslog looks like a twitterfeed: every 5sec docker mounts something. I finally found the culprit: Unbound (5sec), Vaultwarden (1min), Organizr (30sec), vpn-proxy (30sec) run a healthcheck!
+## learned you can configure the healthcheck, lines have been added to disable Organizr healthcheck and change the others to 5min. Change to 15sec when you are still testing if everything works (otherwise status in Portainer will be "starting..." for 5min.
+#
 # CHANGELOG 2021-06-01
 # REMOVED: Syncthing, Resilio. Since you can better do syncing with clients via FileRun/webDAV, it prevents sync issues and you benefit from all FileRun goodies such as file indexing, thumbnails, previews etc. 
 ## for Android devices, use the FolderSync app for syncing, consider CX File Explorer as file manager.
@@ -66,6 +70,8 @@ services:
     container_name: organizr
     image: organizr/organizr:latest
     restart: always
+    healthcheck:
+      disable: 'true'
     networks: 
       - management
     security_opt:
@@ -98,14 +104,15 @@ services:
     container_name: VPN-wg-easy
     image: weejewel/wg-easy
     restart: always
-    networks: 
-      - management
+    network_mode: host
+    healthcheck:
+      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
-    sysctls:
-      - net.ipv4.ip_forward=1
-      - net.ipv4.conf.all.src_valid_mark=1
+    #sysctls:
+      #- net.ipv4.ip_forward=1
+      #- net.ipv4.conf.all.src_valid_mark=1
     environment:
       WG_HOST: $DOMAIN
       PASSWORD: $PW_EXT
@@ -114,9 +121,9 @@ services:
       WG_PORT: 51822
     volumes:
       - $DOCKERDIR/VPN-wg-easy:/etc/wireguard
-    ports:
-      - 51822:51820/udp
-      - 5100:51821/tcp
+    #ports:
+      #- 51822:51820/udp
+      #- 5100:51821/tcp
     restart: unless-stopped
 ##
 ##____________________ Scrutiny [Management/monitoring]
@@ -166,6 +173,10 @@ services:
     container_name: unbound
     image: mvance/unbound:latest
     restart: always
+    healthcheck:
+      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
+      timeout: 3s
+      start_period: 5s
     networks: 
       - management  
     volumes:
@@ -214,9 +225,9 @@ services:
 ##
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
-  firefox-syncserver:
+  firefox-sync:
     image: crazymax/firefox-syncserver:latest
-    container_name: firefox_syncserver
+    container_name: firefox-sync
     restart: always
     networks: 
       - web-proxy
@@ -229,7 +240,7 @@ services:
       FF_SYNCSERVER_LOGLEVEL: debug
       FF_SYNCSERVER_ACCESSLOG: 'true'
     volumes:
-      - $DOCKERDIR/firefox-syncserver:/data
+      - $DOCKERDIR/firefox-sync:/data
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
@@ -239,6 +250,8 @@ services:
     image: vaultwarden/server
     container_name: vaultwarden
     restart: always
+    healthcheck:
+      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
     networks: 
       - web-proxy
     volumes:
@@ -285,8 +298,8 @@ services:
       - $DOCKERDIR/filerun/html:/var/www/html
       - $DATAPOOL/Users:/user-files
       # Mount shareduser folder (mnt/pool/$SHAREDUSER) containing family shared files, into the home users folders
-      - $DATAPOOL/Users/intern/Shared:/user-files/intern/$USER1/Shared
-      - $DATAPOOL/Users/intern/Shared:/user-files/intern/$USER2/Shared
+ #     - $DATAPOOL/Users/intern/Shared:/user-files/intern/$USER1/Shared
+#      - $DATAPOOL/Users/intern/Shared:/user-files/intern/$USER2/Shared
     labels:
       caddy: files.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
@@ -411,8 +424,9 @@ services:
       - net.ipv6.conf.lo.disable_ipv6=1
     healthcheck:
       test: ping -c 1 www.google.com || exit 1
-      interval: 30s
+      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
       timeout: 10s
+      start_period: 10s
       retries: 3
     environment:
       LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
