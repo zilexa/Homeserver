@@ -442,7 +442,7 @@ services:
       #VPNDNS: 8.8.8.8,8.8.4.4
       PORT_FORWARDING: 1
       PORT_PERSIST: 0
-      PORT_SCRIPT: /pia-shared/portupdate-qbittorrent.sh
+      PORT_SCRIPT: /pia-shared/updateport-qbittorrent.sh
     volumes:
       # Auth token is stored here
       - $DOCKERDIR/vpn/pia:/pia
