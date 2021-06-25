@@ -3,6 +3,11 @@
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them.  
 #
+# CHANGELOG: 2021-06-25
+# CHANGED: VPN-PROXY (docker-wireguard-pia) container, suggested the dev to add ability to run a script that will use QBittorrent API to update its listening port. 
+## He acted immediately AND created a working script. 
+# CHANGED: Renamed the volume path of docker-wireguard-pia. 
+#
 # CHANGELOG: 2021-06-23
 # SOLVED: /var/log/syslog looks like a twitterfeed: every 5sec docker mounts something. I finally found the culprit: Unbound (5sec), Vaultwarden (1min), Organizr (30sec), vpn-proxy (30sec) run a healthcheck!
 ## learned you can configure the healthcheck, lines have been added to disable Organizr healthcheck and change the others to 5min. Change to 15sec when you are still testing if everything works (otherwise status in Portainer will be "starting..." for 5min.
@@ -436,8 +441,8 @@ services:
       #KEEPALIVE: 25
       #VPNDNS: 8.8.8.8,8.8.4.4
       PORT_FORWARDING: 1
-      PORT_PERSIST: 
-      #WG_USERSPACE: 1
+      PORT_PERSIST: 0
+      PORT_SCRIPT: /pia-shared/portupdate-qbittorrent.sh
     volumes:
       # Auth token is stored here
       - $DOCKERDIR/vpn/pia:/pia
