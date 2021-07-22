@@ -41,8 +41,10 @@ Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/ma
 ### Step 4. Configure & schedule Backups & Maintenance
 Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/docker/HOST) of your server such as cleanup, backup and disks protection tasks. 
 
-### Step 5. Local network shares
-[Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
+### Step 5. Sync devices, external users laptops
+- Best way, to benefit from file indexing (for search) and server-side photo thumbails & previews, consider using webDAV to sync your User files with your mobile devices: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) is very user-friendly, additionally [FolderSync](https://www.tacit.dk/) allows instant or scheduled syncing. 
+- For desktops and laptops and to keep your parents PC user files in-sync, consider webDAV as well, the NextCloud Desktop client does 2-way sync and is supported by Filerun.
+- Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
 ### Step 6. Configure remote VPN access
 [VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
