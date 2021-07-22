@@ -44,8 +44,8 @@ Verify the paths are correct in the 2 files in `HOST/archiver/`.
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO, and optionally add your email address between "", this way you will receive slightly cryptic error messages if the commands could not be executed. 
 ```
 MAILTO=""
-30 5 * * * /usr/bin/bash /home/asterix/docker/HOST/nightly.sh
-50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/asterix/docker/HOST/monthly.sh
+30 5 * * * /usr/bin/bash /home/YOURUSERNAME/docker/HOST/nightly.sh
+50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/YOURUSERNAME/docker/HOST/monthly.sh
 ```
 Note this means:
 - Nightly will start 5.30 AM every day.
