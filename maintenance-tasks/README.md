@@ -18,6 +18,7 @@ Files location: [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/m
 - [_btrbk_](https://digint.ch/btrbk/): BtrFS swiss-knife for backups. See [Backup Strategy](https://github.com/zilexa/Homeserver/tree/master/backup-strategy). 
 - [_snapraid-btrfs_](https://github.com/automorphism88/snapraid-btrfs): Basically similar to "scheduled RAID" instead of normal raid, for parity-based backups. See [Backup Strategy](https://github.com/zilexa/Homeserver/tree/master/backup-strategy).
 - _Disk health scan_: run S.M.A.R.T. scan to update [Scrutiny](https://github.com/AnalogJ/scrutiny) container. 
+- _Filerun container tasks_: Apart from cleanup, these tasks are only necessary when adding/deleting/modifying files/folders _outside_ of the filerun WebUI or connected WebDAV apps. Without running these tasks, you will _still_ see the files in FileRun and webDAV apps just fine, since FileRun simply shows you a realtime view of your filesystem. Such files just won't appear in search results and their thumbnails & quick previews will be empty. Note these commands will be run from within the container. 
 
 ### MONTHLY MAINTENANCE: Overview of tasks/tools
 - [_Bleachbit_](https://www.bleachbit.org/): Cleanup host OS filesystem, temp, cache, bin, old update files, old logs etc. Runs twice: normal and with elevated rights.
