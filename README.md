@@ -42,8 +42,8 @@ Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/ma
 Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/docker/HOST) of your server such as cleanup, backup and disks protection tasks. 
 
 ### Step 5. Sync devices, external users laptops
-- Best way, to benefit from file indexing (for search) and server-side photo thumbails & previews, consider using webDAV to sync your User files with your mobile devices: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) is very user-friendly, additionally [FolderSync](https://www.tacit.dk/) allows instant or scheduled syncing. 
-- For desktops and laptops and to keep your parents PC user files in-sync, consider webDAV as well, the NextCloud Desktop client does 2-way sync and is supported by Filerun.
+- Filerun supports webDAV, see [helpful tips](https://docs.filerun.com/webdav). This way you benefit from instant file indexing (for search) and server-side photo thumbails & previews. Consider using webDAV to sync your User files with your mobile devices: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) is very user-friendly, additionally [FolderSync](https://www.tacit.dk/) allows instant or scheduled syncing. 
+- For desktops and laptops and to keep your parents PC user files in-sync, consider webDAV as well. For Linux, the NextCloud Desktop client is the obvious choice as it is the only tool that does 2-way sync.
 - Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
 ### Step 6. Configure remote VPN access
