@@ -1,5 +1,6 @@
 # STEP 4: Server Backup & Maintenance Guide
-## SYNOPSIS: [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/backupstrategy.md)
+## [SYNOPSIS](https://github.com/zilexa/Homeserver/blob/master/backup-strategy/backupstrategy.md)
+_(read first)_
 
 Contents:
   - [Prerequisities](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#prequisities)
