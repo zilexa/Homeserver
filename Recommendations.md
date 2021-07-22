@@ -1,3 +1,5 @@
+## Hardware recommendations
+
 A lot of research has been done to determine the required choices to have a rock stable, future-proof homeserver with the lowest power consumption.
 The system will be running 24/7, so power consumption matters. With this combination you should be able to reach idle power consumption of 4 watt.
 
