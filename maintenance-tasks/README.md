@@ -4,13 +4,14 @@ To keep your server spinning and purring everyday like its very first day, sever
 Below the tasks are explained. Note the order of execution has been chosen carefully. If you remove/add tasks, keep that in mind. 
 
 
-Files location: [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/master/docker/HOST)
-- nightly.sh --> nightly tasks such as backups, FileRun cleanup & generation of thumbnails/previews. 
-- monthly.sh --> cleanup of OS, BtrFS filesystem tasks, cleanup of Docker stale/orphaned containers/images 
-- the other folders contains the tools required for the tasks. 
+Files location: [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/)
+- nightly.sh 
+- monthly.sh 
+- /logs
+- the other folders contain necessary tools and their configs, see the [previous step](https://github.com/zilexa/Homeserver/tree/master/backup-strategy) in this guide. 
 
 ### NIGHTLY MAINTENANCE: Overview of tasks/tools
-- [_Media-cleaner_](https://github.com/clara-j/media_cleaner): delete watched show episodes/seasons and movies X days after they have been _watched_(!). 
+- [_Media-cleaner_](https://github.com/clara-j/media_cleaner): delete watched shows episodes/seasons and movies X days after they have been _watched_(!). 
 - [_Archiver_](https://github.com/trapexit/mergerfs#time-based-expiring): If you use MergerFS SSD cache: Unload SSD cache: move _Users_ files unmodified for >30 days to harddisk array (from /mnt/disks/ssd to /mnt/pool-nocache). Since `/mnt/pool-nocache` = `/mnt/pool` without the SSD, the path to the moved files stays is the same, they are still in `/mnt/pool`, they are only moved to a different underlying disk. 
     - Exceptions to this task: Keep thumbnails created by FileRun and DigiKam (photo management software) on the SSD, for performance and power consumption purposes (the HDDs won't turn on when you scroll through your photos via FileRun). 
     - Also do not move files moved to trash.
@@ -28,19 +29,29 @@ Files location: [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/m
 - _BtrFS housekeeping_: balancing & scrubbing disks. Note for the backup disk, the monthly task is actually in the Nightly script, since the disk needs to be mounted, best to run monthly right after completing nightly backup. 
 
 
-### 1. Get the files
-Download the files to your HOST dir. If you completed the Backup guide, you should already have this folder and the btrbk, snapraid files (do not overwrite your own versions!):
+### STEP 1. Get the files
+Download nightly.sh and monthly.sh to your HOST dir.
 [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/master/docker/HOST)
 
+### STEP 2: Get tools / configuration
+#### Snapshot backups & SnapRAID backups
+- See the previous step: [Backup Strategy](https://github.com/zilexa/Homeserver/tree/master/backup-strategy)
+- If you want to limit the risk of loosing files, move the Snapraid command Nightly.sh to your crontab on a seperate line, see step 2 below. 
+For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications.
+
 #### Cofigure Media Cleaner
-1. Get the media_cleaner.py in your `HOST/media-cleaner` folder file by opening it, hit the RAW button and use your browser to Save As (CTRL+S): https://github.com/clara-j/media_cleaner
-2. Open a Terminal window from this folder, run the script to connect it to Jellyfin: `python3 media_cleaner.py` \
-A file `HOST/media-cleaner/media_cleaner.conf` will be created. Modify at will if you need to change the configuration.
+- Get media_cleaner.py: https://github.com/clara-j/media_cleaner: follow the link, click the filename, hit RAW, use your browser Save As (CTRL+S). Save it to your `HOST/media-cleaner`
+- Open a Terminal window from this folder, run the script to connect it to Jellyfin:
+```
+python3 media_cleaner.py
+```
+A file `HOST/media-cleaner/media_cleaner.conf` will be created. Done! To change your settings, Simply edit the .conf file in your text editor.
 
 #### Configure Archiver, MergerFS SSD cache unloading
-Verify the paths are correct in the 2 files in `HOST/archiver/`. 
+- Verify the paths are correct in the 2 files in `HOST/archiver/`.
+- Notice the exclude list, it excludes filerun hidden folders, this way your photo thumbnails/previews stay on your fast SSD. 
 
-### 2. Schedule the 2 tasks!
+### STEP 3. Schedule the 2 tasks
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO, and optionally add your email address between "", this way you will receive slightly cryptic error messages if the commands could not be executed. 
 ```
 MAILTO=""
