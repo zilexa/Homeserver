@@ -446,22 +446,6 @@ services:
     labels: 
       org.hotio.pullio.update: 'true'
 ##
-##____________________ Unpackerr [MEDIA/download-unpack]
-#  unpackerr:
-#    container_name: unpackerr
-#    image: hotio/unpackerr
-#    networks: 
-#      - media
-#    restart: always
-#    environment:
-#      PUID: $PUID
-#      PGID: $PGID
-#      UMASK: 002
-#      TZ: $TZ
-#    volumes:
-#      - $DOCKERDIR/unpacker/config:/config
-#      - $DATAPOOL/Media:/Media
-##
 ##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
   prowlarr:
     container_name: prowlarr
@@ -481,6 +465,7 @@ services:
       - $DATAPOOL/Media/incoming:/Media/incoming
     ports:
       - 9696:9696
+##
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
     container_name: jackett
