@@ -1,0 +1,29 @@
+# If you need the ability in FileRun to not only search files, but also have very fast search for text within files, FileRun supports this via Tika and ElasticSearch.
+# More info, see here: https://docs.filerun.com/docker-tika
+# Add these two to your compose file, add them to FileRun > Settings.
+#
+##____________________ FileRun Tikaserver [CLOUD/FileRun/tika]
+  filerun-tika:
+    image: logicalspark/docker-tikaserver
+    container_name: filerun-tika
+    restart: always
+    networks:
+      - filerun
+##____________________ FileRun ElasticSearch [CLOUD/FileRun/search]
+  filerun-search:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: filerun-search
+    restart: always
+    networks:
+      - filerun
+    environment:
+      cluster.name: docker-cluster
+      bootstrap.memory_lock: 'true'
+      ES_JAVA_OPTS: '-Xms512m -Xmx512m'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - $DOCKERDIR/filerun/esearch:/usr/share/elasticsearch/data
