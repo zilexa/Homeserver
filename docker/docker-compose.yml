@@ -31,7 +31,7 @@
 # CHANGELOG 2021-05-15
 # CHANGED: Bitwarden_rs has been renamed by the developer to Vaultwarden, renamed the image, volume path, env variable
 #
-#version: "2.3"
+version: "2.3"
 ## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm.
 ## Docker-Compose 2.x is for Compose.
 services:
