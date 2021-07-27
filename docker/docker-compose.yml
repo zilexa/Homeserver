@@ -4,6 +4,7 @@
 ### Note this will delete stopped containers and everything linked to them.  
 #
 # CHANGELOG: 2021-07-27
+# REMOVED: WG-Easy. 
 # REMOVED: Tikaserver and ElasticSearch for FileRun (moved to Docker/Extras on Github), since most users won't need it, it is a waste of resources. It is used for in-file text searching.
 # ADDED: Prowlarr as alternative to Jackett. Instead of manually having to add each download site/indexer to Jackkett and then individually 1-by-1 to Sonarr/Radarr, Prowlarr autosyncs to apps, saving you lots of time.
 ## Prowlarr does not support all sites/indexers but it supports plenty and is stable enough. Will remove Jackett with the next update. 
@@ -29,35 +30,7 @@
 # CHANGELOG 2021-05-15
 # CHANGED: Bitwarden_rs has been renamed by the developer to Vaultwarden, renamed the image, volume path, env variable
 #
-# CHANGELOG 2021-05-01
-# REMOVED: PULLIO notify labels. It cannot send email notifications, only Discord which I and most people I believe don't use. 
-## KEPT: PULLIO update labels, for media/download related containers, to update all of them with 1 command (manually or scheduled). 
-# CHANGED: Scrutiny, an attempt to disable its interval based SMART scan, so that this can be done via the NIGHTLY, script.
-## REASON: It will spin up all drives just for the SMART scan. Better to do this when they are already spinning. 
-# CLEANUP: Changed order of values, to have consistency for each and every container.
-#
-# CHANGELOG 2021-04-28
-## REMOVED: Watchtower. Replaced with Pullio bash script. For a weekly update check, running a daemon like Watchtower makes no sense. 
-## CHANGED: VPN-proxy back to Frankfurt, for some reason Swiss doesn't work, the server TLS certificate is outdated. 
-## REPLACED IMAGE: QBittorrent image with the one from Hotio because it has unrar and doesn't create files with root-only access.
-## REPLACED ALL MEDIA RELATED IMAGES: all images are now from Hotio.
-## CHANGED: Scrutiny requires a yaml config file to recognise NVME drives. see my github for an example. 
-## CHANGED: Ports of VPN-proxy to allow access to QBittorrent as it listens on a different port for the webUI.  
-#
-# CHANGELOG 2021-04-13
-## ADDED Guacamole! Now you can open your browser and access the desktop of your server. The image works, still have to test Guacamole. 
-## Removed Transmission as nobody seems to use it anymore, even though it had full Sonarr compatibility, it is riddled with config issues:
-## temp folder will never be used with Sonarr/Radarr, making the filesystem optimisations (disabling CoW & seperate subvolume for incomplete dir)
-## Completely useless, allowing fragmentation. Also, the complete dir is changed during downloading via Sonarr. Devs believe this is all normal behaviour.
-## ADDED QBittorrent, not from Linuxserver as it is 360MB versus this 150MB image. 
-## ToDO: Will look into using Hotio QFlood image instead, the UI is much nicer but seems to lack important settings to increase disk cache etc.
-## REMOVED unneccessary port binds: 80 for Caddy is not used. Now used for Organizr to access server homepage via url (use your servers /etc/hosts file to set an url). 
-## ToDO: Will look into registering https for LAN only, to access all services via https organizr url (not sure if it makes sense to go this far). 
-## CHANGED: pia wireguard vpn to swiss instead of nine eyes Germany.
-## NOTE: I stopped using Syncthing due to this issue (my laptop SSD filled up within 30min): https://forum.syncthing.net/t/problems-with-renamed-directory/16611
-## I might try Resilio instead or see if the dev is helpful to figure out the issue, if it isn't "by design".
-#
-version: "2.3"
+#version: "2.3"
 ## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm.
 ## Docker-Compose 2.x is for Compose.
 services:
@@ -112,31 +85,24 @@ services:
      - "8000:8080"
 ##
 ##____________________ WG-easy [Management/VPN]
-  VPN-wg-easy:
-    container_name: VPN-wg-easy
-    image: weejewel/wg-easy
+  vpn-server-ui:
+    image: vx3r/wg-gen-web:latest
+    container_name: vpn-server-ui
     restart: always
-    network_mode: host
-    healthcheck:
-      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    #sysctls:
-      #- net.ipv4.ip_forward=1
-      #- net.ipv4.conf.all.src_valid_mark=1
+    networks:
+      - management
     environment:
-      WG_HOST: $DOMAIN
-      PASSWORD: $PW_EXT
-      WG_DEFAULT_ADDRESS: 10.6.0.x
-      WG_DEFAULT_DNS: 192.168.88.2
-      WG_PORT: 51822
+      WG_CONF_DIR: /data
+      WG_INTERFACE_NAME: wg0.conf
+      SMTP_HOST: $SMTP
+      SMTP_PORT: 587
+      SMTP_USERNAME: $SMTPUSER
+      SMTP_PASSWORD: $SMTPPASS
+      SMTP_FROM: $RECIPIENT
     volumes:
-      - $DOCKERDIR/VPN-wg-easy:/etc/wireguard
-    #ports:
-      #- 51822:51820/udp
-      #- 5100:51821/tcp
-    restart: unless-stopped
+      - /etc/wireguard:/data
+    ports:
+      - "5100:8080"
 ##
 ##____________________ Scrutiny [Management/monitoring]
   scrutiny:
@@ -248,7 +214,7 @@ services:
       FF_SYNCSERVER_SECRET: $FFSYNCSECRET
       FF_SYNCSERVER_FORWARDED_ALLOW_IPS: '*'
       FF_SYNCSERVER_FORCE_WSGI_ENVIRON: 'true'
-      FF_SYNCSERVER_ALLOW_NEW_USERS: 'true'
+      FF_SYNCSERVER_ALLOW_NEW_USERS: 'false'
       FF_SYNCSERVER_LOGLEVEL: debug
       FF_SYNCSERVER_ACCESSLOG: 'true'
     volumes:
@@ -304,8 +270,6 @@ services:
       APACHE_RUN_GROUP_ID: $PGID
     depends_on:
       - filerun-db
-      - filerun-tika
-      - filerun-search
     volumes:
       - $DOCKERDIR/filerun/html:/var/www/html
       - $DATAPOOL/Users:/user-files
@@ -337,34 +301,9 @@ services:
       MYSQL_DATABASE: filerundb
     volumes:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
-##____________________ FileRun Tikaserver [CLOUD/FileRun/tika]
-  filerun-tika:
-    image: logicalspark/docker-tikaserver
-    container_name: filerun-tika
-    restart: always
-    networks:
-      - filerun
-##____________________ FileRun ElasticSearch [CLOUD/FileRun/search]
-  filerun-search:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-    container_name: filerun-search
-    restart: always
-    networks:
-      - filerun
-    environment:
-      cluster.name: docker-cluster
-      bootstrap.memory_lock: 'true'
-      ES_JAVA_OPTS: '-Xms512m -Xmx512m'
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    mem_limit: 1g
-    volumes:
-      - $DOCKERDIR/filerun/esearch:/usr/share/elasticsearch/data
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
-    image: onlyoffice/documentserver
+    image: onlyoffice/documentserver:6.3.1.32
     container_name: onlyoffice
     stdin_open: 'true'
     restart: always
@@ -436,7 +375,7 @@ services:
       - net.ipv6.conf.lo.disable_ipv6=1
     healthcheck:
       test: ping -c 1 www.google.com || exit 1
-      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
+      interval: 5m # While testing container, change to 10s. To prevent constant logfile activity, change to a few minutes
       timeout: 10s
       start_period: 10s
       retries: 3
@@ -450,11 +389,12 @@ services:
       PORT_FORWARDING: 1
       PORT_PERSIST: 0
       PORT_SCRIPT: /pia-shared/updateport-qbittorrent.sh
+      #WG_USERSPACE: 1
     volumes:
       # Auth token is stored here
-      - $DOCKERDIR/vpn/pia:/pia
+      - $DOCKERDIR/vpn-proxy/pia:/pia
       # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
-      - $DOCKERDIR/vpn/pia-shared:/pia-shared
+      - $DOCKERDIR/vpn-proxy/pia-shared:/pia-shared
     # The container has no recovery logic. Use a healthcheck to catch disconnects.
     ports:
       - 9090:8080 #Qbittorrent webUI
@@ -493,6 +433,25 @@ services:
 #      - $DOCKERDIR/unpacker/config:/config
 #      - $DATAPOOL/Media:/Media
 ##
+##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
+  prowlarr:
+    container_name: prowlarr
+    image: hotio/prowlarr:testing
+    networks: 
+      - media
+    depends_on:
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/prowlarr/config:/config
+      - $DATAPOOL/Media/incoming:/Media/incoming
+    ports:
+      - 9696:9696
 ##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
   jackett:
     container_name: jackett
@@ -506,26 +465,12 @@ services:
       PUID: $PUID
       PGID: $PGID
       UMASK: 002
+      TZ: $TZ
     volumes:
       - $DOCKERDIR/jackett/config:/config
       - $DATAPOOL/Media/incoming:/Media/incoming
     ports:
       - 9117:9117
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    restart: always
-    networks: 
-      - media
-    environment:
-      - LOG_LEVEL=info
-      - CAPTCHA_SOLVER=hcaptcha-solver
-      #- CAPTCHA_SOLVER=harvester
-      #- HARVESTER_ENDPOINT=https://127.0.0.1:5000/token
-    ports:
-      - 8191:8191
-    labels: 
-      org.hotio.pullio.update: 'true'
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
@@ -534,6 +479,7 @@ services:
     networks: 
       - media
     depends_on:
+      - prowlarr
       - qbittorrent
     restart: always
     environment:
@@ -556,6 +502,7 @@ services:
     networks: 
       - media
     depends_on:
+      - prowlarr
       - qbittorrent
     restart: always
     environment:
@@ -601,6 +548,7 @@ services:
     networks: 
       - media
     depends_on:
+      - prowlarr
       - qbittorrent
     restart: always
     environment:
@@ -628,3 +576,579 @@ networks:
     driver: bridge
   media: 
     driver: bridge
+
+ CHANGELOG 2021-05-01
+# REMOVED: PULLIO notify labels. It cannot send email notifications, only Discord which I and most people I believe don't use. 
+## KEPT: PULLIO update labels, for media/download related containers, to update all of them with 1 command (manually or scheduled). 
+# CHANGED: Scrutiny, an attempt to disable its interval based SMART scan, so that this can be done via the NIGHTLY, script.
+## REASON: It will spin up all drives just for the SMART scan. Better to do this when they are already spinning. 
+# CLEANUP: Changed order of values, to have consistency for each and every container.
+#
+# CHANGELOG 2021-04-28
+## REMOVED: Watchtower. Replaced with Pullio bash script. For a weekly update check, running a daemon like Watchtower makes no sense. 
+## CHANGED: VPN-proxy back to Frankfurt, for some reason Swiss doesn't work, the server TLS certificate is outdated. 
+## REPLACED IMAGE: QBittorrent image with the one from Hotio because it has unrar and doesn't create files with root-only access.
+## REPLACED ALL MEDIA RELATED IMAGES: all images are now from Hotio.
+## CHANGED: Scrutiny requires a yaml config file to recognise NVME drives. see my github for an example. 
+## CHANGED: Ports of VPN-proxy to allow access to QBittorrent as it listens on a different port for the webUI.  
+#
+# CHANGELOG 2021-04-13
+## ADDED Guacamole! Now you can open your browser and access the desktop of your server. The image works, still have to test Guacamole. 
+## Removed Transmission as nobody seems to use it anymore, even though it had full Sonarr compatibility, it is riddled with config issues:
+## temp folder will never be used with Sonarr/Radarr, making the filesystem optimisations (disabling CoW & seperate subvolume for incomplete dir)
+## Completely useless, allowing fragmentation. Also, the complete dir is changed during downloading via Sonarr. Devs believe this is all normal behaviour.
+## ADDED QBittorrent, not from Linuxserver as it is 360MB versus this 150MB image. 
+## ToDO: Will look into using Hotio QFlood image instead, the UI is much nicer but seems to lack important settings to increase disk cache etc.
+## REMOVED unneccessary port binds: 80 for Caddy is not used. Now used for Organizr to access server homepage via url (use your servers /etc/hosts file to set an url). 
+## ToDO: Will look into registering https for LAN only, to access all services via https organizr url (not sure if it makes sense to go this far). 
+## CHANGED: pia wireguard vpn to swiss instead of nine eyes Germany.
+## NOTE: I stopped using Syncthing due to this issue (my laptop SSD filled up within 30min): https://forum.syncthing.net/t/problems-with-renamed-directory/16611
+## I might try Resilio instead or see if the dev is helpful to figure out the issue, if it isn't "by design".
+#
+version: "2.3"
+## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is for Docker Swarm, NOT Compose. Do not use Swarm.
+## Docker-Compose 2.x is for Compose.
+services:
+##
+##_____MANAGEMENT_____
+##____________________ Portainer [Management/Docker]
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: always
+    networks: 
+      - management
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DOCKERDIR/portainer/data:/data
+    ports:
+      - "9000:9000"
+##
+##_____________________ Heimdall [Management/HOMEPAGE] 
+  organizr:
+    container_name: organizr
+    image: organizr/organizr:latest
+    restart: always
+    healthcheck:
+      disable: 'true'
+    networks: 
+      - management
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - $DOCKERDIR/organizr:/config
+    ports: 
+      - 80:80
+    #labels: 
+     #caddy: https://o.belix
+      #caddy.reverse_proxy: "{{upstreams 80}}"
+      #caddy.tls: "internal"
+##
+##____________________ Guacamole [Management/remote-desktop]
+  guacamole:
+    container_name: guacamole
+    image: oznu/guacamole
+    restart: always
+    networks: 
+      - management
+    environment:
+      EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
+    volumes:
+      - $DOCKERDIR/guacamole:/config
+    ports:
+     - "8000:8080"
+##
+##____________________ WG-easy [Management/VPN]
+  vpn-server-ui:
+    image: vx3r/wg-gen-web:latest
+    container_name: vpn-server-ui
+    restart: always
+    networks:
+      - management
+    environment:
+      WG_CONF_DIR: /data
+      WG_INTERFACE_NAME: wg0.conf
+      SMTP_HOST: $SMTP
+      SMTP_PORT: 587
+      SMTP_USERNAME: $SMTPUSER
+      SMTP_PASSWORD: $SMTPPASS
+      SMTP_FROM: $RECIPIENT
+    volumes:
+      - /etc/wireguard:/data
+    ports:
+      - "5100:8080"
+##
+##____________________ Scrutiny [Management/monitoring]
+  scrutiny:
+    container_name: scrutiny
+    image: hotio/scrutiny
+    restart: always
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
+    devices:
+      - "/dev/nvme0n1"
+      - "/dev/sda"
+      - "/dev/sdb"
+      - "/dev/sdc"
+      - "/dev/sdd"
+      - "/dev/sde" 
+    networks: 
+      - management
+    #entrypoint: CMD
+    environment:
+      mode: web
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+      API_ENDPOINT: http://scrutiny-web:8080
+    volumes:
+      - /run/udev:/run/udev:ro
+      - $DOCKERDIR/scrutiny/config:/config
+    ports:
+      - "8001:8080"
+##
+##
+##______NETWORK_______
+##____________________ AdGuard Home [NETWORK/noads-dnsserver]
+  adguard:
+    container_name: adguard-home
+    image: adguard/adguardhome
+    restart: always
+    network_mode: host
+    volumes:
+       - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
+       - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
+##____________________ Unbound [NETWORK/noads-dnsserver]
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    restart: always
+    healthcheck:
+      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
+      timeout: 3s
+      start_period: 5s
+    networks: 
+      - management  
+    volumes:
+      - $DOCKERDIR/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
+    ports:
+      - 5335:53/tcp
+      - 5335:53/udp
+##
+##____________________ Unifi Controller [NETWORK/Wifi]
+  unifi:
+    container_name: unifi
+    image: ghcr.io/linuxserver/unifi-controller
+    #mac_address: d0:ca:ab:cd:ef:03
+    networks: 
+      - management
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      MEM_LIMIT: 512M #optional
+    volumes:
+      - $DOCKERDIR/unifi/config:/config
+    ports:
+      - 10001:10001/udp #to auto-discover your Access Points
+      - 8080:8080 # Controller communication with Access Points and vice versa
+      - 8443:8443 #to access webUI
+      - 1900:1900/udp #to auto-discover this Controller in your app
+##
+##
+##________CLOUD________
+##_____________________ Caddy [CLOUD/web-proxy]
+  caddy:
+    container_name: caddy-proxy
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    restart: always
+    networks: 
+      - web-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DOCKERDIR/caddy/caddy_data:/data
+      - $DOCKERDIR/caddy/config:/config
+    labels:
+      caddy.email: $EMAIL
+      #caddy.log.output: file /data/access.log
+    ports:
+      - 443:443
+##
+##_____________________ Firefox Sync [CLOUD/Browser] 
+# generate secret.txt first see docker-config.sh
+  firefox-sync:
+    image: crazymax/firefox-syncserver:latest
+    container_name: firefox-sync
+    restart: always
+    networks: 
+      - web-proxy
+    environment: 
+      FF_SYNCSERVER_PUBLIC_URL: https://firefox.$DOMAIN
+      FF_SYNCSERVER_SECRET: $FFSYNCSECRET
+      FF_SYNCSERVER_FORWARDED_ALLOW_IPS: '*'
+      FF_SYNCSERVER_FORCE_WSGI_ENVIRON: 'true'
+      FF_SYNCSERVER_ALLOW_NEW_USERS: 'false'
+      FF_SYNCSERVER_LOGLEVEL: debug
+      FF_SYNCSERVER_ACCESSLOG: 'true'
+    volumes:
+      - $DOCKERDIR/firefox-sync:/data
+    labels:
+      caddy: firefox.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 5000}}"
+##
+##_____________________ Bitwarden [CLOUD/Password-manager] 
+  vaultwarden:
+    image: vaultwarden/server
+    container_name: vaultwarden
+    restart: always
+    healthcheck:
+      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
+    networks: 
+      - web-proxy
+    volumes:
+      - $DOCKERDIR/vaultwarden:/data
+    environment:
+      WEBSOCKET_ENABLED: 'true'
+      DOMAIN: vault.$DOMAIN
+      SIGNUPS_ALLOWED: 'false'
+      ADMIN_TOKEN: $VAULTWARDENTOKEN
+    labels:
+      caddy: vault.$DOMAIN
+      caddy.reverse_proxy_0: "{{upstreams 80}}"
+      # Required extra headers
+      caddy.encode: gzip
+      caddy.header.X-XSS-Protection: '"1; mode=block;"'
+      caddy.header.X-Frame-Options: "DENY"
+      caddy.header.X-Content-Type-Options: "none"
+      caddy.reverse_proxy_1: "/notifications/hub/negotiate {{upstreams 80}}"
+      caddy.reverse_proxy_2: "/notifications/hub {{upstreams 3012}}"
+##
+##____________________ FileRun [CLOUD/FileRun]
+  filerun:
+    image: afian/filerun
+    container_name: filerun
+    restart: always
+    networks: 
+      - web-proxy
+      - filerun
+    environment:
+      FR_DB_HOST: filerun-db
+      FR_DB_PORT: 3306
+      FR_DB_NAME: filerundb
+      FR_DB_USER: $USERNAME
+      FR_DB_PASS: $PW_DB
+      APACHE_RUN_USER: $USERNAME
+      APACHE_RUN_USER_ID: $PUID
+      APACHE_RUN_GROUP: $USERNAME
+      APACHE_RUN_GROUP_ID: $PGID
+    depends_on:
+      - filerun-db
+    volumes:
+      - $DOCKERDIR/filerun/html:/var/www/html
+      - $DATAPOOL/Users:/user-files
+      # Mount shareduser folder (mnt/pool/$SHAREDUSER) containing family shared files, into the home users folders
+ #     - $DATAPOOL/Users/intern/Shared:/user-files/intern/$USER1/Shared
+#      - $DATAPOOL/Users/intern/Shared:/user-files/intern/$USER2/Shared
+    labels:
+      caddy: files.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.reverse_proxy.header_up: "Host files.$DOMAIN"
+      # Required extra headers
+      caddy.file_server: ""                                         # required for fileservers
+      caddy.encode: gzip                                            # required for fileservers
+      caddy.header.Strict-Transport-Security: '"max-age=15768000;"' # Recommended security hardening for fileservers
+      caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
+      caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
+      caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
+##____________________ Filerun database [CLOUD/FileRun/db]
+  filerun-db:
+    image: mariadb:10.1
+    container_name: filerun-db
+    restart: always
+    networks:
+      - filerun
+    environment:
+      MYSQL_ROOT_PASSWORD: $PW_DB
+      MYSQL_USER: $USER
+      MYSQL_PASSWORD: $PW_DB
+      MYSQL_DATABASE: filerundb
+    volumes:
+      - $DOCKERDIR/filerun/db:/var/lib/mysql
+##_____________________ OnlyOffice Document Server [Cloud/Office]
+  onlyoffice:
+    image: onlyoffice/documentserver:6.3.1.32
+    container_name: onlyoffice
+    stdin_open: 'true'
+    restart: always
+    networks: 
+      - web-proxy
+    tty: 'true'
+    volumes:
+      - $DOCKERDIR/onlyoffice/data:/var/www/onlyoffice/Data
+      - $DOCKERDIR/onlyoffice/log:/var/log/onlyoffice
+      - $DOCKERDIR/onlyoffice/database:/var/lib/postgresql
+      - /usr/share/fonts:/usr/share/fonts
+    dns: 9.9.9.9
+    environment:
+      JWT_ENABLED: 'true'
+      JWT_SECRET: $ONLYOFFICEJWT
+    labels:
+      caddy: office.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      # Required extra headers
+      caddy.file_server: ""
+      caddy.encode: gzip
+      caddy.header.X-Content-Type-Options: "nosniff"
+##
+##
+##________MEDIA________
+##_____________________ Jellyfin [MEDIA/Library] 
+  jellyfin:
+    container_name: jellyfin
+    image: hotio/jellyfin
+    restart: always
+    networks: 
+      - media
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/card0:/dev/dri/card0
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+      UMASK_SET: 002 #optional
+    volumes:
+      - $DOCKERDIR/jellyfin/config:/config
+      - $DATAPOOL/Media:/data
+    # Required for Intel QuickSync/VAAPI hardware accelerated video encoding/transcoding
+    ports:
+      - 8096:8096
+##
+##____________________ vpn-proxy [MEDIA/vpn-client-for-media]
+  vpn-proxy:
+    container_name: vpn-proxy
+    image: thrnz/docker-wireguard-pia
+    restart: always
+    networks: 
+      - vpn-proxy
+    cap_add:
+      - NET_ADMIN
+      #- SYS_MODULE might not be needed with a 5.6+ kernel?
+      #- SYS_MODULE
+      # Mounting the tun device may be necessary for userspace implementations
+      #devices:
+      #- /dev/net/tun:/dev/net/tun
+    privileged: 'true'
+    sysctls:
+      # wg-quick fails to set this without --privileged, so set it here instead if needed
+      - net.ipv4.conf.all.src_valid_mark=1
+      # May as well disable ipv6. Should be blocked anyway.
+      - net.ipv6.conf.default.disable_ipv6=1
+      - net.ipv6.conf.all.disable_ipv6=1
+      - net.ipv6.conf.lo.disable_ipv6=1
+    healthcheck:
+      test: ping -c 1 www.google.com || exit 1
+      interval: 5m # While testing container, change to 10s. To prevent constant logfile activity, change to a few minutes
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    environment:
+      LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
+      LOC: de-frankfurt
+      USER: $VPN_USER_PIA
+      PASS: $VPN_PW_PIA
+      #KEEPALIVE: 25
+      #VPNDNS: 8.8.8.8,8.8.4.4
+      PORT_FORWARDING: 1
+      PORT_PERSIST: 0
+      PORT_SCRIPT: /pia-shared/updateport-qbittorrent.sh
+      #WG_USERSPACE: 1
+    volumes:
+      # Auth token is stored here
+      - $DOCKERDIR/vpn-proxy/pia:/pia
+      # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
+      - $DOCKERDIR/vpn-proxy/pia-shared:/pia-shared
+    # The container has no recovery logic. Use a healthcheck to catch disconnects.
+    ports:
+      - 9090:8080 #Qbittorrent webUI
+##
+##____________________ Transmission [MEDIA/download-client]
+  qbittorrent:
+    image: hotio/qbittorrent
+    container_name: qbittorrent
+    depends_on:
+      - vpn-proxy
+    network_mode: service:vpn-proxy
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/qbittorrent:/config
+      - $DATAPOOL/Media/incoming:/Media/incoming
+    labels: 
+      org.hotio.pullio.update: 'true'
+##
+##____________________ Unpackerr [MEDIA/download-unpack]
+#  unpackerr:
+#    container_name: unpackerr
+#    image: hotio/unpackerr
+#    networks: 
+#      - media
+#    restart: always
+#    environment:
+#      PUID: $PUID
+#      PGID: $PGID
+#      UMASK: 002
+#      TZ: $TZ
+#    volumes:
+#      - $DOCKERDIR/unpacker/config:/config
+#      - $DATAPOOL/Media:/Media
+##
+##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
+  prowlarr:
+    container_name: prowlarr
+    image: hotio/prowlarr:testing
+    networks: 
+      - media
+    depends_on:
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/prowlarr/config:/config
+      - $DATAPOOL/Media/incoming:/Media/incoming
+    ports:
+      - 9696:9696
+##____________________ Jackett [MEDIA/torrent-proxy for Sonarr&Radarr]
+  jackett:
+    container_name: jackett
+    image: hotio/jackett
+    networks: 
+      - media
+    depends_on:
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/jackett/config:/config
+      - $DATAPOOL/Media/incoming:/Media/incoming
+    ports:
+      - 9117:9117
+##
+##____________________ Sonarr [MEDIA/PVR-TVshows]
+  sonarr:
+    container_name: sonarr
+    image: hotio/sonarr
+    networks: 
+      - media
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/sonarr/config:/config
+      - $DATAPOOL/Media:/Media
+    ports:
+      - 8989:8989
+    labels: 
+      org.hotio.pullio.update: 'true'
+##
+##____________________ Radarr [MEDIA/PVR-Movies]
+  radarr:
+    container_name: radarr
+    image: hotio/radarr
+    networks: 
+      - media
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/radarr/config:/config
+      - $DATAPOOL/Media:/Media
+    ports:
+      - 7878:7878
+    labels: 
+      org.hotio.pullio.update: 'true'
+##
+##____________________ Bazarr [MEDIA/subtitles]
+  bazarr:
+    container_name: bazarr
+    image: hotio/bazarr
+    networks: 
+      - media
+    depends_on:
+       - sonarr
+       - radarr
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/bazarr/config:/config
+      - $DATAPOOL/Media:/Media
+    ports:
+      - 6767:6767
+    labels: 
+      org.hotio.pullio.update: 'true'
+##
+##____________________ Lidarr [MEDIA/PVR-Music]
+  lidarr:
+    container_name: lidarr
+    image: hotio/lidarr
+    networks: 
+      - media
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/lidarr/config:/config
+      - $DATAPOOL/Media:/Media
+    ports:
+      - 8686:8686
+    labels: 
+      org.hotio.pullio.update: 'true'
+#
+#
+networks:
+  management:
+    driver: bridge
+  web-proxy:
+    driver: bridge
+  filerun:
+    driver: bridge
+  vpn-proxy:
+    driver: bridge
+  media: 
+    driver: bridge
+
