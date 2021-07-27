@@ -8,7 +8,7 @@
 # ADDED: vx3r/wg-gen-web, calling it vpn-server-ui. It's a webUI for your Wireguard Server, you can add clients and configure defaults, just as userfriendly as wg-easy but more useful. 
 # REMOVED: Tikaserver and ElasticSearch for FileRun (moved to Docker/Extras on Github), since most users won't need it, it is a waste of resources. It is used for in-file text searching.
 # ADDED: Prowlarr as alternative to Jackett. Instead of manually having to add each download site/indexer to Jackkett and then individually 1-by-1 to Sonarr/Radarr, Prowlarr autosyncs to apps, saving you lots of time.
-#        Prowlarr does not support all sites/indexers but it supports plenty and is stable enough. Will remove Jackett with the next update. 
+#        Not removing Jackett yet, Prowlarr does not support all sites/indexers but it supports plenty and is stable enough for main use. 
 ## REMOVED: Flareresolverr as Prowlarr doesn't need it. 
 ## CHANGED: qbittorrent, jackett and prowlarr now also set Timezone (added $TZ env variable to the containers), to match Sonarr/Radarr/Lidarr.
 #
