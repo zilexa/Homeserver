@@ -46,7 +46,9 @@ rm -rf aescrypt*
 # Enable favicons - Add icons and support for all browsers, homescreens and OS's. 
 # -------------------------------------------------------------------------------
 # Extract icons, get the assets from here: https://feedback.filerun.com/en/communities/1/topics/1196-a-new-favicon-for-filerun-with-support-for-all-devices-platforms-and-browsers
+## Copy the downloaded file to your $HOME/docker/filerun/html/postupdate folder
 tar -xf postupdate/favicon.tar.xz
+
 # Replace a line with multiple lines to support all devices/OS's.
 sed -i -e 's|<link rel="icon" type="image/x-icon" href="favicon.ico" />|<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">\
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">\
@@ -63,4 +65,5 @@ sed -i -e 's|<link rel="icon" type="image/x-icon" href="favicon.ico" />|<link re
 # BUGFIXES as released on feedback.filerun.com
 # --------------------------------------------
 # Thumbnails & previews not created: https://feedback.filerun.com/en/communities/1/topics/1216-thumbnail-problems
+## Copy the downloaded file to your $HOME/docker/filerun/html/postupdate folder
 cp -fr postupdate/ImageMagick.php system/classes/vendor/FileRun/Thumbs/Resizers/ImageMagick.php
