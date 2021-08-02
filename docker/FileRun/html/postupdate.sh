@@ -45,7 +45,7 @@ rm -rf aescrypt*
 
 # Enable favicons - Add icons and support for all browsers, homescreens and OS's. 
 # -------------------------------------------------------------------------------
-# Extract icons
+# Extract icons, get the assets from here: https://feedback.filerun.com/en/communities/1/topics/1196-a-new-favicon-for-filerun-with-support-for-all-devices-platforms-and-browsers
 tar -xf postupdate/favicon.tar.xz
 # Replace a line with multiple lines to support all devices/OS's.
 sed -i -e 's|<link rel="icon" type="image/x-icon" href="favicon.ico" />|<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">\
