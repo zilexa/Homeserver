@@ -1,14 +1,13 @@
 #!/bin/sh
-# In other scripts, use this to check if nightly tasks are running and wait for it. 
-#while [[ -f /tmp/backup-is-running ]] ; do
-#   sleep 10 ;
-#done
 
-# Get this script folder path
+# PREPARE
+# -------
+# Get this script folder path, create tempfile to indicate nightly tasks are running
 SCRIPTDIR="$(dirname "$(readlink -f "$BASH_SOURCE")")"
-
-# Create a temp file to indicate maintenance is running
 touch ${SCRIPTDIR}/running-tasks
+
+# Get the user account for non-root commands
+USERACCOUNT=$(who | head -n1 | cut -d " " -f1) 
 
 
 # CLEANUP WATCHED TVSHOWS & MOVIES
@@ -25,24 +24,23 @@ python3 ${SCRIPTDIR}/media-cleaner/media_cleaner.py |& tee -a ${SCRIPTDIR}/logs/
 
 # FileRun 
 # -------
-# CHANGE "ASTERIX" TO THE LOGGED IN USER NAME!
 # Empty trash >30 days old files
-docker exec -u asterix -w /var/www/html/cron filerun php empty_trash.php -days 30
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php empty_trash.php -days 30
 # Clear db of files/folders that no longer exist
-docker exec -u asterix -w /var/www/html/cron filerun php paths_cleanup.php --deep
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php paths_cleanup.php --deep
 # Index filenames for files created outside FileRun
-docker exec -u asterix -w /var/www/html/cron filerun php index_filenames.php /user-files true
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php index_filenames.php /user-files true
 # Read metadata of files created outside FileRun, the UI adjusts to photos (GPS), videos etc and has specific options per filetype
-docker exec -u asterix -w /var/www/html/cron filerun php metadata_index.php 
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php metadata_index.php 
 # Create thumbnails for files - allows instant scrolling through photos
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php make_thumbs.php
 # Create previews for files - allows instant previews for photos
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR1 --size large
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR2 --size large
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR3 --size large
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR4 --size large
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR1 --size large
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR2 --size large
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR3 --size large
+docker exec -u ${USERACCOUNT} -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR4 --size large
 # Index content of files, extracting text, to allow searching within files - not recommended
-# usr/bin/docker exec -u asterix -w /var/www/html/cron -it filerun php process_search_index_queue.php
+# usr/bin/docker exec -u ${USERACCOUNT} -w /var/www/html/cron -it filerun php process_search_index_queue.php
 
 
 # SUBVOLUMES BACKUP  
