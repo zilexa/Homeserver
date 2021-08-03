@@ -37,10 +37,10 @@ docker exec -u asterix -w /var/www/html/cron filerun php metadata_index.php
 # Create thumbnails for files - allows instant scrolling through photos
 docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php
 # Create previews for files - allows instant previews for photos
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
-docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR1 --size large
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR2 --size large
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR3 --size large
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username FiLeRuNuSeR4 --size large
 # Index content of files, extracting text, to allow searching within files - not recommended
 # usr/bin/docker exec -u asterix -w /var/www/html/cron -it filerun php process_search_index_queue.php
 
