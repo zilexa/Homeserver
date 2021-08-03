@@ -2,12 +2,11 @@
 
 # PREPARE
 # -------
-# Get this script folder path, create tempfile to indicate nightly tasks are running
+# Get this script folder path and the running user account
 SCRIPTDIR="$(dirname "$(readlink -f "$BASH_SOURCE")")"
-touch ${SCRIPTDIR}/running-tasks
-
-# Get the user account for non-root commands
 USERACCOUNT=$(who | head -n1 | cut -d " " -f1) 
+# create tempfile to indicate nightly tasks are running
+touch ${SCRIPTDIR}/running-tasks
 
 
 # CLEANUP WATCHED TVSHOWS & MOVIES
