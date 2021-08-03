@@ -25,23 +25,24 @@ python3 ${SCRIPTDIR}/media-cleaner/media_cleaner.py |& tee -a ${SCRIPTDIR}/logs/
 
 # FileRun 
 # -------
+# CHANGE "ASTERIX" TO THE LOGGED IN USER NAME!
 # Empty trash >30 days old files
-docker exec -w /var/www/html/cron filerun php empty_trash.php -days 30
+docker exec -u asterix -w /var/www/html/cron filerun php empty_trash.php -days 30
 # Clear db of files/folders that no longer exist
-docker exec -w /var/www/html/cron filerun php paths_cleanup.php --deep
+docker exec -u asterix -w /var/www/html/cron filerun php paths_cleanup.php --deep
 # Index filenames for files created outside FileRun
-docker exec -w /var/www/html/cron filerun php index_filenames.php /user-files true
+docker exec -u asterix -w /var/www/html/cron filerun php index_filenames.php /user-files true
 # Read metadata of files created outside FileRun, the UI adjusts to photos (GPS), videos etc and has specific options per filetype
-docker exec -w /var/www/html/cron filerun php metadata_index.php 
+docker exec -u asterix -w /var/www/html/cron filerun php metadata_index.php 
 # Create thumbnails for files - allows instant scrolling through photos
-docker exec -w /var/www/html/cron filerun php make_thumbs.php
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php
 # Create previews for files - allows instant previews for photos
-docker exec -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
-docker exec -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
-docker exec -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
-docker exec -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
+docker exec -u asterix -w /var/www/html/cron filerun php make_thumbs.php --username UsErNaMe --size large
 # Index content of files, extracting text, to allow searching within files - not recommended
-# usr/bin/docker exec -w /var/www/html/cron -it filerun php process_search_index_queue.php
+# usr/bin/docker exec -u asterix -w /var/www/html/cron -it filerun php process_search_index_queue.php
 
 
 # SUBVOLUMES BACKUP  
