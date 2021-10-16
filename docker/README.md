@@ -83,7 +83,7 @@ Things you need to take care of:
  
 #### Step 4 - Run Docker Compose
 `cd docker` (when you open terminal, you should already be in $HOME).
-Check for errors: `docker-compose -f docker-compose.yml config` or if you are not in that folder (`cd docker`): `docker-compose -f $HOME/docker/docker-compose.yml config` using -f to point to the location of your config files. 
+Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
 
 Before running docker-compose, make sure: 
 - all app-specific requirements are taken care of. The script from the 
