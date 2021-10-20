@@ -71,7 +71,7 @@ What you have to do yourself during execution:
     - Netdata: just follow the wizard. 
     - NFSv4.2: read more about it here: https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)
 
-#### Step 3 - Prepare, Verify (repeat) & Run Compose
+### Step 3 - Prepare, Verify (and repeat) your Compose file (and repeat)
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
 Notice this folder and its contents are read-only, you need elevated root rights to edit the files. 
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
@@ -90,7 +90,8 @@ Before running docker-compose, make sure:
 - the .env file is complete and correct.
 - the docker-compose.yml file is correct. 
  
-##### 3) Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
+### Step 4: Run Docker Compose
+Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
 - **Warning: if you do prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
 
 All images will be downloaded, containers will be build and everything will start running. 
