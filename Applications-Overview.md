@@ -8,27 +8,29 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
 
 
 ### _Server Management & Monitoring_
-_[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)
+_Server Monitoring via [Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_
+Note this is installed natively on your OS: [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)
 >Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info.\
 >There are other more bloated alternatives (Prometheus+Grafana) that is overkill in a homeserver situation. Netdata requires lm-sensors.\
 >Runs natively just because it is such a deeply integrated to get sensor access etc. If you run it in Docker, you might have to fix that access yourself.
 
 \
-_[Portainer](https://www.portainer.io/products/community-edition)_ - via Docker
+_Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
 >An complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
 
 \
-_[Organizr](https://github.com/causefx/Organizr)_ - via Docker
->A a customisable homepage to have quick access to all your services/applications. 
+_Server Applications Portal via [Organizr](https://github.com/causefx/Organizr)_
+>A customisable homepage to have quick access to all your services/applications. 
 
 \
-_[UniFi Controller](https://github.com/goofball222/unifi)_ - via Docker\
+_Home WiFi configuration via [UniFi Controller](https://github.com/goofball222/unifi)_
 Mobile App: [Unifi Network](https://play.google.com/store/apps/details?id=com.ubnt.easyunifi)
->Ubiquiti UniFi wireless access points are the best. Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once.
+> Only if you use Ubiqity/UniFi hardware. Ubiquiti UniFi wireless access points are the best and are easy to seamlessly integrate in your house decoration. Note there are lots of alternatives these days. 
+> Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once, no need to keep it running all the time. 
 
 ### _Web Access Security_
 
-_[Caddy](https://caddyserver.com/)_ - via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)
+_Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)_
 >reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc.\
 >Caddy already extremely simplifies the whole https process to allow browsers and apps A+ secure connection to your server. Docker Caddy Proxy goes one step further and allows you to set it up per container with just 2 lines! Alternatives like Traefik are needlessly complicated.
 
@@ -36,7 +38,8 @@ _[Caddy](https://caddyserver.com/)_ - via [docker caddy proxy](https://github.co
 > All other apps are only available via VPN or within your local network. You can easily expose other apps such as Jellyfin by adding a few labels to its container. 
 
 \
-_[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker with _[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
+_Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ 
+_Your own recursive DNS server to stop shouting your browsing history to the world [Unbound](https://github.com/MatthewVance/unbound-docker)_ 
 >Unbound is a recursive DNS resolver. By using Unbound, no 3rd party will know the full URLs of the sites you are visiting (your ISP, local and international DNS providers).\
 >AdGuardHome is a DNS based malware & ad filter, blocking ad requests but also blocking known malware, coinmining and phishing sites!
 
@@ -76,21 +79,21 @@ Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=co
 - Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
 \
-_[OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker
+_Your own Office Online/Google Docs via FileRun [OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker
 >Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud.
 
 \
-_[Firefox Sync](https://github.com/mozilla-services/syncserver)_ - via Docker
+_Your own browser sync engine [Firefox Sync](https://github.com/mozilla-services/syncserver)_ - via Docker
 >By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla.\
 >Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
 
 \
-_[Paperless](https://github.com/jonaswinkler/paperless-ng)_ - via Docker
+_Paper document management [Paperless](https://github.com/jonaswinkler/paperless-ng)_ - via Docker
 >Scan files and auto-organise for your administration archive with a webUI to see and manage them. [Background](https://blog.kilian.io/paperless/) of Paperless. No more paper archives!
 
 
 ### _Media Server_
-_[Jellyfin](https://jellyfin.org/)_ - via Docker\
+_Media server [Jellyfin](https://jellyfin.org/)_ - via Docker\
 Mobile & TV Apps: [Jellyfin clients](https://jellyfin.org/clients/) (for series/movies), [Gelli](https://github.com/dkanada/gelli/releases) (amazing Music Player)
 >A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do.\
 >Jellyfin is user-friendly and has easy features that you might miss from the streaming giants such as watched status management etc.\
@@ -99,12 +102,13 @@ The mediaserver can transcode media on the fly to your clients, adjusting for av
 > Allows you to listen to your old AudioCDs! A HiRes Audio alternative to Spotify/Apple Music etc. 
 
 \
-_[Sonarr (tvshows), Radarr (movies) Bazarr (subtitles), Jackett (torrentproxy)](https://wiki.servarr.com/Docker_Guide)_ - via Docker
+_[Sonarr (tvshows), Radarr (movies) Bazarr (subtitles), Jackett (torrentproxy)](https://wiki.servarr.com/Docker_Guide)_
 >A visual, user-friendly tool allowing you to search & add your favourite TV shows (Sonarr) or Movies (Radarr) and subtitles (Bazarr), see a schedule of when the next episodes will air and completely take care of obtaining the requires files (by searching magnets/torrents via Jackett, a proxy for all torrentsites) and organising them, all in order to get a full-blown Nextflix experience served by JellyFin.| For years I have messed with FlexGet, but it can't beat Sonarr.   
+>[BLACK app for Android](https://play.google.com/store/apps/details?id=com.advice.drone): Recommended wife/kids friendly app to add series/movies, discover new, enable/disable automatic monitoring of episodes per show and monitor QBittorrent downloads: 
 
 \
-_[Transmission](https://hub.docker.com/r/linuxserver/transmission/)_ + [PIA Wireguard VPN](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_  - via Docker\
-Mobile App: [Transmission Remote](https://play.google.com/store/apps/details?id=net.yupol.transmissionremote.app)
->Sonarr, Radarr, Jackett (automatically) add stuff to Transmission which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.\
+_[Qbittorrent](https://hotio.dev/containers/qbittorrent/)_
+_[PIA Wireguard VPN](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_ 
+>Sonarr, Radarr, Jackett (automatically) add stuff to Qbittorent which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.\
 >Via the `docker-wireguard-pia` image created by `thrnz`, your downloads are obscured while still allowing you to reach high speeds via the open port in the VPN tunnel, and you can even automatically change the port in Transmission when PIA assigns a new open port, which happens every 90 days.
 
