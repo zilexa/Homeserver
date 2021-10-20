@@ -128,6 +128,6 @@ Note: Monitorr can be used to be notified of updates + update automatically (by 
 Permission issues can be solved with the chown and chmod commands.
 For example Filerun needs you to own the very root of the user folder (/mnt/pool/Users), not root. 
 
-NEXT STEPS...
+_NEXT STEPS..._
 Continue with Step 4 of the main guide, configuring your Apps: 
 [Overview of Docker Apps](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md) contains direct links to the documentation or homepage of each Docker app. 
