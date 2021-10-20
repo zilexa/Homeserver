@@ -49,19 +49,18 @@ _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker 
 
 
 ### _Cloud Experience_
-Configure remote VPN access
-_[VPN SERVER UI)](https://github.com/vx3r/wg-gen-web/)_ - via Docker\
-> Create an admin account, then add VPN profiles for all your devices.\  
+_Remote VPN access [vpn-server-ui](https://github.com/vx3r/wg-gen-web/)_ - via Docker\
+> Notice your container vpn-server-ui (http://serverip:5100). Create an admin account, then add VPN profiles for all your devices.\  
 > For Android: install Wireguard on your dev and consider installing Automate (free). Read my post about why and how here: https://www.reddit.com/r/WireGuard/comments/nkn45n/on_android_finally_you_can_automatically_turn/ 
 
-_[Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ - via Docker\
+_Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ - via Docker\
 Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use.\
 > Additionally allows you to securely share passwords and personal files or documents (IDs, salary slips, insurance) with others via Bitwarden Send.\
 > By using `bitwarden_rs`, written in the modern language RUST, it uses exponentially less resources than the conventional Bitwarden-server.
 
 \
-_[FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
+_Files cloud [FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
 Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for phone backup).
 >FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes.\
 > FileRun support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc.\
@@ -71,7 +70,7 @@ Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=co
 
 > FolderSync is THE app for Android when you run your own filecloud, allowing you to sync the data of your apps (photos, chat apps, backup of your 2FA app (Aegis), home screen settings etc.) to your server, instead of to Google Drive. It also allows local sync: moving all app-specific backup files (like whatsapp\databases) to a single backup dir first before syncing it to your server.
 
-### Sync devices, external users laptops
+*Sync devices, external users laptops*
 - Filerun supports webDAV, see [helpful tips](https://docs.filerun.com/webdav). This way you benefit from instant file indexing (for search) and server-side photo thumbails & previews. Consider using webDAV to sync your User files with your mobile devices: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) is very user-friendly, additionally [FolderSync](https://www.tacit.dk/) allows instant or scheduled syncing. 
 - For desktops and laptops and to keep your parents PC user files in-sync, consider webDAV as well. For Linux, the NextCloud Desktop client is the obvious choice as it is the only tool that does 2-way sync.
 - Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
