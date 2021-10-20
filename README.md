@@ -45,18 +45,10 @@ Move files to your server data pool and [create your folder structure](https://g
 ### Step 3. Prepare server and docker
 Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for specific docker services. Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**_
 
-### Step 4. Configure & schedule Backups & Maintenance
-Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/docker/HOST) of your server such as cleanup, backup and disks protection tasks. 
-
-### Step 5. Sync devices, external users laptops
-- Filerun supports webDAV, see [helpful tips](https://docs.filerun.com/webdav). This way you benefit from instant file indexing (for search) and server-side photo thumbails & previews. Consider using webDAV to sync your User files with your mobile devices: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) is very user-friendly, additionally [FolderSync](https://www.tacit.dk/) allows instant or scheduled syncing. 
-- For desktops and laptops and to keep your parents PC user files in-sync, consider webDAV as well. For Linux, the NextCloud Desktop client is the obvious choice as it is the only tool that does 2-way sync.
-- Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
-
-### Step 6. Configure remote VPN access
-[VPN client configs](https://docs.pivpn.io/wireguard/) for yourself and others you trust to access non-exposed services, to manage your server remotely and to use your own adblocker remotely.
-
-### Step 7. Configure your apps & services
+### Step 4. Configure your apps & services
 The Docker guide (step 3) explains how to access your services. Configuring & using your services is not covered by this guide. 
 The overview of Docker applications below will contain some foldable sections with hints. 
 [Overview of Docker Apps](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md) contains direct links to the documentation or homepage of each Docker app. 
+
+### Step 5. Configure & schedule Backups & Maintenance
+Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/docker/HOST) of your server such as cleanup, backup and disks protection tasks. 
