@@ -38,8 +38,8 @@ _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy
 > All other apps are only available via VPN or within your local network. You can easily expose other apps such as Jellyfin by adding a few labels to its container. 
 
 \
-_Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ 
-_Your own recursive DNS server to stop shouting your browsing history to the world [Unbound](https://github.com/MatthewVance/unbound-docker)_ 
+_Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ \
+_Your own recursive DNS server to stop shouting your browsing history to the world [Unbound](https://github.com/MatthewVance/unbound-docker)_ \
 >Unbound is a recursive DNS resolver. By using Unbound, no 3rd party will know the full URLs of the sites you are visiting (your ISP, local and international DNS providers).\
 >AdGuardHome is a DNS based malware & ad filter, blocking ad requests but also blocking known malware, coinmining and phishing sites!
 
@@ -52,18 +52,18 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 
 
 ### _Cloud Experience_
-_Remote VPN access [vpn-server-ui](https://github.com/vx3r/wg-gen-web/)_ - via Docker\
+_Remote VPN access [vpn-server-ui](https://github.com/vx3r/wg-gen-web/)_
 > Notice your container vpn-server-ui (http://serverip:5100). Create an admin account, then add VPN profiles for all your devices.\  
 > For Android: install Wireguard on your dev and consider installing Automate (free). Read my post about why and how here: https://www.reddit.com/r/WireGuard/comments/nkn45n/on_android_finally_you_can_automatically_turn/ 
 
-_Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ - via Docker\
+_Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ 
 >Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use.\
 > Additionally allows you to securely share passwords and personal files or documents (IDs, salary slips, insurance) with others via Bitwarden Send.\
 > By using `bitwarden_rs`, written in the modern language RUST, it uses exponentially less resources than the conventional Bitwarden-server.
 
 \
-_Files cloud [FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
+_Files cloud [FileRun](https://filerun.com/)_ instead of NextCloud 
 >Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) (for file browsing) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for 2-way or 1-way sync, automated or scheduled) or Goodreader for iOS.
 >FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes.\
 > FileRun support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc.\
@@ -79,21 +79,21 @@ _Files cloud [FileRun](https://filerun.com/)_ instead of NextCloud - via Docker\
 >Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
 \
-_Your own Office Online/Google Docs via FileRun [OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker
+_Your own Office Online/Google Docs via FileRun [OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_
 >Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud.
 
 \
-_Your own browser sync engine [Firefox Sync](https://github.com/mozilla-services/syncserver)_ - via Docker
+_Your own browser sync engine [Firefox Sync](https://github.com/mozilla-services/syncserver)_
 >By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla.\
 >Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
 
 \
-_Paper document management [Paperless](https://github.com/jonaswinkler/paperless-ng)_ - via Docker
+_Paper document management [Paperless](https://github.com/jonaswinkler/paperless-ng)_
 >Scan files and auto-organise for your administration archive with a webUI to see and manage them. [Background](https://blog.kilian.io/paperless/) of Paperless. No more paper archives!
 
 
 ### _Media Server_
-_Media server [Jellyfin](https://jellyfin.org/)_ - via Docker\
+_Media server [Jellyfin](https://jellyfin.org/)_
 >Mobile & TV Apps: [Jellyfin clients](https://jellyfin.org/clients/) (for series/movies), [Gelli](https://github.com/dkanada/gelli/releases) (amazing Music Player)
 >A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do.\
 >Jellyfin is user-friendly and has easy features that you might miss from the streaming giants such as watched status management etc.\
