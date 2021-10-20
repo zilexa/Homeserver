@@ -6,6 +6,7 @@ You can easily find other applications via https://hub.docker.com/
 Below a description of each application that are in Docker-Compose.yml. Choose the ones you need.
 The only exceptions -apps that run natively on the OS for specific reasons- are Netdata, PiVPN and AdGuard Home. These apps have very easy installation instructions.
 
+
 ### _Server Management & Monitoring_
 _[Netdata](https://learn.netdata.cloud/docs/overview/what-is-netdata)_ - via [Native Install](https://learn.netdata.cloud/docs/agent/packaging/installer)
 >Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info.\
@@ -33,12 +34,6 @@ _[Caddy](https://caddyserver.com/)_ - via [docker caddy proxy](https://github.co
 
 > By default only the password manager (Bitwarden), file+Office cloud (FileRun, OnlyOffice), Firefox Sync server and Syncthing are accessible via web.\
 > All other apps are only available via VPN or within your local network. You can easily expose other apps such as Jellyfin by adding a few labels to its container. 
-
-\
-_[PiVPN](https://www.pivpn.io/)_ - via [Native Install](https://docs.pivpn.io/install/)\
-Mobile Apps: [WireGuard](https://play.google.com/store/apps/details?id=com.wireguard.android) + [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate)
->Using the Wireguard VPN protocol, easy and secure access to your non-exposed applications (including SSH & SFTP) on your server.
->Allows you to always use your own DNS (AdGuard Home + Unbound), giving you the same ad-free, secure internet access while outside of your home network, while still allowing direct regular internet access (bypasses the tunnel, only DNS + server IP access goes via the tunnel). Optionally, when in a less secure public environment, let all traffic on your mobile go via the tunnel.
 
 \
 _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker with _[Unbound](https://github.com/MatthewVance/unbound-docker)_ - via Docker
@@ -70,6 +65,11 @@ Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=co
 > The Nextcloud mobile app works with FileRun but CX File Explorer (4.8 stars) is so much better and easier to use. It is a swift and friendly Android file manager that allows you to add your FileRun instance via WebDAV. Compared to the Nextcloud app, it allows you to easily switch between your local storage and your cloud, copying files betweeen them.\
 
 > FolderSync is THE app for Android when you run your own filecloud, allowing you to sync the data of your apps (photos, chat apps, backup of your 2FA app (Aegis), home screen settings etc.) to your server, instead of to Google Drive. It also allows local sync: moving all app-specific backup files (like whatsapp\databases) to a single backup dir first before syncing it to your server.
+
+### Sync devices, external users laptops
+- Filerun supports webDAV, see [helpful tips](https://docs.filerun.com/webdav). This way you benefit from instant file indexing (for search) and server-side photo thumbails & previews. Consider using webDAV to sync your User files with your mobile devices: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) is very user-friendly, additionally [FolderSync](https://www.tacit.dk/) allows instant or scheduled syncing. 
+- For desktops and laptops and to keep your parents PC user files in-sync, consider webDAV as well. For Linux, the NextCloud Desktop client is the obvious choice as it is the only tool that does 2-way sync.
+- Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
 \
 _[OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_ - via Docker
