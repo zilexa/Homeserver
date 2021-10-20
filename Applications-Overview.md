@@ -51,8 +51,8 @@ _[AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ - via Docker 
 ### _Cloud Experience_
 Configure remote VPN access
 _[VPN SERVER GUI (USER/DEVICE MANAGEMENT)](https://github.com/vx3r/wg-gen-web/)_ - via Docker\
-Create an admin account, then add VPN profiles for all your devices.  
-For Android: install Wireguard on your dev and consider installing Automate (free). Read my post about why and how here: https://www.reddit.com/r/WireGuard/comments/nkn45n/on_android_finally_you_can_automatically_turn/ 
+> Create an admin account, then add VPN profiles for all your devices.\  
+> For Android: install Wireguard on your dev and consider installing Automate (free). Read my post about why and how here: https://www.reddit.com/r/WireGuard/comments/nkn45n/on_android_finally_you_can_automatically_turn/ 
 
 _[Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ - via Docker\
 Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
