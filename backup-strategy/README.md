@@ -1,4 +1,4 @@
-# STEP 4: Server Backup & Maintenance Guide
+# STEP 6: Server Backup Guide
 ## [SYNOPSIS](https://github.com/zilexa/Homeserver/blob/master/backup-strategy/backupstrategy.md)
 _(read the synopsis first)_
 
