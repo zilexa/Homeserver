@@ -6,10 +6,11 @@ _**Check the homepage for [the overview of docker applications](https://github.c
 **Contents**
 1. [Configure router & domain](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#configure-router--domain)
 2. [The Docker Compose Guide](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#the-docker-compose-guide)
-    - [Step 1: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---prepare-docker)
-    - [Step 2: Prepare Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-2---prepare-compose)
-    - [Step 3: Run Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-3---run-docker-compose)
-    - [Step 4: Verification](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-4---verify)
+    - [Step 1: Create Docker subvolume](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---create-docker-subvolume)
+    - [Step 2: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---prepare-docker)
+    - [Step 3: Prepare Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-2---prepare-compose)
+    - [Step 4: Run Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-3---run-docker-compose)
+    - [Step 5: Verification](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-4---verify)
     - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
 
@@ -70,34 +71,33 @@ What you have to do yourself during execution:
     - Netdata: just follow the wizard. 
     - NFSv4.2: read more about it here: https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)
 
-#### Step 3 - Prepare Compose
+#### Step 3 - Prepare, Verify (repeat) & Run Compose
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
 Notice this folder and its contents are read-only, you need elevated root rights to edit the files. 
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
-Things you need to take care of:
+##### 1) Things you need to take care of:
 - .env file: set the env variables in the .env file, generate the required secret tokens with the given command.
 - docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking.
 - docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
 - if you remove certain applications, at the bottom also remove unneccary networks.
 - notice the commands at the top of the compose file, for your convenience. 
  
-#### Step 4 - Run Docker Compose
+##### 2) Verify Compose file
 `cd docker` (when you open terminal, you should already be in $HOME).
 Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
-
 Before running docker-compose, make sure: 
 - all app-specific requirements are taken care of. The script from the 
 - the .env file is complete and correct.
 - the docker-compose.yml file is correct. 
-- Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
-- **Warning: if you do prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped.**
+ 
+##### 3) Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
+- **Warning: if you do prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
 
 All images will be downloaded, containers will be build and everything will start running. 
 Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
 
-#### Step 5 - Verify
-5. Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
-6. To update an application in the future, click that container, hit `recreate` and check `pull new image`. 
+##### 4) Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
+
 
 ## Common Docker management tasks
 **Docker Management** 
@@ -109,6 +109,9 @@ I recommend configuring a dns record in your router OR use AdGuard Home > Settin
 A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.\
 B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.\
 C. If needed, you can even access the terminal of the container and check files/logs directly. But an easier way is to go to those files in $HOME/docker/yourcontainer. Only persistent volumes (mapped via docker-compose.yml) are there. Expendable data (containers, volumes, images) is in/var/lib/docker/.  
+
+**Update individual containers**
+6. To update an application, open that container in Portainer, hit `recreate` and check `pull new image`. It is not recommended to use tools like Watchtower to auto-update apps (auto-update is a bad practice in general!). Only the media/download related apps can be consired to auto-update (once a month) since they require frequent updates to keep functioning. Note the Maintenance guide has solutions for auto-updating docker images or notifying you of updates.
 
 **Cleanup docker**
 To remove unused containers (be careful, this means any stopped container) and dangling images, non-persistent volumes: 
@@ -124,3 +127,7 @@ Note: Monitorr can be used to be notified of updates + update automatically (by 
 **Issues:** 
 Permission issues can be solved with the chown and chmod commands.
 For example Filerun needs you to own the very root of the user folder (/mnt/pool/Users), not root. 
+
+NEXT STEPS...
+Continue with Step 4 of the main guide, configuring your Apps: 
+[Overview of Docker Apps](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md) contains direct links to the documentation or homepage of each Docker app. 
