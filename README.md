@@ -36,23 +36,23 @@ NOTES:
   - **My system user account is called `asterix`, I use variables instead of personal names, but that is not always possible. Make sure you replace "asterix" with your systems username (and read Folder Structure! Because "asterix" is also very important in my folder structure).**
 
 
-### Step 1. Filesystem
+### Step 1 - Filesystem
 [Prepare the filesystem](https://github.com/zilexa/Homeserver/tree/master/filesystem). Install fs tools, understand their goal, tailor to your needs.
 
 ### Step 2. Data Migration & Folder Structure
 Move files to your server data pool and [create your folder structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure). Note my folder structure is simple.  
 
-### Step 3. Prepare server and docker
+### Step 3 - Prepare server and docker
 Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for specific docker services. Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**_
 
-### Step 4. Configure your apps & services
+### Step 4 - Configure your apps & services
 The Docker guide (step 3) explains how to access your services. Configuring & using your services is not covered by this guide. 
 The overview of Docker applications below will contain some foldable sections with hints. 
 [Overview of Docker Apps](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md) contains direct links to the documentation or homepage of each Docker app. 
 
-### Step 5. Configure & schedule Maintenance
+### Step 5 - Configure & schedule Maintenance
 Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks) of your server such as cleanup, backup and disks protection tasks. 
 
-### Step 6. Configure & schedule Backups
+### Step 6 - Configure & schedule Backups
 Decide what will be your [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/backup-strategy/backupstrategy.md) and use the [Server Backup Guide](https://github.com/zilexa/Homeserver/tree/master/backup-strategy) to leverage the BTRFS filesystem to backup your @, @home, @docker subvolumes and your data subvolumes easily, while also having a timeline/timemachine snapshots of your data. 
 
