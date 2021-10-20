@@ -53,7 +53,7 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 
 ### _Cloud Experience_
 _Remote VPN access [vpn-server-ui](https://github.com/vx3r/wg-gen-web/)_
-> Notice your container vpn-server-ui (http://serverip:5100). Create an admin account, then add VPN profiles for all your devices.\  
+> Notice your container vpn-server-ui (http://serverip:5100). Create an admin account, then add VPN profiles for all your devices.
 > For Android: install Wireguard on your dev and consider installing Automate (free). Read my post about why and how here: https://www.reddit.com/r/WireGuard/comments/nkn45n/on_android_finally_you_can_automatically_turn/ 
 
 _Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ 
