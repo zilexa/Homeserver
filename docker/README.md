@@ -8,9 +8,8 @@ _**Check the homepage for [the overview of docker applications](https://github.c
 2. [The Docker Compose Guide](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#the-docker-compose-guide)
     - [Step 1: Create Docker subvolume](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---create-docker-subvolume)
     - [Step 2: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---prepare-docker)
-    - [Step 3: Prepare Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-2---prepare-compose)
-    - [Step 4: Run Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-3---run-docker-compose)
-    - [Step 5: Verification](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-4---verify)
+    - [Step 3: Prep & Verify your Compose file](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-3---prepare-verify-and-repeat-your-compose-file-and-repeat)
+    - [Step 4: Run Docker Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-4-run-docker-compose)
     - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
 
