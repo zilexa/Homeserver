@@ -1,5 +1,4 @@
  >>> DO NOT USE THIS FILE. USE /ARCHIVED/ INSTEAD. THIS FILE IS BEING ADJUSTED FOR MANJARO LINUX. 
-
 #!/bin/bash
 
 echo "_________________________________________________________________________"
@@ -50,16 +49,86 @@ sudo powertop --auto-tune
 ## Start the service
 sudo systemctl start powertop.service
 
-
-echo "____________________________________________________________"
+echo "______________________________________________________"
+echo "                   SYSTEM TOOLS                       "
+echo "______________________________________________________"
 echo "Run-if-today: simplify scheduling of weekly or monthly tasks"
-echo "____________________________________________________________"
 sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
 sudo chmod +x /usr/bin/run-if-today
 
-echo "_________________________________________________________"
-echo "Configure linux email notifications without heavy postfix"
-echo "_________________________________________________________"
+echo "btrbk - flexible tool to automate snapshots & backups "
+sudo pamac install --no-confirm btrbk
+## Get config and email script
+mkdir -p $HOME/docker/HOST/btrbk
+wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
+wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
+sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
+# MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
+
+echo "nocache - handy when moving lots of files at once in the background, without filling up cache and slowing down the system."
+sudo pamac install --no-confirm nocache
+
+echo "Grync - friendly UI for rsync"
+sudo pacman -S --noconfirm grsync
+
+echo "lm_sensors to be able to read out all sensors" 
+sudo pacman -S --noconfirm lm_sensors
+sudo sensors-detect --auto
+
+echo "____________________________________________________"
+echo "                    docker                          " 
+echo "____________________________________________________"
+echo " Install docker, docker-compose and docker-rootless-extras" 
+sudo pacman -S --noconfirm docker docker-compose
+pamac install docker-rootless-extras-bin
+# Required steps before running docker rootless setup tool
+sudo touch /etc/subuid
+sudo touch /etc/subgid
+echo "${USER}:100000:65536" | sudo tee -a /etc/subuid
+echo "${USER}:100000:65536" | sudo tee -a /etc/subgid
+systemctl --user enable --now docker.socket
+export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+# Run docker rootless setup tool
+dockerd-rootless-setuptool.sh install
+# enable start at boot and start docker
+systemctl --user enable docker
+systemctl --user start docker
+sudo loginctl enable-linger $(whoami)
+
+echo "Configure Docker"
+# Create the docker folder
+sudo mkdir -p $HOME/docker
+sudo setfacl -Rdm g:docker:rwx $HOME/docker
+sudo chmod -R 755 $HOME/docker
+# Get environment variables to be used by Docker (i.e. requires TZ in quotes)
+sudo wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
+# Get docker compose file
+sudo wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
+
+echo "Pullio (auto-update labeled containers) & Diun (notify of image updates for labeled containers)"
+mkdir -P $HOME/docker/HOST/updater
+cd $HOME/Downloads
+wget -qO- https://github.com/crazy-max/diun/releases/download/v4.15.2/diun_4.15.2_linux_x86_64.tar.gz | tar -zxvf - diun
+sudo cp diun $HOME/docker/HOST/updater/
+sudo ln -s $HOME/docker/HOST/updater/diun /usr/local/bin/diun
+rm diun*.gz
+rm diun
+# Get Diun conf file
+wget -O $HOME/docker/HOST/updater/diun.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/diun/diun.yml
+sudo chmod 770 $HOME/docker/HOST/updater/diun.yml
+sudo mkdir /etc/diun
+sudo chmod 770 /etc/diun
+sudo ln -s $HOME/docker/HOST/updater/diun.yml /etc/diun/diun.yml
+# Install Pullio to auto update a few services
+sudo wget -O $HOME/docker/HOST/updater/pullio https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
+sudo chmod +x $HOME/docker/HOST/updater/pullio
+sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
+
+
+echo "_____________________________________________________________"
+echo "                     SENDING EMAILS                          "
+echo "  Configure linux email notifications without heavy postfix  " 
+echo "_____________________________________________________________"
 # ----------------------------
 sudo pacman -S --noconfirm msmtp
 sudo pacman -S --noconfirm s-nail
@@ -75,53 +144,10 @@ sudo tee -a /etc/aliases << EOF
 default:myemail@address.com
 EOF
 
-echo "______________________________________________________"
-echo "btrbk - flexible tool to automate snapshots & backups "
-echo "______________________________________________________"
-sudo pamac install --no-confirm btrbk
-## Get config and email script
-mkdir -p $HOME/docker/HOST/btrbk
-wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
-wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
-sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
-# MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
 
 echo "______________________________________________________"
-echo "nocache and grsync - secure file copy tools           "
+echo "                     OPTIONAL TOOLS                   "
 echo "______________________________________________________"
-echo "nocache - handy when moving lots of files at once in the background, without filling up cache and slowing down the system."
-sudo pamac install --no-confirm nocache
-echo "Grync - friendly UI for rsync"
-sudo pacman -S --noconfirm grsync
-
-echo "______________________________________________________"
-echo "Install lm-sensors & detect system sensors for Netdata"
-echo "______________________________________________________"
-sudo pacman -S --noconfirm lm_sensors
-sudo sensors-detect --auto
-
-
-
-
-echo "=============================================================="
-echo "                                                              "
-echo "  The following tools have been installed (& configured!)     "
-echo "                                                              "
-echo "  POWERTOP    - system service to optimise power management   "
-echo "  MSMTP       - to allow the system to send emails            " 
-echo "  BTRBK       - THE tool to automate backups                  "
-echo "  LMSENSORS   - for the OS to access its diagnostic sensors   "
-echo "  NOCACHE     - allows background rsyncing                    "
-echo "  Grsync      - Friendly ui for rsync                         "
-echo "                                                              "
-echo "to configure email, desktop share, backups or NFSv4.2:        "
-echo "Go to: https://github.com/zilexa/Homeserver                   "
-echo "=============================================================="
-echo "                                                              " 
-read -p " Hit a key to continue...                                  "
-echo "                                                              " 
-echo "                                                              " 
-echo "---------------------------------------------------"
 read -p "Install SNAPRAID-BTRFS for parity-based backups?" answer
 case ${answer:0:1} in
     y|Y )
@@ -151,66 +177,7 @@ case ${answer:0:1} in
     ;;
 esac
 
-echo "____________________________________________________"
-echo "Docker, docker-compose, bash completion for compose " 
-echo "____________________________________________________"
-# Install docker, docker-compose and docker-rootless-extras
-sudo pacman -S --noconfirm docker docker-compose
-pamac install docker-rootless-extras-bin
-# Required steps before running docker rootless setup tool
-sudo touch /etc/subuid
-sudo touch /etc/subgid
-echo "${USER}:100000:65536" | sudo tee -a /etc/subuid
-echo "${USER}:100000:65536" | sudo tee -a /etc/subgid
-systemctl --user enable --now docker.socket
-export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
-# Run docker rootless setup tool
-dockerd-rootless-setuptool.sh install
-# enable start at boot and start docker
-systemctl --user enable docker
-systemctl --user start docker
-sudo loginctl enable-linger $(whoami)
-
-echo "-----------------"
-echo "Configure Docker "
-echo "-----------------"
-# Create the docker folder
-sudo mkdir -p $HOME/docker
-sudo setfacl -Rdm g:docker:rwx $HOME/docker
-sudo chmod -R 755 $HOME/docker
-# Get environment variables to be used by Docker (i.e. requires TZ in quotes)
-sudo wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
-# Get docker compose file
-sudo wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
-
-echo "__________________________________________________________________________"
-echo "Diun (notify of docker apps updates) & Pullio (auto-install selected apps)"
-echo "__________________________________________________________________________"
-mkdir -P $HOME/docker/HOST/updater
-cd $HOME/Downloads
-wget -qO- https://github.com/crazy-max/diun/releases/download/v4.15.2/diun_4.15.2_linux_x86_64.tar.gz | tar -zxvf - diun
-sudo cp diun $HOME/docker/HOST/updater/
-sudo ln -s $HOME/docker/HOST/updater/diun /usr/local/bin/diun
-rm diun*.gz
-rm diun
-# Get Diun conf file
-wget -O $HOME/docker/HOST/updater/diun.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/diun/diun.yml
-sudo chmod 770 $HOME/docker/HOST/updater/diun.yml
-sudo mkdir /etc/diun
-sudo chmod 770 /etc/diun
-sudo ln -s $HOME/docker/HOST/updater/diun.yml /etc/diun/diun.yml
-# Install Pullio to auto update a few services
-sudo wget -O $HOME/docker/HOST/updater/pullio https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
-sudo chmod +x $HOME/docker/HOST/updater/pullio
-sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
-
-echo "============================================================================"
-echo "                                                                            "
-echo "  Docker is ready to go!                                                    "
-echo "                                                                            "
-echo "If you need any of the following apps, hit yes to take care of              "
-echo "their required setup before running compose:                                "
-echo "----------------------------------------------------------------------------"
+echo "-------------------------------------------------------------------------------------------"
 echo "Prepare for Scrutiny: a nice webUI to monitor your SSD & HDD drives health? (recommend: y)" 
 read -p "y or n ?" answer
 case ${answer:0:1} in
