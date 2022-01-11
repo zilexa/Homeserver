@@ -93,12 +93,13 @@ echo "nocache - handy when moving lots of files at once in the background, witho
 sudo pamac install --no-confirm nocache
 echo "Grync - friendly UI for rsync"
 sudo pacman -S --noconfirm grsync
-sudo pacman -S --noconfirm lm_sensors
+
 echo "______________________________________________________"
 echo "Install lm-sensors & detect system sensors for Netdata"
 echo "______________________________________________________"
-
+sudo pacman -S --noconfirm lm_sensors
 sudo sensors-detect --auto
+
 
 
 
@@ -153,21 +154,30 @@ esac
 echo "____________________________________________________"
 echo "Docker, docker-compose, bash completion for compose " 
 echo "____________________________________________________"
-sudo pacman -S --noconfirm docker
-sudo pacman -S --noconfirm docker-compose
+# Install docker, docker-compose and docker-rootless-extras
+sudo pacman -S --noconfirm docker docker-compose
+pamac install docker-rootless-extras-bin
+# Required steps before running docker rootless setup tool
+sudo touch /etc/subuid
+sudo touch /etc/subgid
+echo "${USER}:100000:65536" | sudo tee -a /etc/subuid
+echo "${USER}:100000:65536" | sudo tee -a /etc/subgid
+systemctl --user enable --now docker.socket
+export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+# Run docker rootless setup tool
+dockerd-rootless-setuptool.sh install
+# enable start at boot and start docker
 systemctl --user enable docker
 systemctl --user start docker
+sudo loginctl enable-linger $(whoami)
 
 echo "-----------------"
 echo "Configure Docker "
 echo "-----------------"
-# Make docker-compose file an executable file and add the current user to the docker container
-#sudo chmod +x /usr/local/bin/docker-compose
-sudo usermod -aG docker ${USER}
 # Create the docker folder
 sudo mkdir -p $HOME/docker
-sudo setfacl -Rdm g:docker:rwx ~/docker
-sudo chmod -R 755 ~/docker
+sudo setfacl -Rdm g:docker:rwx $HOME/docker
+sudo chmod -R 755 $HOME/docker
 # Get environment variables to be used by Docker (i.e. requires TZ in quotes)
 sudo wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
 # Get docker compose file
