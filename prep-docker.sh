@@ -75,8 +75,9 @@ echo "lm_sensors to be able to read out all sensors"
 sudo pacman -S --noconfirm lm_sensors
 sudo sensors-detect --auto
 
+
 echo "____________________________________________________"
-echo "                    docker                          " 
+echo "                    DOCKER                          " 
 echo "____________________________________________________"
 echo " Install docker, docker-compose and docker-rootless-extras" 
 sudo pacman -S --noconfirm docker docker-compose
