@@ -197,7 +197,6 @@ case ${answer:0:1} in
     ;;
 esac
 
-
 echo "--------------------------------------------------------------------------------------------------------------"
 echo "Download recommended/best-practices configuration for QBittorrent: to download media, torrents? (recommend: y)" 
 read -p "y or n ?" answer
@@ -212,7 +211,6 @@ case ${answer:0:1} in
         echo "SKIPPED downloading QBittorrent config file.."
     ;;
 esac
-
 
 echo "---------------------------------------------------------------------------------------------"
 echo "Download preconfigured Organizr config: your portal to all your apps and services? (optional)" 
@@ -231,7 +229,6 @@ case ${answer:0:1} in
         echo "SKIPPED downloading Organizr pre-configuration.."
     ;;
 esac
-
 
 echo "                                                                               "        
 echo "==============================================================================="
