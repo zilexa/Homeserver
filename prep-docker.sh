@@ -1,3 +1,5 @@
+ >>> DO NOT USE THIS FILE. USE /ARCHIVED/ INSTEAD. THIS FILE IS BEING ADJUSTED FOR MANJARO LINUX. 
+
 #!/bin/bash
 
 echo "_________________________________________________________________________"
