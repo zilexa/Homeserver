@@ -2,13 +2,13 @@
 [Why a selfhosted homeserver?](https://github.com/zilexa/Homeserver/blob/master/Justification.md) <> [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Recommendations.md) <> [What is a Container?](https://www.docker.com/resources/what-container) <> [How To Get Started?]()
 ***
 # The Modern Homeserver 
-### - A fast, very low-maintenance, energy efficient selfhosted cloud
-### - can be used for any selfhosted system (from home automation to password manager) 
-### - Can also be deployed and run in the background on your HomePC/Workstation.
-### - Carefully selected hardware recommendations.
-### - Carefully selected Operating System and server tools.
-### - Preconfigured automatic nightly/monthly maintenance.
-### - Carefully selected services for file cloud, password manager, media downloads and more. 
+### * A fast, very low-maintenance, energy efficient selfhosted cloud
+### * can be used for any selfhosted system (from home automation to password manager) 
+### * Can also be deployed and run in the background on your HomePC/Workstation.
+### * Carefully selected hardware recommendations.
+### * Carefully selected Operating System and server tools.
+### * Preconfigured automatic nightly/monthly maintenance.
+### * Carefully selected services for file cloud, password manager, media downloads and more. 
 
 ***
 Jan 11th 2021: I am updating this guide to support Manjaro (Arch based) Linux instead of Ubuntu. 
