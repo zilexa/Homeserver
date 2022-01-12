@@ -9,11 +9,10 @@
 
 
 <p align="center">
-  <ul>
-  <li>one</li>
-  <li>two</li>
-  <li>three</li>
-  </ul>
+  <a href="">Why A Selfhosted Homeserver?</a> |
+  <a href="https://www.docker.com/resources/what-container">Intro to microservices</a> |
+  <a href="Recommendations.md">Hardware Recommendations</a> |
+  <a href="#">How To Get Started?</a>
 </p>
   
   
