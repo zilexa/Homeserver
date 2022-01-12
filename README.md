@@ -1,5 +1,5 @@
 <h1 align="center"><strong>The Modern HomeServer</strong></h1>
-
+<p align="center"><a href="README.md">Tip: a wider view of this page.</a></p>
 ***
 <p align="center">
   <a href="Justification.md">Why A Selfhosted Homeserver?</a> |
