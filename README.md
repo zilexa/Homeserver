@@ -7,7 +7,9 @@
   <a href="#">How To Get Started?</a>
   <br><br>
 </p>
+
 ***
+
 # The Modern Homeserver 
 ### * A fast, very low-maintenance, energy efficient selfhosted cloud
 ### * can be used for any selfhosted system (from home automation to password manager) 
