@@ -10,7 +10,7 @@
 
 
 <p align="center">
-  <a> &bull; <strong>A fast, very low-maintenance, energy efficient selfhosted cloud.</strong></a>
+  <a> &bull; style="font-size:160%;" <strong>A fast, very low-maintenance, energy efficient selfhosted cloud.</strong></a>
 </p>
 <p align="center">
   <a> &bull; <strong>Can be used for any selfhosted system (from home automation to password manager).</strong></a>
