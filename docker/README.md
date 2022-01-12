@@ -34,54 +34,34 @@ If you have an understanding of Docker containerization and docker-compose to se
 
 &nbsp;
 ## The Docker Compose Guide 
-### Step 1 - Create Docker subvolume
-All your application data and server config files should be stored on a seperate btrfs subvolume. This allows extremely easy snapshotting, backup and restore in case of server issues or if you need to migrate to a new machine. All you have to do is install Docker Compose, mount this subvolume, run docker-compose up -d and your applications are up-and-running with their entire configuration!\
-1. Mount the os disk filesystem root to /mnt/system:  
-`sudo mount /mnt/system`
-2. Create subvolume
-`sudo btrfs subvolume create /mnt/system/@docker` 
-3. Add to fstab: `sudo nano /etc/fstab` 
-Now copy paste following
-```
-# Mount DOCKER subvolume: @docker
-UUID=YOUR-OS-DISK-UUID /home/YOURUSERNAME/docker  btrfs   defaults,noatime,subvol=@docker 0       2
-```
-Make sure to copy/paste the UUID from `/` and `/home` in there, save via CTRL+O, exit via CTRL+X.\
-Then mount via `sudo mount -a`.
+### Step 1 - Get Docker and essential server tools
+Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. 
 
-### Step 2 - Prepare Docker
-The [PREP_SERVER+DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script, containing lots of info I gathered/learned via trial&error, it will save you a lot of time. 
-Download and execute it or edit the file to your liking before executing:
+Download and install it via: 
 ```
-cd Downloads
-wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prepare-server-docker.sh
-bash prepare-server-docker.sh
+cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
+bash prepare-docker.sh
 ```
-What the script will do for you, automatically: 
-  - Set permissions (root only) to your $HOME/docker folder and create specific files and folders required for Filerun to run. 
-  - If you will not use Filerun/Elasticsearch, remove its folder from the docker folder when done. 
-  - Install docker via repository (auto-update) and related dependencies. 
-  - Get the docker-compose.yml file and its .env file from this repository. 
 
-What you have to do yourself during execution: 
-1. Read the questions, follow the install wizards of PiVPN, Netdata and allow lm-sensors to scan & configure your systems diagnostic sensors: 
-    - PiVPN: choose Wireguard and when asked which DNS server you want, choose custom and fill in your own server LAN IP if you plan on running AdGuard Home/Unbound. Otherwise select Quad9 or similar. 
-    - lm-sensors: just select yes everywhere and let it do its thing. Don't mind the warnings here. 
-    - Netdata: just follow the wizard. 
-    - NFSv4.2: read more about it here: https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)
+Notice: 
+- A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery
+- Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
+- Allows OS support to send emails (with minimal set of tools and configuration), several Docker containers and your maintenance tasks will need this.
+- Installs several other essential tools, essential for example for data migration, backups, maintenance.
+- Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. Also the Organizr config might be nice and will save you lots of time building your own "Start" page.
 
-### Step 3 - Prepare, Verify (and repeat) your Compose file (and repeat)
+### Step 2 - Prepare, Verify (and repeat) your Compose file (and repeat)
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
 Notice this folder and its contents are read-only, you need elevated root rights to edit the files. 
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
-##### 1) Things you need to take care of:
+##### 2a Things you need to take care of:
 - .env file: set the env variables in the .env file, generate the required secret tokens with the given command.
 - docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking.
 - docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
 - if you remove certain applications, at the bottom also remove unneccary networks.
 - notice the commands at the top of the compose file, for your convenience. 
  
-##### 2) Verify Compose file
+##### 2b Verify Compose file
 `cd docker` (when you open terminal, you should already be in $HOME).
 Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
 Before running docker-compose, make sure: 
@@ -89,7 +69,7 @@ Before running docker-compose, make sure:
 - the .env file is complete and correct.
 - the docker-compose.yml file is correct. 
  
-### Step 4 -  Run Docker Compose
+### Step 3 -  Run Docker Compose
 Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
 - **Warning: if you do prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
 
