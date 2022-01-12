@@ -2,6 +2,7 @@
 #!/bin/bash
 
 echo "_________________________________________________________________________"
+echo "                    ISOLATE DOCKER PERSISTENT DATA                       "
 echo "              Create subvolume for Docker persistent data                "
 echo "_________________________________________________________________________"
 # Create a folder to temporarily map the BTRFS root
@@ -26,7 +27,8 @@ mkdir -p $HOME/docker/HOST/system/etc
 
 
 echo "______________________________________________________"
-echo "Powertop + systemd service to manage power consumption"
+echo "        MANAGE POWER CONSUMPTION AUTOMATICALLY        "
+echo "         always run Powertop autotune at boot         "
 echo "______________________________________________________"
 ## Create a service file to run powertop --auto-tune at boot
 sudo tee -a /etc/systemd/system/powertop.service << EOF
@@ -50,7 +52,8 @@ sudo powertop --auto-tune
 sudo systemctl start powertop.service
 
 echo "______________________________________________________"
-echo "                   SYSTEM TOOLS                       "
+echo "                     APPLICATIONS                     "
+echo "                     server tools                     "
 echo "______________________________________________________"
 echo "Run-if-today: simplify scheduling of weekly or monthly tasks"
 sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
@@ -77,7 +80,8 @@ sudo sensors-detect --auto
 
 
 echo "____________________________________________________"
-echo "                    DOCKER                          " 
+echo "                    APPLICATIONS                    "
+echo "                      DOCKER                        " 
 echo "____________________________________________________"
 echo " Install docker, docker-compose and docker-rootless-extras" 
 sudo pacman -S --noconfirm docker docker-compose
@@ -147,7 +151,7 @@ EOF
 
 
 echo "______________________________________________________"
-echo "                     OPTIONAL TOOLS                   "
+echo "           OPTIONAL TOOLS OR CONFIGURATIONS           "
 echo "______________________________________________________"
 read -p "Install SNAPRAID-BTRFS for parity-based backups?" answer
 case ${answer:0:1} in
