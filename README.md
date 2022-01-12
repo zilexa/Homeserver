@@ -10,18 +10,20 @@
 
 
 <p align="center">
-  * <a>Why A Selfhosted Homeserver?</a> |
-  <a href="">Intro to microservices</a> |
-  <a href="">Hardware Recommendations</a> |
-  <a href=>How To Get Started?</a>
+  <a>* A fast, very low-maintenance, energy efficient selfhosted cloud.</a>
+  <a>* Can be used for any selfhosted system (from home automation to password manager).</a>
+  <a>* Can also be deployed and run in the background on your HomePC/Workstation.</a>
+  <a>* Carefully selected hardware recommendations.</a>
+  <a>* Carefully selected Operating System and server tools.</a>
+  <a>* Preconfigured automatic nightly/monthly maintenance.</a>
+  <a>* Carefully selected services for file cloud, password manager, media downloads and more. </a>
 </p>
   
   
 
-
 # The Modern Homeserver 
-* A fast, very low-maintenance, energy efficient selfhosted cloud
-* can be used for any selfhosted system (from home automation to password manager) 
+### * A fast, very low-maintenance, energy efficient selfhosted cloud
+### * Can be used for any selfhosted system (from home automation to password manager).
 ### * Can also be deployed and run in the background on your HomePC/Workstation.
 ### * Carefully selected hardware recommendations.
 ### * Carefully selected Operating System and server tools.
