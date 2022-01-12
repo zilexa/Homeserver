@@ -7,6 +7,7 @@
 
 ## What is it?
 An always-on PC like device that you can place near your router or even use as your Desktop/workstation. Giving you access to your data, providing you with a higher level of privacy and security and allowing you to be flexible with all online services you might use. 
+Also see the [Features](https://github.com/zilexa/Homeserver#features) you get by simply following this guide. 
 
 Why?
 1. Be in control of your own precious data, think archived family photos and videos but also new photos from your next vacation. 
