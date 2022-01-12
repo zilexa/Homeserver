@@ -38,6 +38,7 @@ Expect lots of updates until end of January (my personal deadline to update & fu
 * Automatically follow and retrieve your favourite tv shows and movies _**Sonarr Radarr Bazarr QBittorrent**_ Because nobody can pay for every streaming service just to watch the few shows or movies they like. 
 * Pretty dashboards to monitor your server _**Grafana, Prometheus**_ - Not necessary, but handy and with notifications. 
 * Your own homepage to quickly access each service in a single webpage _**Organzir**_ See preview here.  \
+
 For more details per app, [see here](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md). 
 
 ***
