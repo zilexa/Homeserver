@@ -1,7 +1,13 @@
 ***
+
 <p align="center">
-[Why a selfhosted homeserver?](https://github.com/zilexa/Homeserver/blob/master/Justification.md) | [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Recommendations.md) | [What is a Container?](https://www.docker.com/resources/what-container) | [How To Get Started?]()
+  <a href="Justification.md">Why A Selfhosted Homeserver?</a> |
+  <a href="https://www.docker.com/resources/what-container">Intro to microservices</a> |
+  <a href="Recommendations.md">Hardware Recommendations</a> |
+  <a href="#">How To Get Started?</a>
+  <br><br>
 </p>
+
 ***
 # The Modern Homeserver 
 ### * A fast, very low-maintenance, energy efficient selfhosted cloud
