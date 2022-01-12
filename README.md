@@ -58,17 +58,17 @@ Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/ma
 ### Step 3 - Prepare data and backup drives
 [Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). I understand your goal, make sane choices for your drives.
 
-### Step 2. Data Migration & Folder Structure
+### Step 4. Data Migration & Folder Structure
 Move files to your server data pool and [create your folder structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure). Note my folder structure might not fit your needs. It's up to you to decide how to structure your data. 
 
-### Step 4 - Configure your apps & services
+### Step 5 - Configure your apps & services
 The Docker guide (step 3) explains how to access your services. Configuring & using your services is not covered by this guide. 
 The overview of Docker applications below will contain some foldable sections with hints. 
 [Overview of Docker Apps](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md) contains direct links to the documentation or homepage of each Docker app. 
 
-### Step 5 - Configure & schedule Maintenance
+### Step 6 - Configure & schedule Maintenance
 Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks) of your server such as cleanup, backup and disks protection tasks. 
 
-### Step 6 - Configure & schedule Backups
+### Step 7 - Configure & schedule Backups
 Decide what will be your [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/backup-strategy/backupstrategy.md) and use the [Server Backup Guide](https://github.com/zilexa/Homeserver/tree/master/backup-strategy) to leverage the BTRFS filesystem to backup your @, @home, @docker subvolumes and your data subvolumes easily, while also having a timeline/timemachine snapshots of your data. 
 
