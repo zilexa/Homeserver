@@ -7,7 +7,6 @@
   <a href="#">How To Get Started?</a>
   <br><br>
 </p>
-
 ***
 # The Modern Homeserver 
 ### * A fast, very low-maintenance, energy efficient selfhosted cloud
