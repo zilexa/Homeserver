@@ -1,3 +1,5 @@
+<h1 align="center"><strong>Carefully selected services for file cloud, password manager, media downloads and more.</strong></h1>
+
 ***
 <p align="center">
   <a href="Justification.md">Why A Selfhosted Homeserver?</a> |
@@ -8,7 +10,6 @@
 
 ***
 
-
 <h3 align="center">&bull; <strong>A fast, very low-maintenance, energy efficient selfhosted cloud.</strong></h3>
 <h3 align="center">&bull; <strong>Can be used for any selfhosted system (from home automation to password manager).</strong></h3>
 <h3 align="center">&bull; <strong>Can also be deployed and run in the background on your HomePC/Workstation.</strong></h3>
@@ -17,19 +18,7 @@
 <h3 align="center">&bull; <strong>Preconfigured automatic nightly/monthly maintenance.</strong></h3>
 <h3 align="center">&bull; <strong>Carefully selected services for file cloud, password manager, media downloads and more.</strong></h3>
 
-
-  
-  
-
-# The Modern Homeserver 
-### * A fast, very low-maintenance, energy efficient selfhosted cloud
-### * Can be used for any selfhosted system (from home automation to password manager).
-### * Can also be deployed and run in the background on your HomePC/Workstation.
-### * Carefully selected hardware recommendations.
-### * Carefully selected Operating System and server tools.
-### * Preconfigured automatic nightly/monthly maintenance.
-### * Carefully selected services for file cloud, password manager, media downloads and more. 
-  
+<sub>Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosen after testing alternatives. You can save lots of time with this guide! :)</sub>
 
 ***
 Jan 11th 2021: I am updating this guide to support Manjaro (Arch based) Linux instead of Ubuntu. 
@@ -37,7 +26,6 @@ After working with Ubuntu for 2 years, I learned Manjaro has lots of advantages 
 Expect lots of updates until end of January (my personal deadline to update & fully test everything). 
 ***
 
-<sub>Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosen after testing alternatives. You can save lots of time with this guide! :)</sub>
 
 ## Features
 _FileRun_ 
