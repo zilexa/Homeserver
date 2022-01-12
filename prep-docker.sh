@@ -121,7 +121,7 @@ echo "--------------------------------------------"
 sudo pacman -S --noconfirm docker docker-compose
 pamac install docker-rootless-extras-bin
 
-# Required steps before running docker rootless setup tool
+# Required steps before running docker rootless setup tool (see docker documentation)
 sudo touch /etc/subuid
 sudo touch /etc/subgid
 echo "${USER}:100000:65536" | sudo tee -a /etc/subuid
