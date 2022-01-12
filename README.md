@@ -1,5 +1,5 @@
 ***
-[Why selfhosted homeserver?](https://github.com/zilexa/Homeserver/blob/master/Justification.md) <> [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Recommendations.md) <> [What is a Container?](https://www.docker.com/resources/what-container) <> [Get Started]()
+[Why a selfhosted homeserver?](https://github.com/zilexa/Homeserver/blob/master/Justification.md) <> [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Recommendations.md) <> [What is a Container?](https://www.docker.com/resources/what-container) <> [How To Get Started?]()
 ***
 # The Modern Homeserver 
 ### - A fast, very low-maintenance, energy efficient selfhosted cloud
@@ -28,7 +28,7 @@ Access and share your files, enjoy your photo albums from any device, anywhere i
 -  
 
 
-## Before you start 
+## How To Get Started With This Guide?
 - The OS used is Ubuntu Budgie, because it is one of the most light-weight and extremely user-friendly of all Linux options. As this script is for beginners, it will help to have an intuitive OS to set everything up. Ofcourse, you can run the server headless (without UI, even without a monitor) . 
 - **Please follow the [OS Installation Guide.](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/blob/master/OS-installation/README.md) Step 3 (BtrFS filesystem) is required for this guide!**
 - **In addition, consider running my post-install script [Ubuntu Budgie Post Install Script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). It's meant for home desktops and laptops but it also takes care of some OS essentials and generally recommended (by experts) btrfs subvolumes. At least use the parts of the script that make sense, especially setting up subvolumes.**
