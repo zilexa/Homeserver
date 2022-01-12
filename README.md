@@ -6,16 +6,19 @@
   <a href="#">How To Get Started?</a>
 </p>
 
-***
+
 
 <p align="center">
   <ul>
-    <li>one</li>
-    <li>two</li>
-    <li>three</li>
+  <li>one</li>
+  <li>two</li>
+  <li>three</li>
   </ul>
 </p>
   
+  
+
+
 # The Modern Homeserver 
 * A fast, very low-maintenance, energy efficient selfhosted cloud
 * can be used for any selfhosted system (from home automation to password manager) 
