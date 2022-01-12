@@ -27,19 +27,19 @@ Expect lots of updates until end of January (my personal deadline to update & fu
 ***
 
 ## Features
-* A file cloud using _FileRun_ - Access and share your files from everywhere, sync your devices and enjoy your photo albums from any device, anywhere in the world. Fast and secure!
-* A fantastic password manager _VaultWarden_ - a.k.a Bitwarden, the best password manager available. 
-* Your own Office Online/Google Docs _OnlyOffice_ - integrates nicely with FileRun. 
-* Your own browser sync _Firefox Sync Server_ - your history, passwords, form fill info etc no longer shared with 3rd parties and easy to sync from laptop to phone.
+* A file cloud using: _**FileRun**_ - Access and share your files from everywhere, sync your devices and enjoy your photo albums from any device, anywhere in the world. Fast and secure!
+* A fantastic password manager: _**VaultWarden**_ - a.k.a Bitwarden, the best password manager available. 
+* Your own Office Online/Google Docs: _**OnlyOffice**_ - integrates nicely with FileRun. 
+* Your own browser sync: _**Firefox Sync Server**_ - your history, passwords, form fill info etc no longer shared with 3rd parties and easy to sync from laptop to phone.
 * A highly secured reverse web proxy to be able to use all these features via your own domain like https://my.domain.cloud. 
-* Your own ad-filtering or parental filtering dns server _AdGuard Home_ - no more ads on any device within your network and even on your phone when you leave the house.
-* Your own very fast VPN _Wireguard_ - Your own VPN server and easy management of clients. To access services you do not want to expose publicly online.
-* Your own paper scanning and organizing system _Paperless-ng_ - helps you to automatically archive your household administration and access documents easily.
-* Your own media center server _JellyFin_ - Watch your series and movies on any smart TV or device. Also when you leave the home via VPN.
-* Automatically follow and retrieve your favourite tv shows and movies _Sonarr Radarr Bazarr QBittorrent_ Because nobody can pay for every streaming service just to watch the few shows or movies they like. 
-* Pretty dashboards to monitor your server _Grafana, Prometheus_ - Not necessary, but handy and with notifications. 
-* Your own homepage to quickly access each service in a single webpage _Organzir_ See preview here.
-
+* Your own ad-filtering or parental filtering dns server: _**AdGuard Home**_ - no more ads on any device within your network and even on your phone when you leave the house.
+* Your own very fast VPN: _**Wireguard**_ - Your own VPN server and easy management of clients. To access services you do not want to expose publicly online.
+* Your own paper scanning and organizing system _**Paperless-ng**_ - helps you to automatically archive your household administration and access documents easily.
+* Your own media center server _**JellyFin**_ - Watch your series and movies on any smart TV or device. Also when you leave the home via VPN.
+* Automatically follow and retrieve your favourite tv shows and movies _**Sonarr Radarr Bazarr QBittorrent**_ Because nobody can pay for every streaming service just to watch the few shows or movies they like. 
+* Pretty dashboards to monitor your server _**Grafana, Prometheus**_ - Not necessary, but handy and with notifications. 
+* Your own homepage to quickly access each service in a single webpage _**Organzir**_ See preview here.
+For more details per app, [see here](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md). 
 &nbsp;
 
 ### Step 1 - Install operating system - consider the Manjaro Gnome Post-Install script
