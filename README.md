@@ -1,13 +1,10 @@
 ***
-
 <p align="center">
   <a href="Justification.md">Why A Selfhosted Homeserver?</a> |
   <a href="https://www.docker.com/resources/what-container">Intro to microservices</a> |
   <a href="Recommendations.md">Hardware Recommendations</a> |
   <a href="#">How To Get Started?</a>
-  <br><br>
 </p>
-
 ***
 
 # The Modern Homeserver 
