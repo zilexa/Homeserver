@@ -8,6 +8,7 @@
 
 ***
 
+<p align="center">
 # The Modern Homeserver 
 ### * A fast, very low-maintenance, energy efficient selfhosted cloud
 ### * can be used for any selfhosted system (from home automation to password manager) 
@@ -16,6 +17,8 @@
 ### * Carefully selected Operating System and server tools.
 ### * Preconfigured automatic nightly/monthly maintenance.
 ### * Carefully selected services for file cloud, password manager, media downloads and more. 
+  
+</p>
 
 ***
 Jan 11th 2021: I am updating this guide to support Manjaro (Arch based) Linux instead of Ubuntu. 
