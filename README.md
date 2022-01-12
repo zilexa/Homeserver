@@ -18,7 +18,7 @@
 <h3 align="center">&bull; <strong>Preconfigured automatic nightly/monthly maintenance.</strong></h3>
 <h3 align="center">&bull; <strong>Carefully selected services for file cloud, password manager, media downloads and more.</strong></h3>
 
-<sub>Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosen after testing alternatives. You can save lots of time with this guide! :)</sub>
+<sub>Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosen after testing alternatives. You can save lots of time with this guide! :) [basic Linux commands](https://www.hostinger.com/tutorials/linux-commands).</sub>
 
 ***
 Jan 11th 2021: I am updating this guide to support Manjaro (Arch based) Linux instead of Ubuntu. 
@@ -26,23 +26,19 @@ After working with Ubuntu for 2 years, I learned Manjaro has lots of advantages 
 Expect lots of updates until end of January (my personal deadline to update & fully test everything). 
 ***
 
-
 ## Features
-_FileRun_ 
-Access and share your files, enjoy your photo albums from any device, anywhere in the world. 
-  - Faster and more user-friendly than NextCloud, Google Drive, Onedrive, Dropbox etc.
-  - Not bloated with additional apps and features like NextCloud.
-  - Not paid for with your privacy and crappy advertising like Google Drive. 
-  - Free up to 10 users, unlimited guest users. 
--  
-
-
-## How To Get Started With This Guide?
-- The OS used is Ubuntu Budgie, because it is one of the most light-weight and extremely user-friendly of all Linux options. As this script is for beginners, it will help to have an intuitive OS to set everything up. Ofcourse, you can run the server headless (without UI, even without a monitor) . 
-- **Please follow the [OS Installation Guide.](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script/blob/master/OS-installation/README.md) Step 3 (BtrFS filesystem) is required for this guide!**
-- **In addition, consider running my post-install script [Ubuntu Budgie Post Install Script](https://github.com/zilexa/Ubuntu-Budgie-Post-Install-Script). It's meant for home desktops and laptops but it also takes care of some OS essentials and generally recommended (by experts) btrfs subvolumes. At least use the parts of the script that make sense, especially setting up subvolumes.**
-- Make sure you have a good text editor installed such as Pluma (`sudo apt install pluma`), this is done by the post-install script. 
-- I had zero Linux experience when I started, so you don't need it, as long as you are ready to Google everything, especially some [basic Linux commands](https://www.hostinger.com/tutorials/linux-commands).
+* A file cloud using _FileRun_ - Access and share your files from everywhere, sync your devices and enjoy your photo albums from any device, anywhere in the world. Fast and secure!
+* A fantastic password manager _VaultWarden_ - a.k.a Bitwarden, the best password manager available. 
+* Your own Office Online/Google Docs _OnlyOffice_ - integrates nicely with FileRun. 
+* Your own browser sync _Firefox Sync Server_ - your history, passwords, form fill info etc no longer shared with 3rd parties and easy to sync from laptop to phone.
+* A highly secured reverse web proxy to be able to use all these features via your own domain like https://my.domain.cloud. 
+* Your own ad-filtering or parental filtering dns server _AdGuard Home_ - no more ads on any device within your network and even on your phone when you leave the house.
+* Your own very fast VPN _Wireguard_ - Your own VPN server and easy management of clients. To access services you do not want to expose publicly online.
+* Your own paper scanning and organizing system _Paperless-ng_ - helps you to automatically archive your household administration and access documents easily.
+* Your own media center server _JellyFin_ - Watch your series and movies on any smart TV or device. Also when you leave the home via VPN.
+* Automatically follow and retrieve your favourite tv shows and movies _Sonarr Radarr Bazarr QBittorrent_ Because nobody can pay for every streaming service just to watch the few shows or movies they like. 
+* Pretty dashboards to monitor your server _Grafana, Prometheus_ - Not necessary, but handy and with notifications. 
+* Your own homepage to quickly access each service in a single webpage _Organzir_ See preview here.
 
 &nbsp;
 
