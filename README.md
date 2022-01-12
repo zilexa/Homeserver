@@ -1,4 +1,4 @@
-<h1 align="center"><strong>Carefully selected services for file cloud, password manager, media downloads and more.</strong></h1>
+<h1 align="center"><strong>The Modern HomeServer</strong></h1>
 
 ***
 <p align="center">
