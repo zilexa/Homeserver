@@ -39,7 +39,7 @@ Expect lots of updates until end of January (my personal deadline to update & fu
 * Pretty dashboards to monitor your server _**Grafana, Prometheus**_ - Not necessary, but handy and with notifications. 
 * Your own homepage to quickly access each service in a single webpage _**Organzir**_ See preview here.  \
 
-For more details per app, [see here](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md). 
+For more details per service, [see here](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md). 
 
 ***
 &nbsp;
