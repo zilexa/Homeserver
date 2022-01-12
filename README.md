@@ -51,7 +51,7 @@ A much better **out-of-the-box experience**, more **user-friendly** (also for se
 
 
 ### Step 2 - Prepare server and docker
-Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for specific docker services. Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.**_
+Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services. Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built Docker-Compose.yml file with variables.**_
 
 ### Step 3 - Prepare data and backup drives
 [Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). I understand your goal, make sane choices for your drives.
