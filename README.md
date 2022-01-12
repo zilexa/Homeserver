@@ -40,7 +40,8 @@ Expect lots of updates until end of January (my personal deadline to update & fu
 * Pretty dashboards to monitor your server _**Grafana, Prometheus**_ - Not necessary, but handy and with notifications. 
 * Your own homepage to quickly access each service in a single webpage _**Organzir**_ See preview here.
 For more details per app, [see here](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md). 
-&nbsp;
+
+***
 
 ### Step 1 - Install operating system - consider the Manjaro Gnome Post-Install script
 - I highly recommend Manjaro Linux.
