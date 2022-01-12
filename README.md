@@ -15,13 +15,22 @@
 <p align="center">
   <a>* Can be used for any selfhosted system (from home automation to password manager).</a>
 </p>
-
-
+<p align="center">
   <a>* Can also be deployed and run in the background on your HomePC/Workstation.</a>
+</p>
+<p align="center">
   <a>* Carefully selected hardware recommendations.</a>
+</p>
+<p align="center">
   <a>* Carefully selected Operating System and server tools.</a>
+</p>
+<p align="center">
   <a>* Preconfigured automatic nightly/monthly maintenance.</a>
-  <a>* Carefully selected services for file cloud, password manager, media downloads and more. </a>
+</p>
+<p align="center">
+  <a>* *Carefully selected services for file cloud, password manager, media downloads and more.* </a>
+</p>
+
 
   
   
