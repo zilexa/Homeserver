@@ -1,3 +1,6 @@
+***
+[Why selfhosted homeserver?](https://github.com/zilexa/Homeserver/blob/master/Justification.md) <> [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Recommendations.md) <> [What is a Container?](https://www.docker.com/resources/what-container) <> [Get Started]()
+***
 # The Modern Homeserver 
 ### - A fast, very low-maintenance, energy efficient selfhosted cloud
 ### - can be used for any selfhosted system (from home automation to password manager) 
@@ -12,10 +15,6 @@ Jan 11th 2021: I am updating this guide to support Manjaro (Arch based) Linux in
 After working with Ubuntu for 2 years, I learned Manjaro has lots of advantages for normal users and for a home server. 
 Expect lots of updates until end of January (my personal deadline to update & fully test everything). 
 ***
-
-This guide uses a declarative methodology, not only to describe and run containerized applications (via docker-compose), but also to install and configure the server and all necessary tools via bash scripts. See [What is a Container?](https://www.docker.com/resources/what-container) to get a quick understanding why Docker is now the default way to deploy, run and manage web applications and how it differs from virtual machines.  
-
-See [Justification](https://github.com/zilexa/Homeserver/blob/master/Justification.md) on the What & the Why and definitely don't start buying stuff before reading [Hardware Recommendations](https://github.com/zilexa/Homeserver/blob/master/Recommendations.md). Most information available online for pc building and NAS devices do not consider **long term stability** and low power consumption with **fault tolerant components**: they focus on downloading stuff and just storing them. **My server uses just 4 WATT**, less than a phone charger, comparable to a Raspberry Pi, much less than a Synology (a popular ready-to-use NAS system) yet way **more powerful and futureproof**. 
 
 Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosen after testing alternatives. You can save lots of time with this guide! :) 
 
