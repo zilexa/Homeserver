@@ -48,7 +48,7 @@ For more details per app, [see here](https://github.com/zilexa/Homeserver/blob/m
 This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
 A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server!)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. 
 - My [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install) provides an even better out-of-the-box experience. It also explains how to install Manjaro, select BTRFS and run the post-install script. 
-- Make sure your OS is installed with BTRFS (no swap file, you can better configure that yourself later) and up to date before continuing. 
+- Make sure your OS is installed with BTRFS (no swap file, you can better configure that yourself later) and up to date before continuing. Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). 
 
 
 ### Step 2 - Prepare server and docker
