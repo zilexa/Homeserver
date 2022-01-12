@@ -54,6 +54,7 @@ echo "____________________________________________"
 echo "                   BTRBK                    "
 echo "--------------------------------------------"
 echo "Swiss handknife-like tool to automate snapshots & backups of personal data" 
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
 sudo pamac install --no-confirm btrbk
 ## Get config and email script
 mkdir -p $HOME/docker/HOST/btrbk
@@ -71,6 +72,7 @@ sudo chmod +x /usr/bin/run-if-today
 echo "                   NOCACHE                  "
 echo "--------------------------------------------"
 echo "handy when moving lots of files at once in the background, without filling up cache and slowing down the system."
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
 sudo pamac install --no-confirm nocache
 
 echo "                    GRSYNC                  "
@@ -84,6 +86,11 @@ echo "to be able to read out all sensors"
 sudo pacman -S --noconfirm lm_sensors
 sudo sensors-detect --auto
 
+echo "                 MERGERFS                  "
+echo "--------------------------------------------"
+echo "pool drives to make them appear as 1 without raid"
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
+sudo pamac install --no-confirm mergerFS
 
 echo "____________________________________________"
 echo "                APPLICATIONS                "
@@ -119,6 +126,7 @@ echo "Configure Docker folder"
 echo "              INSTALL DOCKER                "
 echo "--------------------------------------------"
 sudo pacman -S --noconfirm docker docker-compose
+# Docker official rootless script is not installed with docker and only available in the Arch User Repository (AUR) thus installed via Pamac.
 pamac install docker-rootless-extras-bin
 
 # Required steps before running docker rootless setup tool (see docker documentation)
