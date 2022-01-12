@@ -10,8 +10,8 @@
 
 <p align="center">
 # The Modern Homeserver 
-### * A fast, very low-maintenance, energy efficient selfhosted cloud
-### * can be used for any selfhosted system (from home automation to password manager) 
+* A fast, very low-maintenance, energy efficient selfhosted cloud
+* can be used for any selfhosted system (from home automation to password manager) 
 ### * Can also be deployed and run in the background on your HomePC/Workstation.
 ### * Carefully selected hardware recommendations.
 ### * Carefully selected Operating System and server tools.
