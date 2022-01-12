@@ -10,7 +10,7 @@
 
 
 <p align="center">
-  <a href="">Why A Selfhosted Homeserver?</a> |
+  <a>Why A Selfhosted Homeserver?</a> |
   <a href="">Intro to microservices</a> |
   <a href="">Hardware Recommendations</a> |
   <a href=>How To Get Started?</a>
