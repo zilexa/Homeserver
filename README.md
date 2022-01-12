@@ -10,24 +10,12 @@
 
 
 <h3 align="center">&bull; <strong>A fast, very low-maintenance, energy efficient selfhosted cloud.</strong></h3>
-<p align="center">
-  <a> &bull; <strong>Can be used for any selfhosted system (from home automation to password manager).</strong></a>
-</p>
-<p align="center">
-  <a> &bull; <strong>Can also be deployed and run in the background on your HomePC/Workstation.</strong></a>
-</p>
-<p align="center">
-  <a> &bull; <strong>Carefully selected hardware recommendations.</strong></a>
-</p>
-<p align="center">
-  <a> &bull; <strong>Carefully selected Operating System and server tools.</strong></a>
-</p>
-<p align="center">
-  <a> &bull; <strong>Preconfigured automatic nightly/monthly maintenance.</strong></a>
-</p>
-<p align="center">
-  <a> &bull; <strong>Carefully selected services for file cloud, password manager, media downloads and more.</strong></a>
-</p>
+<h3 align="center">&bull; <strong>Can be used for any selfhosted system (from home automation to password manager).</strong></h3>
+<h3 align="center">&bull; <strong>Can also be deployed and run in the background on your HomePC/Workstation.</strong></h3>
+<h3 align="center">&bull; <strong>Carefully selected hardware recommendations.</strong></h3>
+<h3 align="center">&bull; <strong>Carefully selected Operating System and server tools.</strong></h3>
+<h3 align="center">&bull; <strong>Preconfigured automatic nightly/monthly maintenance.</strong></h3>
+<h3 align="center">&bull; <strong>Carefully selected services for file cloud, password manager, media downloads and more.</strong></h3>
 
 
   
