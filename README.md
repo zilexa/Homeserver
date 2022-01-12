@@ -9,7 +9,7 @@
 ***
 
 
-<p style="font-size:30px" align="center">
+<p style="font-size:60px" align="center">
   <a> &bull; <strong>A fast, very low-maintenance, energy efficient selfhosted cloud.</strong></a>
 </p>
 <p align="center">
