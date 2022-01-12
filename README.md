@@ -1,5 +1,10 @@
 # The Modern Homeserver 
-### Setup a lightweight home server usable as desktop workstation or headless, with carefully selected apps to make your life easier and give you the benefits of the "private cloud"! 
+### A fast, very low-maintenance, energy efficient selfhosted cloud, that can be used for any selfhosted system (home automation to password manager) that can also be deployed and run in the background on your HomePC/Workstation.
+
+### Carefully selected hardware recommendations.
+### Carefully selected Operating System and server tools.
+### Preconfigured automatic nightly/monthly maintenance.
+### Carefully selected services for file cloud, password manager, media downloads and more. 
 
 ***
 Jan 11th 2021: I am updating this guide to support Manjaro (Arch based) Linux instead of Ubuntu. 
