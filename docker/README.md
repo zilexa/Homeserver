@@ -50,7 +50,7 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 
 ##### 2b Check for typos or errors
 `cd docker` (when you open terminal, you should already be in $HOME).
-Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). \
+Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
 
 _Notes:_ 
 > 1. all app-specific requirements are taken care of.
@@ -64,7 +64,7 @@ _Notes:_
 Make sure you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
 
 1. Open a terminal (CTRL+ALT+T or Budgie>Tilix). **NEVER prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
-2. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. \
+2. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
 
 _Notes_
 > - All images will be downloaded, containers will be build and everything will start running. 
