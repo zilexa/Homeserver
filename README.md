@@ -71,8 +71,8 @@ Turn your system into a modern server with 1 click: [Docker & server setup](http
 The carefully written docker-compose.yml file is _**the unique part of this guide!**_. It can be tailored to your needs with Minimal Effort. \
 
 _Important Notes:_ 
-> You cannot finalise your docker-compose without having a single path to your data and your media, covered in step 3.
-> The services you want to access via your own domain won't work until you have completed that step 4.
+> - You cannot finalise your docker-compose without having a single path to your data and your media, covered in step 3.
+> - The services you want to access via your own domain won't work until you have completed that step 4.
 
 ### Step 3 - Prepare data and backup drives
 [Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices for your drives.
