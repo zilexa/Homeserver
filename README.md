@@ -19,12 +19,6 @@
 
 <sub>Note: I had zero experience when I started and learned everything by googling, spending time on fora, reddit and in documentations and by hours and days of trial&error. I made lots of mistakes. Now, in case of disaster I will use the scripts in this repository myself to get up and running again. I am documenting this because I haven't found a single source online that provides _all necessary information_ to get up and running. Also, lot's of things have been carefully chosen after testing alternatives. You can save lots of time with this guide! :) [basic Linux commands](https://www.hostinger.com/tutorials/linux-commands).</sub>
 
-***
-Jan 11th 2021: I am updating this guide to support Manjaro (Arch based) Linux instead of Ubuntu. 
-After working with Ubuntu for 2 years, I learned Manjaro has lots of advantages for normal users and for a home server. 
-Expect lots of updates until end of January (my personal deadline to update & fully test everything). 
-***
-
 ## Features
 * A file cloud using: _**FileRun**_ - Access and share your files from everywhere, sync your devices and enjoy your photo albums from any device, anywhere in the world. Fast and secure!
 * A fantastic password manager: _**VaultWarden**_ - a.k.a Bitwarden, the best password manager available. 
