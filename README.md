@@ -61,7 +61,7 @@ A much better **out-of-the-box experience**, more **user-friendly** (also for se
 
 ### Step 1 - Install Operating System - consider the Manjaro Gnome Post-Install script
 How to install Manjaro? 
-Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). How to prep a USB stick, see [Manjaro First Steps > Making a Live System](https://manjaro.org/support/firststeps/).  \
+Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). How to prep a USB stick, see [Manjaro First Steps > Using a Live System](https://manjaro.org/support/firststeps/).  \
 Notes: 
 * Make you select BTRFS during setup (if you have plenty of RAM, select "no swap" and configure this later.
 * Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC.  
