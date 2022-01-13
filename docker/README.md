@@ -26,12 +26,12 @@ Download and install it via:
 cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
 bash prepare-docker.sh
 ```
-Notice: 
-- A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery
-- Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
-- Allows OS support to send emails (with minimal set of tools and configuration), several Docker containers and your maintenance tasks will need this.
-- Installs several other essential tools, essential for example for data migration, backups, maintenance.
-- Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. Also the Organizr config might be nice and will save you lots of time building your own "Start" page.
+Notes: 
+> - A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery
+> - Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
+> - Allows OS support to send emails (with minimal set of tools and configuration), several Docker containers and your maintenance tasks will need this.
+> - Installs several other essential tools, essential for example for data migration, backups, maintenance.
+> - Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. Also the Organizr config might be nice and will save you lots of time building your own "Start" page.
 
 ***
 
@@ -39,19 +39,20 @@ Notice:
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
 Notice this folder and its contents are read-only, you need elevated root rights to edit the files. 
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
+
 ##### 2a Things you need to take care of:
-- .env file: set the env variables in the .env file, generate the required secret tokens with the given command.
-- docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking.
-- docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
-- if you remove certain applications, at the bottom also remove unneccary networks.
-- notice the commands at the top of the compose file, for your convenience. 
+1. .env file: set the env variables in the .env file, generate the required secret tokens with the given command.
+2. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking.
+3. docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
+4. if you remove certain applications, at the bottom also remove unneccary networks.
+5. notice the commands at the top of the compose file, for your convenience. 
 
 
 ##### 2b Check for typos or errors
 `cd docker` (when you open terminal, you should already be in $HOME).
-Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
+Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). \
 
-Important notes:
+_Notes:_ 
 > 1. all app-specific requirements are taken care of.
 > 2. the .env file is complete and correct.
 > 3. the docker-compose.yml file is correct. 
@@ -106,5 +107,4 @@ Permission issues can be solved with the chown and chmod commands.
 For example Filerun needs you to own the very root of the user folder (/mnt/pool/Users), not root. 
 
 _NEXT STEPS..._
-Continue with Step 4 of the main guide, configuring your Apps: 
-[Overview of Docker Apps](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md) contains direct links to the documentation or homepage of each Docker app. 
+Continue with Step 4 or 5 (order does not matter) of the main guide, configuring your [Network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) or your [data drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). 
