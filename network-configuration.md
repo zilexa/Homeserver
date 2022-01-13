@@ -2,7 +2,7 @@
 
 * [Access your services via your own public domain](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#access-your-services-via-your-own-domain)
 * [Access your services via VPN](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#access-all-other-services-via-wireguard-vpn)
-* [Access services in your local network]()
+* [Access services in your local network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#access-services-in-your-local-network)
 * [E-mail notifications](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#email-notifications)
 
 ***
