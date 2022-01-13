@@ -1,39 +1,20 @@
 # STEP 3: Host Server & Docker Configuration Guide
 
-_**Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose file.**_
-
-\
-**Contents**
-1. [Configure router & domain](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#configure-router--domain)
-2. [The Docker Compose Guide](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#the-docker-compose-guide)
-    - [Step 1: Create Docker subvolume](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---create-docker-subvolume)
-    - [Step 2: Prepare Docker](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---prepare-docker)
-    - [Step 3: Prep & Verify your Compose file](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-3---prepare-verify-and-repeat-your-compose-file-and-repeat)
-    - [Step 4: Run Docker Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-4-run-docker-compose)
-    - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
-
-
 If you have an understanding of Docker containerization and docker-compose to set it up, realise the following:
 - _Containers, Images and non-persistent Volumes are mostly expendable:_
   - You can delete them all (basically delete contents of /var/lib/docker), run docker-compose and it will pull all images online, create containers and use your persistent volumes ($HOME/docker/...): the applications should be in the same state as they were before deletion (unless you didn't make the required volumes persistent via compose).
 - _This makes Docker the most simple, easy and fast way to deploy applications and maintain them._
   - Updating = pull new image, re-create container. Usually 1 command or 2 mouse-clicks. Deletion of a container/image does not delete its config/data. 
+- _**Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose file.**_
 
-## Configure router & domain
-1. Your router port forwarding:
-    - At least the following ports should be forwarded to your servers local IP: **TCP port 443** to access some services via public internet (via HTTPS tls1.2 secured connection, taken care of by Caddy, the most modern & easiest to configure reverse proxy), **UDP port 51820** for Wireguard-VPN access via PiVPN, **TCP and UDP port 22000** for syncing devices via Syncthing.
-    - other containers, applications or services including SSH will **only be accessible via VPN**.
-2. **DynDNS**: a url that links to your home IP, even when your ISP changes it. Most routers allow you to enable this and provide you with a URL. Otherwise, google how to do that. 
-3. **Acquire your own domain (mydomain.com) and link it with an ALIAS to that dynamic-dns url**. I recommend to buy your domain via porkbun.com or godaddy.com. This is a requirement to be able to access your files (FileRun & OnlyOffice), sync your browser between devices (Firefox-Sync), use the best password manager (Bitwarden) and manage synced PCs (Syncthing) as those services need to be exposed online. 
-    - The connection will only allow TLS/HTTPS encrypted connections, meaning your information is protected in transit. 
- 4. At the configuration panel of your domain provider, create: 
-    - an **ALIAS** dns record to your dyndns (`ALIAS - mydomain.com - mydyndnsurl`). 
-    - an **ALIAS** dns record from www to your domain (`ALIAS - www.mydomain.com - mydomain.com`).
-    - a **CNAME** dns record registering subdomains to your domain for each subdomain in your docker-compose.yml (`CNAME - subdomain.domain.com - mydomain.com`).  
-5. If you want **email notifications** (recommended), create a feee account with an SMTP provider. I have bad experience with sendgrid.com, very good experience with smtp2go.com, it explains very well how to configure your domain to make sure emails do not end up in your Gmail/outlook.com junk folder.  
+\
+**Contents**
+      [Step 1: Get Server Essentials](https://github.com/zilexa/Homeserver/tree/master/docker#step-1---get-docker-and-essential-server-tools)
+      [Step 2: Tailor the Compose file](https://github.com/zilexa/Homeserver/tree/master/docker#step-2---prepare-verify-and-repeat-your-compose-file-and-repeat)
+      [Step 3: Run Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker#step-3----run-docker-compose)
+      [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
 &nbsp;
-## The Docker Compose Guide 
 ### Step 1 - Get Docker and essential server tools
 Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. 
 
@@ -42,7 +23,6 @@ Download and install it via:
 cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
 bash prepare-docker.sh
 ```
-
 Notice: 
 - A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery
 - Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
