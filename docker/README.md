@@ -83,26 +83,27 @@ Via Portainer, you can easily access each of your app by clicking on the ports.
 Go ahead and configure each of your applications.
 I recommend configuring a dns record in your router OR use AdGuard Home > Settings > DNS rewrite to create easy urls like my.server to access all your services via my.server:portnumber and configure Organizr, so that you can access ALL services within your LAN and via VPN via 1 url. 
 
-**Check status of your apps/containers**
-A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.\
-B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.\
+**Check status of your apps/containers** \
+A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.  \
+B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.  \
 C. If needed, you can even access the terminal of the container and check files/logs directly. But an easier way is to go to those files in $HOME/docker/yourcontainer. Only persistent volumes (mapped via docker-compose.yml) are there. Expendable data (containers, volumes, images) is in/var/lib/docker/.  
 
-**Update individual containers**
-6. To update an application, open that container in Portainer, hit `recreate` and check `pull new image`. It is not recommended to use tools like Watchtower to auto-update apps (auto-update is a bad practice in general!). Only the media/download related apps can be consired to auto-update (once a month) since they require frequent updates to keep functioning. Note the Maintenance guide has solutions for auto-updating docker images or notifying you of updates.
+**Update individual containers**  \
+To update an application, open that container in Portainer, hit `recreate` and check `pull new image`.  \
+It is not recommended to use tools like Watchtower to auto-update apps (auto-update is a bad practice in general!). Only the media/download related apps can be consired to auto-update (once a month) since they require frequent updates to keep functioning, this will be done via Pullio. Note the Maintenance guide has solutions for auto-updating docker images. 
 
-**Cleanup docker**
+**Cleanup docker**  \
 To remove unused containers (be careful, this means any stopped container) and dangling images, non-persistent volumes: 
  `sudo docker system prune --all --volumes --force`
- Note this will be done automatically via the scheduled maintenance (next guide). 
+Note this will be done automatically via the scheduled maintenance (next guide). 
  
-**Update apps**
+**Update apps**  \
 In Portainer, click on a container, then select _Recreate_ and check the box to re-download the image. 
-The latest image will be downloaded and a new container will be created with it. 
-It will still use your persistent volume mappings: your configuration and persistent data remains. Just like a normal application update. 
+- The latest image will be downloaded and a new container will be created with it. 
+- It will still use your persistent volume mappings: your configuration and persistent data remains. Just like a normal application update. 
 Note: Monitorr can be used to be notified of updates + update automatically (by default don't do that for all services).  
 
-**Issues:** 
+**Issues:**  \
 Permission issues can be solved with the chown and chmod commands.
 For example Filerun needs you to own the very root of the user folder (/mnt/pool/Users), not root. 
 
