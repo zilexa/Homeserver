@@ -12,6 +12,7 @@ If you have an understanding of Docker containerization and docker-compose to se
 **Contents**
 - [Step 1: Get Server Essentials](https://github.com/zilexa/Homeserver/tree/master/docker#step-1---get-docker-and-essential-server-tools)
 - [Step 2: Tailor the Compose file](https://github.com/zilexa/Homeserver/tree/master/docker#step-2---prepare-verify-and-repeat-your-compose-file-and-repeat)
+- [Take a break, configure your network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md)
 - [Step 3: Run Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker#step-3----run-docker-compose)
 - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
@@ -32,6 +33,8 @@ Notice:
 - Installs several other essential tools, essential for example for data migration, backups, maintenance.
 - Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. Also the Organizr config might be nice and will save you lots of time building your own "Start" page.
 
+***
+
 ### Step 2 - Prepare, Verify (and repeat) your Compose file (and repeat)
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
 Notice this folder and its contents are read-only, you need elevated root rights to edit the files. 
@@ -42,24 +45,36 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 - docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
 - if you remove certain applications, at the bottom also remove unneccary networks.
 - notice the commands at the top of the compose file, for your convenience. 
- 
-##### 2b Verify Compose file
+
+
+##### 2b Check for typos or errors
 `cd docker` (when you open terminal, you should already be in $HOME).
 Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
-Before running docker-compose, make sure: 
-- all app-specific requirements are taken care of. The script from the 
-- the .env file is complete and correct.
-- the docker-compose.yml file is correct. 
- 
+
+Important notes:
+> 1. all app-specific requirements are taken care of.
+> 2. the .env file is complete and correct.
+> 3. the docker-compose.yml file is correct. 
+> 4. You have commented out/removed the services that require a domain. Unless you have completed your [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
+
+***
+
 ### Step 3 -  Run Docker Compose
-Open a terminal (CTRL+ALT+T or Budgie>Tilix). **Do not prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
-- **Warning: if you do prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
+Make sure you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
 
-All images will be downloaded, containers will be build and everything will start running. 
-Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
+1. Open a terminal (CTRL+ALT+T or Budgie>Tilix). **NEVER prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
+2. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. \
 
-##### Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
+_Notes_
+> - All images will be downloaded, containers will be build and everything will start running. 
+> - Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
+> - **WARNING: if you accidentally prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
+> - To correct this, stop and remove all containers and images via Portainer and remove the /root/docker folder, 
 
+#### Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
+Make sure you finish [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) before running Docker Compose with the services that require a domain. Anytime you change 
+
+***
 
 ## Common Docker management tasks
 **Docker Management** 
