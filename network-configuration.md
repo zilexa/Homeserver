@@ -1,7 +1,8 @@
 # Network configuration
 
-* [Access your services via your own domain](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#access-your-services-via-your-own-domain)
+* [Access your services via your own public domain](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#access-your-services-via-your-own-domain)
 * [Access your services via VPN](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#access-all-other-services-via-wireguard-vpn)
+* [Access services in your local network]()
 * [E-mail notifications](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#email-notifications)
 
 ***
@@ -36,6 +37,15 @@ _Requirements_
 * Configure port forwarding in your router, Wireguard VPN needs a UDP port, for example 51820. 
 * Install Wireguard on your devices that need access (note Linux has it built in). 
   * Example: Smartphones in my household auto-connect to VPN when I leave the house. Only my server domain address goes through VPN. This way, ads are always filtered even when I am not at home and I can always access all services.
+
+***
+
+### Access services in your local network
+Instead of typing 192.168.0.2:9000 for each service you want to access, configure an easy to remember, local domain address.
+This address will only work within your home network. Some routers support configuring this. Alternatively: 
+1. Go to _AdGuard Home (serverip:3000 or https://localhost:3000) > Settings > DNS rewrite_ 
+2. Add a new rule, fill in a domain name for example `s.erver` and the local IP of your server. 
+3. go to http://s.erver:9000, Portainer should open. Also, AdGuard Home is now accessible via http://s.erver:3000. 
 
 ***
 
