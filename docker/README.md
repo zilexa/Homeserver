@@ -7,14 +7,16 @@ If you have an understanding of Docker containerization and docker-compose to se
   - Updating = pull new image, re-create container. Usually 1 command or 2 mouse-clicks. Deletion of a container/image does not delete its config/data. 
 - _**Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose file.**_
 
-\
+***
+
 **Contents**
 - [Step 1: Get Server Essentials](https://github.com/zilexa/Homeserver/tree/master/docker#step-1---get-docker-and-essential-server-tools)
 - [Step 2: Tailor the Compose file](https://github.com/zilexa/Homeserver/tree/master/docker#step-2---prepare-verify-and-repeat-your-compose-file-and-repeat)
 - [Step 3: Run Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker#step-3----run-docker-compose)
 - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
-&nbsp;
+***
+
 ### Step 1 - Get Docker and essential server tools
 Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. 
 
