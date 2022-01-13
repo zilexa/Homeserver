@@ -1,13 +1,20 @@
 # Network configuration
 
-* Access cloud services
-* Access services via VPN
+* Access your services via your own domain
+* Access your services via VPN
 * E-mail notifications
 
 ***
 
-### Requirements for accessing your selfhosted services online: 
-To be able to access your cloud services from anywhere, you need: 
+### Access your services via your own domain: 
+Understand that you should only expose services online via a domain if it is absolutely necessary. 
+For most people, exposing only the following services via a domain is enough: 
+- FileRun (file cloud)
+- OnlyOffice (online office)
+- VaultWarden (password manager and secure vault)
+- Firefox Sync (bookmarks, web history, logins and syncing all of that between devices)
+
+_Requirements_
 1. Enable dynamic DNS (dyndns) in your router and make a note of the URL. This URL points to your home IP address, even when your ISP changes it. 
   * If your router does not have this functionality, use [a free dyndns](https://freedns.afraid.org/) service. 
 2. Purchase your own domain via a domain provider. I recommend Porkbun (no affiliation).  
@@ -22,17 +29,17 @@ To be able to access your cloud services from anywhere, you need:
  
  ***
  
-### Requirement to access your non-exposed services online
-It is highly recommended to expose the absolute minimum set of services via a domain. Consider if you really need direct access to SSH, RDP but also download tools and Jellyfin. 
-You can access all of them safely via VPN when you are not at home and you really need access. 
-To be able to use Wireguard VPN: 
+### Access all other services via Wireguard VPN
+Consider if you really need direct access to SSH, RDP but also download tools and Jellyfin. You can access all of them safely via VPN when you are not at home and you really need access. To be able to use Wireguard VPN: 
+
+_Requirements_
 * Configure port forwarding in your router, Wireguard VPN needs a UDP port, for example 51820. 
 * Install Wireguard on your devices that need access (note Linux has it built in). 
   * Example: Smartphones in my household auto-connect to VPN when I leave the house. Only my server domain address goes through VPN. This way, ads are always filtered even when I am not at home and I can always access all services.
 
 ***
 
-### Requirement for email notifications from services and server
+### Email notifications
 Imagine you need to reset your file cloud password, you need a confirmation if someone downloaded a file that you shared or you want confirmation that your nightly backups ran successfully. 
 Setting up your own selfhosted SMTP server is a nightmare, because your domain is easily blocked by Gmail, Outlook.com etc. The solution is to use an SMTP service.
 * Create a free account with https://smtp2go.com 
