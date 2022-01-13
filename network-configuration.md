@@ -1,8 +1,8 @@
 # Network configuration
 
-* Access your services via your own domain
-* Access your services via VPN
-* E-mail notifications
+* [Access your services via your own domain](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#access-your-services-via-your-own-domain)
+* [Access your services via VPN](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#access-all-other-services-via-wireguard-vpn)
+* [E-mail notifications](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#email-notifications)
 
 ***
 
