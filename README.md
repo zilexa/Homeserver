@@ -42,7 +42,6 @@ Expect lots of updates until end of January (my personal deadline to update & fu
 For more details per service, [see here](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md). 
 
 ***
-&nbsp;
 
 ### Requirements
 Regardless of your hardware (x86-64 or ARM, see [Hardware Recommendations](Recommendations.md), for the scripts in this guide to work, the following is required, otherwise you may need to change the install commands, build software, figure out how to configure email notifications etc: 
