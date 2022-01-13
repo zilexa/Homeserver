@@ -68,7 +68,8 @@ Notes:
 
 ### Step 2 - Prepare server and docker
 Turn your system into a modern server with 1 click: [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services. 
-The carefully written docker-compose.yml file is _**the unique part of this guide!**_. It can be tailored to your needs with Minimal Effort.
+The carefully written docker-compose.yml file is _**the unique part of this guide!**_. It can be tailored to your needs with Minimal Effort. \
+
 <sup>*Consider reading step 4 first. The services you want to access via your own domain won't work until you have completed that step.*</sup>
 
 ### Step 3 - Prepare data and backup drives
