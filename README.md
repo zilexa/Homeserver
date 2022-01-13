@@ -57,7 +57,7 @@ Regardless of your hardware (x86-64 or ARM, see [Hardware Recommendations](Recom
 [sub]This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
 A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server!)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. [/sub]
 
-&nbsp;
+***
 
 ### Step 1 - Install Operating System - consider the Manjaro Gnome Post-Install script
 How to install Manjaro? 
