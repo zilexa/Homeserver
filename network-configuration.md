@@ -12,7 +12,7 @@ For most people, exposing only the following services via a domain is enough:
 - OnlyOffice (online office)
 - VaultWarden (password manager and secure vault)
 - Firefox Sync (bookmarks, web history, logins and syncing all of that between devices)
-Understand that you should only expose services online via a domain if it is absolutely necessary. 
+Understand that you should only expose services online via a domain if it is absolutely necessary. \
 _Requirements_
 1. Enable dynamic DNS (dyndns) in your router and make a note of the URL. This URL points to your home IP address, even when your ISP changes it. 
   * If your router does not have this functionality, use [a free dyndns](https://freedns.afraid.org/) service. 
