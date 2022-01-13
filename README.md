@@ -44,13 +44,28 @@ For more details per service, [see here](https://github.com/zilexa/Homeserver/bl
 ***
 &nbsp;
 
-### Step 1 - Install operating system - consider the Manjaro Gnome Post-Install script
-- I highly recommend Manjaro Linux.
-This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
-A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server!)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. 
-- My [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install) provides an even better out-of-the-box experience. It also explains how to install Manjaro, select BTRFS and run the post-install script. 
-- Make sure your OS is installed with BTRFS (no swap file, you can better configure that yourself later) and up to date before continuing. Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). 
+### Requirements
+Regardless of your hardware (x86-64 or ARM, see [Hardware Recommendations](Recommendations.md), for the scripts in this guide to work, the following is required, otherwise you may need to change the install commands, build software, figure out how to configure email notifications etc: 
 
+- Arch based OS
+- AUR (Arch User Repository)
+- Pamac to be able to install AUR packages
+- Pacman to be able to install packages
+- BTRFS filesystem - with or without swapfile (no swap partition)
+
+**[Manjaro](https://manjaro.org/)** on x86-64 (Intel/AMD) is the recommended OS of choice and used for this guide. It does not matter which desktop flavor you choose (Manjaro has 3 official flavours. I use Gnome. Power users might want to consider KDE instead). 
+
+[sub]This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
+A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server!)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. [/sub]
+
+&nbsp;
+
+### Step 1 - Install Operating System - consider the Manjaro Gnome Post-Install script
+How to install Manjaro? 
+Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). How to prep a USB stick: 
+Notes: 
+* Make you select BTRFS during setup (if you have plenty of RAM, select "no swap" and configure this later.
+* Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC.  
 
 ### Step 2 - Prepare server and docker
 Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services. Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built Docker-Compose.yml file, easy to personalize via the .env file containing all variables.**_
