@@ -26,7 +26,7 @@ Download and install it via:
 cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
 bash prepare-docker.sh
 ```
-Notes: 
+_Notes_
 > - A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery
 > - Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
 > - Allows OS support to send emails (with minimal set of tools and configuration), several Docker containers and your maintenance tasks will need this.
@@ -52,7 +52,7 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 `cd docker` (when you open terminal, you should already be in $HOME).
 Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
 
-_Notes:_ 
+_Notes_ 
 > 1. all app-specific requirements are taken care of.
 > 2. the .env file is complete and correct.
 > 3. the docker-compose.yml file is correct. 
