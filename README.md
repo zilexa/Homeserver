@@ -67,7 +67,9 @@ Notes:
 * Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC.  
 
 ### Step 2 - Prepare server and docker
-Continue to [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services. Get up and running in minutes via Docker Compose: _**this is the unique part of this guide, a complete and carefully built Docker-Compose.yml file, easy to personalize via the .env file containing all variables.**_
+Turn your system into a modern server with 1 click: [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services. 
+The carefully written docker-compose.yml file is _**the unique part of this guide!**_. It can be tailored to your needs with Minimal Effort.
+<sup>*Consider reading step 4 first. The services you want to access via your own domain won't work until you have completed that step.*</sup>
 
 ### Step 3 - Prepare data and backup drives
 [Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices for your drives.
