@@ -54,8 +54,8 @@ Regardless of your hardware (x86-64 or ARM, see [Hardware Recommendations](Recom
 
 **[Manjaro](https://manjaro.org/)** on x86-64 (Intel/AMD) is the recommended OS of choice and used for this guide. It does not matter which desktop flavor you choose (Manjaro has 3 official flavours. I use Gnome. Power users might want to consider KDE instead). 
 
-[sub]This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
-A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server!)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. [/sub]
+<sub>This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
+A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server!)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. </sub>
 
 ***
 
