@@ -52,7 +52,7 @@ Regardless of your hardware (x86-64 or ARM, see [Hardware Recommendations](Recom
 - Pacman to be able to install packages
 - BTRFS filesystem - with or without swapfile (no swap partition)
 
-**[Manjaro](https://manjaro.org/)** on x86-64 (Intel/AMD) is the recommended OS of choice and used for this guide. It does not matter which desktop flavor you choose (Manjaro has 3 official flavours. I use Gnome. Power users might want to consider KDE instead). 
+**[Manjaro](https://manjaro.org/)** on x86-64 (Intel/AMD) is the recommended OS of choice and used for this guide. It does not matter which [desktop flavor](https://manjaro.org/download/) you choose. I use Gnome but power users might want to consider KDE instead. 
 
 <sub>This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
 A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server! This is reflected in my scripts, they are a lot smaller)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. </sub>
