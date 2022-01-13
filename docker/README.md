@@ -78,11 +78,6 @@ Make sure you finish [Network Configuration](https://github.com/zilexa/Homeserve
 ***
 
 ## Common Docker management tasks
-**Docker Management** 
-Via Portainer, you can easily access each of your app by clicking on the ports. 
-Go ahead and configure each of your applications.
-I recommend configuring a dns record in your router OR use AdGuard Home > Settings > DNS rewrite to create easy urls like my.server to access all your services via my.server:portnumber and configure Organizr, so that you can access ALL services within your LAN and via VPN via 1 url. 
-
 **Check status of your apps/containers** \
 A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.  \
 B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.  \
