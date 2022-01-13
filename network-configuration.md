@@ -1,5 +1,11 @@
 # Network configuration
 
+* Access cloud services
+* Access services via VPN
+* E-mail notifications
+
+***
+
 ### Requirements for accessing your selfhosted services online: 
 To be able to access your cloud services from anywhere, you need: 
 1. Enable dynamic DNS (dyndns) in your router and make a note of the URL. This URL points to your home IP address, even when your ISP changes it. 
@@ -13,7 +19,9 @@ To be able to access your cloud services from anywhere, you need:
 5 Configure port forwarding in your router: TCP ports 443 and 80. After you are up and running, you only need port 443 (with Porkbun). 
 6 If your router supports it, configure a pretty domain that will forward to your local IP, so that you can easily access local services in your LAN without typing IP address. 
   * This can also be configured in Adguard Home, even if you do not use its DHCP feature!
-  
+ 
+ ***
+ 
 ### Requirement to access your non-exposed services online
 It is highly recommended to expose the absolute minimum set of services via a domain. Consider if you really need direct access to SSH, RDP but also download tools and Jellyfin. 
 You can access all of them safely via VPN when you are not at home and you really need access. 
@@ -21,6 +29,8 @@ To be able to use Wireguard VPN:
 * Configure port forwarding in your router, Wireguard VPN needs a UDP port, for example 51820. 
 * Install Wireguard on your devices that need access (note Linux has it built in). 
   * Example: Smartphones in my household auto-connect to VPN when I leave the house. Only my server domain address goes through VPN. This way, ads are always filtered even when I am not at home and I can always access all services.
+
+***
 
 ### Requirement for email notifications from services and server
 Imagine you need to reset your file cloud password, you need a confirmation if someone downloaded a file that you shared or you want confirmation that your nightly backups ran successfully. 
