@@ -4,7 +4,7 @@
   <a href="Justification.md">Why A Selfhosted Homeserver?</a> |
   <a href="https://www.docker.com/resources/what-container">Intro to microservices</a> |
   <a href="Recommendations.md">Hardware Recommendations</a> |
-  <a href="#">How To Get Started?</a>
+  <a href="https://github.com/zilexa/Homeserver/blob/master/README.md#requirements">How To Get Started?</a>
 </p>
 
 ***
