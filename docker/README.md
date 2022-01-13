@@ -72,7 +72,7 @@ _Notes_
 > - **WARNING: if you accidentally prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
 > - To correct this, stop and remove all containers and images via Portainer and remove the /root/docker folder, 
 
-#### Go to portainer: yourserverip:9000 login and go to containers. Everything should be green. 
+#### Go to portainer: yourserverip:9000 login and go to containers. Everything should be green or yellow temporary). Access any service by clicking its the port number.  
 Make sure you finish [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) before running Docker Compose with the services that require a domain. Anytime you change 
 
 ***
