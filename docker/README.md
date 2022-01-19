@@ -21,22 +21,18 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 
 ***
 
-### Step 1 Customisation of Compose file
+### Step 1 Customisation and Personalisation of Compose file
 1. Decide which services you want to run and remove others from this file. Note at the bottom you should remove the corresponding networks as well. 
-2. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking. Also see next step about $CAPS, these are variables for personalisation.
-3. docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. Also see next step about variables. 
-4. if you remove certain applications, at the bottom also remove unneccary networks.
-5. notice the commands at the top of the compose file, for your convenience. 
-6. For now, comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md)
+2. if you remove certain applications, at the bottom also remove unneccary networks.
+3. Comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and comment out containers that need access to your datapool unless you have finished [Step 2: Filesystem Configuration](). 
 
-### Step 2 Personalisation through variables
-_Personalisation_ is done through the .env file. Every variable in the docker-compose.yml is listed here. \
-1. Every service in the compose file that you are planning to use, must have its variable filled in the .env file!
-
+4. _Personalisation_ is done through the .env file. Every variable (for example your domain name and the root path of your datapool) in the docker-compose.yml is listed here. Every service in the compose file that you are planning to use, must have its variable filled in the .env file. 
+5. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking. Set the root path to your datapool in the .env file. 
+6. docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
 
 ***
 
-### Step 3 -  Run Docker Compose
+### Step 2 -  Run Docker Compose
 Make sure you commented out or removed services that are exposed via a $DOMAIN name or services that need access to you datapool, unless you completed [Step 2: Filesystem Configuration]() and [Step 3: Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md). 
 
 1. `cd docker` (when you open terminal, you should already be in $HOME).
@@ -52,6 +48,7 @@ Make sure you commented out or removed services that are exposed via a $DOMAIN n
 _Notes_
 > - All images will be downloaded, containers will be build and everything will start running. 
 > - Run again in case you ran into time-outs, this can happen, as a server hosting the image might be temp down. Just delete the containers, images and volumes in Portainer and re-run the command. 
+> - notice the commands at the top of the compose file, for your convenience. 
 > - **WARNING: if you accidentally prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
 > - To correct this, stop and remove all containers and images via Portainer and remove the /root/docker folder, 
 
