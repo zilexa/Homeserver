@@ -21,7 +21,7 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 
 ***
 
-### Step 1 Customisation and Personalisation of Compose file
+### Step 1 - Customisation and Personalisation of Compose file
 1. Decide which services you want to run and remove others from this file. Note at the bottom you should remove the corresponding networks as well. 
 2. if you remove certain applications, at the bottom also remove unneccary networks.
 3. Comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and comment out containers that need access to your datapool unless you have finished [Step 2: Filesystem Configuration](). 
@@ -56,7 +56,7 @@ _Notes_
 
 ***
 
-## Common Docker management tasks
+## Step 3 - Common Docker management tasks
 **Check status of your apps/containers** \
 A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.  \
 B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.  \
@@ -67,9 +67,9 @@ To update an application, open that container in Portainer, hit `recreate` and c
 It is not recommended to use tools like Watchtower to auto-update apps (auto-update is a bad practice in general!). Only the media/download related apps can be consired to auto-update (once a month) since they require frequent updates to keep functioning, this will be done via Pullio. Note the Maintenance guide has solutions for auto-updating docker images. 
 
 **Cleanup docker**  \
-To remove unused containers (be careful, this means any stopped container) and dangling images, non-persistent volumes: 
+To remove all unused containers (be careful, this means any stopped container) and all dangling images and all non-persistent volumes: 
  `sudo docker system prune --all --volumes --force`
-Note this will be done automatically via the scheduled maintenance (next guide). 
+Note this will be done automatically via the scheduled maintenance (next steps). 
  
 **Update apps**  \
 In Portainer, click on a container, then select _Recreate_ and check the box to re-download the image. 
