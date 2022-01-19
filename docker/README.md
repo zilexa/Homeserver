@@ -21,7 +21,7 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 
 ***
 
-##### Step 1 Customisation of Compose file
+### Step 1 Customisation of Compose file
 1. Decide which services you want to run and remove others from this file. Note at the bottom you should remove the corresponding networks as well. 
 2. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking. Also see next step about $CAPS, these are variables for personalisation.
 3. docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. Also see next step about variables. 
@@ -29,22 +29,24 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 5. notice the commands at the top of the compose file, for your convenience. 
 6. For now, comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md)
 
-##### Step 2 Personalisation through variables
+### Step 2 Personalisation through variables
 _Personalisation_ is done through the .env file. Every variable in the docker-compose.yml is listed here. \
 1. Every service in the compose file that you are planning to use, must have its variable filled in the .env file!
 
-##### 2b Check for typos or errors
-`cd docker` (when you open terminal, you should already be in $HOME). \
-Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file).  \
-Notice all variables will automatically be filled. 
 
 ***
 
 ### Step 3 -  Run Docker Compose
 Make sure you commented out or removed services that are exposed via a $DOMAIN name or services that need access to you datapool, unless you completed [Step 2: Filesystem Configuration]() and [Step 3: Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md). 
-1. Open a terminal (CTRL+ALT+T or Budgie>Tilix). **NEVER prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
-2. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
-3. If there was a misconfiguration with an app, for example, a password, simply remove that container (through Portainer, see below) and re-run docker compose command. 
+
+1. `cd docker` (when you open terminal, you should already be in $HOME). \
+2. First, Check for errors: 
+```docker-compose -f docker-compose.yml config``` 
+(-f is used to point to the location of your config file). 
+Notice all variables will automatically be filled. Fix the errors/missing items in the compose or env file. 
+4. Run the file. This will download app impages and configure all containers **NEVER prefix with sudo**. ```docker-compose -f $HOME/docker/docker-compose.yml up -d```
+5. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
+6. If there was a misconfiguration with an app, for example, a password, simply remove that container (through Portainer, see below) and re-run docker compose command. 
 
 _Notes_
 > - All images will be downloaded, containers will be build and everything will start running. 
