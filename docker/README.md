@@ -11,8 +11,8 @@ If you have an understanding of Docker containerization and docker-compose to se
 ***
 
 **Contents**
-- [Step 1: Tailor the Compose file](https://github.com/zilexa/Homeserver/tree/master/docker#step-2---prepare-verify-and-repeat-your-compose-file-and-repeat)
-- [Step 2: Run Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker#step-3----run-docker-compose)
+- [Step 1: Customisation and Personalisation](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-1---customisation-and-personalisation-of-compose-file)
+- [Step 2: Run Docker Compose](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#step-2----run-docker-compose)
 - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
@@ -56,7 +56,7 @@ _Notes_
 
 ***
 
-## Step 3 - Common Docker management tasks
+## Common Docker management tasks
 **Check status of your apps/containers** \
 A. Open Portainer (your.server.lan.IP:9000), click containers, green = OK.  \
 B. Open a container to investigate, click "Inspect" and make sure "dead=false". Go back, click Log to check logfile.  \
