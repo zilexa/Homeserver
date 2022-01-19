@@ -24,7 +24,7 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 ### Step 1 - Customisation and Personalisation of Compose file
 1. Decide which services you want to run and remove others from this file. Note at the bottom you should remove the corresponding networks as well. 
 2. if you remove certain applications, at the bottom also remove unneccary networks.
-3. Comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and comment out containers that need access to your datapool unless you have finished [Step 2: Filesystem Configuration](). 
+3. Comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and comment out containers that need access to your datapool unless you have finished [Step 2: Filesystem Configuration](https://github.com/zilexa/Homeserver/tree/master/filesystem). 
 
 4. _Personalisation_ is done through the .env file. Every variable (for example your domain name and the root path of your datapool) in the docker-compose.yml is listed here. Every service in the compose file that you are planning to use, must have its variable filled in the .env file. 
 5. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking. Set the root path to your datapool in the .env file. 
@@ -33,7 +33,7 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 ***
 
 ### Step 2 -  Run Docker Compose
-Make sure you commented out or removed services that are exposed via a $DOMAIN name or services that need access to you datapool, unless you completed [Step 2: Filesystem Configuration]() and [Step 3: Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md). 
+Make sure you commented out or removed services that are exposed via a $DOMAIN name or services that need access to you datapool, unless you completed [Step 2: Filesystem Configuration](https://github.com/zilexa/Homeserver/tree/master/filesystem) and [Step 3: Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md). 
 
 1. `cd docker` (when you open terminal, you should already be in $HOME).
 2. First, check for errors:  \
