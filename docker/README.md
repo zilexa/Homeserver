@@ -1,4 +1,4 @@
-# STEP 3: Host Server & Docker Configuration Guide
+# STEP 4: Host Server & Docker Configuration Guide
 
 If you have an understanding of Docker containerization and docker-compose to set it up, realise the following:
 - _Containers and Images and **non-persistent** are expendable:_
@@ -11,50 +11,37 @@ If you have an understanding of Docker containerization and docker-compose to se
 ***
 
 **Contents**
-- [Step 1: Get Server Essentials](https://github.com/zilexa/Homeserver/tree/master/docker#step-1---get-docker-and-essential-server-tools)
-- [Step 2: Tailor the Compose file](https://github.com/zilexa/Homeserver/tree/master/docker#step-2---prepare-verify-and-repeat-your-compose-file-and-repeat)
-- [Take a break, configure your network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md)
-- [Step 3: Run Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker#step-3----run-docker-compose)
+- [Step 1: Tailor the Compose file](https://github.com/zilexa/Homeserver/tree/master/docker#step-2---prepare-verify-and-repeat-your-compose-file-and-repeat)
+- [Step 2: Run Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker#step-3----run-docker-compose)
 - [Common docker management tasks](https://github.com/zilexa/Homeserver/blob/master/docker/README.md#common-docker-management-tasks)
 
-***
-
-### Step 1 - Get Docker and essential server tools
-Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. 
-
-Download and install it via: 
-```
-cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
-bash prepare-docker.sh
-```
-_Notes_
-> - A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery
-> - Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
-> - Allows OS support to send emails (with minimal set of tools and configuration), several Docker containers and your maintenance tasks will need this.
-> - Installs several other essential tools, essential for example for data migration, backups, maintenance.
-> - Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. Also the Organizr config might be nice and will save you lots of time building your own "Start" page.
-
-***
-
-### Step 2 - Prepare, Verify (and repeat) your Compose file (and repeat)
 Notice the script has placed 2 files in $HOME/docker: `docker-compose.yml` and (hidden) `.env`. 
 Notice this folder and its contents are read-only, you need elevated root rights to edit the files. 
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
 
-##### 2a Things you need to take care of:
-1. .env file: set the env variables in the .env file, generate the required secret tokens with the given command. This file must be complete and correct!
-2. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking.
-3. docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
+***
+
+##### Step 1 Customisation of Compose file
+1. Decide which services you want to run and remove others from this file. Note at the bottom you should remove the corresponding networks as well. 
+2. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking. Also see next step about $CAPS, these are variables for personalisation.
+3. docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. Also see next step about variables. 
 4. if you remove certain applications, at the bottom also remove unneccary networks.
 5. notice the commands at the top of the compose file, for your convenience. 
 6. For now, comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md)
 
+##### Step 2 Personalisation through variables
+_Personalisation_ is done through the .env file. Every variable in the docker-compose.yml is listed here. \
+1. Every service in the compose file that you are planning to use, must have its variable filled in the .env file!
+
 ##### 2b Check for typos or errors
-`cd docker` (when you open terminal, you should already be in $HOME).
-Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
+`cd docker` (when you open terminal, you should already be in $HOME). \
+Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file).  \
+Notice all variables will automatically be filled. 
+
 ***
 
 ### Step 3 -  Run Docker Compose
+Make sure you commented out or removed services that are exposed via a $DOMAIN name or services that need access to you datapool, unless you completed [Step 2: Filesystem Configuration]() and [Step 3: Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md). 
 1. Open a terminal (CTRL+ALT+T or Budgie>Tilix). **NEVER prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
 2. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
 3. If there was a misconfiguration with an app, for example, a password, simply remove that container (through Portainer, see below) and re-run docker compose command. 
@@ -66,7 +53,6 @@ _Notes_
 > - To correct this, stop and remove all containers and images via Portainer and remove the /root/docker folder, 
 
 #### Go to portainer: http://localhost:9000 (your.server.lan.ip:9000) login and go to containers. Everything should be green or yellow (temporary). Access any service by clicking its the port number.  
-Make sure you finish [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) before running Docker Compose with the services that require a domain.
 
 ***
 
@@ -94,6 +80,3 @@ Note: Monitorr can be used to be notified of updates + update automatically (by 
 **Issues:**  \
 Permission issues can be solved with the chown and chmod commands.
 For example Filerun needs you to own the very root of the user folder (/mnt/pool/Users), not root. 
-
-_NEXT STEPS..._
-Continue with Step 4 or 5 (order does not matter) of the main guide, configuring your [Network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) or your [data drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). 
