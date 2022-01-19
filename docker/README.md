@@ -41,8 +41,8 @@ Make sure you commented out or removed services that are exposed via a $DOMAIN n
 
 1. `cd docker` (when you open terminal, you should already be in $HOME).
 2. First, Check for errors: 
-```docker-compose -f docker-compose.yml config```  \
-  - (-f is used to point to the location of your config file).  \
+```docker-compose -f docker-compose.yml config```
+  - (-f is used to point to the location of your config file). 
   - Notice all variables will automatically be filled. Fix the errors/missing items in the compose or env file. 
 4. Run the file. This will download app impages and configure all containers **NEVER prefix with sudo**.  \
 ```docker-compose -f $HOME/docker/docker-compose.yml up -d```
