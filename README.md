@@ -53,12 +53,26 @@ A much better **out-of-the-box experience**, more **user-friendly** (also for se
 
 ***
 
-### Step 1 - Install Operating System - consider the Manjaro Gnome Post-Install script
-How to install Manjaro? 
-Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). How to prep a USB stick, see [Manjaro First Steps > Using a Live System](https://manjaro.org/support/firststeps/).  \
+### Step 1 - Install Operating System & Essential Tools
+#### Step 1A -  How to install Manjaro? 
+Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). How to prep a USB stick, see [Manjaro First Steps > Using a Live System](https://manjaro.org/support/firststeps/). 
 Notes: 
-* Requirement: select _BTRFS_ during setup with _no swap_, this allows you to later enable swapfile with hibernate support or zRAM/zswap.
-* Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC.  
+* Requirement: select _BTRFS_ during setup with _no swap_, this allows you to later enable swapfile with hibernate support or zRAM.
+* Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC. 
+
+#### 1B. Get Docker and essential server tools
+Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. Download and install it via: 
+```
+cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
+bash prepare-docker.sh
+```
+_Notes_
+> - A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery.
+> - Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
+> - Allows OS support to send emails (with minimal set of tools and configuration), several Docker containers and your maintenance tasks will need this.
+> - Installs several other essential tools, essential for example for data migration, backups, maintenance.
+> - Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. The Organizr config might be nice and will save you lots of time building your own "Start" page.
+
 
 ### Step 2 - Prepare server and docker
 Turn your system into a modern server with 1 click: [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services. 
