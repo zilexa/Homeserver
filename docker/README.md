@@ -1,10 +1,11 @@
 # STEP 3: Host Server & Docker Configuration Guide
 
 If you have an understanding of Docker containerization and docker-compose to set it up, realise the following:
-- _Containers, Images and non-persistent Volumes are mostly expendable:_
-  - You can delete them all (basically delete contents of /var/lib/docker), run docker-compose and it will pull all images online, create containers and use your persistent volumes ($HOME/docker/...): the applications should be in the same state as they were before deletion (unless you didn't make the required volumes persistent via compose).
+- _Containers and Images and **non-persistent** are expendable:_
+  - Deletion of a container/image does not delete its config/data.
+  - You can remove them completely, move your persistent volumes ($HOME/docker/...) to a different computer/laptop, run docker-compose and be back online in minutes with your own configuration (= your persistent volumes. That is how easy it will be to restore your server or re-create an application when there is an issue!
 - _This makes Docker the most simple, easy and fast way to deploy applications and maintain them._
-  - Updating = pull new image, re-create container. Usually 1 command or 2 mouse-clicks. Deletion of a container/image does not delete its config/data. 
+  - Updating = pull new image & re-create container. 
 - _**Check the homepage for [the overview of docker applications](https://github.com/zilexa/Homeserver/blob/master/README.md#overview-of-applications-and-services) included in the compose file.**_
 
 ***
@@ -41,30 +42,22 @@ Notice this folder and its contents are read-only, you need elevated root rights
 Modify docker-compose.yml to your needs and understand the (mostly unique for your setup) variables that are expected in your.env file.   
 
 ##### 2a Things you need to take care of:
-1. .env file: set the env variables in the .env file, generate the required secret tokens with the given command.
+1. .env file: set the env variables in the .env file, generate the required secret tokens with the given command. This file must be complete and correct!
 2. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking.
 3. docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
 4. if you remove certain applications, at the bottom also remove unneccary networks.
 5. notice the commands at the top of the compose file, for your convenience. 
-
+6. For now, comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md)
 
 ##### 2b Check for typos or errors
 `cd docker` (when you open terminal, you should already be in $HOME).
 Check for errors: `docker-compose -f docker-compose.yml config` (-f is used to point to the location of your config file). 
-
-_Notes_ 
-> 1. all app-specific requirements are taken care of.
-> 2. the .env file is complete and correct.
-> 3. the docker-compose.yml file is correct. 
-> 4. You have commented out/removed the services that require a domain. Unless you have completed your [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
-
 ***
 
 ### Step 3 -  Run Docker Compose
-Make sure you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
-
 1. Open a terminal (CTRL+ALT+T or Budgie>Tilix). **NEVER prefix with sudo**. `docker-compose -f $HOME/docker/docker-compose.yml up -d`
 2. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
+3. If there was a misconfiguration with an app, for example, a password, simply remove that container (through Portainer, see below) and re-run docker compose command. 
 
 _Notes_
 > - All images will be downloaded, containers will be build and everything will start running. 
@@ -72,8 +65,8 @@ _Notes_
 > - **WARNING: if you accidentally prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
 > - To correct this, stop and remove all containers and images via Portainer and remove the /root/docker folder, 
 
-#### Go to portainer: yourserverip:9000 login and go to containers. Everything should be green or yellow temporary). Access any service by clicking its the port number.  
-Make sure you finish [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) before running Docker Compose with the services that require a domain. Anytime you change 
+#### Go to portainer: http://localhost:9000 (your.server.lan.ip:9000) login and go to containers. Everything should be green or yellow (temporary). Access any service by clicking its the port number.  
+Make sure you finish [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) before running Docker Compose with the services that require a domain.
 
 ***
 
