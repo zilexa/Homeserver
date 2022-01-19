@@ -61,7 +61,11 @@ Notes:
 * Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC. 
 
 #### Step 1B. Get Docker and essential server tools
-Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. Download and install it via: 
+Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. 
+The PREP_DOCKER.SH script is carefully created to install the tools required to run all aspects of your server (from docker to mainentance tasks). \
+Official documentation is used to install tools correctly (Docker Rootless Mode) and all but 1 tools will be installed via the Manjaro or AUR repository --> they will be automatically updated by the OS official repositories (compare that to Ubuntu/Debian based systems). 
+
+Download and install it via: 
 ```
 cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
 bash prepare-docker.sh
@@ -73,21 +77,19 @@ _Notes_
 > - Installs several other essential tools, essential for example for data migration, backups, maintenance.
 > - Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. The Organizr config might be nice and will save you lots of time building your own "Start" page.
 
+### Step 2 - Prepare data and backup drives
+[Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices for your drives.
 
-### Step 2 - Prepare server and docker
+### Step 3 - Network configuration
+Before you can access your services outside of your home, [prepare your network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and get your own domain. 
+
+### Step 4 - Prepare server and docker
 Turn your system into a modern server with 1 click: [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services. 
-
 
 _Important Notes:_ 
 > - The carefully written docker-compose.yml file is _**the unique part of this guide!**_. It can be tailored to your needs with Minimal Effort.
-> - You cannot finalise your docker-compose without having a single path to your data and your media, covered in step 3.
-> - The services you want to access via your own domain won't work until you have completed step 4.
-
-### Step 3 - Prepare data and backup drives
-[Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices for your drives.
-
-### Step 4 - Network configuration
-Before you can access your services outside of your home, [prepare your network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and get your own domain. 
+> - You cannot finalise your docker-compose without having a single path to your data and your media, covered in step 2.
+> - The services you want to access via your own domain won't work until you have completed step 3.
 
 ### Step 5. Data Migration & Folder Structure
 Move files to your server data pool and [create your folder structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure). Note my folder structure might not fit your needs. It's up to you to decide how to structure your data. 
