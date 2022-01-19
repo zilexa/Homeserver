@@ -55,12 +55,15 @@ A much better **out-of-the-box experience**, more **user-friendly** (also for se
 
 ### Step 1 - Install Operating System & Essential Tools
 #### Step 1A -  How to install Manjaro? 
-Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). How to prep a USB stick, see [Manjaro First Steps > Using a Live System](https://manjaro.org/support/firststeps/). 
-Notes: 
+How to prep a USB stick: see [Manjaro First Steps > Using a Live System](https://manjaro.org/support/firststeps/). Further Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide).
+
+_Note_
 * Requirement: select _BTRFS_ during setup with _no swap_, this allows you to later enable swapfile with hibernate support or zRAM.
 * Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC. 
 
 #### Step 1B. Get Docker and essential server tools
+_Turn your system into a modern server with 1 click with [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services._
+
 Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. 
 The PREP_DOCKER.SH script is carefully created to install the tools required to run all aspects of your server (from docker to mainentance tasks). \
 Official documentation is used to install tools correctly (Docker Rootless Mode) and all but 1 tools will be installed via the Manjaro or AUR repository --> they will be automatically updated by the OS official repositories (compare that to Ubuntu/Debian based systems). 
@@ -70,7 +73,7 @@ Download and install it via:
 cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
 bash prepare-docker.sh
 ```
-_Notes_
+_Note_
 > - A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery.
 > - Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
 > - Allows OS support to send emails (with minimal set of tools and configuration), several Docker containers and your maintenance tasks will need this.
@@ -84,9 +87,10 @@ _Notes_
 Before you can access your services outside of your home, [prepare your network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and get your own domain. 
 
 ### Step 4 - Prepare server and docker
-Turn your system into a modern server with 1 click: [Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker) and use the bash script to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services. 
+[Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker)
+There are a lot of guides and docker-compose.yml files. Most of them are not complete or do not adhere to Docker best practices. A lot of hours have been spent on the yml file in this repository to ensure it follows best practices, does not contain unneccessary complexities and is as generic as possible, so that it can be published without security concerns. The .env file allows you to personalize your compose file through variables. 
 
-_Important Notes:_ 
+_Note:_ 
 > - The carefully written docker-compose.yml file is _**the unique part of this guide!**_. It can be tailored to your needs with Minimal Effort.
 > - You cannot finalise your docker-compose without having a single path to your data and your media, covered in step 2.
 > - The services you want to access via your own domain won't work until you have completed step 3.
