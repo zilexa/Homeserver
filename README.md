@@ -60,7 +60,7 @@ Notes:
 * Requirement: select _BTRFS_ during setup with _no swap_, this allows you to later enable swapfile with hibernate support or zRAM.
 * Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC. 
 
-#### 1B. Get Docker and essential server tools
+#### Step 1B. Get Docker and essential server tools
 Scan the [PREP_DOCKER.SH](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does. Download and install it via: 
 ```
 cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
