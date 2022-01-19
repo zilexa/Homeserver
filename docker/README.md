@@ -40,11 +40,11 @@ _Personalisation_ is done through the .env file. Every variable in the docker-co
 Make sure you commented out or removed services that are exposed via a $DOMAIN name or services that need access to you datapool, unless you completed [Step 2: Filesystem Configuration]() and [Step 3: Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md). 
 
 1. `cd docker` (when you open terminal, you should already be in $HOME).
-2. First, Check for errors: 
+2. First, Check for errors:  \
 ```docker-compose -f docker-compose.yml config```
   - (-f is used to point to the location of your config file). 
   - Notice all variables will automatically be filled. Fix the errors/missing items in the compose or env file. 
-4. Run the file. This will download app impages and configure all containers **NEVER prefix with sudo**.  \
+4. Run the file. This will download app impages and configure all containers **NEVER prefix with sudo**:  \
 ```docker-compose -f docker-compose.yml up -d```
 6. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
 7. If there was a misconfiguration with an app, for example, a password, simply remove that container (through Portainer, see below) and re-run docker compose command. 
