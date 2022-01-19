@@ -86,8 +86,8 @@ _Note_
 ### Step 3 - Network configuration
 Before you can access your services outside of your home, [prepare your network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and get your own domain. 
 
-### Step 4 - Prepare server and docker
-[Docker & server setup](https://github.com/zilexa/Homeserver/tree/master/docker)
+### Step 4 - Docker Compose Guide - file customisation and personalisation
+[Docker Compose Guide](https://github.com/zilexa/Homeserver/tree/master/docker)
 There are a lot of guides and docker-compose.yml files. Most of them are not complete or do not adhere to Docker best practices. A lot of hours have been spent on the yml file in this repository to ensure it follows best practices, does not contain unneccessary complexities and is as generic as possible, so that it can be published without security concerns. The .env file allows you to personalize your compose file through variables. 
 
 _Note:_ 
