@@ -80,13 +80,13 @@ _Note_
 > - Installs several other essential tools, essential for example for data migration, backups, maintenance.
 > - Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. The Organizr config might be nice and will save you lots of time building your own "Start" page.
 
-### Step 2 - Prepare data and backup drives
-[Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices for your drives.
+### Step 2 - Filesystem configuration
+[Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices for your drives and create a datapool. 
 
 ### Step 3 - Network configuration
 Before you can access your services outside of your home, [prepare your network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and get your own domain. 
 
-### Step 4 - Docker Compose Guide - file customisation and personalisation
+### Step 4 - Docker Compose Guide - customisation and personalisation
 [Docker Compose Guide](https://github.com/zilexa/Homeserver/tree/master/docker)
 There are a lot of guides and docker-compose.yml files. Most of them are not complete or do not adhere to Docker best practices. A lot of hours have been spent on the yml file in this repository to ensure it follows best practices, does not contain unneccessary complexities and is as generic as possible, so that it can be published without security concerns. The .env file allows you to personalize your compose file through variables. 
 
