@@ -57,7 +57,7 @@ A much better **out-of-the-box experience**, more **user-friendly** (also for se
 How to install Manjaro? 
 Instructions [here](https://github.com/zilexa/manjaro-gnome-post-install#quick-guide). How to prep a USB stick, see [Manjaro First Steps > Using a Live System](https://manjaro.org/support/firststeps/).  \
 Notes: 
-* Make you select BTRFS during setup (if you have plenty of RAM, select "no swap" and configure zswap later).
+* Requirement: select _BTRFS_ during setup with _no swap_, this allows you to later enable swapfile with hibernate support or zRAM/zswap.
 * Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC.  
 
 ### Step 2 - Prepare server and docker
