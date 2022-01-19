@@ -45,7 +45,7 @@ Make sure you commented out or removed services that are exposed via a $DOMAIN n
   - (-f is used to point to the location of your config file). 
   - Notice all variables will automatically be filled. Fix the errors/missing items in the compose or env file. 
 4. Run the file. This will download app impages and configure all containers **NEVER prefix with sudo**.  \
-```docker-compose -f $HOME/docker/docker-compose.yml up -d```
+```docker-compose -f docker-compose.yml up -d```
 6. Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
 7. If there was a misconfiguration with an app, for example, a password, simply remove that container (through Portainer, see below) and re-run docker compose command. 
 
