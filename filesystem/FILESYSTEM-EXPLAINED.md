@@ -18,7 +18,7 @@ Technologies used:
 - Online filesystem defragmentation.
 - Great for SSDs and HDDs.</details>
 
-## Use Btrfs data duplication? 2 options.
+## Use Btrfs data duplication? 2 options
 BtrFS offers 3 ways to create a single fileystem across multiple devices, I only mention 2 here: 
 - **BtrFS Single**: data is allocated to disks linearly, metadata is duplicated (`mkfs.btrfs -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
   - Pros: 
@@ -38,7 +38,8 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
     - Requirements around disk sizes because of duplication. 
     - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
 
-## A more home-friendly and economical solution: individual filesystems, drives pooled via MergerFS:
+## Option 3: individual filesystems, drives pooled via MergerFS
+_A more home-friendly and economical solution:_
 Instead of using any type of RAID, consider why that would be a default option? Your #1 goal is to have a single storage path, for all your data, regardless whether it is spread over multiple drives. For that, _RAID is not the default option_. Because this is called drive pooling. It is just an extra convenience of RAID. But you can also simply use a drive pooling tool, that only pools the drives into a single path! (while keeping them accessible seperatly). This tool is MergerFS. 
 
 Reasons to use MergerFS:
@@ -58,14 +59,18 @@ Reasons to use MergerFS:
 - You choose whether data is balanced over the disks (writing data to disks with most free space) or stored linearly: fill up 1 disk before using the next. 
 - Protecting against drive failure (like with raid1) can be done through SnapRAID! This will only cost you 1 disk per 4 disks. 
 
-## What should you choose? 
-- it all depends on your personal situation. By default, start with drive pooling through MergerFS unless you have plenty of drives. 
-- For example, if you have 4TB and 5TB drives, but you have <2TB of data that doesn't grow much, don't overthink. Just use single drive for your data and include 1 or 2 backup drives for nightly backups. That is all you need. 
-- If you do need more storage, you can always add a drive and convert the filesystem to BTRFS single or RAID1 or even more simple: enable MergerFS. 
-- Note SnapRAID is only useful if you have more than 1 drive with data and is not practical to use in combination with a drive that has constantly changing data (like a download drive for your series/movies). 
-- As a best practice your precious personal data (documents, photos, videos, music albums) should be on seperate drives from your downloaded media/download drive. 
+## Option 4: single disk, backup disks
+- If your data does not fill much more than half of a single drive and the data does not grow fast, there is no need for data pooling. 
+- Just make sure you have 1 or 2 backup drives inside your system. Also see the Backup Strategy Guide. 
+- If you do need more storage in the future, you can always add a drive and enable MergerFS or convert the existing drive to BTRFS single or raid1. 
+
 
 &nbsp;
+
+## What should you choose? 
+- it all depends on your personal situation. By default, start with drive pooling through MergerFS unless you have plenty of drives. 
+- As a best practice your precious personal data (documents, photos, videos, music albums) should be on seperate drives from your downloaded media/download drive. 
+- Note SnapRAID is only useful if you have more than 1 drive with data and is not practical to use in combination with a drive that has constantly changing data (like a download drive for your series/movies). 
 
 ### About snapraid/snapraid-btrfs
 - Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) for scheduled parity, the disk will be less active than data disks, **extending its lifecycle** compared to the realtime duplication of Raid1.
