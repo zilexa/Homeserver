@@ -6,71 +6,79 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 ## Requirements: 
 1. The OS disk should be BtrFS, this should be chosen during [OS Installation](https://github.com/zilexa/manjaro-gnome-post-install). 
 2. You have ran the prep-docker.sh script and the server tools have been installed. 
+3. You have read the synopsis, had a good night rest and are ready to decide which of the 4 options is best for you!
 
 &nbsp;
 
---> If you prefer BTRFS Raid1, follow those steps and in step 3 notice steps marked "_Exception `Raid1`_" or "_Exception `Raid1` + SSD Cache_". Otherwise ignore those steps. 
 
+## General need-to-knows
+- In Linux, every piece of hardware has its own path. For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. 
+- Note you should not have any partitions on your drive when you use BTRFS. That just overcomplicate things. BTRFS uses subvolumes instead.
+- Paths can change, for example when you mount/unmount drives, `/deb/sda` could now be mounted as `/dev/sdb`. 
+- To actually use drives, they need to be mounted to a path you can use, since you cannot use `/dev/`. 
+- The system file `/etc/fstab` decides where drives are mounted at boot. You can edit this file easily and this repository has a nice example. Follow it!
+- In `stab` does not use `/dev/` paths, instead the disk ID is used. This ID is persistent unless you remove its filesystem.
+- The system usually mounts drives by default inside `/media/`, especially USB drives. To permanently mount your drives, we will use `/mnt/` instead. 
+- If the drive name, the path to mount to etc are incorrect in /etc/fstab, you will boot into command line and will need to fix it (or comment out) using `sudo nano /etc/fstab`. 
 
-### Step 1A: Identify your disks
-Note this will delete your data. To convert EXT4 disks without loosing data or add existing BtrFS disks to a filesystem, Google. 
-1. unmount all the drives you are going to format: for each disk `sudo umount /media/(diskname)` or use the Disks utility via Budgie menu and hit the stop button for each disk. 
-2. list the disk devices: `sudo fdisk -l` you will need the paths of each disks (for example /dev/sda, /dev/sdb, /dev/sdc). 
-3. Decide the purpose of each disk and their corresponding label, make notes (`data1`, `data2` etc. `backup1`, `parity1`). 
-4. In the next steps, know `-L name` is how you label your disks. 
+## How to properly list your drives
+Besides the Disks app (look it up in your Menu), There are multiple commands allowing you to view your drives and all its details. 
+```sudo lsblk -f```
+This will give you the most useful and readable overview of disks, partitions, labels, UUID, remaining space. Alternatives are `blkid` and `sudo fdisk -l`. That last can be useful to identify drives by size. 
 
-### STEP 1B: Create the permanent mount points
-1. Create mountpoint for the OS disk filesystem root, to be used on-demand: `sudo mkdir /mnt/system`
-2. Create mount point for the pool: `sudo mkdir -p /mnt/pool`
-3. For the SSD cache: to be able to unload the cache to the disks, also create a mountpoint excluding your cache`sudo mkdir -p /mnt/pool-nocache`. 
-4. Create mount point for every disk at once: `sudo mkdir -p /mnt/disks/{cache,data1,data2,data3,parity1,backup1}` (change to reflect the # of drives you have for data, parity and backup.)
+## Step 1: Erase existing filesystems, partitions, create GPT new partition table
+The end goal is to have no partitions, single GPT partition table. 
+Yes, you can use tools for this. But to ensure your disks start with a fresh, clean partition table without any floating partitions, this is the way to go: 
+1. For each disk, wipe all existing filesystems: 
+```sudo wipefs --all /dev/sda```` 
+2.  Alternatively go directly into fdisk to delete existing partitionsand create a GPT partition table. The most important steps below, [full steps in the Arch Wiki](https://wiki.archlinux.org/title/fdisk#Create_a_partition_table_and_partitions). 
+   ```sudo fdisk /dev/sda```
+   - Hit `m` to list commands, `p` to show the list of partitions, `d` to delete them one by one, `w` to save changes.
+   - Hit `g` to remove partition table and create a new GPT partition table.
+   - Hit `w` to write changes. This is irriversible. 
 
-<details>
-  <summary>### practical commands you might need before step 2A: wipe the disk, delete partitions</summary>
-  
-- To wipe the filesystems, run this command per partition (a partition is for example /dev/sda1 on disk /dev/sda): `sudo wipefs --all /dev/sda1`
-- To delete the partitions: `sudo fdisk /dev/sda`, now you are in the fdisk tool. Hit `m`. You will see the commands available. Use `p` to show the list of partitions, `d` to delete them one by one, `w` to save changes. Then proceed with step 2A. 
-- To list all subvolumes in your whole system: `sudo btrfs subvolume list /` or only of one mounted disk `sudo btrfs subvolume list /mnt/disks/data1`.
-- To rename an existing subvolume, after mounting the disk, simply use `mv oldname newname`, feel free to use the full path.
-- To delete subvolumes, `sudo btrfs subvolume delete /mnt/disks/data1/subvolname`. 
-</details>
+## Step 2: Create mountpoints for each drive
+Only continue if you know what purpose you want to assign to your drives.
+1. Open the folder /mnt in your file manager, right click and open it with root rights.This will give you a nice view of the structure.
+2. Consider using the following naming scheme and create all these folders, quickest way is via command line: 
+```sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}```
+  - Please remove what you do not need. If you are not going to use  MergerFS cache drive, remove that. If you only have 2 drives, remove 3 and 4 etc. 
+  - If you do use a cache drive, also create a folder `sudo mkdir -p /mnt/pool-nocache`. This path will only be used during nightly maintenance to offload the cache drive.
+3. Create the datapool folders which you will use to pool drives (regardless of the chosen filesystem options). 
+    ```sudo mkdir -p /mnt/pool/Users```
+    ```sudo mkdir -p /mnt/pool/Media```
+5. Now have a look in your filemanager and delete/create if you missed something.
 
-### STEP 2A: Create filesystems and root subvolumes
-1. For the parity disk(s): Create ext4 filesystem with [snapraid's recommended options](https://sourceforge.net/p/snapraid/discussion/1677233/thread/ecef094f/): `sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sdX` _where X is the device disk name, see 1A_.
-2. For each data and backup disk: Create btrfs filesystem `sudo mkfs.btrfs -f -L data1 /dev/sdX`.
-3. For each data disk: Temporarily mount the disk like this: `sudo mount /dev/sdX /mnt/disks/data1`.
-4. For each data disk: Create a root subvolume like this: `sudo btrfs subvolume create /mnt/disks/data1/data`.  
+## Step 3: Create filesystems 
+  Make sure you have the correct device path for each drive when you use this command. 
+  Your OS drive should beon an NVME drive (`/dev/nvmen0p1`). If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
+  Replace "LABEL" for a useful label (MEDIA for downloads/shows/series, USERS for personal data.
+- BTRFS single: `mkfs.btrfs -L LABEL -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd` recommended label would be _MEDIA_ for downloads or _USERS_ for personal data. 
+- BTRFS RAID1: `mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd` recommended label would be _MEDIA_ for downloads or _USERS_ for personal data. 
+- Create individual filesystems per drive: `mkfs.btrfs -m dup -L data0 /dev/sda` recommended label would be _data0_, _data1_ or _backup1_, _backup2_, or _parity1_ etc.
+- Create filesystem for your SnapRAID drive (should be EXT4 with these options): `sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda`
 
-<details>
-  <summary>### STEP 2B For Raid1 (click to expand)</summary>
+By temporarily mounting the drives to the mountpoints, you can test if the drive is accessible via that mountpoint. For example: 
+`sudo mount /dev/sda /mnt/disks/data0` 
+Make sure you eventually unmount everything you mounted manually. 
+Also make sure you unmount everything in /media: `sudo umount /media/*`
 
-1. Create 1 filesystem for all data+backup disks:  `sudo mkfs.btrfs -f -L pool –d raid1 /dev/sda /dev/sdb` for each disk device, set label and path accordingly (see output of fdisk).
-2. For the backup disk, use the command in 2A. 
-3. Do step 3 and 4 from 1C now, but obtaining the path of your array first via `sudo lsblk`. 
-4. Modify the script:  
-- Line 10-38 (Snapraid install): remove. Line 3-8 (MergerFS install): remove if you will not use an SSD cache with Raid1. 
-- Line 49: remove. Line 48: Keep, as this is the path used by scripts and applications. 
-- Line 50: Remove parity1 and remove data1-data3 between brackets { } because raid1 appears as a single disk, it will be mounted to `/mnt/pool`.
-- _Exception `Raid1` + SSD Cache_: Add `raid1` between brackets { }. You  will mount the filesystem (in step 4) to `mnt/disks/raid1` and the pool stays `/mnt/pool`.
-</details>
+## Step 4: Physically label your drives!
+If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint. 
 
-### Step 3: edit fstab
-`sudo nano /etc/fstab` 
-Add your disks etc to the file, use [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) in this repository as reference. 
-_**Example fstab notes:**_
-- There is a line for each system subvolume to mount it to a specific location.
-- There is a line for each data disk to mount it to a location.
-- There are commented-out lines for the `backup1` and `parity1` disks. They might come in handy and it's good for your reference to add their UUIDs. 
-- For MergerFS, the 2 mounts contain many arguments, copy paste them completely. 
-  - The first should start with the path of your cache SSD and all data disks (or the path of your raid1 pool) seperated with `:`, mounting them to `/mnt/pool`.
-  - The second is identical except without the SSD and a different mount path: `/mnt/pool-nocache`. This second pool will only be used to periodically offload data from the SSD to the data disks. 
-  - the paths to your ssd and disks should be identical to the mount points of those physical disks, as configured 
+## Step 5: Configure permanent mounting - FSTAB
+This is the most important step, do not make errors. .  You can do this easily as follows:  
+1. Open 2 command windows: 
+2. In the first one, list each UUID per disk: `sudo lsblk -f`
+3. In the second one, make a backup of your fstab first via `sudo cp /etc/fstab /etc/fstabbackup`
+4. In the second one, open fstab: `sudo nano /etc/fstab` 
+5. Make sure you do not mess with the existing lines. Use the [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) as reference, copy only the lines you need and adjust the UUID to match your drives.
+6. If you use MergerFS, add those lines in addition to the lines for each disk just like in my example. Make sure to comment out the MergerFS lines first. You want to be sure the lines per drive are correct first. 
+7. Save the file via CTRL+O and exit via CTRL+X. Now test if your fstab works without errors: `sudo mount -a` 
+8. If it says things couldn't be mounted, make sure you unmount anything you mounted manually or anything that was mounted in `/media`. 
+9. If successfull, edit the file again and uncomment the mergerfs lines. Test again. 
 
-<details>
-  <summary>fstab RAID1 exceptions (click to expand)</summary> 
-- You only need 1 line for datadisks, with the single UUID of the raid1 filesystem and no line for parity.
-- RAID1 + SSD cache: you only need the first MergerFS line (`/mnt/pool`), with the SSD path and the Raid1 path (/mnt/disks/raid1). Because /mnt/disks/raid1 is the path for cache unloading.
-</details>
+&nbsp;
 
 _**MergerFS Notes:**_
 - The long list of arguments have carefully been chosen for this Tiered Caching setup.
@@ -86,22 +94,5 @@ _**MergerFS Notes:**_
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-nocache.
 
 &nbsp;
-
-### Good practices
-** SSD with duplicate metadata**
-By default BTRFS formats SSDs with single metadata. After reading mailinglists and discussions between devs, the conclusion is it cannot do harm to enable duplicate metadata and it could possibly save you when data becomes corrupted. To convert an existing  btrfs SSD, for example your system disk from single to dup:  \
-`sudo mount /mnt/disks/system`  \
-`sudo btrfs balance start -mconvert=dup /mnt/disks/system`  \
-Just be patient, when done unmount the root filesystem: `sudo umount /mnt/disks/system`  \
-
-**Harddisk power management**\
-Some harddisks (Seagate) spindown/power down immediately when there is no activity, even if a standby timout of XX minutes has been set. This will wear out the disk _fast_.\
-Via the Disks app, you can check disk properties and power settings. Note a value of 127 is common but also the culprit here. Changing it to 129 allows the standby timout to work:
-```
-sudo hdparm -S 240 -B 129 /dev/sdX
-```
-Perform this command for all your disks. Note 240 = standby after 20min, for 30 min timeout, use 241. 
-
-
 
 Continue setting up your [Folder Structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure) or go back to the main guide. 
