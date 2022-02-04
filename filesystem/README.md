@@ -64,7 +64,7 @@ sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
 
 ## Step 3: Create filesystems 
   Make sure you have the correct device path for each drive when you use this command. 
-  Your OS drive should beon an NVME drive (`/dev/nvmen0p1`). If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
+  Your OS drive should beon an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
   Replace "LABEL" for a useful label (MEDIA for downloads/shows/series, USERS for personal data.
 - BTRFS single: `mkfs.btrfs -L LABEL -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd` recommended label would be _MEDIA_ for downloads or _USERS_ for personal data. 
 - BTRFS RAID1: `mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd` recommended label would be _MEDIA_ for downloads or _USERS_ for personal data. 
