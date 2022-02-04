@@ -91,10 +91,11 @@ This is the most important step, do not make errors. .  You can do this easily a
 8. If it says things couldn't be mounted, make sure you unmount anything you mounted manually or anything that was mounted in `/media`. 
 9. If successfull, edit the file again and uncomment the mergerfs lines. Test again. 
 
-_**MergerFS Notes:**_
-- The long list of arguments have carefully been chosen for this Tiered Caching setup.
+_Regarding MergerFS Notes:_
+- The long list of arguments have carefully been chosen for high performance. 
 - [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
-- When you copy these lines from the example fstab to your fstab, make sure you use the correct paths of your data disk mounts, each should be declared separately with their UUIDs above the MergerFS lines (mounted first) just like in the example!
+- If you use the Tiered Caching setup of MergerFS, make sure you have 2 lines, one for `/mnt/pool` that includes the cache drive and one for `/mnt/pool-nocache` that only contains the harddisks. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the `mnt/pool/-nocache`. Your apps, OS should only use `/mnt/pool`. 
+
 
 ## Step 5: Mount the disks and pools!
 1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media.
