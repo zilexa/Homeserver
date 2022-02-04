@@ -61,7 +61,7 @@ Reasons to use MergerFS:
 
 ## Option 4: single disk, backup disks
 - If your data does not fill much more than half of a single drive and the data does not grow fast, there is no need for data pooling. 
-- Just make sure you have 1 or 2 backup drives inside your system. Also see the Backup Strategy Guide. 
+- Just make sure you have 1 or 2 backup drives inside your system. Also see the Backup Strategy Guide since you will need backup drives regardless of the chosen option. 
 - If you do need more storage in the future, you can always add a drive and enable MergerFS or convert the existing drive to BTRFS single or raid1. 
 
 
