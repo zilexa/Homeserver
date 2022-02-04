@@ -20,22 +20,22 @@ Technologies used:
 
 ## Use Btrfs data duplication? 2 options.
 BtrFS offers 3 ways to create a single fileystem across multiple devices, I only mention 2 here: 
-- **BtrFS Single**: data is striped (not duplicated), metadata is duplicated. 
+- **BtrFS Single**: data is allocated to disks linearly, metadata is duplicated (`mkfs.btrfs -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
   - Pros: 
+    - Maximum space available: disk size = available space.
     - Flexible: use disks of different sizes.
-    - Available space: maximise the available space for data (compared to raid1).
-    - When 1 disk fails, the filesystem is recoverable (compared to raid0).
+    - When 1 disk fails, the filesystem is recoverable (compared to raid0). 
   - Cons
     - When 1 disk fails, data from that disk is not recoverable.
     - When 1 disk fails, files larger than 1GB might have been partially stored on that disk. 
-    - Where, on which disks files are stored exactly is unknown: blocks of a single file (>1GB) can be spread across disks. 
-- **BtrFS Raid1**: data is striped and duplicated, metadata is duplicated. 
+    - What files are stored on which disks is not obvious: especially blocks of a single file (>1GB) can be spread across disks. 
+- **BtrFS Raid1**: data is striped and duplicated, metadata is duplicated (`mkfs.btrfs -d dup /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
   - Pros
     - Data is mirrored on other disks in realtime, when a disk fails, the data is easily recoverable. 
     - The most secure method to store precious data. 
   - Cons
-    - It costs more: only half of the total storage space is available for data, because of duplication. Use only if you have plenty of disks.
-    - requirements around disk sizes because of duplication. 
+    - Expensive: you need twice the disks to get same amount as storage as Btrfs Single. 
+    - Requirements around disk sizes because of duplication. 
     - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
 
 ## The alternative, economical home-friendly method
@@ -44,14 +44,14 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
 1. BtrFS Single pool is not secure enough for your personal data. 
 2. Raid1 isn't for everyone: You need twice the disks, this can be uneconomical. When your data grows >50% of disks you need more disks again. 
 
-### Coupled with MergerFS:
-- Disks each have _individual BtrFS Single_ filesystems: metadata is duplicated, **disk can recover its filesystem by itself**. 
+### Solution: drive pooling via MergerFS:
+- Drives each have _individual BtrFS_ filesystems: metadata is duplicated to help the filesystem recover itself from errors/corruption.. 
 - Files are stored **as a whole** on disks, not spread out in blocks across multiple disks.
-- You can always **see where (on which disk)** what files are stored and access them directly for recovery purposes.
+- 100% clarity which drive contains what file.  **see where (on which disk)** what files are stored and access them directly for recovery purposes.
 - You can **combine whatever combination of disk sizes.**
 - **No risk of losing files >1GB.**
 - Disks don't all have to spin up for file access/write, **reducing disk load and power consumption, enhancing life cycle**.
-- Disks become **more or less evenly full**, as files are written to the disk with the most free space (and you can balance manually). 
+- You choose whether data is balanced over the disks (writing data to disks with most free space) or stored linearly: fill up 1 disk before using the next. 
 
 ### Coupled with snapraid/snapraid-btrfs
 - Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) for scheduled parity, the disk will be less active than data disks, **extending its lifecycle** compared to the realtime duplication of Raid1.
@@ -65,6 +65,7 @@ MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you main
 - Files that haven't been modified for X days will be moved from the SSD to the disks within the pool. 
 - In most cases, you won't hear your disks spinning the entire day, since everything you use frequently is on the SSD. 
 - This CAN be used in combination with Raid1. 
+- This is NOT USEFUL if your datadrives are already SATA SSDs, since SATA SSDs are plenty fast for a NAS/homeserver. 
 
 We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
 
