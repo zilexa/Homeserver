@@ -91,8 +91,6 @@ This is the most important step, do not make errors. .  You can do this easily a
 8. If it says things couldn't be mounted, make sure you unmount anything you mounted manually or anything that was mounted in `/media`. 
 9. If successfull, edit the file again and uncomment the mergerfs lines. Test again. 
 
-&nbsp;
-
 _**MergerFS Notes:**_
 - The long list of arguments have carefully been chosen for this Tiered Caching setup.
 - [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
