@@ -9,7 +9,7 @@
 ## 1. Data migration 
 #### 1.1 Moving files to your server
 - To copy files from existing disks, connect them via USB. 
-- Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your SSD!
+- Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your SSD! You will still see all data in `/mnt/pool`
 - While copying via the file manager is an option I highly recommend using rsync as it will verify each disk read and write action, to ensure the files are copied correctly. Also it includes options to have 100% identical copy with all of your files metadata and attributes. 
 
 From non-btrfs disk to btrfs disk (For a GUI, install the Grsync app: `sudo apt install grsync`):\
