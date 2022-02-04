@@ -23,7 +23,9 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 
 ## How to properly list your drives
 Besides the Disks app (look it up in your Menu), There are multiple commands allowing you to view your drives and all its details.  \
-```sudo lsblk -f```  \
+```
+sudo lsblk -f
+```
 This will give you the most useful and readable overview of disks, partitions, labels, UUID, remaining space. 
 Alternatives are `blkid` and `sudo fdisk -l`. That last can be useful to identify drives by size. 
 
@@ -31,9 +33,13 @@ Alternatives are `blkid` and `sudo fdisk -l`. That last can be useful to identif
 The end goal is to have no partitions, single GPT partition table. 
 Yes, you can use tools for this. But to ensure your disks start with a fresh, clean partition table without any floating partitions, this is the way to go: 
 1. For each disk, wipe all existing filesystems: 
-```sudo wipefs --all /dev/sda```` 
+```
+sudo wipefs --all /dev/sda
+```` 
 2.  Alternatively go directly into fdisk to delete existing partitionsand create a GPT partition table. The most important steps below, [full steps in the Arch Wiki](https://wiki.archlinux.org/title/fdisk#Create_a_partition_table_and_partitions). 
-   ```sudo fdisk /dev/sda```
+   ```
+   sudo fdisk /dev/sda
+   ```
    - Hit `m` to list commands, `p` to show the list of partitions, `d` to delete them one by one, `w` to save changes.
    - Hit `g` to remove partition table and create a new GPT partition table.
    - Hit `w` to write changes. This is irriversible. 
@@ -42,12 +48,18 @@ Yes, you can use tools for this. But to ensure your disks start with a fresh, cl
 Only continue if you know what purpose you want to assign to your drives.
 1. Open the folder /mnt in your file manager, right click and open it with root rights.This will give you a nice view of the structure.
 2. Consider using the following naming scheme and create all these folders, quickest way is via command line: 
-```sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}```
+```
+sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
+```
   - Please remove what you do not need. If you are not going to use  MergerFS cache drive, remove that. If you only have 2 drives, remove 3 and 4 etc. 
   - If you do use a cache drive, also create a folder `sudo mkdir -p /mnt/pool-nocache`. This path will only be used during nightly maintenance to offload the cache drive.
 3. Create the datapool folders which you will use to pool drives (regardless of the chosen filesystem options). 
-    ```sudo mkdir -p /mnt/pool/Users```
-    ```sudo mkdir -p /mnt/pool/Media```
+    ```
+    sudo mkdir -p /mnt/pool/Users
+    ```
+    ```
+    sudo mkdir -p /mnt/pool/Media
+    ```
 5. Now have a look in your filemanager and delete/create if you missed something.
 
 ## Step 3: Create filesystems 
