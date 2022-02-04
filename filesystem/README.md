@@ -24,7 +24,8 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 ## How to properly list your drives
 Besides the Disks app (look it up in your Menu), There are multiple commands allowing you to view your drives and all its details.  \
 ```sudo lsblk -f```  \
-This will give you the most useful and readable overview of disks, partitions, labels, UUID, remaining space. Alternatives are `blkid` and `sudo fdisk -l`. That last can be useful to identify drives by size. 
+This will give you the most useful and readable overview of disks, partitions, labels, UUID, remaining space. 
+Alternatives are `blkid` and `sudo fdisk -l`. That last can be useful to identify drives by size. 
 
 ## Step 1: Erase existing filesystems, partitions, create GPT new partition table
 The end goal is to have no partitions, single GPT partition table. 
