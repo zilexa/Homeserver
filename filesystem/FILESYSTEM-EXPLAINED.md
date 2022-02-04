@@ -38,13 +38,12 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
     - Requirements around disk sizes because of duplication. 
     - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
 
-## The alternative, economical home-friendly method
-The default solution in this guide doesn't use BtrFS to pool disks into 1 filesystem, although Raid1 is optionally explained in the steps below. 
-2 reasons: 
-1. BtrFS Single pool is not secure enough for your personal data. 
-2. Raid1 isn't for everyone: You need twice the disks, this can be uneconomical. When your data grows >50% of disks you need more disks again. 
+### A more home-friendly and economical solution: individual filesystems, drives pooled via MergerFS:
+Using RAID always has downsides that should be considered; RAID is not a backup. In the case of BTRFS:
+1. BTRFS Single  is not secure enough for your personal data. 
+2. BTRFS Raid1 isn't for everyone: You need twice the disks, this can be uneconomical. When your data grows >50% of disks you need more disks again. 
 
-### Solution: drive pooling via MergerFS:
+Benefits of using individual drives, pooled through MergerFS:
 - Drives each have _individual BtrFS_ filesystems: metadata is duplicated to help the filesystem recover itself from errors/corruption.. 
 - Files are stored **as a whole** on disks, not spread out in blocks across multiple disks.
 - 100% clarity which drive contains what file.  **see where (on which disk)** what files are stored and access them directly for recovery purposes.
@@ -56,6 +55,15 @@ The default solution in this guide doesn't use BtrFS to pool disks into 1 filesy
 ### Coupled with snapraid/snapraid-btrfs
 - Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) for scheduled parity, the disk will be less active than data disks, **extending its lifecycle** compared to the realtime duplication of Raid1.
 - **For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit) and note by using _snapraid-btrfs_ we overcome the single major [disadvantage of snapraid itself](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs) (versus BtrFS-Raid1). Because these tools exist, I really recommend no realtime duplication for home use. 
+
+
+### What should you choose? 
+- it all depends on your personal situation. 
+- For example, if you have 4TB and 5TB drives, but you have <2TB of data that doesn't grow much, don't overthink. Just use single drive for your data and include 1 or 2 backup drives for nightly backups. That is all you need. 
+- If you do need more storage, you can always add a drive and convert the filesystem to BTRFS single or RAID1 or even more simple: enable MergerFS. 
+- Note SnapRAID is only useful if you have more than 1 drive with data and is not practical to use in combination with a drive that has constantly changing data (like a download drive for your series/movies). 
+- As a best practice your precious personal data (documents, photos, videos, music albums) should be on seperate drives from your downloaded media/download drive. 
+
 
 ### MergerFS BONUS: SSD tiered caching
 Optional read: [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching).  
