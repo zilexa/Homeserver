@@ -91,10 +91,10 @@ This is the most important step, do not make errors. .  You can do this easily a
 8. If it says things couldn't be mounted, make sure you unmount anything you mounted manually or anything that was mounted in `/media`. 
 9. If successfull, edit the file again and uncomment the mergerfs lines. Test again. 
 
-_Regarding MergerFS Notes:_
+_If you use MergerFS:_
 - The long list of arguments have carefully been chosen for high performance. 
 - [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
-- If you use the Tiered Caching setup of MergerFS, make sure you have 2 lines, one for `/mnt/pool` that includes the cache drive and one for `/mnt/pool-nocache` that only contains the harddisks. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the `mnt/pool/-nocache`. Your apps, OS should only use `/mnt/pool`. 
+- If you use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching), make sure you have 2 lines, one for `/mnt/pool` that includes the cache drive and one for `/mnt/pool-nocache` that only contains the harddisks. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the `mnt/pool/-nocache`. Your apps, OS should only use `/mnt/pool`. 
 
 
 ## Step 5: Mount the disks and pools!
