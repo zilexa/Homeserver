@@ -5,6 +5,8 @@ The system will be running 24/7, so power consumption matters. With this combina
 
 The research can be found in [this Dutch forum](https://gathering.tweakers.net/forum/list_messages/1673583) (or see [translation](https://translate.google.com/translate?hl=&sl=nl&tl=en&u=https%3A%2F%2Fgathering.tweakers.net%2Fforum%2Flist_messages%2F1673583)), the first post is long and contains the most important information. Below the concluding recommendations: 
 
+## Motherboard
+_non-gaming, Intel for lowest power consumption, ECC memory support
 The most important part that goes against most online recommendations:
 1. A motherboard designed specifically for 24/7/365 stable operation with low power consumption - Fujitsu D3644-B. This is the cheapest (yet feature-complete) motherboard with the C246 chipset, one that is specifically meant for embedded devices and edge solutions. It is made of special components for low power consumption and stability. **Almost every other motherboard you find is made up of components focused on performance (for gaming usually)**. Building a home server requires you to think differently. For example. you do not want a motherboard with maximum number of phases, because they exist solely to support high consumption of your CPU. This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server. The Fujitu D3644-B, D3643-H, D3473-B motherboards are smart choices. Only the 3644 supports ECC. 
 
@@ -14,12 +16,13 @@ The most important part that goes against most online recommendations:
 
 4. Error-correcting memory (non-registered/unbuffered ECC RAM) - even normal computers should have this. Prevents data and disk corruption issues.
 
-5. 2.5" harddrives - compared to 3.5" they use up to 5 times less power, even when idle. Instead of buying the SATA harddisks, buy the Seagate Portable Drive or Seagate Backup Plus 4TB or 5TB: they cost half the price and contain a normal SATA controller. Just remove them from the usb case first. 
+5. If you do have an addiction to the highest speed, even though NVME/PCI Express is not recommended for data storage (see Storage section), go for a Motherboard with PCI-Express bifurcation support. In the future when ssds become cheaper, you can replace SATA drives for M.2 drives. You can insert 4 M.2 SSDs with full PCIe 4x speed in a PCIe 16x port. With the Fujitsu/Kontron 3644 motherboard, you can add in total 5x NVME PCI Express 3.0 x4 M.2 SSDs with full speed in addition to the 6 SATA slots.
 
-6. Samsung PM981a or WesternDigital SN550 ssd for system/os - they have the lowest idle power consumption (tomshardware.com).
-
+## Power consumption
 7. PicoPSU-90 & Leicke 120W adapter - extremely efficient at low power consumption. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
 
-Optional:
-- WesternDigital SN550 1tb ssd for a fast cache to complement the 2.5" disks.
-- Motherboard with PCI-Express bifurcation support. In the future when ssds become cheaper, you can replace drives for M.2 drives. You can insert 4 M.2 SSDs with full PCIe 4x speed in a PCIe 16x port. With the 3644 motherboard, you can add in total 5 M.2 SSDs with full speed, in addition to the M.2 port on the motherboard and 6 SATA slots. This allows you to transform your server into an SSD-based server in 5-10 years. 
+## Storage
+- For the OS and applications, use an NVME drive, for example M.2 PCI Express 3.0 x4 are common.
+- Samsung PM981a, WesternDigital SN730, Kioxia G6 are examples of M.2 NVME ssds that have low idle power consumption. There are big differences, look for Anandtech, Tomshardware reviews. Most other reviewers do not test idle power consumption at all! Even though on a 24x7 system, this will be THE power consumption 90% of the time.
+- For data storage, backups etc use SATA instead of NVME: SATA SSDs offer plenty of speed and use less power. They are also cheaper. There are very little usecases for NVME/PCI Express drives in a NAS/Homeserver.
+- When using harddisks, go for 2.5" instead of 3.5" because they use up to 5 times less power, even when idle. Instead of buying the SATA harddisks, buy the Seagate Portable Drive or Seagate Backup Plus 4TB or 5TB: they cost half the price and contain a normal SATA controller. Just remove them from the usb case first. 
