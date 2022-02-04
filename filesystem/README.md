@@ -13,7 +13,7 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 
 ## General need-to-knows
 - In Linux, every piece of hardware has its own path. For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. 
-- Note you should not have any partitions on your drive when you use BTRFS. That just overcomplicate things. BTRFS uses subvolumes instead.
+- No partitions are needed, when you have finished this part of the guide, there should not be a `sda` for example. That just overcomplicate things. BTRFS uses subvolumes instead.
 - Paths can change, for example when you mount/unmount drives, `/deb/sda` could now be mounted as `/dev/sdb`. 
 - To actually use drives, they need to be mounted to a path you can use, since you cannot use `/dev/`. 
 - The system file `/etc/fstab` decides where drives are mounted at boot. You can edit this file easily and this repository has a nice example. Follow it!
