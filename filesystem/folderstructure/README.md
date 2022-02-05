@@ -14,7 +14,7 @@ For example, the docker and home subvolumes are root subvolumes just like /. Thi
 #### 2.1 System folder structure
 When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately, with a different cadence or a different retention policy.  
 
-On the OS system SSD: 
+On the OS system SSD the following subvolumes will be created: 
 - By OS: root subvolume `@` mapped to path `/` = root folder. will be snapshotted and backupped. 
 - By OS: root subvolume `@home` mapped to path`/home` --> user folder, will be snapshotted and backupped.
 - By you: root subvolume `@docker` mapped to path `$HOME/docker` --> docker persistent data per container, will be snapshotted and backupped. 
