@@ -1,25 +1,23 @@
 # STEP 2: Folder Structure Recommendations & Data Migration
 
 **Contents**
-1. [Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#2-folder-structure-recommendations)
-2. [Data Migration](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
-3. [Sharing between partners and devices](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
-4. [How to use the setup-folderstructure script](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
+1. [Data Migration](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
+2. [Sharing between partners and devices](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
+3. [How to use the setup-folderstructure script](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
 
 ## Folder Structure Recommendations
-My folder structure is extremely simple, this supports easy backups and snapshots with a similar file structure. 
-Note I rely heavily on the flexibility and portability of btrfs subvolumes. 
-For example, the docker and home subvolumes are root subvolumes just like /. This allows you to quickly restore the state of your docker applications to any point in time for which snapshot exists. Or you could even re-install your system, mount the docker subvolume and be back online immediately. 
+You might not realise the importance of a well-thought through folder structure. Consider the information below informative and use as inspiration. 
 
-#### 1. System folder structure
+#### 1. Overview of system subvolumes and folders:
 When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately, with a different cadence or a different retention policy.  
 
 On the OS system SSD the following subvolumes will be created: 
 - By OS: root subvolume `@` mapped to path `/` = root folder. will be snapshotted and backupped. 
 - By OS: root subvolume `@home` mapped to path`/home` --> user folder, will be snapshotted and backupped.
-- By you: root subvolume `@docker` mapped to path `$HOME/docker` --> docker persistent data per container, will be snapshotted and backupped. 
+- By prep-server script: root subvolume `@docker` mapped to path `$HOME/docker` --> docker persistent data per container, will be snapshotted and backupped. 
 - By OS: `@cache`, `@log`mapped inside path `/var/` --> just to ensure these temporary folders are excluded in snapshots.
-- By you: `@system-snapshots` --> To store snapshots of `@`, `@home` and `@docker`. 
+- By prep-server script: `@system-snapshots` --> To store snapshots of `@`, `@home` and `@docker`. 
+- By prep-server script: `/mnt/btrfs-root` --> to mount the btrfs root, required to create `@docker` and to backup the snapshots of `@`, `@home`, `@docker`. Not auto-mounted.
 
 _Notes_
 If your whole system breaks down due to hardware failure or software corruption, you can easily replace hardware and do a clean install, run the 2 scripts again and only recover the `@docker` from your `/mnt/disks/backup1` or `/mnt/disks/backup1` or external backup disk. You will be up and running in minutes, without having to configure your apps. All maintenance scripts are in that same docker subvolume, you only need to re-enable scheduling. 
@@ -29,25 +27,23 @@ If your whole system breaks down due to hardware failure or software corruption,
 - docker-compose.yml and .env files in the root of the folder.
 - `docker/HOST` folder: containing configs and scripts for maintenance, cleanup, backup. This way, you backup a single folder, /docker == equals backup of your complete server configuration. 
 
-#### 2. Disk mounts: 
-- `/mnt/disks` --> physical disks
-  - `/mnt/disks/ {data1, data2, data3}`
+#### 2. Overview of drive mounts: 
+- `/mnt/disks` --> Just a folder with the mountpoints of your drives.
+  - `/mnt/disks/{data1,data2,data3,data4}` (unless you use BTRFS RAID1 filesystem). 
   - `/mnt/disks/parity1` not automounted, will be mounted during backup run.  
-  - `/mnt/disks/backup1` not automounted, will be mounted during backup run.  
-- `/mnt/pool` --> the union of all files/folders on cache/data disks. the single access point to your data.
+  - `/mnt/disks/{backup1,backup2}` not automounted, will be mounted during backup run.  
+- `/mnt/pool` --> the union of all files/folders on cache/data disks. the single access point to your data. Could be 1 drive, a MergerFS mountpoint or the mountpoint of your BTRFS RAID1 filesystem). 
 
-***Helper folders:***
-- `/mnt/pool-nocache` --> the union but excluding the cache, required to offload the cache on a scheduled basis. 
-- `/mnt/pool-backup` --> the union of cache/data disk backup snapshots on backupdisk. They are seperately backupped on the backupdisk. Not auto-mounted. Create this mount yourself when needed. 
-- `/mnt/btrfs-root` --> used during initial setup and during nightly backup. Not auto-mounted.
+_Helper folders:_
+- If you use MergerFS Tiered Cache: `/mnt/pool-nocache` --> the union but excluding the cache, required to offload the cache on a scheduled basis. 
+- If you use MergerFS: `/mnt/pool-backup` --> If you use MergerFS, each drive will be backupped to individual folders on your `backup1` disk. To easily restore files and folders, you can simply pool/unionise those folders on your `backup1` to look just like your `/mnt/pool`. Otherwise it will be a hassle to find which file/folders are stored in which backup folder. 
 
 #### 3. Data folder structure
-In the mountpoint of each cache/data disk, create the following subvolumes (for example, `cd /mnt/disks`, `sudo btrfs subvolume create data1/Users`: 
-- `/Users` personal, non-expendable precious userdata. Protected via parity _and_ backupped to backup disk. 
-- `/TV` non-personal, expendable tv media and downloads. Protected via parity, not backupped. 
-- `/Music` non-personal, semi-expendable music files. Protected via parity, backup is a choice, if you have enough space. 
+In the mountpoint of each cache/data disk: 
+- Subvolume `/Users` personal, non-expendable precious userdata. Protected via parity _and_ backupped to backup disk. 
+- Subvolume`/Media` non-personal: incoming (downloading) files, series, movies, music, books etc. Unless rare HiFi music albums, most likely no need to backup.  
 - `/.snapraid` contains the snapraid content file.
-- additionally: `/data/Media/TV/incoming/incomplete` is a nested subvolume and should have `chattr -R +C incomplete` applied to it from its parent folder.\Reason: Downloaded files can be heavily fragmented. The torrent client can be set to download to `incomplete` and move files to `complete` when finished. By having a subvol for incomplete, files will be newly created (instead of just updating the index table) in complete. Zero fragmentation!
+- Nested subvolume `/data/Media/TV/incoming/incomplete`with `chattr -R +C incomplete` applied to it from its parent folder.\Reason: Downloaded files can be heavily fragmented. The torrent client can be set to download to `incomplete` and move files to `complete` when finished. By having a subvol for incomplete, files will be newly created (instead of just updating the index table) in complete. Zero fragmentation!
 
 **When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool`:**\
 `mnt/pool/Users`, `mnt/pool/TV` and `/mnt/pool/Music`.  
