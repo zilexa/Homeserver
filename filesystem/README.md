@@ -132,7 +132,7 @@ sudo nano /etc/fstab
 ```
 The goal is to have all your data accessible for users and applications or cloud services via `/mnt/pool/Media` and `mnt/pool/Users`, regardless of underlying drives. Also, snapshot/backup folders will not be visible here as you want to isolate those instead of exposing them to users/applications. 
 
-### OPTION 1: single drive per datatype or BTRFS1 
+### _OPTION 1: single drive per datatype or BTRFS1_
 If you only have 1 Media drive and 1 Users drive OR if you use a BTRFS1 array, you can mount the drives directly without MergerFS to the respective `/mnt/pool/Media` and `mnt/pool/Users` folders that we created in step 3. 
 The `subvol=` option is important here!
 ```
@@ -141,7 +141,7 @@ UUID=0187bc8c-4188-4b25-b4d6-46dcd655c3ce /mnt/pool/Users btrfs defaults,noatime
 ```
 Where UUID= the UUID of the drive. In case of BTRFS RAID1, just use the UUID of the first drive. 
 
-### OPTION 2: multiple drives pooled via MergerFS  
+### _OPTION 2: multiple drives pooled via MergerFS_
 If you have multiple drives that need to be pooled, you merge them via MergerFS. for example: `/mnt/disks/cache/Users` `/mnt/disks/data1/Users` and `/mnt/disks/data2/Users`:  
 The line in FSTAB looks like this (do not copy paste this lines, use the mergerfs examples here instead!). 
 ```
