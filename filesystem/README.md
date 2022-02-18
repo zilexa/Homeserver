@@ -142,17 +142,21 @@ UUID=0187bc8c-4188-4b25-b4d6-46dcd655c3ce /mnt/pool/Users btrfs defaults,noatime
 Where UUID= the UUID of the drive. In case of BTRFS RAID1, just use the UUID of the first drive. 
 
 ### _Option 2: multiple drives pooled via MergerFS_
-If you have multiple drives that need to be pooled, you merge them via MergerFS. for example: `/mnt/disks/cache/Users` `/mnt/disks/data1/Users` and `/mnt/disks/data2/Users`:  
-The line in FSTAB looks like this (do not copy paste this lines, use the mergerfs examples here instead!). Note the long list of arguments have been carefully chosen for high performance while maintaining stability. 
+If you have multiple drives that need to be pooled, you merge them via MergerFS. for example: 
+`/mnt/disks/data1/Users` and `/mnt/disks/data2/Users`  \
+`/mnt/disks/data0/Media` and `/mnt/disks/data3/Media`  \
+To merge/pool the Users drives and the Media drives, you simply add a line in FSTAB for each desired pool, using MergerFS as filesystem: 
 ```
 /mnt/disks/data1/Users:/mnt/disks/data2/Users /mnt/pool/Users fuse.mergerfs ...
 /mnt/disks/data0/Media:/mnt/disks/data3/Media /mnt/pool/Media fuse.mergerfs ... 
 ``` 
-Copy the MergerFS example line, change the paths of your drive to reflect your situation. Next you can optionally change a few arguments to your desire: 
-- FSNAME: a name to identify your pool for the OS. Not important.
-- MINFREESPACE: when this threshold has been reached, the disk is considered full and depending on the MergerFS policy it will write to the next drive.
-- POLICY: MergerFS will follow a _Least Free Space (LFS)_ policy; filling up disk by disk starting with the first disk. This way, you always know where your data is stored. You can also choose a different policy for example to fill each drive equally by always selecting the drive with the _most free space (MFS)_ and there are lots of other policies. [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
-- The rest of the long list of arguments have carefully been chosen for high performance. 
+1. This is an incomplete example, go to [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) and copy the first MergerFS example line into your fstab.
+2. Change the paths of your drive to reflect your situation.
+3. You can optionally change a few arguments to your desire: 
+  - FSNAME: a name to identify your pool for the OS. Not important.
+  - MINFREESPACE: when this threshold has been reached, the disk is considered full and depending on the MergerFS policy it will write to the next drive.
+  - POLICY: MergerFS will follow a _Least Free Space (LFS)_ policy; filling up disk by disk starting with the first disk. This way, you always know where your data is stored. You can also choose a different policy for example to fill each drive equally by always selecting the drive with the _most free space (MFS)_ and there are lots of other policies. [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
+  - The rest of the long list of arguments have carefully been chosen for high performance while maintaining stability. 
 
 ### _Option 3: MergerFS with Tiered Cache_
 If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching) do the following: 
