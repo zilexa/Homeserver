@@ -1,14 +1,17 @@
 # STEP 2: Folder Structure Recommendations & Data Migration
 
 **Contents**
-1. [Data Migration](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
-2. [Sharing between partners and devices](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
-3. [How to use the setup-folderstructure script](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
+1. [Overview of system folders](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
+2. [Overview of mountpoints](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
+3. [A folder structure for your data](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
+3. [How to migrate data to your pools](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
+3. [How to handle shared files between users](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
+
 
 ## Folder Structure Recommendations
 You might not realise the importance of a well-thought through folder structure. Consider the information below informative and use as inspiration. 
 
-#### 1. Overview of system subvolumes and folders:
+### 1. Overview of system folders:
 When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately, with a different cadence or a different retention policy.  
 
 On the OS system SSD the following subvolumes will be created: 
@@ -27,25 +30,41 @@ If your whole system breaks down due to hardware failure or software corruption,
 - docker-compose.yml and .env files in the root of the folder.
 - `docker/HOST` folder: containing configs and scripts for maintenance, cleanup, backup. This way, you backup a single folder, /docker == equals backup of your complete server configuration. 
 
-#### 2. Overview of drive mounts: 
+### 2. Overview mountpoints: 
 - `/mnt/disks` --> Just a folder with the mountpoints of your drives.
   - `/mnt/disks/{data1,data2,data3,data4}` (unless you use BTRFS RAID1 filesystem). 
   - `/mnt/disks/parity1` not automounted, will be mounted during backup run.  
   - `/mnt/disks/{backup1,backup2}` not automounted, will be mounted during backup run.  
-- `/mnt/pool` --> the union of all files/folders on cache/data disks. the single access point to your data. Could be 1 drive, a MergerFS mountpoint or the mountpoint of your BTRFS RAID1 filesystem). 
+- `/mnt/pool/Users` and `/mnt/pool/Media` --> the union of all files/folders on cache/data disks. the single access point to your data. Could be 1 drive, a MergerFS mountpoint or the mountpoint of your BTRFS RAID1 filesystem). 
 
 _Helper folders:_
 - If you use MergerFS Tiered Cache: `/mnt/pool-nocache` --> the union but excluding the cache, required to offload the cache on a scheduled basis. 
 - If you use MergerFS: `/mnt/pool-backup` --> If you use MergerFS, each drive will be backupped to individual folders on your `backup1` disk. To easily restore files and folders, you can simply pool/unionise those folders on your `backup1` to look just like your `/mnt/pool`. Otherwise it will be a hassle to find which file/folders are stored in which backup folder. 
 
-#### 3. Data folder structure
+### 3. A folder structure of your data
 In the mountpoint of each cache/data disk: 
-- Subvolume `/Users` personal, non-expendable precious userdata. Protected via parity _and_ backupped to backup disk. 
-- Subvolume`/Media` non-personal: incoming (downloading) files, series, movies, music, books etc. Unless rare HiFi music albums, most likely no need to backup.  
-- `/.snapraid` contains the snapraid content file.
-- Nested subvolume `/data/Media/TV/incoming/incomplete`with `chattr -R +C incomplete` applied to it from its parent folder.\Reason: Downloaded files can be heavily fragmented. The torrent client can be set to download to `incomplete` and move files to `complete` when finished. By having a subvol for incomplete, files will be newly created (instead of just updating the index table) in complete. Zero fragmentation!
+- Subvolume `/Users` personal, non-expendable precious userdata. Protected via parity _and_ backupped to backup disk. Each user has its own folder here. 
+  For example`/mnt/pool/Users/Zilexa` contains the folders: 
+  `/mnt/pool/Users/Zilexa/Documents`
+  `/mnt/pool/Users/Zilexa/Desktop`
+  `/mnt/pool/Users/Zilexa/Pictures`
+  etc.
+- Subvolume`/Media` non-personal: incoming (downloading) files, series, movies, music, books etc. Unless rare HiFi music albums, most likely no need to backup. 
+  For example `/mnt/pool/Media` contains the folders:
+  `/mnt/pool/Media/Movies`
+  `/mnt/pool/Media/Series`
+  `/mnt/pool/Media/Music/Albums`
+  `/mnt/pool/Media/Incoming`
+  `/mnt/pool/Media/Incoming/complete` <-- completed downloads. 
+  `/mnt/pool/Media/Incoming/incomplete` <-- ongoing downloads. 
 
-**When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool`:**\
+#### HIGHLY RECOMMENDED:
+- The `incomplete` folder should be created as nested subvolume (on each underlying drive in `mnt/disks`! ), after creating the Incoming folder via: 
+  `sudo btrfs subvolume create /mnt/disks/data0/Media/Incoming/incomplete`. Do this for each Media drive pooled via MergFS. 
+  As subvolume, this ensures finished downloads have zero fragmentation when moved to the complete folder (and hardlinked to Movies, Series or Music). 
+- This folder also needs `chattr -R +C /mnt/disks/data0/Media/incomplete`, applied to each drive, to disable BTRFS CoW behavior, reducing system load and wear of your drive.
+
+When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool`:**\
 `mnt/pool/Users`, `mnt/pool/TV` and `/mnt/pool/Music`.  
 
 &nbsp;
