@@ -144,7 +144,7 @@ UUID=0187bc8c-4188-4b25-b4d6-46dcd655c3ce /mnt/pool/Users btrfs defaults,noatime
 
 
 ### _Option 2: multiple drives pooled via MergerFS_
-If you have multiple drives that need to be pooled, you merge them via MergerFS. for example: 
+If you have multiple drives that need to be pooled, you merge them via MergerFS. for example:  \
 `/mnt/disks/data1/Users` and `/mnt/disks/data2/Users`  \
 `/mnt/disks/data0/Media` and `/mnt/disks/data3/Media`  \
 To merge/pool the Users drives and the Media drives, you simply add a line in FSTAB for each desired pool, using MergerFS as filesystem: 
