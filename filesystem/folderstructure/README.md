@@ -1,11 +1,11 @@
 # STEP 2: Folder Structure Recommendations & Data Migration
 
 **Contents**
-1. [Overview of system folders](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-data-migration)
-2. [Overview of mountpoints](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-extras)
-3. [A folder structure for your data](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
-3. [How to migrate data to your pools](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
-3. [How to handle shared files between users](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#how-to-use-the-setup-folderstructure-script)
+1. [Overview of system folders](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-overview-of-system-folders)
+2. [Overview of mountpoints](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#2-overview-mountpoints)
+3. [A folder structure for your data](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-a-folder-structure-of-your-data)
+4. [Data Migration](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#4-data-migration)
+5. [How to handle shared files between users](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#5-sharing-between-partners-and-devices)
 
 
 ## Folder Structure Recommendations
