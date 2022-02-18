@@ -15,10 +15,10 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 - In Linux, every piece of hardware has its own path starting with `/dev/...` For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. Partitions on the next drive will be `dev/sdb1` etc. 
 - No partitions are needed, when you have finished this part of the guide, there should not be a `sda1`. That just overcomplicate things. BTRFS uses subvolumes instead.
 - To actually use drives, they need to be mounted to a folder you have created, you cannot use the device path `/dev/`. 
-- The system file `/etc/fstab` is a register of all your mounts. You can edit this file easily and this repository has a nice example. Follow it!
+- The system file `/etc/fstab` is a register of all your mounts. You can edit this file easily, [example here](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab). Follow it!
 - `/etc/stab` should not contain `/dev/` paths, instead the disk ID is used. This ID is persistent unless you remove its filesystem.
 - The system usually mounts drives by default inside `/media/`, especially USB drives. To permanently mount your drives, we will use `/mnt/` instead. 
-- If the drive name, the path to mount to etc are incorrect in /etc/fstab, you will boot into command line and will need to fix it (or comment out) using `sudo nano /etc/fstab`. 
+- If the drive name, the path to mount to etc are incorrect in /etc/fstab, you will boot into command line and will need to fix it (or comment out) using `sudo nano /etc/fstab`. Alternatively, you can simply restore since this guide requires you to make a backup. Restoring: `sudo mv /etc/fstabbackup /etc/fstab` and reboot again. 
 
 ## How to properly list your drives
 Besides the Disks app (look it up in your Menu), There are multiple commands allowing you to view your drives and all its details.  \
@@ -79,10 +79,8 @@ sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
 4. If you do use a cache drive, also create a folder `sudo mkdir -p /mnt/pool-nocache`. This path will only be used during nightly maintenance to offload the cache drive.
 5. Now have a look in your filemanager and delete/create if you missed something.
 
-By temporarily mounting the drives to the mountpoints, you can test if the drive is accessible via that mountpoint. For example: 
-`sudo mount /dev/sda /mnt/disks/data0` 
-Make sure you eventually unmount everything you mounted manually. 
-Also make sure you unmount everything in /media: `sudo umount /media/*`
+6. By temporarily mounting the drives to the mountpoints, you can test if the drive is accessible via that mountpoint. For example: 
+`sudo mount /dev/sda /mnt/disks/data0`Make sure you eventually unmount everything you mounted manually. Also make sure you unmount everything in /media: `sudo umount /media/*`
 
 ## Step 4: Physically label your drives!
 If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint. 
@@ -105,13 +103,39 @@ _If you use MergerFS:_
 - If you use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching), make sure you have 2 lines, one for `/mnt/pool` that includes the cache drive and one for `/mnt/pool-nocache` that only contains the harddisks. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the `mnt/pool/-nocache`. Your apps, OS should only use `/mnt/pool`. 
 
 
-## Step 5: Mount the disks and pools!
+## Step 6: Mount the disks and pools!
 1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media.
 2. Make sure each mount point is an empty folder after unmounting.
 3. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
 4. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-nocache.
+
+
+## Step 7: Create subvolumes
+Each filesystem should have at least 1 subvolume. Subvolumes are the special folders of BTRFS that can be snapshotted and securily copied/transmitted to other drives or locations (for backup purposes). This guide assumes 2 types of data:  \
+
+- _Users_ data, containing per-user folders, each user folder will contain all data of that user (documents, photos etc). Note that if you have family content such as your photo collection, this can be stored in a family-user account (for example user "Shared"). This way, each user still has their own data but also access to a Shared folder. 
+- _MEDIA_ data, not user-specific and often generally available such as Downloads; Movies, TV Shows, Music Albums. 
+
+1. decide which of your `data` drives (`data0`, `data1` etc) will contain USER data and which one will contain MEDIA data. 
+2. In general, you want seperate drives for media as continuous downloads will wear down the disk faster --> use cheaper drives for such tasks. 
+3. If you use BTRFS RAID1, you don't create subvolumes per drive, only per filesystem. 
+4.  Creating a subvolume needs to be done per filesystem: 
+```sudo btrfs subvolume create /mnt/disks/data0/Media``` 
+```sudo btrfs subvolume create /mnt/disks/data1/Users``` 
+```sudo btrfs subvolume create /mnt/disks/data2/Users``` 
+In this example I use 4 drives, 1 for downloads/media and 3 for userdata. 
+
+
+## Step 7: Update /etc/fstab
+Now that you have subvolumes, you can mount the subvolumes to the different pools: 
+`/mnt/disks/data1/Users` and `/mnt/disks/data2/Users` can be mounted to `mnt/pool/Users` via a MergerFS rule in your fstab: 
+```/mnt/disks/data1/Users:/mnt/disks/data2/Users /mnt/pool fuse.mergerfs fsname=mergerfsPool 0 0``` 
+Do not copy paste this line, use the mergerfs examples in the fstab example file instead!
+
+Since we only have 1 Media drive, we can mount that one directly to the `/mnt/pool/Media` folder. 
+
 
 &nbsp;
 
