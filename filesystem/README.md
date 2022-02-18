@@ -125,9 +125,12 @@ Each filesystem should have at least 1 subvolume. Subvolumes are the special fol
 ```sudo btrfs subvolume create /mnt/disks/data2/Users``` 
 
 &nbsp;
-## Step 7: Mount the pools!
-Now that you have subvolumes, you can mount the subvolumes to the different pools: `/mnt/pool/Media` and `mnt/pool/Users`.  \
-This is the location where all your data will be accessible, regardless of underlying drives. Also, snapshot/backup folders will not be visible here as you want to isolate those instead of exposing them to users/applications. 
+## Step 7: Add pools to FSTAB
+Now that you have subvolumes, you can mount the subvolumes to the different pools by editing `/etc/fstab` again: 
+```
+sudo nano /etc/fstab
+```
+The goal is to have all your data accessible for users and applications or cloud services via `/mnt/pool/Media` and `mnt/pool/Users`, regardless of underlying drives. Also, snapshot/backup folders will not be visible here as you want to isolate those instead of exposing them to users/applications. 
 
 ### OPTION 1: single drive per datatype or BTRFS1 
 If you only have 1 Media drive and 1 Users drive OR if you use a BTRFS1 array, you can mount the drives directly without MergerFS to the respective `/mnt/pool/Media` and `mnt/pool/Users` folders that we created in step 3. 
