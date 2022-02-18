@@ -172,4 +172,5 @@ If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blo
 
 &nbsp;
 
-Continue setting up your [Folder Structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure) or go back to the main guide. 
+Have a look at [Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure), follow the tips in the _Data Migration_ to 100% securily copy your data and verify each read & write is correct (using Rsync or BTRFS send/receive). 
+If you are going to download stuff, follow the 2 HIGHLY RECOMMENDED actions under Step 3 for your incoming downloads folder. 
