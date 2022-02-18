@@ -132,7 +132,7 @@ sudo nano /etc/fstab
 ```
 The goal is to have all your data accessible for users and applications or cloud services via `/mnt/pool/Media` and `mnt/pool/Users`, regardless of underlying drives. Also, snapshot/backup folders will not be visible here as you want to isolate those instead of exposing them to users/applications. 
 
-### _OPTION 1: single drive per datatype or BTRFS1_
+### _Option 1: single drive per datatype or BTRFS1_
 If you only have 1 Media drive and 1 Users drive OR if you use a BTRFS1 array, you can mount the drives directly without MergerFS to the respective `/mnt/pool/Media` and `mnt/pool/Users` folders that we created in step 3. 
 The `subvol=` option is important here!
 ```
@@ -141,19 +141,24 @@ UUID=0187bc8c-4188-4b25-b4d6-46dcd655c3ce /mnt/pool/Users btrfs defaults,noatime
 ```
 Where UUID= the UUID of the drive. In case of BTRFS RAID1, just use the UUID of the first drive. 
 
-### _OPTION 2: multiple drives pooled via MergerFS_
+### _Option 2: multiple drives pooled via MergerFS_
 If you have multiple drives that need to be pooled, you merge them via MergerFS. for example: `/mnt/disks/cache/Users` `/mnt/disks/data1/Users` and `/mnt/disks/data2/Users`:  
-The line in FSTAB looks like this (do not copy paste this lines, use the mergerfs examples here instead!). 
+The line in FSTAB looks like this (do not copy paste this lines, use the mergerfs examples here instead!). Note the long list of arguments have been carefully chosen for high performance while maintaining stability. 
 ```
-/mnt/disks/cache/Users:/mnt/disks/data1/Users:/mnt/disks/data2/Users /mnt/pool/Users fuse.mergerfs [mergerfs arguments] fsname=MergedUsers 0 0
+/mnt/disks/data1/Users:/mnt/disks/data2/Users /mnt/pool/Users fuse.mergerfs ...
+/mnt/disks/data0/Media:/mnt/disks/data3/Media /mnt/pool/Media fuse.mergerfs ... 
 ``` 
-```
-/mnt/disks/cache/Media:/mnt/disks/data0/Media:/mnt/disks/data3/Media /mnt/pool/Media fuse.mergerfs [mergerfs arguments] fsname=MergedMedia 0 0
-``` 
-- Remove `/mnt/disks/cache/Users` and/or `/mnt/disks/cache/Users` if you are not going to use a cache disk. If you already use SATA SSDs, it is not necessary. 
-- The long list of arguments have carefully been chosen for high performance. 
-- If you use the options from the example file, MergerFS will follow a _Least Free Space (LFS)_ policy; filling up disk by disk starting with the first disk. This way, you always know where your data is stored. You can also choose a different policy for example to fill each drive equally by always selecting the drive with the _most free space (MFS)_ and there are lots of other policies. [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
-- If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching), make sure you add additional MergerFS lines for each pool: each pool should also have a MergerFS line without the cache drive (only harddisks) and mounted to `/mnt/pool-nocache/Users` or `/mnt/pool-nocache/Media`. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the `mnt/pool/-nocache`. Your apps, OS should always and only use `/mnt/pool`. 
+Copy the MergerFS example line, change the paths of your drive to reflect your situation. Next you can optionally change a few arguments to your desire: 
+- FSNAME: a name to identify your pool for the OS. Not important.
+- MINFREESPACE: when this threshold has been reached, the disk is considered full and depending on the MergerFS policy it will write to the next drive.
+- POLICY: MergerFS will follow a _Least Free Space (LFS)_ policy; filling up disk by disk starting with the first disk. This way, you always know where your data is stored. You can also choose a different policy for example to fill each drive equally by always selecting the drive with the _most free space (MFS)_ and there are lots of other policies. [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
+- The rest of the long list of arguments have carefully been chosen for high performance. 
+
+### _Option 3: MergerFS with Tiered Cache_
+If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching) do the following: 
+1. Same as Option 2 but add `/mnt/disks/cache/Users` and/or `/mnt/disks/cache/Media` as first drive in each MergerFS line. 
+2. Add additional MergerFS lines: each MergerFS pool should also have a corresponding "no-cache" pool containing only the harddisks and mounted to `/mnt/pool-nocache/Users` or `/mnt/pool-nocache/Media`. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the subfolders of `mnt/pool-nocache`. 
+3. Realize that all data in `/mnt/pool/no-cache` is also in `/mnt/pool/` since one is a subset of the other. 
 
 #### Why do we mount subvolumes instead of the root of the drive?
 --> In /mnt/pool/ you only want to see Users and Media. The Backup Guide will require additional folders in the root of each drive (for snapshots and/or parity). As a best practice, you should only expose folders to users and applications that must be exposed. Exposing your backup/snapshots folder serves no purpose. 
