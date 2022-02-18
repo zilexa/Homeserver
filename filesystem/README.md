@@ -12,12 +12,11 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 
 
 ## General need-to-knows
-- In Linux, every piece of hardware has its own path. For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. 
-- No partitions are needed, when you have finished this part of the guide, there should not be a `sda` for example. That just overcomplicate things. BTRFS uses subvolumes instead.
-- Paths can change, for example when you mount/unmount drives, `/deb/sda` could now be mounted as `/dev/sdb`. 
-- To actually use drives, they need to be mounted to a path you can use, since you cannot use `/dev/`. 
-- The system file `/etc/fstab` decides where drives are mounted at boot. You can edit this file easily and this repository has a nice example. Follow it!
-- In `stab` does not use `/dev/` paths, instead the disk ID is used. This ID is persistent unless you remove its filesystem.
+- In Linux, every piece of hardware has its own path starting with `/dev/...` For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. Partitions on the next drive will be `dev/sdb1` etc. 
+- No partitions are needed, when you have finished this part of the guide, there should not be a `sda1`. That just overcomplicate things. BTRFS uses subvolumes instead.
+- To actually use drives, they need to be mounted to a folder you have created, you cannot use the device path `/dev/`. 
+- The system file `/etc/fstab` is a register of all your mounts. You can edit this file easily and this repository has a nice example. Follow it!
+- `/etc/stab` should not contain `/dev/` paths, instead the disk ID is used. This ID is persistent unless you remove its filesystem.
 - The system usually mounts drives by default inside `/media/`, especially USB drives. To permanently mount your drives, we will use `/mnt/` instead. 
 - If the drive name, the path to mount to etc are incorrect in /etc/fstab, you will boot into command line and will need to fix it (or comment out) using `sudo nano /etc/fstab`. 
 
@@ -44,32 +43,41 @@ sudo wipefs --all /dev/sda
    - Hit `g` to remove partition table and create a new GPT partition table.
    - Hit `w` to write changes. This is irriversible. 
 
-## Step 2: Create mountpoints for each drive
-Only continue if you know what purpose you want to assign to your drives.
+## Step 2: Create filesystems 
+Make sure you have the correct device path for each drive when you use this command. 
+Your OS drive should beon an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
+1. Decide the purpose of each of your drives. The following purposes are available: 
+    - `data0, data1, data2` etc: drive containing your user and media data. 
+    - `backup1, backup2` etc: drive containing backups. 
+    - `parity1, parity2` etc: drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
+    - `cache`: only when using MergerFS Tiered Caching. 
+2. depending on the filesystem option you have chosen (see Filesystem Synopsis), create the filesystem as follows and replace LABEL for one of the purposes above.
+- BTRFS single: 
+    ```mkfs.btrfs -L LABEL -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd```
+- BTRFS RAID1: 
+    ```mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd```
+- Create individual filesystems per drive: 
+    ```mkfs.btrfs -m dup -L data0 /dev/sda```
+- Create filesystem for your SnapRAID drive (should be EXT4 with these options): 
+    ```sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda```
+
+## Step 3: Create mountpoints for each drive
+Now that each drive has a filesystem (or in case of BTRFS RAID1 is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
 1. Open the folder /mnt in your file manager, right click and open it with root rights.This will give you a nice view of the structure.
-2. Consider using the following naming scheme and create all these folders, quickest way is via command line: 
+2. With the following command, you create multiple folders.   
 ```
 sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
 ```
-  - Please remove what you do not need. If you are not going to use  MergerFS cache drive, remove that. If you only have 2 drives, remove 3 and 4 etc. 
-  - If you do use a cache drive, also create a folder `sudo mkdir -p /mnt/pool-nocache`. This path will only be used during nightly maintenance to offload the cache drive.
-3. Create the datapool folders which you will use to pool drives (regardless of the chosen filesystem options). 
+  - Adjust the command to reflect the drives you have/want to assign. For example, remove `cache` if you are not going to use MergerFS with Tiered Caching (read the Filesystem Synopsis). Also if you only have 2 drives for data and 1 for backup, remove the folders you are not going to use.  
+3. Now create the datapool folders. These folders will be the actual path to your drive pool.
     ```
     sudo mkdir -p /mnt/pool/Users
     ```
     ```
     sudo mkdir -p /mnt/pool/Media
     ```
+4. If you do use a cache drive, also create a folder `sudo mkdir -p /mnt/pool-nocache`. This path will only be used during nightly maintenance to offload the cache drive.
 5. Now have a look in your filemanager and delete/create if you missed something.
-
-## Step 3: Create filesystems 
-  Make sure you have the correct device path for each drive when you use this command. 
-  Your OS drive should beon an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
-  Replace "LABEL" for a useful label (MEDIA for downloads/shows/series, USERS for personal data.
-- BTRFS single: `mkfs.btrfs -L LABEL -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd` recommended label would be _MEDIA_ for downloads or _USERS_ for personal data. 
-- BTRFS RAID1: `mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd` recommended label would be _MEDIA_ for downloads or _USERS_ for personal data. 
-- Create individual filesystems per drive: `mkfs.btrfs -m dup -L data0 /dev/sda` recommended label would be _data0_, _data1_ or _backup1_, _backup2_, or _parity1_ etc.
-- Create filesystem for your SnapRAID drive (should be EXT4 with these options): `sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda`
 
 By temporarily mounting the drives to the mountpoints, you can test if the drive is accessible via that mountpoint. For example: 
 `sudo mount /dev/sda /mnt/disks/data0` 
