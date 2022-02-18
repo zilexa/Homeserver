@@ -85,8 +85,8 @@ The issue: My partner and I share photo albums, administrative documents etc. Wi
 But your partner won't see those files on the local filesystem of your laptop, PC, workstation or server: only if she uses the web application (FileRun or NextCloud). As you will prefer to use the local files directly, this can be frustrating and annoying as she has to go find your folder with those files.
 
 #### Solution
-1. To keep the filesystem structure simple, we create a 3rd user, a `shareduser`, for example named `asterix`. For conveniency, this is the same username as the server OS login user account. 
-2. `/mnt/pool/Users/Asterix/{Documents, Desktop, Photos}` contains our shared photo albums, shared documents etc and symlinks to these folders replace the common personal folders in $HOME. 
+1. To keep the filesystem structure simple, we create a 3rd user called `Shared`. 
+2. `/mnt/pool/Users/Shared/{Documents, Desktop, Photos}` contains our shared photo albums, shared documents etc and symlinks to these folders replace the common personal folders in $HOME. 
 3. in $HOME, the common personal folders are replaced with symlinks to `Users/Myusername` and `Users/Herusername`. 
 4. Each one of our user folders (`/mnt/pool/Users/Myname` and `mnt/pool/Users/Hername` are also symlinked into `$HOME` and visible next to the symlinked Documents, Photos etc.
 7. Extra benefit: on a shared home laptop, via Syncthing you can have a copy of yours and her Users/ folders via (Syncthing manages a realtime 2-way sync of folders) and you can sync the Documents, Desktop etc folder as well. 
