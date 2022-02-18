@@ -134,12 +134,14 @@ The goal is to have all your data accessible for users and applications or cloud
 
 ### _Option 1: single drive per datatype or BTRFS1_
 If you only have 1 Media drive and 1 Users drive OR if you use a BTRFS1 array, you can mount the drives directly without MergerFS to the respective `/mnt/pool/Media` and `mnt/pool/Users` folders that we created in step 3. 
-The `subvol=` option is important here!
 ```
 UUID=8e9f178a-e531-40ce-87a9-801aa11aa4ea /mnt/pool/Media btrfs defaults,noatime,compress-force=zstd:2,subvol=Media 0 0
 UUID=0187bc8c-4188-4b25-b4d6-46dcd655c3ce /mnt/pool/Users btrfs defaults,noatime,compress-force=zstd:2,subvol=Users 0 0
 ```
-Where UUID= the UUID of the drive. In case of BTRFS RAID1, just use the UUID of the first drive. 
+- The `subvol=` option is important here!
+- Note`UUID=` is the UUID of the drive, easy to find as it should already be listed in your fstab (see Step 5).
+- In case of BTRFS RAID1, just use the UUID of the first drive. 
+
 
 ### _Option 2: multiple drives pooled via MergerFS_
 If you have multiple drives that need to be pooled, you merge them via MergerFS. for example: 
@@ -157,6 +159,7 @@ To merge/pool the Users drives and the Media drives, you simply add a line in FS
   - MINFREESPACE: when this threshold has been reached, the disk is considered full and depending on the MergerFS policy it will write to the next drive.
   - POLICY: MergerFS will follow a _Least Free Space (LFS)_ policy; filling up disk by disk starting with the first disk. This way, you always know where your data is stored. You can also choose a different policy for example to fill each drive equally by always selecting the drive with the _most free space (MFS)_ and there are lots of other policies. [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
   - The rest of the long list of arguments have carefully been chosen for high performance while maintaining stability. 
+
 
 ### _Option 3: MergerFS with Tiered Cache_
 If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching) do the following: 
