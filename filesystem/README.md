@@ -85,34 +85,26 @@ sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
 ## Step 4: Physically label your drives!
 If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint. 
 
-## Step 5: Configure permanent mounting - FSTAB
-This is the most important step, do not make errors. .  You can do this easily as follows:  
-1. Open 2 command windows: 
-2. In the first one, list each UUID per disk: `sudo lsblk -f`
-3. In the second one, make a backup of your fstab first via `sudo cp /etc/fstab /etc/fstabbackup`
-4. In the second one, open fstab: `sudo nano /etc/fstab` 
-5. Make sure you do not mess with the existing lines. Use the [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) as reference, copy only the lines you need and adjust the UUID to match your drives.
-6. If you use MergerFS, add those lines in addition to the lines for each disk just like in my example. Make sure to comment out the MergerFS lines first. You want to be sure the lines per drive are correct first. 
-7. Save the file via CTRL+O and exit via CTRL+X. Now test if your fstab works without errors: `sudo mount -a` 
-8. If it says things couldn't be mounted, make sure you unmount anything you mounted manually or anything that was mounted in `/media`. 
-9. If successfull, edit the file again and uncomment the mergerfs lines. Test again. 
+## Step 5: Configure drive mountpoints through FSTAB
+This step is prone to errors. Prepare first. 
 
-_If you use MergerFS:_
-- The long list of arguments have carefully been chosen for high performance. 
-- [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
-- If you use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching), make sure you have 2 lines, one for `/mnt/pool` that includes the cache drive and one for `/mnt/pool-nocache` that only contains the harddisks. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the `mnt/pool/-nocache`. Your apps, OS should only use `/mnt/pool`. 
+_Preparation_
+1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media. You cannot mount to non-empty folder.
+2. Make sure each mount point (created in Step 3) is an empty folder after unmounting.
+3. Open 2 command windows:
+  - In the first one, list each UUID per disk: `sudo lsblk -f`
+  - In the second one, make a backup of your fstab first via `sudo cp /etc/fstab /etc/fstabbackup`
+  - Stay in the second one, open fstab: `sudo nano /etc/fstab`. Whatever you do next, do not mess up the existing lines!
 
-
-## Step 6: Mount the disks and pools!
-1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media.
-2. Make sure each mount point is an empty folder after unmounting.
-3. Automatically mount everything in fstab via `sudo mount -a`. If there is no output: Congrats!! Almost done!
-4. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
-
-The combined data of your data disks should be in /mnt/pool and also (excluding the SSD cache) in /mnt/pool-nocache.
+_Steps to add drives_ 
+1. You now want to add "DRIVE MOUNT POINTS". Use that specific section of the [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) as reference, copy only the lines you need!
+2. After copying the lines make sure you fill in the right UUID, use the first command window to copy/paste the UUID.
+3. Save the file via CTRL+O and exit via CTRL+X. Now test if your fstab works without errors: `sudo mount -a`. This will mount everything listed in fstab. If there is no output: Congrats!! Almost done!
+4. If it says things couldn't be mounted, edit the file again, fix the errors, repeat step 3.  
+5. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 
-## Step 7: Create subvolumes
+## Step 6: Create subvolumes
 Each filesystem should have at least 1 subvolume. Subvolumes are the special folders of BTRFS that can be snapshotted and securily copied/transmitted to other drives or locations (for backup purposes). This guide assumes 2 types of data:  \
 
 - _Users_ data, containing per-user folders, each user folder will contain all data of that user (documents, photos etc). Note that if you have family content such as your photo collection, this can be stored in a family-user account (for example user "Shared"). This way, each user still has their own data but also access to a Shared folder. 
@@ -128,14 +120,35 @@ Each filesystem should have at least 1 subvolume. Subvolumes are the special fol
 In this example I use 4 drives, 1 for downloads/media and 3 for userdata. 
 
 
-## Step 7: Update /etc/fstab
-Now that you have subvolumes, you can mount the subvolumes to the different pools: 
-`/mnt/disks/data1/Users` and `/mnt/disks/data2/Users` can be mounted to `mnt/pool/Users` via a MergerFS rule in your fstab: 
-```/mnt/disks/data1/Users:/mnt/disks/data2/Users /mnt/pool fuse.mergerfs fsname=mergerfsPool 0 0``` 
-Do not copy paste this line, use the mergerfs examples in the fstab example file instead!
+## Step 7: Mount the pools!
+Now that you have subvolumes, you can mount the subvolumes to the different pools:  \
+`/mnt/pool/Media` \
+`mnt/pool/Users`  \
+This is the location where all your data will be accessible, regardless of underlying drives. 
 
-Since we only have 1 Media drive, we can mount that one directly to the `/mnt/pool/Media` folder. 
+OPTION 1: 
+If you only have 1 Media drive and 1 Users drive OR if you use a BTRFS1 array, you can mount the drives directly without MergerFS to the respective `/mnt/pool/Media` and `mnt/pool/Users` folders that we created in step 3: 
+```
+UUID=8e9f178a-e531-40ce-87a9-801aa11aa4ea /mnt/pool/Media btrfs defaults,noatime,compress-force=zstd:2,subvol=Media 0 0
+UUID=0187bc8c-4188-4b25-b4d6-46dcd655c3ce /mnt/pool/Users btrfs defaults,noatime,compress-force=zstd:2,subvol=Users 0 0
+```
+Where UUID= the UUID of the drive. In case of BTRFS RAID1, just use the UUID of the first drive. 
 
+OPTION 2: 
+If you have multiple drives that need to be pooled, you merge them via MergerFS. for example: `/mnt/disks/cache/Users` `/mnt/disks/data1/Users` and `/mnt/disks/data2/Users`:  
+```
+/mnt/disks/cache/Users:/mnt/disks/data1/Users:/mnt/disks/data2/Users /mnt/pool/Users fuse.mergerfs [mergerfs options] fsname=MergedUsers 0 0
+``` 
+```
+/mnt/disks/cache/Media:/mnt/disks/data0/Media:/mnt/disks/data3/Media /mnt/pool/Media fuse.mergerfs [mergerfs options] fsname=MergedMedia 0 0
+``` 
+- Do not copy paste these lines, use the mergerfs examples in the fstab example file instead, it contains best practice MergerFS options. 
+- If you do not use MergerFS Tiered Cache just remove the path of that drive. 
+
+_If you use MergerFS:_
+- The long list of arguments have carefully been chosen for high performance. 
+- [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
+- If you use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching), make sure you have 2 lines, one for `/mnt/pool` that includes the cache drive and one for `/mnt/pool-nocache` that only contains the harddisks. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the `mnt/pool/-nocache`. Your apps, OS should only use `/mnt/pool`. 
 
 &nbsp;
 
