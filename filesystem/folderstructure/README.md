@@ -44,17 +44,17 @@ _Helper folders:_
 ### 3. A folder structure of your data
 In the mountpoint of each cache/data disk: 
 - Subvolume `/Users` personal, non-expendable precious userdata. Protected via parity _and_ backupped to backup disk. Each user has its own folder here. 
-  For example`/mnt/pool/Users/Zilexa` contains the folders: /
-  `/mnt/pool/Users/Zilexa/Documents`  /
-  `/mnt/pool/Users/Zilexa/Desktop`  /
+  For example`/mnt/pool/Users/Zilexa` contains the folders: \
+  `/mnt/pool/Users/Zilexa/Documents`  \
+  `/mnt/pool/Users/Zilexa/Desktop`  \
   `/mnt/pool/Users/Zilexa/Pictures` etc.
 - Subvolume`/Media` non-personal: incoming (downloading) files, series, movies, music, books etc. Unless rare HiFi music albums, most likely no need to backup. 
-  For example `/mnt/pool/Media` contains the folders:  /
-  `/mnt/pool/Media/Movies`  /
-  `/mnt/pool/Media/Series`  /
-  `/mnt/pool/Media/Music/Albums`  /
-  `/mnt/pool/Media/Incoming`  /
-  `/mnt/pool/Media/Incoming/complete` <-- completed downloads.  /
+  For example `/mnt/pool/Media` contains the folders:  \
+  `/mnt/pool/Media/Movies`  \
+  `/mnt/pool/Media/Series`  \
+  `/mnt/pool/Media/Music/Albums`  \
+  `/mnt/pool/Media/Incoming`  \
+  `/mnt/pool/Media/Incoming/complete` <-- completed downloads.  \
   `/mnt/pool/Media/Incoming/incomplete` <-- ongoing downloads.   
 
 #### HIGHLY RECOMMENDED:
