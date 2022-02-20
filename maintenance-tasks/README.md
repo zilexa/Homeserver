@@ -11,7 +11,7 @@ Files location: [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/m
 - the other folders contain necessary tools and their configs.  
 
 ### NIGHTLY MAINTENANCE: Overview of tasks/tools
-- [_Media-cleaner_](https://github.com/clara-j/media_cleaner): delete watched shows episodes/seasons and movies X days after they have been _watched_(!). 
+- [_Media-cleaner_](https://github.com/clara-j/media_cleaner): delete watched shows episodes/seasons and movies X days after they have been _watched_(!) highly recommended, requires much less data if you automatically delete watched content after 5-10 days! For example, a single 2TB SSD is enough for my `/mnt/pool/Media`.
 - [_Archiver_](https://github.com/trapexit/mergerfs#time-based-expiring): If you use MergerFS SSD cache: Unload SSD cache: move _Users_ files unmodified for >30 days to harddisk array (from /mnt/disks/ssd to /mnt/pool-nocache). Since `/mnt/pool-nocache` = `/mnt/pool` without the SSD, the path to the moved files stays is the same, they are still in `/mnt/pool`, they are only moved to a different underlying disk. 
     - Exceptions to this task: Keep thumbnails created by FileRun and DigiKam (photo management software) on the SSD, for performance and power consumption purposes (the HDDs won't turn on when you scroll through your photos via FileRun). 
     - Also do not move files moved to trash.
