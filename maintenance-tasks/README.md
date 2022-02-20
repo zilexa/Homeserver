@@ -36,8 +36,8 @@ Download nightly.sh and monthly.sh to your HOST dir.
 ### STEP 2: Get tools / configuration
 #### Snapshot backups & SnapRAID backups
 - See the previous step: [Backup Strategy](https://github.com/zilexa/Homeserver/tree/master/backup-strategy)
-- If you want to limit the risk of loosing files, move the Snapraid command Nightly.sh to your crontab on a seperate line, see step 2 below. 
-For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications.
+- If you want to run SnapRAID more frequently instead of Nightly, add the Snapraid command from the Nightly.sh script (removing it from the script) to your crontab directly. 
+For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications. Note you want to configure to not store more than 1 snapshot otherwise your storage consumption can explode. 
 
 #### Cofigure Media Cleaner
 - Get media_cleaner.py: https://github.com/clara-j/media_cleaner: follow the link, click the filename, hit RAW, use your browser Save As (CTRL+S). Save it to your `HOST/media-cleaner`
