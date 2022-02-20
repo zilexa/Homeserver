@@ -27,6 +27,29 @@ sudo powertop --auto-tune
 sudo systemctl start powertop.service
 
 
+echo "___________________________________________________________________________________"
+echo "                                                                                   " 
+echo "                                 Create system paths                               "
+echo "___________________________________________________________________________________"
+# The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. Check if it exists otherwise create it.
+if sudo grep -Fq "/mnt/disks/systemdrive" /etc/fstab; then echo already added by post-install script; 
+else 
+# Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/disks/systemdrive")
+# create mountpoint
+sudo mkdir -p /mnt/disks/systemdrive
+# Get the systemdrive UUID
+fs_uuid=$(findmnt / -o UUID -n)
+# Add mountpoint to FSTAB
+sudo tee -a /etc/fstab &>/dev/null << EOF
+
+# Allow easy manual mounting of btrfs root subvolume                         
+UUID=${fs_uuid}  btrfs   subvolid=5,defaults,noatime,noauto  0  0
+
+EOF
+fi
+#Get device path of systemdrive, for example "/dev/nvme0n1p2" via #SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
+
+
 echo "_____________________________________________________________"
 echo "                     SENDING EMAILS                          "
 echo "       allow system to send email notifications              " 
