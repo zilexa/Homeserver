@@ -7,16 +7,17 @@ Contents:
 
 ## The 3-tier Backup Strategy outline
 ### 1. disk protection 
-To protect against disk failure, snapraid is used to protect essential data & largest data folders. 
+To protect against disk failure, SnapRAID is used to protect essential data & largest data folders. 
   - It does not duplicate files to a backup location, instead it will calculate parity for the selected subvolumes. 
   - This way with a single parity disk you can protect 4 data disks against single-disk failure. 
   - Parity is updated/synced on a schedule that you choose (once a day at night or every 6 hrs). 
-  - The downside of scheduled parity versus realtime (like traditional raid): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). Snapraid-btrfs leverages the BTRFS filesystem to overcome that issue by creating a read-only snapshot and create parity of that instead of the live filesytem. Now, the live data can be modified between snapraid runs, but you will always be able to restore a subvolume to its latest state. This is taken care of by `snapraid-btrfs` wrapper of `snapraid`.
-  - The `snapraid-btrfs-runner` script wraps around that to send email notifications.  
-  - LIMITAION: you can only configure 1 subvolume per disk. If you store /Media and /Users on the same disk, the logical choice would be /Users. I now have disks that only contain /Media and disks that only contain /Users. This way Snapraid can protect them all. 
+  - The downside of scheduled parity versus realtime (like traditional raid): described [here](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs). Snapraid-btrfs leverages the BTRFS filesystem to overcome that issue by creating a read-only snapshot and create parity of that instead of the live filesytem. Now, the live data can be modified between snapraid runs, but you will always be able to restore the last snapshot (entirely or per file). This is taken care of by `snapraid-btrfs` wrapper of `snapraid`.
+  - The `snapraid-btrfs-runner` script wraps around that just to send email notifications.  
+  - LIMITAION: you can only configure 1 subvolume per disk. If you store /Media and /Users on the same disk, the logical choice would be to protect /Users with SnapRAID. 
+  - Since /Media can contain huge files (movies, seasons in 4K) that often change, you might not want to snapshot that subvolume at all, as it will cost you more storage.   
 
 ### 2. Timeline backups
-The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives: Snapper, does not do backups, only snapshots and creates them against logic within the snapshotted subvolume. Timeshift is very user friendly but again only snapshots, does not take care of backing up to other location. Timeshift is recommended for laptops and personal computers.  
+The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives: 1) Snapper, does not do backups, only snapshots and creates them against logic within the snapshotted subvolume. 2)Timeshift is very user friendly but again only snapshots, does not take care of backing up to other location. Timeshift is recommended for laptops and personal computers, to protect the system drive.  
 With [btrbk](https://digint.ch/btrbk): 
 - The system subvolumes (`/`, `/docker`, `/home`) and subvolumes on data disks (`/Users`) can be snapshotted with a chosen retention policy on their respective disks in a root folder (for example `/mnt/disks/data1/.timeline`). 
 - In addition, using BTRFS native send/receive mechanism the snapshots are efficiently and securely copied to a seperate backup disk (`mnt/disks/backup1`).
