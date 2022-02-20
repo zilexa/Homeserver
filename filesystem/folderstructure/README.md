@@ -20,14 +20,14 @@ sudo mount /mnt/disks/systemdrive
 Execute this command and have a look at the `systemdrive` folder. You should see the following: 
 - Created during OS setup:
   - `@` mapped to path `/` = root folder. will be snapshotted and backupped. 
-  - `@cache`, mapped to path `/` --> to exclude it from snapshots of the system (= snapshot of `@`)
-  - `@log` mapped to path `/var/log` --> to exclude it from snapshots of the system (= snapshot of `@`)
-  - `@home` mapped to path`/home` --> user folder, will be snapshotted and backupped.
+  - `@cache`, mapped to path `/` = to exclude it from snapshots of the system (= snapshot of `@`)
+  - `@log` mapped to path `/var/log` = to exclude it from snapshots of the system (= snapshot of `@`)
+  - `@home` mapped to path`/home` = OS user account folder, will be snapshotted and backupped.
 - Subvolume created by prep-server script: 
-  - `@docker` mapped to path `$HOME/docker` --> docker persistent data per container, will be snapshotted and backupped. 
+  - `@docker` mapped to path `$HOME/docker` = docker persistent data per container, will be snapshotted and backupped. 
 - Folders created by prep-server script: 
-  - `/mnt/disks/systemdrive` --> the mountpoint to access the root filesystem when needed. Not mounted by default. 
-  - `/mnt/disks/systemdrive/timeline` --> just a folder in the root filesystem to store the daily/weekly/monthly snapshots of `@`, `@home` and `@docker`. 
+  - `/mnt/disks/systemdrive` = the mountpoint to access the root filesystem when needed. Not mounted by default/not mounted at boot. 
+  - `/mnt/disks/systemdrive/timeline` = a folder in the root filesystem to store the daily/weekly/monthly snapshots of `@`, `@home` and `@docker`. 
 
 
 _Notes_
