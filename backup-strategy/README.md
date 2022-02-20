@@ -11,12 +11,12 @@ Contents:
 
 
 ### Prequisities
-All prequisities have been taken care of by the script from [Step 3:Prepare Server & Docker](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh).
+All prequisities have been taken care of by the script from [Step 1B:Install Essentials](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools).
 - This script installed the tools (btrbk for backups, snapraid/snapraid-btrfs/snapraid-btrf-runner for backups and additional tools) but more importantly also added configuration files (based on the tools default example) that are almost ready to use. The script downloaded them from this folder to your `$HOME/docker/HOST/` folder. 
 - By storing these files outside of your OS system dir (`etc/system`) you have your entire configuration independent of OS and backupped as a whole (`HOME/docker`). The files are symlinked into the system folder.  
 
 _All you have to do:_
-- Make sure you have done [step 3](https://github.com/zilexa/Homeserver/blob/master/docker) first or select the essential parts of the [prepare-server-docker.sh](https://github.com/zilexa/Homeserver/blob/master/prepare-server-docker.sh) script and execute the commands to install the required tools and obtain the config files, or go back and perform first. 
+- Make sure you have done [step 1B](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools), by running the script or executing the commands to install the tools yourself. 
 
 ## I. Configure parity-based backups _via snapraid-btrfs_
 #### Step 1: Create snapper config files
