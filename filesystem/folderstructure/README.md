@@ -12,12 +12,11 @@
 You might not realise the importance of a well-thought through folder structure. Consider the information below informative and use as inspiration. 
 
 ### 1. Overview of system folders:
-By default, the BTRFS filesystem contains subvolumes in the root of the filesystem. The OS creates them with "@" in front of the name, to easily recognise it is a subvolume in the root of the filesystem, to be mounted to a path. 
-The prep-server script created a similar subvolume for docker container data and a few helper folders. The actual filesystem root can be mounted. The prep-server.sh script added a line to your `/etc/fstab`, allowing you to easily mount the root of the filesystem via: 
+By default, the BTRFS filesystem contains subvolumes in the root of the filesystem. The OS creates them with "@" in front of the name, to easily recognise it is a subvolume in the root of the filesystem, to be mounted to a path. The prep-server.sh script added a line to your `/etc/fstab` to manually mount the root filesystem easily: 
 ```
 sudo mount /mnt/disks/systemdrive
 ```
-Execute this command and have a look at the `systemdrive` folder. You should see the following: 
+Run this command and look at the `systemdrive` folder. You should see: 
 - Created during OS setup:
   - `@` mapped to path `/` = root folder. will be snapshotted and backupped. 
   - `@cache`, mapped to path `/` = to exclude it from snapshots of the system (= snapshot of `@`)
