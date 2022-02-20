@@ -28,9 +28,13 @@ Run this command and look at the `systemdrive` folder. You should see:
   - `/mnt/disks/systemdrive` = the mountpoint to access the root filesystem when needed. Not mounted by default/not mounted at boot. 
   - `/mnt/disks/systemdrive/timeline` = a folder in the root filesystem to store the daily/weekly/monthly snapshots of `@`, `@home` and `@docker`. 
 
-
 _Notes_
-If your whole system breaks down due to hardware failure or software corruption, you can easily replace hardware and do a clean install, run the 2 scripts again and only recover the `@docker` from your `/mnt/disks/backup1` or `/mnt/disks/backup1` or external backup disk. You will be up and running in minutes, without having to configure your apps. All maintenance scripts are in that same docker subvolume, you only need to re-enable scheduling. 
+> If your whole system breaks down due to hardware failure or software corruption, you can easily replace hardware and do a clean install, then: 
+>  1. run the post-install.sh and prep-server.sh scripts.
+>  2. restore your `/etc/fstab` using the fstab file from the last `@` snapshot from `/mnt/disks/backup`. 
+>  3. btrfs send/receive the last `@docker` snapshot from `/mnt/disks/backup1` to `/mnt/disks/systemdrive/`. See Backup Guide, step xx. 
+>  4. run docker-compose. 
+>  5. Schedule maintenance by adding the nightly and monthly commands to your crontab. See Maintenance Guide. 
 
 **The docker subvolume is precious and non-expendable!** It contains: 
 - a folder per container for app data/config data. 
