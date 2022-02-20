@@ -1,6 +1,6 @@
 ## STEP 5: Maintenance & scheduling 
 
-To keep your server spinning and purring everyday like its very first day, several tasks should be executed. 
+To keep your server spinning and purring everyday like its very first day, several tasks should be executed automatically on a regular basis.  
 Below the tasks are explained. Note the order of execution has been chosen carefully. If you remove/add tasks, keep that in mind. 
 
 
@@ -8,7 +8,7 @@ Files location: [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/m
 - nightly.sh 
 - monthly.sh 
 - /logs
-- the other folders contain necessary tools and their configs, see the [previous step](https://github.com/zilexa/Homeserver/tree/master/backup-strategy) in this guide. 
+- the other folders contain necessary tools and their configs.  
 
 ### NIGHTLY MAINTENANCE: Overview of tasks/tools
 - [_Media-cleaner_](https://github.com/clara-j/media_cleaner): delete watched shows episodes/seasons and movies X days after they have been _watched_(!). 
