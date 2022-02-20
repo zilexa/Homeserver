@@ -44,19 +44,18 @@ _Helper folders:_
 ### 3. A folder structure of your data
 In the mountpoint of each cache/data disk: 
 - Subvolume `/Users` personal, non-expendable precious userdata. Protected via parity _and_ backupped to backup disk. Each user has its own folder here. 
-  For example`/mnt/pool/Users/Zilexa` contains the folders: 
-  `/mnt/pool/Users/Zilexa/Documents`
-  `/mnt/pool/Users/Zilexa/Desktop`
-  `/mnt/pool/Users/Zilexa/Pictures`
-  etc.
+  For example`/mnt/pool/Users/Zilexa` contains the folders: /
+  `/mnt/pool/Users/Zilexa/Documents`  /
+  `/mnt/pool/Users/Zilexa/Desktop`  /
+  `/mnt/pool/Users/Zilexa/Pictures` etc.
 - Subvolume`/Media` non-personal: incoming (downloading) files, series, movies, music, books etc. Unless rare HiFi music albums, most likely no need to backup. 
-  For example `/mnt/pool/Media` contains the folders:
-  `/mnt/pool/Media/Movies`
-  `/mnt/pool/Media/Series`
-  `/mnt/pool/Media/Music/Albums`
-  `/mnt/pool/Media/Incoming`
-  `/mnt/pool/Media/Incoming/complete` <-- completed downloads. 
-  `/mnt/pool/Media/Incoming/incomplete` <-- ongoing downloads. 
+  For example `/mnt/pool/Media` contains the folders:  /
+  `/mnt/pool/Media/Movies`  /
+  `/mnt/pool/Media/Series`  /
+  `/mnt/pool/Media/Music/Albums`  /
+  `/mnt/pool/Media/Incoming`  /
+  `/mnt/pool/Media/Incoming/complete` <-- completed downloads.  /
+  `/mnt/pool/Media/Incoming/incomplete` <-- ongoing downloads.   
 
 #### HIGHLY RECOMMENDED:
 - The `incomplete` folder should be created as nested subvolume (on each underlying drive in `mnt/disks`! ), after creating the Incoming folder via: 
@@ -64,8 +63,7 @@ In the mountpoint of each cache/data disk:
   As subvolume, this ensures finished downloads have zero fragmentation when moved to the complete folder (and hardlinked to Movies, Series or Music). 
 - This folder also needs `chattr -R +C /mnt/disks/data0/Media/incomplete`, applied to each drive, to disable BTRFS CoW behavior, reducing system load and wear of your drive.
 
-When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool`:**\
-`mnt/pool/Users`, `mnt/pool/TV` and `/mnt/pool/Music`.  
+When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool/Media` and `/mnt/pool/Users`.
 
 &nbsp;
 
@@ -87,8 +85,9 @@ Optional: verify the data is identical by doing a dryrun with rsync to list file
 
 #### 4.2 Move files within your filesystem
 To move files within a subvolume, copy them first, note this action will be instant on btrfs! Files won't be physically moved:\
-`cp --reflink=always /my/source /my/destination`
-
+```
+cp --reflink=always /my/source /my/destination
+```
 Then when you are satisfied, delete the source folder/files. Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. Note you can use mv also on subvolumes to rename them. 
 
 
