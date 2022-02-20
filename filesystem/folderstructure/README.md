@@ -12,15 +12,23 @@
 You might not realise the importance of a well-thought through folder structure. Consider the information below informative and use as inspiration. 
 
 ### 1. Overview of system folders:
-When a BTRFS snapshot is made of a subvolume, its nested subvolumes are excluded. This way, we can exclude folders that should not be backupped or should be backupped separately, with a different cadence or a different retention policy.  
+By default, the BTRFS filesystem contains subvolumes in the root of the filesystem. The OS creates them with "@" in front of the name, to easily recognise it is a subvolume in the root of the filesystem, to be mounted to a path. 
+The prep-server script created a similar subvolume for docker container data and a few helper folders. The actual filesystem root can be mounted. The prep-server.sh script added a line to your `/etc/fstab`, allowing you to easily mount the root of the filesystem via: 
+```
+sudo mount /mnt/disks/systemdrive
+```
+Execute this command and have a look at the `systemdrive` folder. You should see the following: 
+- Created during OS setup:
+  - `@` mapped to path `/` = root folder. will be snapshotted and backupped. 
+  - `@cache`, mapped to path `/` --> to exclude it from snapshots of the system (= snapshot of `@`)
+  - `@log` mapped to path `/var/log` --> to exclude it from snapshots of the system (= snapshot of `@`)
+  - `@home` mapped to path`/home` --> user folder, will be snapshotted and backupped.
+- Subvolume created by prep-server script: 
+  - `@docker` mapped to path `$HOME/docker` --> docker persistent data per container, will be snapshotted and backupped. 
+- Folders created by prep-server script: 
+  - `/mnt/disks/systemdrive` --> the mountpoint to access the root filesystem when needed. Not mounted by default. 
+  - `/mnt/disks/systemdrive/timeline` --> just a folder in the root filesystem to store the daily/weekly/monthly snapshots of `@`, `@home` and `@docker`. 
 
-On the OS system SSD the following subvolumes will be created: 
-- By OS: root subvolume `@` mapped to path `/` = root folder. will be snapshotted and backupped. 
-- By OS: root subvolume `@home` mapped to path`/home` --> user folder, will be snapshotted and backupped.
-- By prep-server script: root subvolume `@docker` mapped to path `$HOME/docker` --> docker persistent data per container, will be snapshotted and backupped. 
-- By OS: `@cache`, `@log`mapped inside path `/var/` --> just to ensure these temporary folders are excluded in snapshots.
-- By prep-server script: `@system-snapshots` --> To store snapshots of `@`, `@home` and `@docker`. 
-- By prep-server script: `/mnt/btrfs-root` --> to mount the btrfs root, required to create `@docker` and to backup the snapshots of `@`, `@home`, `@docker`. Not auto-mounted.
 
 _Notes_
 If your whole system breaks down due to hardware failure or software corruption, you can easily replace hardware and do a clean install, run the 2 scripts again and only recover the `@docker` from your `/mnt/disks/backup1` or `/mnt/disks/backup1` or external backup disk. You will be up and running in minutes, without having to configure your apps. All maintenance scripts are in that same docker subvolume, you only need to re-enable scheduling. 
@@ -32,6 +40,7 @@ If your whole system breaks down due to hardware failure or software corruption,
 
 ### 2. Overview mountpoints: 
 - `/mnt/disks` --> Just a folder with the mountpoints of your drives.
+  - 
   - `/mnt/disks/{data1,data2,data3,data4}` (unless you use BTRFS RAID1 filesystem). 
   - `/mnt/disks/parity1` not automounted, will be mounted during backup run.  
   - `/mnt/disks/{backup1,backup2}` not automounted, will be mounted during backup run.  
