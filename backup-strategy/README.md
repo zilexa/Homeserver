@@ -35,7 +35,7 @@ Open `/etc/snapraid.conf` in an editor and adjust the lines that say "ADJUST THI
 Run `snapraid-btrfs ls` (no sudo!). Notice & verify 3 things: 
 - A confirmation it found snapper configs for each(!) data disk in your snapraid.conf file. 
 - A (correct) warning about non-existing snapraid.content files for each content-file location you defined in snapraid.conf, they will be automatically created during first sync. 
-- A warning about UUIDs that cannot be used. Correct, because Snapraid will sync snapshots, not the actual subvolumes. You won't get this errror if you sync the live filesystem with `snapraid sync`. 
+- A warning about UUIDs that cannot be used. Correct, because Snapraid will sync snapshots, not the actual subvolumes. Note you won't get this errror if you sync the live filesystem with `snapraid sync`, but the whole idea is to not do that, so that you can always recover files, even when the live filesystem has changed in the last 24 hrs.
 
 #### Step 4: Run the first sync!
 Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
