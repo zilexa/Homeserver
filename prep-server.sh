@@ -29,9 +29,9 @@ sudo systemctl start powertop.service
 
 echo "___________________________________________________________________________________"
 echo "                                                                                   " 
-echo "                                 Create system paths                               "
+echo "         Create systemdrive mountpoint and folder to store system snapshots        "
 echo "___________________________________________________________________________________"
-# The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. Check if it exists otherwise create it.
+# The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. If that script was not used, create the mountpoint now:
 if sudo grep -Fq "/mnt/disks/systemdrive" /etc/fstab; then echo already added by post-install script; 
 else 
 # Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/disks/systemdrive")
@@ -43,10 +43,13 @@ fs_uuid=$(findmnt / -o UUID -n)
 sudo tee -a /etc/fstab &>/dev/null << EOF
 
 # Allow easy manual mounting of btrfs root subvolume                         
-UUID=${fs_uuid}  btrfs   subvolid=5,defaults,noatime,noauto  0  0
+UUID=${fs_uuid} /mnt/disks/systemdrive  btrfs   subvolid=5,defaults,noatime,noauto  0  0
 
 EOF
 fi
+sudo mount -a
+sudo mount /mnt/disks/systemdrive
+
 #Get device path of systemdrive, for example "/dev/nvme0n1p2" via #SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
 
 
