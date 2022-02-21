@@ -62,7 +62,6 @@ Note this means:
 - Nightly runs at 5.30 AM every day.
 - Monthly runs every first Sunday of the month at 5.50AM. 
 - Feel free to change the schedule. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today). 
-
 - If Nightly happens to still be running while Monthly is executed, Monthly pauses until Nightly is done (see how the scripts start and end).  
   - The Nightly script creates a file "tasks-running" and deletes the file when the script is finished.
   - The Monthly script checks if such a file exists, waits for it to disappear, then starts running its tasks (how neat!). 
