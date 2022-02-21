@@ -58,6 +58,7 @@ The btrbk config file has been carefully created and tested to:
 > - Incremental backups will be sent to your internal backup disk, multiple disks can be added.
 > - Allows you to run a backup actions automatically and manually for multiple subvolumes by using groups. 
 > - Allows you to archive (copy) backups to BTRFS USB disks easily. 
+> 
 _No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs._  \
 
 ### Step 1: Create the snapshot location and backup target location folders
