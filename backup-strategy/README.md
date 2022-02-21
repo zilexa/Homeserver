@@ -93,7 +93,7 @@ sudo nano /etc/aliases
   - Keep `mailto=default` to use what is set in the system (/etc/aliases) or change at will. 
   - Most importantly make sure all required drives for running backups are listed in `mount_targets=`; 
       - Your system drive (`/mnt/disks/systemdrive`) and at least 1 backup drive (`/mnt/disks/backup1`). 
-      - You should have added your backup drives in `etc/fstab` already during steps 3 and 5 of the [Filesystem guide](https://github.com/zilexa/Homeserver/tree/master/filesystem)
+      - This only works if these mountpoints are present in your /etc/fstab, done in steps 3 and 5 of the [Filesystem guide](https://github.com/zilexa/Homeserver/tree/master/filesystem). 
 
 3. Run `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh` to run btrbk and receive an email when it is done. Since this is the second run it should go very fast.  \
    Note this command will be used in the Nightly maintenance run (see next guide).  \
