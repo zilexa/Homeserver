@@ -75,7 +75,3 @@ For example, you could run Snapraid every hour. The Snapraid command will create
 Note the snapshots created specifically for SnapRAID are seperate from the snapshots created by btrbk, which maintains a timeline (X days, X weeks, X months) and copies snapshots to backup drives. 
 
 
-#### Step 5: Do a manual backup run
-
-#### Step 6: Restore a subvolume
-
