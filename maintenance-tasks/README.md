@@ -4,7 +4,7 @@ To keep your server spinning and purring everyday like its very first day, sever
 Below the tasks are explained. Note the order of execution has been chosen carefully. If you remove/add tasks, keep that in mind. 
 
 
-Files location: [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/)
+The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/HOST/`. Most importantly: 
 - nightly.sh 
 - monthly.sh 
 - /logs
@@ -29,29 +29,26 @@ Files location: [$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/m
 - _BtrFS housekeeping_: balancing & scrubbing disks. Note for the backup disk, the monthly task is actually in the Nightly script, since the disk needs to be mounted, best to run monthly right after completing nightly backup. 
 
 
-### STEP 1. Get the files
-Download nightly.sh and monthly.sh to your HOST dir.
-[$HOME/docker/HOST/](https://github.com/zilexa/Homeserver/tree/master/docker/HOST)
+### STEP 1: Decide what tools and tasks you need
+- remove the Archiver command from the Nightly script if you do not use a MergerFS Tiered Cache drive.
+- remove Mediacleaner if you will not download anything. 
+- remove SnapRAID if you will not use it (or uncomment it to save for later). 
 
-### STEP 2: Get tools / configuration
-#### Snapshot backups & SnapRAID backups
-- See the previous step: [Backup Strategy](https://github.com/zilexa/Homeserver/tree/master/backup-strategy)
-- If you want to run SnapRAID more frequently instead of Nightly, add the Snapraid command from the Nightly.sh script (removing it from the script) to your crontab directly. 
-For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications. Note you want to configure to not store more than 1 snapshot otherwise your storage consumption can explode. 
 
-#### Cofigure Media Cleaner
-- Get media_cleaner.py: https://github.com/clara-j/media_cleaner: follow the link, click the filename, hit RAW, use your browser Save As (CTRL+S). Save it to your `HOST/media-cleaner`
-- Open a Terminal window from this folder, run the script to connect it to Jellyfin:
-```
-python3 media_cleaner.py
-```
-A file `HOST/media-cleaner/media_cleaner.conf` will be created. Done! To change your settings, Simply edit the .conf file in your text editor.
-
-#### Configure Archiver, MergerFS SSD cache unloading
+#### STEP 2: Configure Archiver, MergerFS SSD cache unloading
 - Verify the paths are correct in the 2 files in `HOST/archiver/`.
 - Notice the exclude list, it excludes filerun hidden folders, this way your photo thumbnails/previews stay on your fast SSD. 
 
-### STEP 3. Schedule the 2 tasks
+
+### STEP 3: Configure Media Cleaner
+- Open a Terminal window from `$HOME/docker/HOST/mediacleaner` (right click in that folder > Open Terminal), run the script for initial one-time config:
+```
+python3 media_cleaner.py
+```
+- Follow the steps.
+- A file `HOST/media-cleaner/media_cleaner.conf` will be created. Done! To change your settings, Simply edit the .conf file in your text editor.
+
+### STEP 4. Schedule the 2 tasks
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO, and optionally add your email address between "", this way you will receive slightly cryptic error messages if the commands could not be executed. 
 ```
 MAILTO=""
@@ -64,4 +61,21 @@ Note this means:
 - The Nightly script creates a file "tasks-running" and deletes the file when the script is finished.
 - The Monthly script checks if such a file exists, waits for it to disappear, then starts running its tasks (how neat!). 
 Feel free to change the schedule. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today). 
+
+#### Optional: change frequency of snapshots/backups
+- If you want to create snapshots and backups more frequently: move the single `SUBVOLUMES SNAPSHOTS & BACKUPS` command from the `nightly.sh` script to crontab and set a schedule like the above but more frequently, like every 6 hours. 
+- `btrbk` has been configured to only save 1 snapshot per day, this means during the first run the next day, it will delete the previous day snapshots except for the latest, otherwise it can cost a lot of storage if you save multiple snapshots of the past days. 
+
+#### Optional: change frequency of SnapRAID
+- See the previous step: [Backup Strategy](https://github.com/zilexa/Homeserver/tree/master/backup-strategy)
+- If you want to run SnapRAID more frequently move the single SnapRAID command from the `nightly.sh` script to your crontab and set a schedule like the above but more often. 
+
+For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications. Note Snapper has been configured to only store the latest snapshot. Keeping older snapshots has no usecase for SnapRAID. 
+
+Note the snapshots created specifically for SnapRAID are seperate from the snapshots created by btrbk, which maintains a timeline (X days, X weeks, X months) and copies snapshots to backup drives. 
+
+
+#### Step 5: Do a manual backup run
+
+#### Step 6: Restore a subvolume
 
