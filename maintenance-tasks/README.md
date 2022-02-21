@@ -7,11 +7,14 @@ The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/
 - [nightly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh)
 - [monthly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/monthly.sh)
 - /logs
-- the other folders contain the tools used and their config files.  
+
+The other folders contain the tools used and their config files. 
 
 &nbsp;
 
-### NIGHTLY MAINTENANCE: Overview of tasks/tools
+## Overview of Tasks and Tools
+
+### Tasks and Tools for NIGHTLY MAINTENANCE
 - [_Media-cleaner_](https://github.com/clara-j/media_cleaner): delete watched shows episodes/seasons and movies X days after they have been _watched_(!) highly recommended, requires much less data if you automatically delete watched content after 5-10 days! For example, a single 2TB SSD is enough for my `/mnt/pool/Media`.
 - [_Archiver_](https://github.com/trapexit/mergerfs#time-based-expiring): If you use MergerFS SSD cache: Unload SSD cache: move _Users_ files unmodified for >30 days to harddisk array (from /mnt/disks/ssd to /mnt/pool-nocache). Since `/mnt/pool-nocache` = `/mnt/pool` without the SSD, the path to the moved files stays is the same, they are still in `/mnt/pool`, they are only moved to a different underlying disk. 
     - Exceptions to this task: Keep thumbnails created by FileRun and DigiKam (photo management software) on the SSD, for performance and power consumption purposes (the HDDs won't turn on when you scroll through your photos via FileRun). 
@@ -22,7 +25,7 @@ The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/
 - _Disk health scan_: run S.M.A.R.T. scan to update [Scrutiny](https://github.com/AnalogJ/scrutiny) container. 
 - _Filerun container tasks_: Apart from cleanup, these tasks are only necessary when adding/deleting/modifying files/folders _outside_ of the filerun WebUI or connected WebDAV apps. Without running these tasks, you will _still_ see the files in FileRun and webDAV apps just fine, since FileRun simply shows you a realtime view of your filesystem. Such files just won't appear in search results and their thumbnails & quick previews will be empty. Note these commands will be run from within the container. 
 
-### MONTHLY MAINTENANCE: Overview of tasks/tools
+### Tasks and Tools for MONTHLY MAINTENANCE
 - [_Bleachbit_](https://www.bleachbit.org/): Cleanup host OS filesystem, temp, cache, bin, old update files, old logs etc. Runs twice: normal and with elevated rights.
 - [_pullio_](https://hotio.dev/pullio/): Auto-update labeled docker images (only used for Media related images. Do not use for other images!).
 - [_duin_](https://crazymax.dev/diun/): Check labeled docker images for updates, user can decide to update after verifying update is stable. 
