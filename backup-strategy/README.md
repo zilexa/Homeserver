@@ -61,9 +61,9 @@ The btrbk config file has been carefully created and tested to:
 > 
 _No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs._ 
 
-### Step 1: Create the snapshot location and backup target location folders
-- Create a `timeline` (note the dot) folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/timeline`
-- In `/mnt/disks/backup1/`, create all destination folders for system and each data disk, for example via: `sudo mkdir /mnt/disks/backup1/{system,data1,data2,cache}`
+### Step 1: Create the Snapshots destinations and Backup destinations folders
+- Create a `timeline` (note the dot) folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/timeline`. Snapshots will be stored here. 
+- In `/mnt/disks/backup1/`, create all destination folders for system and each data disk, for example via: `sudo mkdir /mnt/disks/backup1/{system,data1,data2,cache}`. Snapshots will be sent here and become your backups. 
 
 ### Step 2: Get the configuration & adjust settings, retention policy to your needs
 - Open the file located in `$HOME/docker/HOST/btrbk/btrbk.conf`
