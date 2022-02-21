@@ -81,10 +81,7 @@ When all is well, run the same command without "-n" (simulation) and without -v 
 sudo btrbk run --progress
 ```
 BE AWARE this will perform all snapshot and backup actions, first time can take lots of time, after that, backups will be incremental.  \
-Use this command if you ever want to initiate a backup run manually. Alternatively, you can also use this command to only backup a group of subvolumes, as configured in `btrbk.conf`. For example: 
-```
-btrbk run users --progress 
-```
+Use this command if you ever want to initiate a backup run manually. Alternatively, you can also use this command to only backup a group of subvolumes, as configured in `btrbk.conf`. For example: `btrbk run users --progress `. 
 
 ### Step 4: Configure automatic backups
 The `btrbk-mail.sh` script is from the official [btrbk repository](https://github.com/digint/btrbk) and will automatically mount backup drives, unmount when done and sent an email when an error has occured. You can easily edit that script to always sent an email. This script is included in the Nightly script that runs maintenance tasks, to be configured in the next guide: [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks). 
