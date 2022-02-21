@@ -67,7 +67,7 @@ Note this means:
 
 #### Optional: change frequency of snapshots/backups
 - If you want to create snapshots and backups more frequently: move the single `SUBVOLUMES SNAPSHOTS & BACKUPS` command from the `nightly.sh` script to crontab and set a schedule like the above but more frequently, like every 6 hours. 
-- `btrbk` has been configured to only save 1 snapshot per day, this means during the first run the next day, it will delete all but the latest of the previous day snapshots, otherwise it can cost a lot of storage if you save multiple snapshots of the past days. 
+- `btrbk` has been configured to only save 1 snapshot per day, this means during the first run the next day, it will delete all but the latest of the previous day snapshots, otherwise it can cost a lot of storage if you save multiple snapshots of each day.  
 
 #### Optional: change frequency of SnapRAID
 - See the previous step: [Backup Strategy](https://github.com/zilexa/Homeserver/tree/master/backup-strategy)
