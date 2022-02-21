@@ -1,4 +1,4 @@
-# STEP 5: Folder Structure Recommendations & Data Migration
+# Folder Structure Recommendations & Data Migration
 
 **Contents**
 1. [Overview of system folders](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-overview-of-system-folders)
