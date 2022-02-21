@@ -98,8 +98,8 @@ sudo nano /etc/aliases
       - Your system drive (`/mnt/disks/systemdrive`) and at least 1 backup drive (`/mnt/disks/backup1`). 
       - You should have added your backup drives in `etc/fstab` already during steps 3 and 5 of the [Filesystem guide](https://github.com/zilexa/Homeserver/tree/master/filesystem)
 
-To run btrbk in the background and receive an email when done, run: `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh`. Test if this works.  \ 
-Since it will be the second run, it should finish within a minute.  \ 
+To run btrbk in the background and receive an email when done, run: `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh`. Test if this works. \ 
+Since it will be the second run, it should finish within a minute. \ 
 If you want to initiate a backup run manually, use the command from the previous step as it will show progress. 
 
 To schedule backups to run at least nightly, continue to the Maintenance Guide. 
