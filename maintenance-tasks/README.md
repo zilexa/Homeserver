@@ -1,4 +1,4 @@
-## STEP 5: Maintenance & scheduling 
+## Maintenance Tasks & Scheduling
 
 To keep your server spinning and purring everyday like its very first day, several tasks should be executed automatically on a regular basis.  
 Below the tasks are explained. Note the order of execution has been chosen carefully. If you remove/add tasks, keep that in mind. 
