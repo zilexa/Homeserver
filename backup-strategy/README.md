@@ -73,7 +73,7 @@ _No other tool allows you to do all that automatically. The config file is also 
 ### Step 3: Run the backups!
 When you think your btrbk.conf file is correct, do a dryrun, it will only perform a simulation: 
 ```
-sudo btrbk -n -v run
+sudo btrbk dryrun -v
 ```
 Read carefully the legenda and verify snapshots are created and backups are stored in the correct paths.  \
 When all is well, run the same command without "-n" (simulation) and without -v (exessive info): 
@@ -82,7 +82,6 @@ sudo btrbk run --progress
 ```
 BE AWARE this will perform all snapshot and backup actions, first time can take lots of time, after that, backups will be incremental.  \
 Use this command if you ever want to initiate a backup run manually. Alternatively, you can also use this command to only backup a group of subvolumes, as configured in `btrbk.conf`. For example: 
-
 ```
 btrbk run users --progress 
 ```
