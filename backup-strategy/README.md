@@ -96,9 +96,9 @@ This can take quite some time depending on how much data you have. Subsequent ru
   ```
   bash $HOME/docker/HOST/btrbk/btrbk-mail.sh
   ```
-  Since this is the second run it should go very fast.  \
-  Note this command will be used in the Nightly maintenance run (see next guide).  \
-  If you ever need to do a manual run, it is better to use the `btrbk run` command, it shows the progress. 
+  - Since this is the second run it should go very fast.  \
+  - Note this command will be used in the Nightly maintenance run (see next guide).  \
+  - If you ever need to do a manual run, it is better to use the `btrbk run` command, it shows the progress. 
 
 &nbsp;
 
