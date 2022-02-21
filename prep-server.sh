@@ -27,32 +27,6 @@ sudo powertop --auto-tune
 sudo systemctl start powertop.service
 
 
-echo "___________________________________________________________________________________"
-echo "                                                                                   " 
-echo "         Create systemdrive mountpoint and folder to store system snapshots        "
-echo "___________________________________________________________________________________"
-# The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. If that script was not used, create the mountpoint now:
-if sudo grep -Fq "/mnt/disks/systemdrive" /etc/fstab; then echo already added by post-install script; 
-else 
-# Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/disks/systemdrive")
-# create mountpoint
-sudo mkdir -p /mnt/disks/systemdrive
-# Get the systemdrive UUID
-fs_uuid=$(findmnt / -o UUID -n)
-# Add mountpoint to FSTAB
-sudo tee -a /etc/fstab &>/dev/null << EOF
-
-# Allow easy manual mounting of btrfs root subvolume                         
-UUID=${fs_uuid} /mnt/disks/systemdrive  btrfs   subvolid=5,defaults,noatime,noauto  0  0
-
-EOF
-fi
-sudo mount -a
-sudo mount /mnt/disks/systemdrive
-
-#Get device path of systemdrive, for example "/dev/nvme0n1p2" via #SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
-
-
 echo "_____________________________________________________________"
 echo "                     SENDING EMAILS                          "
 echo "       allow system to send email notifications              " 
@@ -113,44 +87,71 @@ sudo pacman -S --noconfirm lm_sensors
 sudo sensors-detect --auto
 
 echo "                 MERGERFS                  "
-echo "--------------------------------------------"
+echo "-------------------------------------------"
 echo "pool drives to make them appear as 1 without raid"
 # available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
 sudo pamac install --no-confirm mergerFS
 
-echo "____________________________________________"
-echo "                APPLICATIONS                "
-echo "                   docker                   "
-echo "____________________________________________"
-echo "       ISOLATE DOCKER PERSISTENT DATA       "
+
+echo "______________________________________________"
+echo "                                              " 
+echo " DOCKER SUBVOLUME & MAINTENANCE TOOLS+SCRIPTS "
+echo "______________________________________________"
+echo "      on-demand systemdrive mountpoint     "
+echo "-------------------------------------------"
+# The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. If that script was not used, create the mountpoint now:
+#Get device path of systemdrive, for example "/dev/nvme0n1p2" via #SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
+if sudo grep -Fq "/mnt/disks/systemdrive" /etc/fstab; then echo already added by post-install script; 
+else 
+# Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/disks/systemdrive")
+sudo mkdir -p /mnt/disks/systemdrive
+# Get the systemdrive UUID
+fs_uuid=$(findmnt / -o UUID -n)
+# Add mountpoint to FSTAB
+sudo tee -a /etc/fstab &>/dev/null << EOF
+
+# Allow easy manual mounting of btrfs root subvolume                         
+UUID=${fs_uuid} /mnt/disks/systemdrive  btrfs   subvolid=5,defaults,noatime,noauto  0  0
+EOF
+fi
+
+sudo mount -a
+
+echo "              Docker subvolume              "
 echo "--------------------------------------------"
 echo "create subvolume for Docker persistent data "
-# Create a folder to temporarily map the BTRFS root
-sudo mkdir /mnt/system
-# Mount BTRFS root
-SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
-sudo mount -o subvolid=5 $SYSTEMDRIVE /mnt/system
+# Temporarily Mount filesystem root
+sudo mount /mnt/disks/systemdrive
 # create a root subvolume for docker
 sudo btrfs subvolume create /mnt/system/@docker
 ## unmount root filesystem
-sudo umount /mnt/system
+sudo umount /mnt/disks/systemdrive
 # Get system fs UUID
 fs_uuid=$(findmnt / -o UUID -n)
 # Add @docker subvolume to fstab to mount at boot
 sudo tee -a /etc/fstab &>/dev/null << EOF
+
 # Mount the BTRFS root subvolume @userdata
-UUID=${fs_uuid} /mnt/docker  btrfs   defaults,noatime,subvol=@docker,compress-force=zstd:1  0  0
+UUID=${fs_uuid} /mnt/docker  btrfs   subvol=@docker,defaults,noatime,compress-force=zstd:1  0  0
 EOF
+sudo mount -a
 
-echo "Create folder for server maintenance scripts"
-mkdir -p $HOME/docker/HOST/system/etc
-
-echo "Configure Docker folder" 
-#sudo setfacl -Rdm g:docker:rwx $HOME/docker
-#sudo chmod -R 755 $HOME/docker
-
-echo "              INSTALL DOCKER                "
+echo "      get maintenance tools & scripts       "
 echo "--------------------------------------------"
+cd $HOME/Downloads
+curl -L https://api.github.com/repos/zilexa/Homeserver/tarball | tar xz --wildcards "*/docker/" --strip-components=1
+rm -r $HOME/Downloads/docker/Extras && rm -r $HOME/docker/docker/README.md
+mv -T $HOME/Downloads/docker $HOME/docker
+
+echo "Configure permissions on docker folder" 
+sudo setfacl -Rdm g:docker:rwx $HOME/docker
+sudo chmod -R 755 $HOME/docker
+
+
+echo "________________________________________________"
+echo "                                                " 
+echo "       Install Docker and Docker Compose        "
+echo "________________________________________________"
 sudo pacman -S --noconfirm docker docker-compose
 # Docker official rootless script is not installed with docker and only available in the Arch User Repository (AUR) thus installed via Pamac.
 pamac install docker-rootless-extras-bin
@@ -170,12 +171,6 @@ dockerd-rootless-setuptool.sh install
 systemctl --user enable docker
 systemctl --user start docker
 sudo loginctl enable-linger $(whoami)
-
-
-echo "Get docker compose file and its environment variables" 
-sudo wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
-sudo wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
-
 
 echo "Install Pullio (auto-update labeled containers)"
 # Should only be used for selected services. For all others, Diun (docker container) is used to notify only instead of auto-update.
