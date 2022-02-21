@@ -49,7 +49,7 @@ python3 media_cleaner.py
 - A file `HOST/media-cleaner/media_cleaner.conf` will be created. Done! To change your settings, Simply edit the .conf file in your text editor.
 
 ### STEP 4. Schedule the 2 tasks
-- In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO, and optionally add your email address between "", this way you will receive slightly cryptic error messages if the commands could not be executed. 
+- In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive cryptic error messages, use `""` instead. 
 ```
 MAILTO=""
 30 5 * * * /usr/bin/bash /home/YOURUSERNAME/docker/HOST/nightly.sh
