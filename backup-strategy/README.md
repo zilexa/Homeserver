@@ -54,10 +54,10 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snap
 
 ## II. Configure subvolume backups _via btrbk_
 The btrbk config file has been carefully created and tested to:
-> Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `timeline` folder of each disk :)
-> Incremental backups will be sent to your internal backup disk, multiple disks can be added.
-> Allows you to run a backup actions automatically and manually for multiple subvolumes by using groups. 
-> Allows you to archive (copy) backups to BTRFS USB disks easily. 
+> - Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `timeline` folder of each disk :)
+> - Incremental backups will be sent to your internal backup disk, multiple disks can be added.
+> - Allows you to run a backup actions automatically and manually for multiple subvolumes by using groups. 
+> - Allows you to archive (copy) backups to BTRFS USB disks easily. 
 _No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs._  \
 
 ### Step 1: Create the snapshot location and backup target location folders
