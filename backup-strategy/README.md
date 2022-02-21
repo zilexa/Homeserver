@@ -84,10 +84,7 @@ This can take quite some time depending on how much data you have. Subsequent ru
 
 ### Step 4: Configure automatic backups
 
-1. If you haven't done this already, fill in your email address (the administrator of your server) in this systemfile:  
-```
-sudo nano /etc/aliases
-```
+1. If you haven't done this already, fill in your email address (the administrator of your server) in this systemfile:  `sudo nano /etc/aliases`
 2. Edit the file `$HOME/docker/HOST/btrbk/btrbk-mail.sh` and: 
   - Change the email-subject to your server name or something you like. 
   - Keep `mailto=default` to use what is set in the system (/etc/aliases) or change at will. 
@@ -95,9 +92,13 @@ sudo nano /etc/aliases
       - Your system drive (`/mnt/disks/systemdrive`) and at least 1 backup drive (`/mnt/disks/backup1`). 
       - This only works if these mountpoints are present in your /etc/fstab, done in steps 3 and 5 of the [Filesystem guide](https://github.com/zilexa/Homeserver/tree/master/filesystem). 
 
-3. Run `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh` to run btrbk and receive an email when it is done. Since this is the second run it should go very fast.  \
-   Note this command will be used in the Nightly maintenance run (see next guide).  \
-   If you ever need to do a manual run, it is better to use the `btrbk run` command, it shows the progress. 
+3. To run btrbk and receive an email when it is done, run: 
+  ```
+  bash $HOME/docker/HOST/btrbk/btrbk-mail.sh` 
+  ```
+  Since this is the second run it should go very fast.  \
+  Note this command will be used in the Nightly maintenance run (see next guide).  \
+  If you ever need to do a manual run, it is better to use the `btrbk run` command, it shows the progress. 
 
 &nbsp;
 
