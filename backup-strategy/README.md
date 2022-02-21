@@ -71,12 +71,16 @@ _No other tool allows you to do all that automatically. The config file is also 
 - Edit the default retention policy used for data disks and the system-specific retention policy to your needs. Understand there are limits: if you create 10 snapshots of 1TB of data right now, it costs you 1TB in total. But when you start making big changes to your data and regular snapshots, this will cost lots of space as it deviates more and more from your oldest snapshot and backup. 
 
 ### Step 3: Do a full run of all snapshots and backups
-When you think your btrbk.conf file is correct, do a dryrun, it will only perform a simulation: 
-`sudo btrbk -n run`
-Read carefully the legenda and verify snapshots are created and backups are stored in the correct paths.  \
-When all is well, run the same command without "-n".  \
-BE AWARE this will perform all snapshot and backup actions, first time can take lots of time, after that, backups will be incremental. 
-
+- When you think your btrbk.conf file is correct, do a dryrun, it will only perform a simulation:  \
+```
+sudo btrbk -n run
+```
+- Read carefully the legenda and verify snapshots are created and backups are stored in the correct paths.  \
+- When all is well you are ready to snapshot all your configured subvolumes and back them up to your backup drive(s): 
+```
+sudo btrbk -n run
+```
+This can take quite some time depending on how much data you have. Subsequent runs will be much faster as metadata will be scanned and only changes will be part of the next snapshot. 
 
 ### Step 4: Configure automatic backups
 
@@ -91,7 +95,8 @@ sudo nano /etc/aliases
       - Your system drive (`/mnt/disks/systemdrive`) and at least 1 backup drive (`/mnt/disks/backup1`). 
       - You should have added your backup drives in `etc/fstab` already during steps 3 and 5 of the [Filesystem guide](https://github.com/zilexa/Homeserver/tree/master/filesystem)
 
-3. From now on, you can simply run `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh` to run btrbk and receive an email when it is done. Note this is also used in the Nightly maintenance run (see next guide). 
+3. Run `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh` to run btrbk and receive an email when it is done. Since this is the second run it should go very fast.  \
+   Note this command will be used in the Nightly maintenance run (see next guide). If you do a manual run, it is better to use the `btrbk run` command, it shows the progress. 
 
 &nbsp;
 
