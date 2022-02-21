@@ -3,12 +3,13 @@
 To keep your server spinning and purring everyday like its very first day, several tasks should be executed automatically on a regular basis.  
 Below the tasks are explained. Note the order of execution has been chosen carefully. If you remove/add tasks, keep that in mind. 
 
-
 The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/HOST/`. Most importantly: 
 - nightly.sh 
 - monthly.sh 
 - /logs
 - the other folders contain necessary tools and their configs.  
+
+&nbsp;
 
 ### NIGHTLY MAINTENANCE: Overview of tasks/tools
 - [_Media-cleaner_](https://github.com/clara-j/media_cleaner): delete watched shows episodes/seasons and movies X days after they have been _watched_(!) highly recommended, requires much less data if you automatically delete watched content after 5-10 days! For example, a single 2TB SSD is enough for my `/mnt/pool/Media`.
@@ -27,6 +28,8 @@ The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/
 - [_duin_](https://crazymax.dev/diun/): Check labeled docker images for updates, user can decide to update after verifying update is stable. 
 - _Docker housekeeping_: remove dangling images and volumes. 
 - _BtrFS housekeeping_: balancing & scrubbing disks. Note for the backup disk, the monthly task is actually in the Nightly script, since the disk needs to be mounted, best to run monthly right after completing nightly backup. 
+
+&nbsp;
 
 
 ### STEP 1: Decide what tools and tasks you need
