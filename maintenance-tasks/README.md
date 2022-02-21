@@ -48,7 +48,7 @@ python3 media_cleaner.py
 - Follow the steps.
 - A file `HOST/media-cleaner/media_cleaner.conf` will be created. Done! To change your settings, Simply edit the .conf file in your text editor.
 
-### STEP 4. Schedule the 2 tasks
+### STEP 4. Schedule Nightly and Monthly
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive cryptic error messages, use `""` instead. 
 ```
 MAILTO=""
