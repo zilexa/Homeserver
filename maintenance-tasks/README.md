@@ -35,7 +35,7 @@ The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/
 - remove SnapRAID if you will not use it (or uncomment it to save for later). 
 
 
-#### STEP 2: Configure Archiver, MergerFS SSD cache unloading
+### STEP 2: Configure Archiver, MergerFS SSD cache unloading
 - Verify the paths are correct in the 2 files in `HOST/archiver/`.
 - Notice the exclude list, it excludes filerun hidden folders, this way your photo thumbnails/previews stay on your fast SSD. 
 
