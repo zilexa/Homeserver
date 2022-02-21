@@ -33,9 +33,9 @@ The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/
 
 
 ### STEP 1: Decide what tools and tasks you need
-- remove the Archiver command from the Nightly script if you do not use a MergerFS Tiered Cache drive.
-- remove Mediacleaner if you will not download anything. 
-- remove SnapRAID if you will not use it (or uncomment it to save for later). 
+- If you do not use a MergerFS Tiered Cache drive: remove the Archiver command from the Nightly script. 
+- If you do not download series/movies/etc: remove Mediacleaner command and its folder. 
+- If you are not planning to use SnapRAID, remove the command and its folder and uninstall Snapper and Snapraid:  
 
 
 ### STEP 2: Configure Archiver, MergerFS SSD cache unloading
