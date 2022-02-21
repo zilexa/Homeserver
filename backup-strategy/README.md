@@ -70,12 +70,16 @@ No other tool allows you to do all that automatically. The config file is also e
 - Edit the default retention policy used for data disks and the system-specific retention policy to your needs. Understand there are limits: if you create 10 snapshots of 1TB of data right now, it costs you 1TB in total. But when you start making big changes to your data and regular snapshots, this will cost lots of space as it deviates more and more from your oldest snapshot and backup. 
 - Edit the file `$HOME/docker/HOST/btrbk/btrbk-mail.sh` and: 1) change the email subject to your server name and 2) make sure the mount targets are correct, see the example fstab: you should have a mount for the backup disk and a mount for the btrfs-root of your system OS disk.  
 
-#### Step 3: Perform a dryrun
-When you think your btrbk.conf file is correct, do a dryrun, it will not perform a simulation: 
+#### Step 3: Do a full run of all snapshots and backups
+When you think your btrbk.conf file is correct, do a dryrun, it will only perform a simulation: 
 `sudo btrbk -n run`
-When all is well, run the same command without "-n", this will perform all snapshot and backup actions, first time can take lots of time, after that, backups will be incremental. 
+Read carefully the legenda and verify snapshots are created and backups are stored in the correct paths.  \
+When all is well, run the same command without "-n".  \
+BE AWARE this will perform all snapshot and backup actions, first time can take lots of time, after that, backups will be incremental. 
 
 &nbsp;
+
+#### Step 4: Restore a subvolume
 
 ## III. Configure auto-archiving to USB disk _via btrbk_
 
