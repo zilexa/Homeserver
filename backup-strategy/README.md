@@ -11,22 +11,27 @@ Contents:
 
 
 ### Prequisities
-All prequisities have been taken care of by the script from [Step 1B:Install Essentials](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools).
-- This script installed the tools (btrbk for backups, snapraid/snapraid-btrfs/snapraid-btrf-runner for backups and additional tools) but more importantly also added configuration files (based on the tools default example) that are almost ready to use. The script downloaded them from this folder to your `$HOME/docker/HOST/` folder. 
-- By storing these files outside of your OS system dir (`etc/system`) you have your entire configuration independent of OS and backupped as a whole (`HOME/docker`). The files are symlinked into the system folder.  
+Necessary tools have been installed by prep-server.sh in [Step 1B:Install Essentials](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools).
+- btrbk for scheduled snapshots and backups.
+- snapraid/snapraid-btrfs/snapraid-btrf-runner for parity based protection of 1 subvolume per drive.
+- Ready to use config files for btrbk and snapraid.
+- A folder `/mnt/disks/systemdrive/timeline` is created to store snapshots of the system drive. 
 
-_All you have to do:_
-- Make sure you have done [step 1B](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools), by running the script or executing the commands to install the tools yourself. 
+_All you have to do:
+- Create a folder `timeline` in the root of each datadrive (for example `/mnt/disks/data1/timeline`); at least the drives containing a `Users` subvolume. 
+- Tailor the `.conf` files of snapraid, snapraid-btrfs-runner and btrbk to your needs.  
+- Run snapraid-btrfs-runner for the first time manually to create the parity file (on `mnt/disks/parity1)`. 
+- Run btrbk for the first time manually to create the first snapshots and back those up to your backup drives (`mnt/disks/backup1`, `mnt/disks/backup2` etc). 
 
 ## I. Configure parity-based backups _via snapraid-btrfs_
 #### Step 1: Create snapper config files
-- For SS only: create a backup of the default template: `sudo mv /etc/snapper/config-templates/default /etc/snapper/config-templates/defaultbak`
-- For SS only: Get the modified template:   
-`sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default`
-- Create snapper config files for the root filesystem and each subvolume (max 1 per disk) you want to protect with snapraid:  
+- Create a backup of the default template: `sudo mv /etc/snapper/config-templates/default /etc/snapper/config-templates/defaultbak`
+- Get a template specific for Snapraid, disabling all other Snapper features: `sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default`
+- Now create snapper config files for the root filesystem: 
 `sudo snapper create-config /` \
+- Create a snapper config for 1 subvolume per drive you want to protect with snapraid:  
 `sudo snapper -c data1 create-config /mnt/disks/data1/Users`
-- verify "timeline_create" is set to "no" in each file. 
+- verify "timeline_create" is set to "no" in each file! 
 
 ### Step 2: Adjust snapraid config file
 Open `/etc/snapraid.conf` in an editor and adjust the lines that say "ADJUST THIS.." to your situation. Note for each data disk, a snapper-config from the prev step must exist.
