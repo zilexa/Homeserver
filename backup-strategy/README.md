@@ -101,7 +101,7 @@ sudo nano /etc/aliases
 To run btrbk in the background and receive an email when done, run: `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh`. Test if this works. \
 Since it will be the second run, it should finish within a minute. If you ever want to initiate a backup run manually, use the command from the previous step instead of this one to show progress. 
 
-To schedule backups to run at least nightly, continue to the Maintenance Guide. 
+To schedule backups to run at least nightly, continue to the [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks). 
 
 
 &nbsp;
