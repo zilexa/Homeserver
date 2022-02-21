@@ -47,9 +47,10 @@ Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on
 
 ### Step 5: Configure mail notifications
 A script exists that takes care of running the sync command, scrub data (verifies parity file), clean up all but the latest snapshots, log everything to file and send email notifications when done. 
-- Modify `$HOME/docker/HOST/snapraid-btrfs-runner` section `[email]` to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and add the smtp provider server details:\
-Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snapraid-btrfs sync just like in step 3 and send you an email when done. 
-- Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` command for `s-nail` otherwise you need to do a whole lot more configuration (Postfix) to support `mail` on your system. 
+- Modify `$HOME/docker/HOST/snapraid-btrfs-runner` section `[email]` to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and add the smtp provider server details:
+- Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snapraid-btrfs sync just like in step 3 and send you an email when done. 
+
+Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` command for `s-nail` otherwise you need to do a whole lot more configuration (Postfix) to support `mail` on your system. 
 
 &nbsp;
 
@@ -59,7 +60,7 @@ The btrbk config file has been carefully created and tested to:
 - Incremental backups will be sent to your internal backup disk, multiple disks can be added.
 - Allows you to run a backup actions automatically and manually for multiple subvolumes by using groups. 
 - Allows you to archive (copy) backups to BTRFS USB disks easily. 
-_No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs._  \
+_No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs._  
 
 ### Step 1: Create the snapshot location and backup target location folders
 - Create a `timeline` (note the dot) folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/timeline`
