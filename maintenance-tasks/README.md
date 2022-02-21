@@ -7,7 +7,7 @@ The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/
 - [nightly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh)
 - [monthly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/monthly.sh)
 - /logs
-- the other folders contain necessary tools and their configs.  
+- the other folders contain the tools used and their config files.  
 
 &nbsp;
 
