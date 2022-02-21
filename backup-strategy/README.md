@@ -96,7 +96,8 @@ sudo nano /etc/aliases
       - You should have added your backup drives in `etc/fstab` already during steps 3 and 5 of the [Filesystem guide](https://github.com/zilexa/Homeserver/tree/master/filesystem)
 
 3. Run `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh` to run btrbk and receive an email when it is done. Since this is the second run it should go very fast.  \
-   Note this command will be used in the Nightly maintenance run (see next guide). If you do a manual run, it is better to use the `btrbk run` command, it shows the progress. 
+   Note this command will be used in the Nightly maintenance run (see next guide).  \
+   If you ever need to do a manual run, it is better to use the `btrbk run` command, it shows the progress. 
 
 &nbsp;
 
