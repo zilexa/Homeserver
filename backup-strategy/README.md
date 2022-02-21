@@ -94,7 +94,7 @@ This can take quite some time depending on how much data you have. Subsequent ru
 
 3. To run btrbk and receive an email when it is done, run: 
   ```
-  bash $HOME/docker/HOST/btrbk/btrbk-mail.sh` 
+  bash $HOME/docker/HOST/btrbk/btrbk-mail.sh
   ```
   Since this is the second run it should go very fast.  \
   Note this command will be used in the Nightly maintenance run (see next guide).  \
