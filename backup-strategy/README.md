@@ -1,6 +1,5 @@
 # Server Backup Guide
-## [SYNOPSIS](https://github.com/zilexa/Homeserver/blob/master/backup-strategy/backupstrategy.md)
-_(read the synopsis first)_
+## Read first: [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/backup-strategy/backupstrategy.md)
 
 Contents:
   - [Prerequisities](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#prequisities)
