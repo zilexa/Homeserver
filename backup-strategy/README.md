@@ -55,25 +55,20 @@ Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snap
 
 ## II. Configure subvolume backups _via btrbk_
 The btrbk config file has been carefully created and tested to:
-- Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `timeline` folder of each disk. 
+- Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `timeline` folder of each disk :)
 - Incremental backups will be sent to your internal backup disk, multiple disks can be added.
-- Allows you to run a backup actions manually for multiple subvolumes by using groups. 
+- Allows you to run a backup actions automatically and manually for multiple subvolumes by using groups. 
 - Allows you to archive (copy) backups to BTRFS USB disks easily. 
-No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs.\
+_No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs._  \
 
 ### Step 1: Create the snapshot location and backup target location folders
-- We need access to the OS disk filesystem root and the backup disk, mount both:
-  - `sudo mount /mnt/disks/backup1` 
-  - `sudo mount /mnt/system` 
-- Create the folder to store snapshots of the OS disk: `sudo mkdir /mnt/system/timeline`
-- Similarly, create a `.timeline` (note the dot) folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/.timeline`
+- Create a `timeline` (note the dot) folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/timeline`
 - In `/mnt/disks/backup1/`, create all destination folders for system and each data disk, for example via: `sudo mkdir /mnt/disks/backup1/{system,data1,data2,cache}`
 
 ### Step 2: Get the configuration & adjust settings, retention policy to your needs
 - Open the file located in `$HOME/docker/HOST/btrbk/btrbk.conf`
 - Read and understand the taxonomy, the order and the hierarchy. Change to your disk situation (verify paths of volumes, subvols, targets) Do not change the order or the indentation! 
 - Edit the default retention policy used for data disks and the system-specific retention policy to your needs. Understand there are limits: if you create 10 snapshots of 1TB of data right now, it costs you 1TB in total. But when you start making big changes to your data and regular snapshots, this will cost lots of space as it deviates more and more from your oldest snapshot and backup. 
-- Edit the file `$HOME/docker/HOST/btrbk/btrbk-mail.sh` and: 1) change the email subject to your server name and 2) make sure the mount targets are correct, see the example fstab: you should have a mount for the backup disk and a mount for the btrfs-root of your system OS disk.  
 
 ### Step 3: Do a full run of all snapshots and backups
 When you think your btrbk.conf file is correct, do a dryrun, it will only perform a simulation: 
@@ -82,7 +77,21 @@ Read carefully the legenda and verify snapshots are created and backups are stor
 When all is well, run the same command without "-n".  \
 BE AWARE this will perform all snapshot and backup actions, first time can take lots of time, after that, backups will be incremental. 
 
-### Step 4: Restore a subvolume
+
+### Step 4: Configure automatic backups
+
+1. If you haven't done this already, fill in your email address (the administrator of your server) in this systemfile:  
+```
+sudo nano /etc/aliases
+```
+2. Edit the file `$HOME/docker/HOST/btrbk/btrbk-mail.sh` and: 
+  - Change the email-subject to your server name or something you like. 
+  - Keep `mailto=default` to use what is set in the system (/etc/aliases) or change at will. 
+  - Most importantly make sure all required drives for running backups are listed in `mount_targets=`; 
+      - Your system drive (`/mnt/disks/systemdrive`) and at least 1 backup drive (`/mnt/disks/backup1`). 
+      - You should have added your backup drives in `etc/fstab` already during steps 3 and 5 of the [Filesystem guide](https://github.com/zilexa/Homeserver/tree/master/filesystem)
+
+3. From now on, you can simply run `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh` to run btrbk and receive an email when it is done. Note this is also used in the Nightly maintenance run (see next guide). 
 
 &nbsp;
 
