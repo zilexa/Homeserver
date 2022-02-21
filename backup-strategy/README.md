@@ -28,7 +28,7 @@ _All you have to do:
 - Create a backup of the default template: `sudo mv /etc/snapper/config-templates/default /etc/snapper/config-templates/defaultbak`
 - Get a template specific for Snapraid, disabling all other Snapper features: `sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default`
 - Now create snapper config files for the root filesystem: 
-`sudo snapper create-config /` \
+`sudo snapper create-config /`
 - Create a snapper config for 1 subvolume per drive you want to protect with snapraid:  
 `sudo snapper -c data1 create-config /mnt/disks/data1/Users`
 - verify "timeline_create" is set to "no" in each file! 
