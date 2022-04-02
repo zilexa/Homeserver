@@ -123,16 +123,18 @@ echo "create subvolume for Docker persistent data "
 # Temporarily Mount filesystem root
 sudo mount /mnt/disks/systemdrive
 # create a root subvolume for docker
-sudo btrfs subvolume create /mnt/systemdrive/@docker
+sudo btrfs subvolume create /mnt/disks/systemdrive/@docker
 ## unmount root filesystem
 sudo umount /mnt/disks/systemdrive
-# Get system fs UUID
+# Create mountpoint, to be used by fstab
+mkdir $HOME/docker
+# Get system fs UUID, to be used for next command
 fs_uuid=$(findmnt / -o UUID -n)
-# Add @docker subvolume to fstab to mount at boot
+# Add @docker subvolume to fstab to mount on mountpoint at boot
 sudo tee -a /etc/fstab &>/dev/null << EOF
 
-# Mount the BTRFS root subvolume @userdata
-UUID=${fs_uuid} /mnt/docker  btrfs   subvol=@docker,defaults,noatime,compress-force=zstd:1  0  0
+# Mount @docker subvolume
+UUID=${fs_uuid} $HOME/docker  btrfs   subvol=@docker,defaults,noatime,compress-force=zstd:1  0  0
 EOF
 sudo mount -a
 
