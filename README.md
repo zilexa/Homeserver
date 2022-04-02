@@ -62,16 +62,16 @@ _Note_
 * Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC. 
 
 #### Step 1B. How to properly install Docker and essential tools?
-_Turn your system into a modern server with 1 click with [prep_docker.sh](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services._
+_Turn your system into a modern server with 1 click with [prep_server.sh](https://github.com/zilexa/Homeserver/blob/master/prep-server.sh) to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services._
 
-Read through the [prep_docker.sh](https://github.com/zilexa/Homeserver/blob/master/prep-docker.sh) and see what it does (everything has comments). 
+Read through the [prep_server.sh](https://github.com/zilexa/Homeserver/blob/master/prep-server.sh) and see what it does (everything has comments). 
 The PREP_DOCKER.SH script is carefully created to install the tools required to run all aspects of your server (from docker to mainentance tasks). \
 Official documentation is used to install tools correctly (Docker Rootless Mode) and all but 1 tools will be installed via the Manjaro or AUR repository --> they will be automatically updated by the OS official repositories (compare that to Ubuntu/Debian based systems). 
 
 Download and install it via: 
 ```
-cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-docker.sh
-bash prepare-docker.sh
+cd Downloads && wget https://raw.githubusercontent.com/zilexa/Homeserver/master/prep-server.sh
+bash prep-server.sh
 ```
 _Note_
 > - A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery.
