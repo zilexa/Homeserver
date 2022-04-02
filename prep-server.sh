@@ -134,7 +134,7 @@ fs_uuid=$(findmnt / -o UUID -n)
 sudo tee -a /etc/fstab &>/dev/null << EOF
 
 # Mount @docker subvolume
-UUID=${fs_uuid} $HOME/docker  btrfs   subvol=@docker,defaults,noatime,compress-force=zstd:1  0  0
+UUID=${fs_uuid} $HOME/docker  btrfs   subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
 EOF
 sudo mount -a
 
