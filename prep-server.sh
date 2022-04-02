@@ -90,7 +90,7 @@ echo "                 MERGERFS                  "
 echo "-------------------------------------------"
 echo "pool drives to make them appear as 1 without raid"
 # available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
-sudo pamac install --no-confirm mergerFS
+sudo pamac install --no-confirm mergerfs
 
 
 echo "______________________________________________"
@@ -123,7 +123,7 @@ echo "create subvolume for Docker persistent data "
 # Temporarily Mount filesystem root
 sudo mount /mnt/disks/systemdrive
 # create a root subvolume for docker
-sudo btrfs subvolume create /mnt/system/@docker
+sudo btrfs subvolume create /mnt/systemdrive/@docker
 ## unmount root filesystem
 sudo umount /mnt/disks/systemdrive
 # Get system fs UUID
