@@ -52,12 +52,12 @@ sudo pamac install --no-confirm nocache
 echo "                    GRSYNC                  "
 echo "--------------------------------------------"
 echo "Friendly UI for rsync"
-sudo pacman -S --noconfirm grsync
+sudo pamac install --no-confirm grsync
 
 echo "                LM_SENSORS                  "
 echo "--------------------------------------------"
 echo "to be able to read out all sensors" 
-sudo pacman -S --noconfirm lm_sensors
+sudo pamac install --no-confirm lm_sensors
 sudo sensors-detect --auto
 
 echo "                 MERGERFS                  "
@@ -142,9 +142,9 @@ echo "________________________________________________"
 echo "                                                " 
 echo "       Install Docker and Docker Compose        "
 echo "________________________________________________"
-sudo pacman -S --noconfirm docker docker-compose
+sudo pamac install --no-confirm docker docker-compose
 # Docker official rootless script is not installed with docker and only available in the Arch User Repository (AUR) thus installed via Pamac.
-pamac install docker-rootless-extras-bin
+sudo pamac install --no-confirm docker-rootless-extras-bin
 
 # Required steps before running docker rootless setup tool (see docker documentation)
 sudo touch /etc/subuid
@@ -174,8 +174,8 @@ echo "                     SENDING EMAILS                          "
 echo "       allow system to send email notifications              " 
 echo "_____________________________________________________________"
 # Configure smtp according to Arch wiki
-sudo pacman -S --noconfirm msmtp
-sudo pacman -S --noconfirm s-nail
+sudo pamac install --no-confirm msmtp
+sudo pamac install --no-confirm s-nail
 # link sendmail to msmtp
 sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
 sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
@@ -235,7 +235,7 @@ case ${answer:0:1} in
         mv $HOME/docker/HOST/snapraid/snapraid-btrfs-runner-master $HOME/docker/HOST/snapraid/snapraid-btrfs-runner
         rm $HOME/docker/HOST/snapraid/master.zip
         # Install snapper, required for snapraid-btrfs 
-        sudo pacman -S --no-confirm snapper-gui
+        sudo pamac install --no-confirm snapper-gui
         # Get snapper default template
         sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default
         # get SnapRAID config
