@@ -113,11 +113,21 @@ EOF
 sudo mount -a
 
 
-echo "______________________________________________"
-echo "                                              " 
-echo "       DOCKER MAINTENANCE TOOLS+SCRIPTS       "
-echo "______________________________________________"
+echo "______________________________________________________________________"
+echo "                                                                      " 
+echo " GET THE homeserver guide DOCKER COMPOSE FILE and MAINTENANCE SCRIPTS "
+echo "______________________________________________________________________"
 cd $HOME/Downloads
+echo "         compose yml and env file           "
+echo "--------------------------------------------"
+wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
+wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
+
+echo "         server maintenance scripts         "
+echo "--------------------------------------------"
+curl -L https://api.github.com/repos/zilexa/Homeserver/tarball | tar xz --wildcards "*/docker/HOST/" --strip-components=1
+mv $HOME/Downloads/docker/HOST $HOME/docker/
+rm -r $HOME/Downloads/docker
 
 echo "      BTRBK config and mail script          "
 echo "--------------------------------------------"
@@ -127,13 +137,15 @@ wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/
 sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
 # MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
 
-echo "     Homeserver guide maintenance scripts   "
+echo "PULLIO script to auto update certain services"
 echo "--------------------------------------------"
-curl -L https://api.github.com/repos/zilexa/Homeserver/tarball | tar xz --wildcards "*/docker/" --strip-components=1
-rm -r $HOME/Downloads/docker/Extras && rm -r $HOME/docker/docker/README.md
-mv -T $HOME/Downloads/docker $HOME/docker
+# Should only be used for selected services. For all others, Diun (docker container) is used to notify only instead of auto-update.
+sudo wget -O $HOME/docker/HOST/updater/pullio https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
+sudo chmod +x $HOME/docker/HOST/updater/pullio
+sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
 
 echo "Configure permissions on docker folder" 
+echo "--------------------------------------------"
 sudo setfacl -Rdm g:docker:rwx $HOME/docker
 sudo chmod -R 755 $HOME/docker
 
@@ -161,12 +173,6 @@ dockerd-rootless-setuptool.sh install
 systemctl --user enable docker
 systemctl --user start docker
 sudo loginctl enable-linger $(whoami)
-
-echo "Install Pullio (auto-update labeled containers)"
-# Should only be used for selected services. For all others, Diun (docker container) is used to notify only instead of auto-update.
-sudo wget -O $HOME/docker/HOST/updater/pullio https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
-sudo chmod +x $HOME/docker/HOST/updater/pullio
-sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
 
 
 echo "_____________________________________________________________"
@@ -273,7 +279,7 @@ case ${answer:0:1} in
 esac
 
 echo "--------------------------------------------------------------------------------------------------------------"
-echo "Download recommended/best-practices configuration for QBittorrent: to download media, torrents? (recommend: y)" 
+echo "Download recommended/best-practices configuration for QBittorrent: to download media, torrents? (recommended)" 
 read -p "y or n ?" answer
 case ${answer:0:1} in
     y|Y )
@@ -286,6 +292,23 @@ case ${answer:0:1} in
         echo "SKIPPED downloading QBittorrent config file.."
     ;;
 esac
+
+
+echo "--------------------------------------------------------------------------------------------------------------"
+echo "Get the PIA VPN script to auto-update Qbittorrent portforwarding? (recommended if you will use PIA VPN for downloads)" 
+read -p "y or n ?" answer
+case ${answer:0:1} in
+    y|Y )
+        echo " PIA VPN script to auto-update Qbittorrent  "
+        echo "--------------------------------------------"
+        mkdir -p HOME/docker/HOST/vpn-proxy/pia-shared
+        wget -O $HOME/docker/HOST/vpn-proxy/pia-shared/updateport-qbittorrent.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/vpn-proxy/pia-shared/updateport-qbittorrent.sh
+    ;;
+    * )
+        echo "SKIPPED getting PIA VPN script for auto-updating QB portforwarding.."
+    ;;
+esac
+
 
 echo "---------------------------------------------------------------------------------------------"
 echo "Download preconfigured Organizr config: your portal to all your apps and services? (optional)" 
