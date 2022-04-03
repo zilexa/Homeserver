@@ -27,26 +27,6 @@ sudo powertop --auto-tune
 sudo systemctl start powertop.service
 
 
-echo "_____________________________________________________________"
-echo "                     SENDING EMAILS                          "
-echo "       allow system to send email notifications              " 
-echo "_____________________________________________________________"
-# ----------------------------
-sudo pacman -S --noconfirm msmtp
-sudo pacman -S --noconfirm s-nail
-# link sendmail to msmtp
-sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
-sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
-# set msmtp as mta
-echo "set mta=/usr/bin/msmtp" | sudo tee -a /etc/mail.rc
-## Get config file, MANUALLY add your smtp provider credentials
-sudo wget -O /etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/msmtprc
-echo "Create aliases file, MANUALLY edit file and replace with your emailaddress" 
-sudo tee -a /etc/aliases << EOF
-default:myemail@address.com
-EOF
-
-
 echo "____________________________________________"
 echo "                APPLICATIONS                "
 echo "                server tools                "
@@ -56,12 +36,6 @@ echo "--------------------------------------------"
 echo "Swiss handknife-like tool to automate snapshots & backups of personal data" 
 # available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
 sudo pamac install --no-confirm btrbk
-## Get config and email script
-mkdir -p $HOME/docker/HOST/btrbk
-wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
-wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
-sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
-# MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
 
 echo "               RUN-IF-TODAY                 "
 echo "--------------------------------------------"
@@ -95,7 +69,7 @@ sudo pamac install --no-confirm mergerfs
 
 echo "______________________________________________"
 echo "                                              " 
-echo " DOCKER SUBVOLUME & MAINTENANCE TOOLS+SCRIPTS "
+echo "               DOCKER SUBVOLUME               "
 echo "______________________________________________"
 echo "      on-demand systemdrive mountpoint     "
 echo "-------------------------------------------"
@@ -138,9 +112,23 @@ UUID=${fs_uuid} $HOME/docker  btrfs   subvol=@docker,defaults,noatime,x-gvfs-hid
 EOF
 sudo mount -a
 
-echo "      get maintenance tools & scripts       "
-echo "--------------------------------------------"
+
+echo "______________________________________________"
+echo "                                              " 
+echo "       DOCKER MAINTENANCE TOOLS+SCRIPTS       "
+echo "______________________________________________"
 cd $HOME/Downloads
+
+echo "      BTRBK config and mail script          "
+echo "--------------------------------------------"
+mkdir -p $HOME/docker/HOST/btrbk
+wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
+wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
+sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
+# MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
+
+echo "     Homeserver guide maintenance scripts   "
+echo "--------------------------------------------"
 curl -L https://api.github.com/repos/zilexa/Homeserver/tarball | tar xz --wildcards "*/docker/" --strip-components=1
 rm -r $HOME/Downloads/docker/Extras && rm -r $HOME/docker/docker/README.md
 mv -T $HOME/Downloads/docker $HOME/docker
@@ -181,6 +169,57 @@ sudo chmod +x $HOME/docker/HOST/updater/pullio
 sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
 
 
+echo "_____________________________________________________________"
+echo "                     SENDING EMAILS                          "
+echo "       allow system to send email notifications              " 
+echo "_____________________________________________________________"
+# Configure smtp according to Arch wiki
+sudo pacman -S --noconfirm msmtp
+sudo pacman -S --noconfirm s-nail
+# link sendmail to msmtp
+sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
+sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
+# set msmtp as mta
+echo "set mta=/usr/bin/msmtp" | sudo tee -a /etc/mail.rc
+echo "---------------------------------------"
+echo "                                                             "
+echo "To receive important server notifications, please enter your main/default emailaddress that should receive notifications:"
+echo "                                                             "
+read -p 'Enter email address to receive server notifications:' DEFAULTEMAIL
+sudo sed -i -e "s#default:myemail@address.com#default:$DEFAULTEMAIL#g" /etc/aliases
+## Get config file
+sudo wget -O /etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/msmtprc
+# set SMTP server
+echo "                                                             "
+echo "---------------------------------------"
+echo "                                                             "
+echo "Would you like to configure sending email now? You need to have an smtp provider account correctly configured with your domain" 
+read -p "Have you done that and do you have your smtp credentials at hand? (y/n)" answer
+case ${answer:0:1} in
+    y|Y )
+    read -p "Enter SMTP server address (or hit ENTER for default: mail.smtp2go.com):" SMTPSERVER
+    SMTPSERVER="${SMTPSERVER:=mail.smtp2go.com}"
+    read -p "Enter SMTP server port (or hit ENTER for default:587):" SMTPPORT
+    SMTPPORT="${SMTPPORT:=587}"
+    read -p 'Enter SMTP username: ' SMTPUSER
+    read -p 'Enter password: ' SMTPPASS
+    read -p 'Enter the from emailaddress that will be shown as sender, for example username@yourdomain.com: ' FROMADDRESS
+    sudo sed -i -e "s#mail.smtp2go.com#$SMTPSERVER#g" /etc/msmtprc
+    sudo sed -i -e "s#587#$SMTPPORT#g" /etc/msmtprc
+    sudo sed -i -e "s#SMTPUSER#$SMTPUSER#g" /etc/msmtprc
+    sudo sed -i -e "s#SMTPPASS#$SMTPPASS#g" /etc/msmtprc
+    sudo sed -i -e "s#FROMADDRESS#$FROMADDRESS#g" /etc/msmtprc
+    echo "Done, now sending you a test email...." 
+    echo "Hello, this is a confirmation from your server, your smtp configuration was successful!" | msmtp -a default $DEFAULTEMAIL
+    echo "Email sent!" 
+    echo "if an error appeared above, the email has not been sent and you made an error or did not configure your domain and smtp provider" 
+    ;;
+    * )
+        echo "Not configuring SMTP. Please manually enter your SMTP provider details in file /etc/msmprc.." 
+    ;;
+esac
+
+
 echo "______________________________________________________"
 echo "           OPTIONAL TOOLS OR CONFIGURATIONS           "
 echo "______________________________________________________"
@@ -202,6 +241,7 @@ case ${answer:0:1} in
         # get SnapRAID config
         sudo wget -O $HOME/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapraid.conf
         sudo ln -s $HOME/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
+        # DONE !
         # MANUALLY: Create a root subvolume on your fastest disks named .snapraid, this wil contain snapraid content file. 
         # MANUALLY: customise the $HOME/docker/HOST/snapraid/snapraid.conf file to your needs. 
         # MANUALLY: follow instructions in the guide 
