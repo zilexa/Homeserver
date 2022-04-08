@@ -111,6 +111,9 @@ sudo tee -a /etc/fstab &>/dev/null << EOF
 UUID=${fs_uuid} $HOME/docker  btrfs   subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
 EOF
 sudo mount -a
+sudo chown ${USER}:${USER} $HOME/docker
+sudo chmod -R 755 $HOME/docker
+#sudo setfacl -Rdm g:docker:rwx $HOME/docker
 
 
 echo "______________________________________________________________________"
@@ -140,14 +143,10 @@ sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
 echo "PULLIO script to auto update certain services"
 echo "--------------------------------------------"
 # Should only be used for selected services. For all others, Diun (docker container) is used to notify only instead of auto-update.
+mkdir -p $HOME/docker/HOST/updater/pullio
 sudo wget -O $HOME/docker/HOST/updater/pullio https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
 sudo chmod +x $HOME/docker/HOST/updater/pullio
 sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
-
-echo "Configure permissions on docker folder" 
-echo "--------------------------------------------"
-sudo setfacl -Rdm g:docker:rwx $HOME/docker
-sudo chmod -R 755 $HOME/docker
 
 
 echo "________________________________________________"
