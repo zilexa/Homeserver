@@ -143,8 +143,8 @@ sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
 echo "PULLIO script to auto update certain services"
 echo "--------------------------------------------"
 # Should only be used for selected services. For all others, Diun (docker container) is used to notify only instead of auto-update.
-mkdir -p $HOME/docker/HOST/updater/pullio
-sudo wget -O $HOME/docker/HOST/updater/pullio https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
+mkdir -p $HOME/docker/HOST/updater
+sudo curl -fsSL "https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh" -o $HOME/docker/HOST/updater/pullio
 sudo chmod +x $HOME/docker/HOST/updater/pullio
 sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
 
