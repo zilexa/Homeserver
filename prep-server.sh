@@ -154,24 +154,18 @@ echo "                                                "
 echo "       Install Docker and Docker Compose        "
 echo "________________________________________________"
 sudo pamac install --no-confirm docker docker-compose
-# Docker official rootless script is not installed with docker and only available in the Arch User Repository (AUR) thus installed via Pamac.
-sudo pamac install --no-confirm docker-rootless-extras-bin
 
-# Required steps before running docker rootless setup tool (see docker documentation)
-sudo touch /etc/subuid
-sudo touch /etc/subgid
-echo "${USER}:100000:65536" | sudo tee -a /etc/subuid
-echo "${USER}:100000:65536" | sudo tee -a /etc/subgid
-systemctl --user enable --now docker.socket
-export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+# Create non-root user for docker, with privileges (not docker rootless)
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
 
-# Run docker rootless setup tool
-dockerd-rootless-setuptool.sh install
+# Enable docker at boot
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
 
-# enable start at boot and start docker
-systemctl --user enable docker
-systemctl --user start docker
-sudo loginctl enable-linger $(whoami)
+# Start docker
+systemctl start docker
 
 
 echo "_____________________________________________________________"
@@ -191,7 +185,7 @@ echo "                                                             "
 echo "To receive important server notifications, please enter your main/default emailaddress that should receive notifications:"
 echo "                                                             "
 read -p 'Enter email address to receive server notifications:' DEFAULTEMAIL
-sudo sed -i -e "s#default:myemail@address.com#default:$DEFAULTEMAIL#g" /etc/aliases
+sudo sh -c "echo default:$DEFAULTEMAIL >> /etc/aliases"
 ## Get config file
 sudo wget -O /etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/msmtprc
 # set SMTP server
