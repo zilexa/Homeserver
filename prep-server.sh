@@ -209,7 +209,7 @@ case ${answer:0:1} in
     sudo sed -i -e "s#SMTPPASS#$SMTPPASS#g" /etc/msmtprc
     sudo sed -i -e "s#FROMADDRESS#$FROMADDRESS#g" /etc/msmtprc
     echo "Done, now sending you a test email...." 
-    echo "Hello, this is a confirmation from your server, your smtp configuration was successful!" | msmtp -a default $DEFAULTEMAIL
+    printf "Subject: Your Homeserver is almost ready\nHello there, I am almost ready. I can sent you emails now." | msmtp -a default $DEFAULTEMAIL
     echo "Email sent!" 
     echo "if an error appeared above, the email has not been sent and you made an error or did not configure your domain and smtp provider" 
     ;;
