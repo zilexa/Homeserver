@@ -4,8 +4,8 @@
 ### Note this will delete stopped containers and everything linked to them.  
 # CHANGELOG 2022-04--08
 # UPDATED: Now works with all latest containers. 
-# CHANGED: 'true' to true
-# CHANGED: CADDY-DOCKER-PROXY: renamed from 'caddy-proxy to 'web-proxy', its network has the same name. 
+# CHANGED: 'true' to true everywhere.
+# CHANGED: CADDY-DOCKER-PROXY: renamed contaimer name:'caddy-proxy to 'web-proxy', its network (unchanged) has the same name. 
 # CHANGED: CADDY-DOCKER-PROXY: latest version requires an env variable, this has been added.
 # CHANGED: CADDY-DOCKER-PROXY: requires you to run "docker network create web-proxy" BEFORE running compose!
 #  
