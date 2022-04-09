@@ -171,6 +171,17 @@ If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blo
 --> In /mnt/pool/ you only want to see Users and Media. The Backup Guide will require additional folders in the root of each drive (for snapshots and/or parity). As a best practice, you should only expose folders to users and applications that must be exposed. Exposing your backup/snapshots folder serves no purpose. 
 
 &nbsp;
+## Step 8: Fix the personal folder links in $HOME
+If you used the Manjaro Gnome Post Install script, your common personal folders (Desktop, Documents, Pictures, Music, Media) are actually links that link to a subvolume `userdata` on your OS drive, visible in `/mnt/disks/systemdrive`. Since you are configuring a server, you probably want to link those $HOME folders to your own user folder within your datapool (`/mnt/pool/Users/MYNAME/` or `/mnt/pool/Users/Shared/`)
+```
+ln -s /mnt/pool/Users/Shared/Documents $HOME/Documents
+ln -s /mnt/pool/Users/Shared/Pictures $HOME/Pictures
+ln -s /mnt/pool/Users/Shared/Desktop $HOME/Desktop
+ln -s /mnt/pool/Media $HOME/Media
+ln -s /mnt/pool/Media/Music $HOME/Music
+```
+Do not forget to delete the `/mnt/disks/systemdrive/userdata` subvolume, simply by deleting it like a folder.
 
+&nbsp;
 Have a look at [Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure), follow the tips in the _Data Migration_ to 100% securily copy your data and verify each read & write is correct (using Rsync or BTRFS send/receive). 
 If you are going to download stuff, follow the 2 HIGHLY RECOMMENDED actions under Step 3 for your incoming downloads folder. 
