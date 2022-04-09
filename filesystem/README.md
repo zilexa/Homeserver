@@ -181,6 +181,7 @@ ln -s /mnt/pool/Media $HOME/Media
 ln -s /mnt/pool/Media/Music $HOME/Music
 ```
 Do not forget to delete the `/mnt/disks/systemdrive/userdata` subvolume, simply by deleting it like a folder.
+Note the `Downloads` folder is not in userdata, it is suppose to be a temporary folder that should never be backupped since it can contain a lot of mess. 
 
 &nbsp;
 Have a look at [Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure), follow the tips in the _Data Migration_ to 100% securily copy your data and verify each read & write is correct (using Rsync or BTRFS send/receive). 
