@@ -156,19 +156,16 @@ echo "________________________________________________"
 echo "                                                " 
 echo "       Install Docker and Docker Compose        "
 echo "________________________________________________"
+# Install Docker and Docker Compose
 sudo pamac install --no-confirm docker docker-compose
 
 # Create non-root user for docker, with privileges (not docker rootless)
 sudo groupadd docker
 sudo usermod -aG docker $USER
-newgrp docker
 
 # Enable docker at boot
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
-
-# Start docker
-systemctl start docker
 
 
 echo "_____________________________________________________________"
@@ -297,7 +294,7 @@ case ${answer:0:1} in
     y|Y )
         echo " PIA VPN script to auto-update Qbittorrent  "
         echo "--------------------------------------------"
-        mkdir -p HOME/docker/HOST/vpn-proxy/pia-shared
+        mkdir -p $HOME/docker/HOST/vpn-proxy/pia-shared
         wget -O $HOME/docker/HOST/vpn-proxy/pia-shared/updateport-qbittorrent.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/vpn-proxy/pia-shared/updateport-qbittorrent.sh
     ;;
     * )
