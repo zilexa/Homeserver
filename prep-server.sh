@@ -29,8 +29,22 @@ sudo systemctl start powertop.service
 # Disable automatic suspend
 gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
 
+echo "____________________________________________"
+echo "                SYSTEM CONFIG               "
+echo "____________________________________________"
 # Add CLI to Panel Favourites
 gsettings set org.gnome.shell favorite-apps "['nemo.desktop', 'org.gnome.Terminal.desktop', 'firefox.desktop', 'org.gnome.gThumb.desktop', 'pluma.desktop', 'org.gnome.Calculator.desktop']"
+
+# Set Nemo bookmarks, reflecting folder that will be renamed later (Videos>Media)
+truncate -s 0 $HOME/.config/gtk-3.0/bookmarks
+tee -a $HOME/.config/gtk-3.0/bookmarks &>/dev/null << EOF
+file:///home/${USER}/docker docker
+file:///home/${USER}/Downloads Downloads
+file:///home/${USER}/Documents Documents
+file:///home/${USER}/Music Music
+file:///home/${USER}/Pictures Pictures
+file:///home/${USER}/Media Media
+EOF
 
 
 echo "____________________________________________"
