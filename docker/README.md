@@ -40,7 +40,9 @@ Make sure you commented out or removed services that are exposed via a $DOMAIN n
 ```docker-compose -f docker-compose.yml config```
   - `-f` is used to point to the location of your config file. 
   - Notice all variables will automatically be filled. Fix the errors/missing items in the compose or env file (see Step 2). 
-3. Run the file. This will download app impages and configure all containers **NEVER prefix with sudo**:  \
+3. If decided to keep caddy-docker-proxy, create the required external network first:  \
+```docker network create web-proxy```
+4. No run the file. This will download app impages and configure all containers **NEVER prefix with sudo**:  \
 ```docker-compose -f docker-compose.yml up -d```
   - Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
   - If there was a misconfiguration with an app, for example, a password, simply remove that container (through Portainer, see below) and re-run docker compose command. 
