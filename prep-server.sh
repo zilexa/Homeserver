@@ -26,6 +26,9 @@ sudo powertop --auto-tune
 ## Start the service
 sudo systemctl start powertop.service
 
+# Disable automatic suspend
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+
 
 echo "____________________________________________"
 echo "                APPLICATIONS                "
