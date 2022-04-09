@@ -70,9 +70,11 @@ In the mountpoint of each cache/data disk:
   `/mnt/pool/Media/Incoming/incomplete` <-- ongoing downloads.   
 
 #### HIGHLY RECOMMENDED:
-- The `incomplete` folder should be created as nested subvolume and should have BTRFS Copy-On-Write feature disabled for it. This will ensure 0% fragmentation: 
+The `incomplete` folder should be created as nested subvolume and should have BTRFS Copy-On-Write feature disabled for it. This will ensure 0% fragmentation:  \
   Create the subvolume:
-```sudo btrfs subvolume create /mnt/disks/data0/Media/incoming/incomplete```
+```
+sudo btrfs subvolume create /mnt/disks/data0/Media/incoming/incomplete
+```
   Make the current user instead of root owner: 
 ```sudo chown asterix:asterix /mnt/disks/data0/Media/incoming/incomplete``` 
   Disable CoW:
