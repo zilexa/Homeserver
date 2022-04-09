@@ -38,12 +38,14 @@ gsettings set org.gnome.shell favorite-apps "['nemo.desktop', 'org.gnome.Termina
 # Set Nemo bookmarks, reflecting folder that will be renamed later (Videos>Media)
 truncate -s 0 $HOME/.config/gtk-3.0/bookmarks
 tee -a $HOME/.config/gtk-3.0/bookmarks &>/dev/null << EOF
-file:///home/${USER}/docker docker
-file:///home/${USER}/Downloads Downloads
-file:///home/${USER}/Documents Documents
-file:///home/${USER}/Music Music
-file:///home/${USER}/Pictures Pictures
-file:///home/${USER}/Media Media
+file:///home/asterix/docker Docker
+file:///mnt/disks Drives
+file:///mnt/pool Pool
+file:///home/asterix/Downloads Downloads
+file:///home/asterix/Documents Documents
+file:///home/asterix/Music Music
+file:///home/asterix/Pictures Pictures
+file:///home/asterix/Media Media
 EOF
 
 
