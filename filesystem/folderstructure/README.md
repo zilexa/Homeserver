@@ -76,9 +76,13 @@ The `incomplete` folder should be created as nested subvolume and should have BT
 sudo btrfs subvolume create /mnt/disks/data0/Media/incoming/incomplete
 ```
   Make the current user instead of root owner: 
-```sudo chown asterix:asterix /mnt/disks/data0/Media/incoming/incomplete``` 
+```
+sudo chown asterix:asterix /mnt/disks/data0/Media/incoming/incomplete
+``` 
   Disable CoW:
-  `chattr -R +C /mnt/disks/data0/Media/Incoming/incomplete`
+```
+chattr -R +C /mnt/disks/data0/Media/Incoming/incomplete
+``` 
   Now, completed downloads will be moved outside this subvolume to the `complete` folder, ensuring 0 fragmentation. Also, with CoW disabled for the incomplete dir, writing will be much faster. Since this is a temporary location for downloads, there is no reason to have CoW running.  \
 If you use MergerFS, do the above for each drive that contains your Media/incoming folders.  \
 
