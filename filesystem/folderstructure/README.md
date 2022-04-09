@@ -47,7 +47,7 @@ _Notes_
   - `/mnt/disks/{data1,data2,data3,data4}` (unless you use BTRFS RAID1 filesystem). 
   - `/mnt/disks/parity1` not automounted, will be mounted during backup run.  
   - `/mnt/disks/{backup1,backup2}` not automounted, will be mounted during backup run.  
-- `/mnt/pool/Users` and `/mnt/pool/Media` --> the union of all files/folders on cache/data disks. the single access point to your data. Could be 1 drive, a MergerFS mountpoint or the mountpoint of your BTRFS RAID1 filesystem). 
+- `/mnt/pool/Users` and `/mnt/pool/Media` --> the union of all files/folders on cache/data disks. the single access point to your data. Could be 1 drive, a MergerFS mountpoint or the mountpoint of your BTRFS RAID1 filesystem). When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool/Media` and `/mnt/pool/Users`.
 
 _Helper folders:_
 - If you use MergerFS Tiered Cache: `/mnt/pool-nocache` --> the union but excluding the cache, required to offload the cache on a scheduled basis. 
@@ -70,12 +70,16 @@ In the mountpoint of each cache/data disk:
   `/mnt/pool/Media/Incoming/incomplete` <-- ongoing downloads.   
 
 #### HIGHLY RECOMMENDED:
-- The `incomplete` folder should be created as nested subvolume (on each underlying drive in `mnt/disks`! ), after creating the Incoming folder via: 
-  `sudo btrfs subvolume create /mnt/disks/data0/Media/Incoming/incomplete`. Do this for each Media drive pooled via MergFS. 
-  As subvolume, this ensures finished downloads have zero fragmentation when moved to the complete folder (and hardlinked to Movies, Series or Music). 
-- This folder also needs `chattr -R +C /mnt/disks/data0/Media/incomplete`, applied to each drive, to disable BTRFS CoW behavior, reducing system load and wear of your drive.
+- The `incomplete` folder should be created as nested subvolume and should have BTRFS Copy-On-Write feature disabled for it. This will ensure 0% fragmentation: 
+  Create the subvolume:
+```sudo btrfs subvolume create /mnt/disks/data0/Media/incoming/incomplete```
+  Make the current user instead of root owner: 
+```sudo chown asterix:asterix /mnt/disks/data0/Media/incoming/incomplete``` 
+  Disable CoW:
+  `chattr -R +C /mnt/disks/data0/Media/Incoming/incomplete`
+  Now, completed downloads will be moved outside this subvolume to the `complete` folder, ensuring 0 fragmentation. Also, with CoW disabled for the incomplete dir, writing will be much faster. Since this is a temporary location for downloads, there is no reason to have CoW running.  \
+If you use MergerFS, do the above for each drive that contains your Media/incoming folders.  \
 
-When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadisks will appear unionised inside `/mnt/pool/Media` and `/mnt/pool/Users`.
 
 &nbsp;
 
