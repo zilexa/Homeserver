@@ -29,6 +29,9 @@ sudo systemctl start powertop.service
 # Disable automatic suspend
 gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
 
+# Add CLI to Panel Favourites
+gsettings set org.gnome.shell favorite-apps "['nemo.desktop', 'org.gnome.Terminal.desktop', 'firefox.desktop', 'org.gnome.gThumb.desktop', 'pluma.desktop', 'org.gnome.Calculator.desktop']"
+
 
 echo "____________________________________________"
 echo "                APPLICATIONS                "
@@ -150,6 +153,12 @@ mkdir -p $HOME/docker/HOST/updater
 sudo curl -fsSL "https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh" -o $HOME/docker/HOST/updater/pullio
 sudo chmod +x $HOME/docker/HOST/updater/pullio
 sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
+
+echo "Create the minimum folder structure for drives and datapool"
+echo "--------------------------------------------"
+sudo mkdir /mnt/disks/data0
+sudo mkdir /mnt/disks/backup1
+sudo mkdir -p /mnt/pool/{Users,Media}
 
 
 echo "________________________________________________"
