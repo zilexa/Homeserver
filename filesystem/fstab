@@ -35,7 +35,7 @@ UUID=                                     /mnt/pool/Users         btrfs   subvol
 /mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool  0 0
 
 # Parity - parity drives for Snapraid, when  datadrives
-UUID=                                    /mnt/disks/parity1       ext4   defaults,noatime,noauto 0 0
+UUID=                                     /mnt/disks/parity1       ext4   defaults,noatime,noauto 0 0
 
 # NFS ~ home network shares  
 # -------------------------
