@@ -1,46 +1,46 @@
-  GNU nano 5.2                                                                                                   /etc/fstab                                                                                                             
-# sudo nano /etc/fstab: static file system information.
-# STOP! Use 'blkid' to print the universally unique identifier for a
-# device; this may be used with UUID= as a more robust way to name devices
-# that works even if disks are added and removed.
+# /etc/fstab: static file system information.
 #
-# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# Use 'blkid' to print the universally unique identifier for a device; this may
+# be used with UUID= as a more robust way to name devices that works even if
+# disks are added and removed. See fstab(5).
 #
-# Mount System disk ~ subvolumes
-#--------------------------------
-# Mount root subvolume @docker
-UUID=!ADD YOUR OS/SYSTEM SSD UUID HERE! /home/asterix/docker  btrfs   defaults,noatime,subvol=@docker 0       2
-#
-# Mount DATA disks
-# ----------------- 
-UUID=!ADD YOUR CACHE SSD UUID HERE! /mnt/disks/cache btrfs defaults,noatime,compress-force=zstd:3 0 0
-UUID=!ADD YOUR DATA DISK1 UUID HERE! /mnt/disks/data1 btrfs defaults,noatime,compress-force=zstd:5 0 0
-UUID=!ADD YOUR DATA DISK2 UUID HERE! /mnt/disks/data2 btrfs defaults,noatime,compress-force=zstd:5 0 0
-UUID=!ADD YOUR DATA DISK3 UUID HERE! /mnt/disks/data3 btrfs defaults,noatime,compress-force=zstd:5 0 0
-#
-# MergerFS ~ POOL & pool-archive
-# ------------------------------
-# MergerFS datapool ~ with SSD as tiered cache
-/mnt/disks/cache:/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=lfs,moveonenospc=true,minfreespace=200G,fsname=mergerfsPool 0 0
-# MergerFS ~ datapool excluding the SSD cache (required to be able to unload the cache)
-/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool-archive fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool 0 0
-#
-#
-# Mount PARITY disk(s) ~ for regular SnapRAID sync
-# ------------------------------------------------
-UUID=!ADD YOUR DATA PARITY1 UUID HERE! /mnt/disks/parity1 ext4 defaults,noatime,noauto 0 0
-#
-# Mount BACKUP disk(s) ~ for regular backups
-# ------------------------------------------------
-UUID=!ADD YOUR DATA BACKUP1 UUID HERE! /mnt/disks/backup1 btrfs defaults,noatime,noauto,compress-force=zstd:5 0 0
-/dev/nvme0n1p2 /mnt/system btrfs subvolid=5,defaults,noatime,noauto 0 0
+# <file system>             <mount point>  <type>  <options>  <dump>  <pass>
+UUID=                                     /boot/efi      vfat    umask=0077 0 2
+UUID=                                     /              btrfs   subvol=/@,defaults 0 0
+UUID=                                     /home          btrfs   subvol=/@home,defaults 0 0
+UUID=                                     /var/cache     btrfs   subvol=/@cache,defaults 0 0
+UUID=                                     /var/log       btrfs   subvol=/@log,defaults 0 0
 
-#
-#
+# systemdrive root - Allow easy on-demand mounting of btrfs root subvolume
+UUID=                                     /mnt/disks/systemdrive  btrfs   subvolid=5,defaults,noatime,noauto  0  0
+
+# Docker - Mount @docker subvolume
+UUID=4ef7e0d4-db61-4c5b-97f1-33fc1eb97333 /home/asterix/docker    btrfs   subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
+
+# Backups -Allow easy on-demand mounting of backup drives
+UUID=                                     /mnt/disks/backup1      btrfs   defaults,noatime,noauto,compress-force=zstd:5  0 0
+
+# Data - Mount data drives
+UUID=                                     /mnt/disks/data0        btrfs   defaults,noatime,compress-force=zstd:3  0 0
+UUID=                                     /mnt/disks/data1        btrfs   defaults,noatime,compress-force=zstd:3  0 0
+
+# Pool - Mount pool if single drive per datatype fits your data
+UUID=                                     /mnt/pool/Media         btrfs   subvol=Media,defaults,noatime  0 0
+UUID=                                     /mnt/pool/Users         btrfs   subvol=Users,defaults,noatime,compress-force=zstd:3  0 0
+
+# Pool - MergerFS with tiered cache
+/mnt/disks/cache:/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=lfs,moveonenospc=true,minfreespace=200G,fsname=mergerfsPool  0 0
+
+# Pool - MergerFS without tiered cache. This line is also required if you do use tiered cache, to offload the cache (use different mountpoint!)
+/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=epmfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool  0 0
+
+# Parity - parity drives for Snapraid
+UUID=                                    /mnt/disks/parity1       ext4   defaults,noatime,noauto 0 0
+
 # NFS ~ home network shares  
 # -------------------------
 # NFSv4.2 requires a root folder with each shared folder in it. We create /srv/nfs and bind mount the shared folders.
 /mnt/pool/Media /srv/nfs/Media none rbind 0 0
 #
-# Example how to mount your servers NFS shares to a client:
-#192.168.88.X:  /mnt/Y  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0
+# Client side: example how the mount looks like for your client devices:
+# 192.168.88.X:  /mnt/Y  nfs4  nfsvers=4,minorversion=2,proto=tcp,fsc,nocto  0  0
