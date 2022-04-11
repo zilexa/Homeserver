@@ -1,7 +1,10 @@
-## Run compose               : docker-compose up -d 
-## Check for typos           : docker-compose config 
-## Cleanup unused images etc : sudo docker system prune --all --volumes --force
-### Note this will delete stopped containers and everything linked to them.  
+## Check for typos             : docker-compose config 
+## Run                         : docker-compose up -d 
+## Stop all containers         : docker kill $(docker ps -q)
+## Remove stopped containers   : docker container prune
+## Stop & remove containers    : docker rm $(docker ps -a -q) 
+## Remove everything (stopped) : sudo docker system prune --all --volumes --force
+#
 # CHANGELOG 2022-04-11
 # UPDATED: Hotio images have a new source. 
 # CHANGED: For all services, first item is container_name, second is image source.  
