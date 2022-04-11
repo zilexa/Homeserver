@@ -4,12 +4,12 @@
 # be used with UUID= as a more robust way to name devices that works even if
 # disks are added and removed. See fstab(5).
 #
-# <file system>             <mount point>  <type>  <options>  <dump>  <pass>
-UUID=                                     /boot/efi      vfat    umask=0077 0 2
-UUID=                                     /              btrfs   subvol=/@,defaults 0 0
-UUID=                                     /home          btrfs   subvol=/@home,defaults 0 0
-UUID=                                     /var/cache     btrfs   subvol=/@cache,defaults 0 0
-UUID=                                     /var/log       btrfs   subvol=/@log,defaults 0 0
+# <file system>                           <mount point> <type>   <options>                <dump>  <pass>
+UUID=                                     /boot/efi      vfat    umask=0077  0 2
+UUID=                                     /              btrfs   subvol=/@,defaults  0 0
+UUID=                                     /home          btrfs   subvol=/@home,defaults  0 0
+UUID=                                     /var/cache     btrfs   subvol=/@cache,defaults  0 0
+UUID=                                     /var/log       btrfs   subvol=/@log,defaults  0 0
 
 # systemdrive root - Allow easy on-demand mounting of btrfs root subvolume
 UUID=                                     /mnt/disks/systemdrive  btrfs   subvolid=5,defaults,noatime,noauto  0  0
