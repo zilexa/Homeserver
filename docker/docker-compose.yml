@@ -2,7 +2,10 @@
 ## Check for typos           : docker-compose config 
 ## Cleanup unused images etc : sudo docker system prune --all --volumes --force
 ### Note this will delete stopped containers and everything linked to them.  
-# CHANGELOG 2022-04--08
+# CHANGELOG 2022-04-11
+# CHANGED: Hotio images have a new source. 
+#
+# CHANGELOG 2022-04-08
 # UPDATED: Now works with all latest containers. 
 # CHANGED: 'true' to true everywhere.
 # CHANGED: CADDY-DOCKER-PROXY: renamed contaimer name:'caddy-proxy to 'web-proxy', its network (unchanged) has the same name. 
@@ -92,8 +95,8 @@ services:
 ##
 ##____________________ VPN-portal [Management/VPN]
   VPN-portal:
-    image: h44z/wg-portal:latest
     container_name: VPN-portal
+    image: h44z/wg-portal:latest
     restart: always
     healthcheck:
       disable: true
@@ -125,7 +128,7 @@ services:
 ##____________________ Scrutiny [Management/monitoring]
   scrutiny:
     container_name: scrutiny
-    image: hotio/scrutiny
+    image: cr.hotio.dev/hotio/scrutiny
     restart: always
     cap_add:
       - SYS_RAWIO
@@ -237,8 +240,8 @@ services:
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
   firefox-sync:
-    image: crazymax/firefox-syncserver:latest
     container_name: firefox-sync
+    image: crazymax/firefox-syncserver:latest
     restart: always
     networks: 
       - web-proxy
@@ -258,8 +261,8 @@ services:
 ##
 ##_____________________ Bitwarden [CLOUD/Password-manager] 
   vaultwarden:
-    image: vaultwarden/server
     container_name: vaultwarden
+    image: vaultwarden/server
     restart: always
     healthcheck:
       interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
@@ -285,8 +288,8 @@ services:
 ##
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
-    image: filerun/filerun
     container_name: filerun
+    image: filerun/filerun
     restart: always
     networks: 
       - web-proxy
@@ -319,8 +322,8 @@ services:
       caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
-    image: mariadb:10.1
     container_name: filerun-db
+    image: mariadb:10.1
     restart: always
     networks:
       - filerun
@@ -333,8 +336,8 @@ services:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
   onlyoffice:
-    image: onlyoffice/documentserver
     container_name: onlyoffice
+    image: onlyoffice/documentserver
     stdin_open: true
     restart: always
     networks: 
@@ -362,7 +365,7 @@ services:
 ##_____________________ Jellyfin [MEDIA/Library] 
   jellyfin:
     container_name: jellyfin
-    image: hotio/jellyfin
+    image: cr.hotio.dev/hotio/jellyfin
     restart: always
     networks: 
       - media
@@ -431,8 +434,8 @@ services:
 ##
 ##____________________ Transmission [MEDIA/download-client]
   qbittorrent:
-    image: hotio/qbittorrent
     container_name: qbittorrent
+    image: cr.hotio.dev/hotio/qbittorrent
     depends_on:
       - VPN-proxy
     network_mode: service:VPN-proxy
@@ -466,7 +469,7 @@ services:
 ##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
   prowlarr:
     container_name: prowlarr
-    image: hotio/prowlarr:testing
+    image: cr.hotio.dev/hotio/prowlarr
     networks: 
       - media
     depends_on:
@@ -486,7 +489,7 @@ services:
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
-    image: hotio/sonarr
+    image: cr.hotio.dev/hotio/sonarr
     networks: 
       - media
     depends_on:
@@ -509,7 +512,7 @@ services:
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
     container_name: radarr
-    image: hotio/radarr
+    image: cr.hotio.dev/hotio/radarr
     networks: 
       - media
     depends_on:
@@ -532,7 +535,7 @@ services:
 ##____________________ Bazarr [MEDIA/subtitles]
   bazarr:
     container_name: bazarr
-    image: hotio/bazarr
+    image: cr.hotio.dev/hotio/bazarr
     networks: 
       - media
     depends_on:
@@ -555,7 +558,7 @@ services:
 ##____________________ Lidarr [MEDIA/PVR-Music]
   lidarr:
     container_name: lidarr
-    image: hotio/lidarr
+    image: cr.hotio.dev/hotio/lidarr
     networks: 
       - media
     depends_on:
