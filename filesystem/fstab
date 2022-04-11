@@ -21,8 +21,8 @@ UUID=                                     /home/asterix/docker    btrfs   subvol
 UUID=                                     /mnt/disks/backup1      btrfs   defaults,noatime,noauto,compress-force=zstd:5  0 0
 
 # Data - Mount data drives, on-demand only (for creating snapshots and backups)
-UUID=                                     /mnt/disks/data0        btrfs   defaults,noatime,compress-force=zstd:3  0 0
-UUID=                                     /mnt/disks/data1        btrfs   defaults,noatime,compress-force=zstd:3  0 0
+UUID=                                     /mnt/disks/data0        btrfs   defaults,noatime,noauto,compress-force=zstd:3  0 0
+UUID=                                     /mnt/disks/data1        btrfs   defaults,noatime,noauto,compress-force=zstd:3  0 0
 
 # Pool - single drive or one drive per datatype
 UUID=                                     /mnt/pool/Media         btrfs   subvol=Media,defaults,noatime  0 0
