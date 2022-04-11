@@ -15,7 +15,7 @@ UUID=                                     /var/log       btrfs   subvol=/@log,de
 UUID=                                     /mnt/disks/systemdrive  btrfs   subvolid=5,defaults,noatime,noauto  0  0
 
 # Docker - Mount @docker subvolume
-UUID=4ef7e0d4-db61-4c5b-97f1-33fc1eb97333 /home/asterix/docker    btrfs   subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
+UUID=                                     /home/asterix/docker    btrfs   subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
 
 # Backups -Allow easy on-demand mounting of backup drives
 UUID=                                     /mnt/disks/backup1      btrfs   defaults,noatime,noauto,compress-force=zstd:5  0 0
