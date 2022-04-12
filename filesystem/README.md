@@ -172,11 +172,11 @@ If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blo
 
 &nbsp;
 ## Step 8: Fix the personal folder links in $HOME
-If you used the Manjaro Gnome Post Install script, your common personal folders (Desktop, Documents, Pictures, Music, Media) are actually links that link to a subvolume `userdata` on your OS drive, visible in `/mnt/disks/systemdrive`. Since you are configuring a server, you probably want to link those $HOME folders to your own user folder within your datapool (`/mnt/pool/Users/MYNAME/` or `/mnt/pool/Users/Shared/`)
+If you used the Manjaro Gnome Post Install script, your common personal folders (Desktop, Documents, Pictures, Music, Media) are actually links that link to a subvolume `userdata` on your OS drive, visible in `/mnt/disks/system`. Since you are configuring a server, you probably want to link those $HOME folders to your own user folder within your datapool (for example`/mnt/pool/Users/local/MYNAME/` or `/mnt/pool/Users/local/Shared/` or whatever folderstructure you use).
 ```
-ln -sfn /mnt/pool/Users/Shared/Documents $HOME/Documents
-ln -sfn /mnt/pool/Users/Shared/Pictures $HOME/Pictures
-ln -sfn /mnt/pool/Users/Shared/Desktop $HOME/Desktop
+ln -sfn /mnt/pool/Users/local/Shared/Documents $HOME/Documents
+ln -sfn /mnt/pool/Users/local/Shared/Pictures $HOME/Pictures
+ln -sfn /mnt/pool/Users/local/Shared/Desktop $HOME/Desktop
 ln -sfn /mnt/pool/Media $HOME/Media
 ln -sfn /mnt/pool/Media/Music $HOME/Music
 ```
