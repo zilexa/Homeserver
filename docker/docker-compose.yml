@@ -369,7 +369,7 @@ services:
 ##_____________________ Jellyfin [MEDIA/Library] 
   jellyfin:
     container_name: jellyfin
-    image: cr.hotio.dev/hotio/jellyfin
+    image: cr.hotio.dev/hotio/jellyfin:release
     restart: always
     networks: 
       - media
@@ -473,7 +473,7 @@ services:
 ##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
   prowlarr:
     container_name: prowlarr
-    image: cr.hotio.dev/hotio/prowlarr
+    image: cr.hotio.dev/hotio/prowlarr:testing
     networks: 
       - media
     depends_on:
