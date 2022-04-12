@@ -39,7 +39,7 @@ gsettings set org.gnome.shell favorite-apps "['nemo.desktop', 'org.gnome.Termina
 truncate -s 0 $HOME/.config/gtk-3.0/bookmarks
 tee -a $HOME/.config/gtk-3.0/bookmarks &>/dev/null << EOF
 file:///home/asterix/docker Docker
-file:///mnt/disks Drives
+file:///mnt/drives Drives
 file:///mnt/pool Pool
 file:///home/asterix/Downloads Downloads
 file:///home/asterix/Documents Documents
@@ -97,17 +97,17 @@ echo "      on-demand systemdrive mountpoint     "
 echo "-------------------------------------------"
 # The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. If that script was not used, create the mountpoint now:
 #Get device path of systemdrive, for example "/dev/nvme0n1p2" via #SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
-if sudo grep -Fq "/mnt/disks/systemdrive" /etc/fstab; then echo already added by post-install script; 
+if sudo grep -Fq "/mnt/drives/systemdrive" /etc/fstab; then echo already added by post-install script; 
 else 
-# Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/disks/systemdrive")
-sudo mkdir -p /mnt/disks/systemdrive
+# Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/drives/system")
+sudo mkdir -p /mnt/drives/system
 # Get the systemdrive UUID
 fs_uuid=$(findmnt / -o UUID -n)
 # Add mountpoint to FSTAB
 sudo tee -a /etc/fstab &>/dev/null << EOF
 
 # Allow easy manual mounting of btrfs root subvolume                         
-UUID=${fs_uuid} /mnt/disks/systemdrive  btrfs   subvolid=5,defaults,noatime,noauto  0  0
+UUID=${fs_uuid} /mnt/drives/system  btrfs   subvolid=5,defaults,noatime,noauto  0  0
 EOF
 fi
 
@@ -117,11 +117,11 @@ echo "              Docker subvolume              "
 echo "--------------------------------------------"
 echo "create subvolume for Docker persistent data "
 # Temporarily Mount filesystem root
-sudo mount /mnt/disks/systemdrive
+sudo mount /mnt/drives/system
 # create a root subvolume for docker
-sudo btrfs subvolume create /mnt/disks/systemdrive/@docker
+sudo btrfs subvolume create /mnt/drives/system/@docker
 ## unmount root filesystem
-sudo umount /mnt/disks/systemdrive
+sudo umount /mnt/drives/system
 # Create mountpoint, to be used by fstab
 mkdir $HOME/docker
 # Get system fs UUID, to be used for next command
@@ -172,8 +172,8 @@ sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
 
 echo "Create the minimum folder structure for drives and datapool"
 echo "--------------------------------------------"
-sudo mkdir /mnt/disks/data0
-sudo mkdir /mnt/disks/backup1
+sudo mkdir /mnt/drives/data0
+sudo mkdir /mnt/drives/backup1
 sudo mkdir -p /mnt/pool/{Users,Media}
 
 
@@ -267,7 +267,7 @@ case ${answer:0:1} in
         sudo wget -O $HOME/docker/HOST/snapraid/snapraid.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapraid.conf
         sudo ln -s $HOME/docker/HOST/snapraid/snapraid.conf /etc/snapraid.conf
         # DONE !
-        # MANUALLY: Create a root subvolume on your fastest disks named .snapraid, this wil contain snapraid content file. 
+        # MANUALLY: Create a root subvolume on your fastest drives named .snapraid, this wil contain snapraid content file. 
         # MANUALLY: customise the $HOME/docker/HOST/snapraid/snapraid.conf file to your needs. 
         # MANUALLY: follow instructions in the guide 
         # Get drive IDs
