@@ -247,7 +247,8 @@ esac
 echo "______________________________________________________"
 echo "           OPTIONAL TOOLS OR CONFIGURATIONS           "
 echo "______________________________________________________"
-read -p "Install SNAPRAID-BTRFS for parity-based backups?" answer
+echo "Install SNAPRAID-BTRFS for parity-based backups? (recommended if you will pool drives via MergerFS instead of BTRFS RAID)"
+read -p "y or n ?" answer
 case ${answer:0:1} in
     y|Y )
         echo "Installing required tools: snapraid, Snapraid-btrfs, snapraid-btrfs-runner mailscript and snapper.."
@@ -278,7 +279,7 @@ case ${answer:0:1} in
 esac
 
 echo "-------------------------------------------------------------------------------------------"
-echo "Prepare for Scrutiny: a nice webUI to monitor your SSD & HDD drives health? (recommend: y)" 
+echo "Prepare for Scrutiny: a nice webUI to monitor your SSD & HDD drives health? (recommended)" 
 read -p "y or n ?" answer
 case ${answer:0:1} in
     y|Y )
@@ -349,6 +350,6 @@ esac
 echo "                                                                               "        
 echo "==============================================================================="
 echo "                                                                               "  
-echo "All done! Please log out/in first, before running Docker (reboot not required)."
+echo "  All done! Please reboot and do not use sudo for docker or compose commands.  "
 echo "                                                                               "  
 echo "==============================================================================="
