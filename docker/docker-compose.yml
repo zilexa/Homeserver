@@ -5,6 +5,10 @@
 ## Stop & remove containers    : docker rm $(docker ps -a -q) 
 ## Remove everything (stopped) : sudo docker system prune --all --volumes --force
 #
+# CHANGELOG 2022-04-13
+# UPDATED: OnlyOffice container removed unnessary caddy labels. Note due to a bug, OnlyOffice image is not compatible with Arch based host systems: https://github.com/ONLYOFFICE/Docker-DocumentServer/issues/426 
+# UPDATED: Caddy container: added port 80 back again so that Caddy will correctly redirect http requests to https. Ensure this port is forwarded to your host in your router just like port 443.
+#
 # CHANGELOG 2022-04-11
 # UPDATED: Hotio images have a new source. 
 # CHANGED: For all services, first item is container_name, second is image source.  
@@ -47,7 +51,7 @@
 ## NOTE: I stopped using Syncthing due to this issue (my laptop SSD filled up within 30min): https://forum.syncthing.net/t/problems-with-renamed-directory/16611
 ## I might try Resilio instead or see if the dev is helpful to figure out the issue, if it isn't "by design".
 #
-version: "2.4"
+version: "2.3"
 ## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is targeting Docker Swarm, NOT Compose. Do not use Swarm.
 ## Docker-Compose 2.4 is the latest version for uncomplicated Compose configuration. 
 services:
@@ -81,7 +85,7 @@ services:
     volumes:
       - $DOCKERDIR/organizr:/config
     ports: 
-      - 80:80
+      - 81:80
 ##
 ##____________________ Guacamole [Management/remote-desktop]
   guacamole:
@@ -240,6 +244,7 @@ services:
       #caddy.log.output: file /data/access.log
     ports:
       - 443:443
+      - 80:80
 ##
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
@@ -352,17 +357,18 @@ services:
       - $DOCKERDIR/onlyoffice/log:/var/log/onlyoffice
       - $DOCKERDIR/onlyoffice/database:/var/lib/postgresql
       - /usr/share/fonts:/usr/share/fonts
-    dns: 9.9.9.9
     environment:
       JWT_ENABLED: true
       JWT_SECRET: $ONLYOFFICEJWT
     labels:
       caddy: office.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
-      # Required extra headers
-      caddy.file_server: ""
       caddy.encode: gzip
-      caddy.header.X-Content-Type-Options: "nosniff"
+      # Required extra headers
+      #caddy.file_server: ""
+      #caddy.header.X-Content-Type-Options: "nosniff"
+      #caddy.tls_insecure_skip_verify: ""
+      #caddy.header: /
 ##
 ##
 ##________MEDIA________
@@ -457,7 +463,7 @@ services:
 ##____________________ Unpackerr [MEDIA/download-unpack]
 #  unpackerr:
 #    container_name: unpackerr
-#    image: hotio/unpackerr
+#    image: cr.hotio.dev/hotio/unpackerr
 #    networks: 
 #      - media
 #    restart: always
