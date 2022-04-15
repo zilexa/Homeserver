@@ -82,6 +82,22 @@ echo "to be able to read out all sensors"
 sudo pamac install --no-confirm lm_sensors
 sudo sensors-detect --auto
 
+echo "          S.M.A.R.T. monitoring             "
+echo "--------------------------------------------"
+echo "to be able to read SMART values of drives" 
+sudo pamac install --no-confirm smartmontools
+
+echo "          Wireguard VPN Tools               "
+echo "--------------------------------------------"
+echo "to be able to easily configure Wireguard" 
+sudo pamac install --no-confirm wireguard-tools
+
+echo "                LM_SENSORS                  "
+echo "--------------------------------------------"
+echo "to be able to read out all sensors" 
+sudo pamac install --no-confirm smartmontools
+
+
 echo "                 MERGERFS                  "
 echo "-------------------------------------------"
 echo "pool drives to make them appear as 1 without raid"
