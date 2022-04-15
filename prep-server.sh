@@ -87,6 +87,11 @@ echo "--------------------------------------------"
 echo "to be able to read SMART values of drives" 
 sudo pamac install --no-confirm smartmontools
 
+echo "                   HD PARM                  "
+echo "--------------------------------------------"
+echo "to be able to configure drive parameters" 
+sudo pamac install --no-confirm hdparm
+
 echo "          Wireguard VPN Tools               "
 echo "--------------------------------------------"
 echo "to be able to easily configure Wireguard" 
