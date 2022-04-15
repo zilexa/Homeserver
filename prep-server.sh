@@ -102,7 +102,6 @@ echo "--------------------------------------------"
 echo "to be able to read out all sensors" 
 sudo pamac install --no-confirm smartmontools
 
-
 echo "                 MERGERFS                  "
 echo "-------------------------------------------"
 echo "pool drives to make them appear as 1 without raid"
