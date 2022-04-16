@@ -5,10 +5,6 @@
 ## Stop & remove containers    : docker rm $(docker ps -a -q) 
 ## Remove everything (stopped) : sudo docker system prune --all --volumes --force
 #
-# CHANGELOG 2022-04-13
-# UPDATED: OnlyOffice container removed unnessary caddy labels. Note due to a bug, OnlyOffice image is not compatible with Arch based host systems: https://github.com/ONLYOFFICE/Docker-DocumentServer/issues/426 
-# UPDATED: Caddy container: added port 80 back again so that Caddy will correctly redirect http requests to https. Ensure this port is forwarded to your host in your router just like port 443.
-#
 # CHANGELOG 2022-04-11
 # UPDATED: Hotio images have a new source. 
 # CHANGED: For all services, first item is container_name, second is image source.  
@@ -74,18 +70,22 @@ services:
 ##_____________________ Organizr [Management/Dashboard] 
   organizr:
     container_name: organizr
-    image: organizr/organizr:latest
+    image: organizr/organizr
     restart: always
-    healthcheck:
-      disable: true
+    #healthcheck:
+     # disable: true
     networks: 
-      - management
-    security_opt:
-      - no-new-privileges:true
+      - web-proxy
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      fpm: true
     volumes:
       - $DOCKERDIR/organizr:/config
-    ports: 
-      - 81:80
+    labels:
+      caddy: http://o.belix
+      caddy.reverse_proxy: "{{upstreams 80}}"
+
 ##
 ##____________________ Guacamole [Management/remote-desktop]
   guacamole:
@@ -103,35 +103,30 @@ services:
 ##
 ##____________________ VPN-portal [Management/VPN]
   VPN-portal:
-    container_name: VPN-portal
-    image: h44z/wg-portal:latest
+    container_name: vpn-portal
+    image: ngoduykhanh/wireguard-ui:latest
     restart: always
-    healthcheck:
-      disable: true
     cap_add:
       - NET_ADMIN
     network_mode: host
     environment:
-      # WireGuard Settings
-      WG_DEVICES: wg0
-      WG_DEFAULT_DEVICE: wg0
-      WG_CONFIG_PATH: /etc/wireguard
-      # Core Settings
-      WEBSITE_TITLE: Obelix VPN
-      COMPANY_NAME: Obelix
-      ADMIN_USER: $USEREMAIL
-      ADMIN_PASS: $PW
-      # Mail Settings
-      MAIL_FROM: $RECIPIENT
-      EMAIL_HOST: $SMTP
-      EMAIL_PORT: $SMTPPORT
-      EMAIL_USERNAME: $SMTPUSER
-      EMAIL_PASSWORD: $SMTPPASS
-      EMAIL_TLS: true
-      EMAIL_AUTHTYPE: auth
+      SMTP_HOSTNAME: $SMTP
+      SMTP_PORT: $SMTPPORT
+      SMTP_USERNAME: $SMTPUSER
+      SMTP_PASSWORD: $SMTPPASS
+      SMTP_AUTH_TYPE: LOGIN
+      EMAIL_FROM_ADDRESS: $RECIPIENT
+      EMAIL_FROM_NAME: $SMTPUSER
+      SESSION_SECRET: HmJg1j3pUN85GcfSiQrfrecgqU8oP8eufy7VWxltbfQ=
+    logging:
+      driver: json-file
+      options:
+        max-size: 15m
     volumes:
-      - /etc/wireguard:/etc/wireguard
-      - $DOCKERDIR/vpn-portal/data:/app/data
+      - $DOCKERDIR/vpn-portal/db:/app/db
+      - /etc/wireguard:/etc/wireguard  
+    ports:
+      - 5000:5000
 ##
 ##____________________ Scrutiny [Management/monitoring]
   scrutiny:
