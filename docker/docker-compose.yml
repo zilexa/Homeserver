@@ -5,6 +5,9 @@
 ## Stop & remove containers    : docker rm $(docker ps -a -q) 
 ## Remove everything (stopped) : sudo docker system prune --all --volumes --force
 #
+# CHANGELOG 2022-04-15
+# CHANGED: switched to easier to use VPN portal
+#
 # CHANGELOG 2022-04-11
 # UPDATED: Hotio images have a new source. 
 # CHANGED: For all services, first item is container_name, second is image source.  
@@ -117,7 +120,7 @@ services:
       SMTP_AUTH_TYPE: LOGIN
       EMAIL_FROM_ADDRESS: $RECIPIENT
       EMAIL_FROM_NAME: $SMTPUSER
-      SESSION_SECRET: HmJg1j3pUN85GcfSiQrfrecgqU8oP8eufy7VWxltbfQ=
+      SESSION_SECRET: $VPNSESSIONSECRET
     logging:
       driver: json-file
       options:
