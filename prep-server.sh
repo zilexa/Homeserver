@@ -139,7 +139,6 @@ EOF
 
 # Enable services
 systemctl enable wgui.{path,service}
-systemctl start wgui.{path,service}
 
 
 echo "______________________________________________"
