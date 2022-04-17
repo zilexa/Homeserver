@@ -92,11 +92,6 @@ echo "--------------------------------------------"
 echo "to be able to configure drive parameters" 
 sudo pamac install --no-confirm hdparm
 
-echo "          Wireguard VPN Tools               "
-echo "--------------------------------------------"
-echo "to be able to easily configure Wireguard" 
-sudo pamac install --no-confirm wireguard-tools
-
 echo "                LM_SENSORS                  "
 echo "--------------------------------------------"
 echo "to be able to read out all sensors" 
@@ -107,6 +102,44 @@ echo "-------------------------------------------"
 echo "pool drives to make them appear as 1 without raid"
 # available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
 sudo pamac install --no-confirm mergerfs
+
+
+echo "______________________________________________"
+echo "                                              " 
+echo "                 WIREGUARD VPN                "
+echo "______________________________________________"
+echo " + services to restart Wireguard when conf file has been updated "
+echo "-----------------------------------------------------------------"
+# tools to easily start/stop WireGuard networks 
+sudo pamac install --no-confirm wireguard-tools
+
+# Services to monitor conf file and restart WG when changed
+sudo tee -a /etc/systemd/system/wgui.service << EOF
+[Unit]
+Description=Restart WireGuard
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl restart wg-quick@wg0.service
+
+[Install]
+EOF
+
+sudo tee -a /etc/systemd/system/wgui.path << EOF
+[Unit]
+Description=Watch /etc/wireguard/wg0.conf for changes
+
+[Path]
+PathModified=/etc/wireguard/wg0.conf
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable services
+systemctl enable wgui.{path,service}
+systemctl start wgui.{path,service}
 
 
 echo "______________________________________________"
@@ -132,6 +165,7 @@ EOF
 fi
 
 sudo mount -a
+
 
 echo "              Docker subvolume              "
 echo "--------------------------------------------"
