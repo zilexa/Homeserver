@@ -1,0 +1,21 @@
+##
+##_____________________ Organizr [Management/Dashboard] 
+  organizr:
+    container_name: organizr
+    image: organizr/organizr
+    restart: always
+    #healthcheck:
+     # disable: true
+    networks: 
+      - web-proxy
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      fpm: true
+    volumes:
+      - $DOCKERDIR/organizr:/config
+    ports:
+      - 88:80
+    labels:
+      caddy: http://home.o/
+      caddy.reverse_proxy: "{{upstreams 80}}"
