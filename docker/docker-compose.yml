@@ -1,60 +1,19 @@
-## Check for typos             : docker-compose config 
-## Run                         : docker-compose up -d 
-## Stop all containers         : docker kill $(docker ps -q)
-## Remove stopped containers   : docker container prune
-## Stop & remove containers    : docker rm $(docker ps -a -q) 
-## Remove everything (stopped) : sudo docker system prune --all --volumes --force
-#
-# CHANGELOG 2022-04-15
-# CHANGED: switched to easier to use VPN portal
-#
-# CHANGELOG 2022-04-11
-# UPDATED: Hotio images have a new source. 
-# CHANGED: For all services, first item is container_name, second is image source.  
-#
-# CHANGELOG 2022-04-08
-# UPDATED: Now works with all latest containers. 
-# CHANGED: 'true' to true everywhere.
-# CHANGED: CADDY-DOCKER-PROXY: renamed contaimer name:'caddy-proxy to 'web-proxy', its network (unchanged) has the same name. 
-# CHANGED: CADDY-DOCKER-PROXY: latest version requires an env variable, this has been added.
-# CHANGED: CADDY-DOCKER-PROXY: requires you to run "docker network create web-proxy" BEFORE running compose!
-#  
-# CHANGELOG 2021-05-15
-# CHANGED: Bitwarden_rs has been renamed by the developer to Vaultwarden, renamed the image, volume path, env variable
-#
-# CHANGELOG 2021-05-01
-# REMOVED: PULLIO notify labels. It cannot send email notifications, only Discord which I and most people I believe don't use. 
-## KEPT: PULLIO update labels, for media/download related containers, to update all of them with 1 command (manually or scheduled). 
-# CHANGED: Scrutiny, an attempt to disable its interval based SMART scan, so that this can be done via the NIGHTLY, script.
-## REASON: It will spin up all drives just for the SMART scan. Better to do this when they are already spinning. 
-# CLEANUP: Changed order of values, to have consistency for each and every container.
-#
-# CHANGELOG 2021-04-28
-## REMOVED: Watchtower. Replaced with Pullio bash script. For a weekly update check, running a daemon like Watchtower makes no sense. 
-## CHANGED: VPN-proxy back to Frankfurt, for some reason Swiss doesn't work, the server TLS certificate is outdated. 
-## REPLACED IMAGE: QBittorrent image with the one from Hotio because it has unrar and doesn't create files with root-only access.
-## REPLACED ALL MEDIA RELATED IMAGES: all images are now from Hotio.
-## CHANGED: Scrutiny requires a yaml config file to recognise NVME drives. see my github for an example. 
-## CHANGED: Ports of VPN-proxy to allow access to QBittorrent as it listens on a different port for the webUI.  
-#
-# CHANGELOG 2021-04-13
-## ADDED Guacamole! Now you can open your browser and access the desktop of your server. The image works, still have to test Guacamole. 
-## Removed Transmission as nobody seems to use it anymore, even though it had full Sonarr compatibility, it is riddled with config issues:
-## temp folder will never be used with Sonarr/Radarr, making the filesystem optimisations (disabling CoW & seperate subvolume for incomplete dir)
-## Completely useless, allowing fragmentation. Also, the complete dir is changed during downloading via Sonarr. Devs believe this is all normal behaviour.
-## ADDED QBittorrent, not from Linuxserver as it is 360MB versus this 150MB image. 
-## ToDO: Will look into using Hotio QFlood image instead, the UI is much nicer but seems to lack important settings to increase disk cache etc.
-## REMOVED unneccessary port binds: 80 for Caddy is not used. Now used for Organizr to access server homepage via url (use your servers /etc/hosts file to set an url). 
-## ToDO: Will look into registering https for LAN only, to access all services via https organizr url (not sure if it makes sense to go this far). 
-## CHANGED: pia wireguard vpn to swiss instead of nine eyes Germany.
-## NOTE: I stopped using Syncthing due to this issue (my laptop SSD filled up within 30min): https://forum.syncthing.net/t/problems-with-renamed-directory/16611
-## I might try Resilio instead or see if the dev is helpful to figure out the issue, if it isn't "by design".
-#
-version: "2.3"
-## Read the Docker Documentation! Most examples use 3.x. Docker-Compose 3.x is targeting Docker Swarm, NOT Compose. Do not use Swarm.
-## Docker-Compose 2.4 is the latest version for uncomplicated Compose configuration. 
-services:
+## UPDATED: 24-04-2022, changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.md
 ##
+## COMMON COMMANDS:
+# Check for typos: docker-compose config 
+# Run: docker-compose up -d 
+# Stop a container: docker-compose stop containername
+# Remove a stopped container: docker-compose rm containername 
+# Stop all containers: docker kill $(docker ps -q)
+# Remove stopped containers: docker container prune
+# Stop & remove containers: docker rm $(docker ps -a -q) 
+# Remove everything related to stopped containers: sudo docker system prune --all --volumes --force
+#
+## Docker-Compose 2.4 the final non-swarm version
+#
+version: "2.4"
+services:
 ##_____MANAGEMENT_____
 ##____________________ Portainer [Management/Docker]
   portainer:
@@ -62,33 +21,38 @@ services:
     image: portainer/portainer-ce
     restart: always
     networks: 
-      - management
-    command: -H unix:///var/run/docker.sock
+      - web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/portainer/data:/data
     ports:
-      - "9000:9000"
+      - 9000:9000
+    labels:
+      caddy: http://services.o
+      caddy.reverse_proxy: "{{upstreams 9000}}"
+      flame.type: app
+      flame.name: Container Management
+      flame.url: http://services.o/
+      #flame.icon: custom
 ##
-##_____________________ Organizr [Management/Dashboard] 
-  organizr:
-    container_name: organizr
-    image: organizr/organizr
+##____________________ Flame [Management/Homepage]
+  flame:
+    container_name: homepage
+    image: pawelmalak/flame
     restart: always
-    #healthcheck:
-     # disable: true
     networks: 
       - web-proxy
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      fpm: true
+   # command: -H unix:///var/run/docker.sock
     volumes:
-      - $DOCKERDIR/organizr:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DOCKERDIR/homepage/data:/app/data
+    environment:
+      - PASSWORD=$PW
+    ports:
+      - 5005:5005
     labels:
-      caddy: http://o.belix
-      caddy.reverse_proxy: "{{upstreams 80}}"
-
+      caddy: http://start.o
+      caddy.reverse_proxy: "{{upstreams 5005}}"
 ##
 ##____________________ Guacamole [Management/remote-desktop]
   guacamole:
@@ -96,13 +60,20 @@ services:
     image: oznu/guacamole
     restart: always
     networks: 
-      - management
+      - web-proxy
     environment:
       EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
     volumes:
       - $DOCKERDIR/guacamole:/config
     ports:
-     - "8000:8080"
+     - 8000:8080
+    labels:
+      caddy: http://desktop.o
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      flame.type: app
+      flame.name: Remote Desktop
+      flame.url: http://desktop.o/
+      #flame.icon: custom
 ##
 ##____________________ VPN-portal [Management/VPN]
   VPN-portal:
@@ -120,7 +91,7 @@ services:
       SMTP_AUTH_TYPE: LOGIN
       EMAIL_FROM_ADDRESS: $RECIPIENT
       EMAIL_FROM_NAME: $SMTPUSER
-      SESSION_SECRET: $VPNSESSIONSECRET
+      SESSION_SECRET: HmJg1j3pUN85GcfSiQrfrecgqU8oP8eufy7VWxltbfQ=
     logging:
       driver: json-file
       options:
@@ -130,6 +101,13 @@ services:
       - /etc/wireguard:/etc/wireguard  
     ports:
       - 5000:5000
+    labels:
+      caddy: http://vpn.o
+      caddy.reverse_proxy: "{{upstreams 5000}}"
+      flame.type: app
+      flame.name: VPN portal
+      flame.url: http://vpn.o/
+      #flame.icon: custom
 ##
 ##____________________ Scrutiny [Management/monitoring]
   scrutiny:
@@ -147,7 +125,7 @@ services:
       - "/dev/sdd"
       - "/dev/sde" 
     networks: 
-      - management
+      - web-proxy
     #entrypoint: CMD
     environment:
       mode: web
@@ -160,19 +138,33 @@ services:
       - /run/udev:/run/udev:ro
       - $DOCKERDIR/scrutiny/config:/config
     ports:
-      - "8001:8080"
+      - "8081:8080"
+    labels:
+      caddy: http://storage.o
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      flame.type: app
+      flame.name: Storage Health
+      flame.url: http://storage.o/
+      #flame.icon: custom
 ##
 ##
 ##______NETWORK_______
 ##____________________ AdGuard Home [NETWORK/Adblocking-dnsserver]
   adguard:
-    container_name: adguard-home
+    container_name: adguard
     image: adguard/adguardhome
     restart: always
     network_mode: host
     volumes:
        - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
        - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
+    labels:
+      caddy: http://adguard.o
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+      flame.type: app
+      flame.name: AdGuard
+      flame.url: http://adguard.o/
+      #flame.icon: custom
 ##____________________ Unbound [NETWORK/Adblocking-dnsserver]
   unbound:
     container_name: unbound
@@ -183,7 +175,7 @@ services:
       timeout: 3s
       start_period: 5s
     networks: 
-      - management  
+      - unbound
     volumes:
       - $DOCKERDIR/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
     ports:
@@ -209,7 +201,7 @@ services:
     image: ghcr.io/linuxserver/unifi-controller
     #mac_address: d0:ca:ab:cd:ef:03
     networks: 
-      - management
+      - web-proxy
     environment:
       PUID: $PUID
       PGID: $PGID
@@ -221,6 +213,13 @@ services:
       - 8080:8080 # Controller communication with Access Points and vice versa
       - 8443:8443 #to access webUI
       - 1900:1900/udp #to auto-discover this Controller in your app
+    labels:
+      caddy: http://unifi.o
+      caddy.reverse_proxy: "{{upstreams 8443}}"
+      flame.type: app
+      flame.name: Unifi WiFi
+      flame.url: http://unifi.o/
+      #flame.icon: custom
 ##
 ##
 ##________CLOUD________
@@ -376,7 +375,8 @@ services:
     image: cr.hotio.dev/hotio/jellyfin
     restart: always
     networks: 
-      - media
+      - web-proxy
+    # Required for Intel QuickSync/VAAPI hardware accelerated video encoding/transcoding
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/card0:/dev/dri/card0
@@ -388,9 +388,16 @@ services:
     volumes:
       - $DOCKERDIR/jellyfin/config:/config
       - $DATAPOOL/Media:/data
-    # Required for Intel QuickSync/VAAPI hardware accelerated video encoding/transcoding
     ports:
       - 8096:8096
+    labels:
+      caddy: http://jellyfin.o
+      caddy.reverse_proxy: "{{upstreams 8096}}"
+      flame.type: app
+      flame.name: Jellyfin
+      flame.url: http://jellyfin.o/
+      #flame.icon: custom
+      org.hotio.pullio.update: true
 
 ##____________________ VPN-proxy [MEDIA/vpn-client-for-media]
   VPN-proxy:
@@ -398,7 +405,7 @@ services:
     image: thrnz/docker-wireguard-pia
     restart: always
     networks: 
-      - vpn-proxy
+      - web-proxy
     cap_add:
       - NET_ADMIN
       #- SYS_MODULE might not be needed with a 5.6+ kernel?
@@ -439,6 +446,14 @@ services:
     # The container has no recovery logic. Use a healthcheck to catch disconnects.
     ports:
       - 9090:8080 #Qbittorrent webUI
+    labels:
+      caddy: http://downloads.o
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      flame.type: app
+      flame.name: Downloads
+      flame.url: http://downloads.o/
+      #flame.icon: custom
+      org.hotio.pullio.update: true
 ##
 ##____________________ Transmission [MEDIA/download-client]
   qbittorrent:
@@ -458,28 +473,12 @@ services:
     labels: 
       org.hotio.pullio.update: true
 ##
-##____________________ Unpackerr [MEDIA/download-unpack]
-#  unpackerr:
-#    container_name: unpackerr
-#    image: cr.hotio.dev/hotio/unpackerr
-#    networks: 
-#      - media
-#    restart: always
-#    environment:
-#      PUID: $PUID
-#      PGID: $PGID
-#      UMASK: 002
-#      TZ: $TZ
-#    volumes:
-#      - $DOCKERDIR/unpacker/config:/config
-#      - $DATAPOOL/Media:/Media
-##
 ##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
   prowlarr:
     container_name: prowlarr
     image: cr.hotio.dev/hotio/prowlarr:testing
     networks: 
-      - media
+      - web-proxy
     depends_on:
       - qbittorrent
     restart: always
@@ -493,13 +492,21 @@ services:
       - $DATAPOOL/Media/incoming:/Media/incoming
     ports:
       - 9696:9696
+    labels:
+      caddy: http://torrents.o
+      caddy.reverse_proxy: "{{upstreams 9696}}"
+      flame.type: app
+      flame.name: Search Torrents
+      flame.url: http://torrents.o/
+      #flame.icon: custom
+      org.hotio.pullio.update: true
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
     container_name: sonarr
     image: cr.hotio.dev/hotio/sonarr
     networks: 
-      - media
+      - web-proxy
     depends_on:
       - prowlarr
       - qbittorrent
@@ -514,7 +521,13 @@ services:
       - $DATAPOOL/Media:/Media
     ports:
       - 8989:8989
-    labels: 
+    labels:
+      caddy: http://sonarr.o
+      caddy.reverse_proxy: "{{upstreams 8989}}"
+      flame.type: app
+      flame.name: Sonarr (series)
+      flame.url: http://sonarr.o/
+      #flame.icon: custom
       org.hotio.pullio.update: true
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
@@ -522,7 +535,7 @@ services:
     container_name: radarr
     image: cr.hotio.dev/hotio/radarr
     networks: 
-      - media
+      - web-proxy
     depends_on:
       - prowlarr
       - qbittorrent
@@ -537,7 +550,13 @@ services:
       - $DATAPOOL/Media:/Media
     ports:
       - 7878:7878
-    labels: 
+    labels:
+      caddy: http://radarr.o
+      caddy.reverse_proxy: "{{upstreams 7878}}"
+      flame.type: app
+      flame.name: Radarr (movies)
+      flame.url: http://radarr.o/
+      #flame.icon: custom
       org.hotio.pullio.update: true
 ##
 ##____________________ Bazarr [MEDIA/subtitles]
@@ -545,7 +564,7 @@ services:
     container_name: bazarr
     image: cr.hotio.dev/hotio/bazarr
     networks: 
-      - media
+      - web-proxy
     depends_on:
        - sonarr
        - radarr
@@ -560,7 +579,13 @@ services:
       - $DATAPOOL/Media:/Media
     ports:
       - 6767:6767
-    labels: 
+    labels:
+      caddy: http://bazarr.o
+      caddy.reverse_proxy: "{{upstreams 6767}}"
+      flame.type: app
+      flame.name: Bazarr (subtitles)
+      flame.url: http://bazarr.o/
+      #flame.icon: custom
       org.hotio.pullio.update: true
 ##
 ##____________________ Lidarr [MEDIA/PVR-Music]
@@ -568,7 +593,7 @@ services:
     container_name: lidarr
     image: cr.hotio.dev/hotio/lidarr
     networks: 
-      - media
+      - web-proxy
     depends_on:
       - prowlarr
       - qbittorrent
@@ -583,19 +608,20 @@ services:
       - $DATAPOOL/Media:/Media
     ports:
       - 8686:8686
-    labels: 
+    labels:
+      caddy: http://lidarr.o
+      caddy.reverse_proxy: "{{upstreams 8686}}"
+      flame.type: app
+      flame.name: Lidarr (music)
+      flame.url: http://lidarr.o/
+      #flame.icon: custom
       org.hotio.pullio.update: true
 #
 #
 networks:
-  management:
-    driver: bridge
   web-proxy:
-    #driver: bridge
     external: true
   filerun:
     driver: bridge
-  vpn-proxy:
-    driver: bridge
-  media: 
+  unbound:
     driver: bridge
