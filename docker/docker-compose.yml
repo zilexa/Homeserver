@@ -28,29 +28,29 @@ services:
     ports:
       - 9000:9000
     labels:
-      caddy: http://services.o
+      caddy: http://docker.o
       caddy.reverse_proxy: "{{upstreams 9000}}"
       flame.type: app
       flame.name: Container Management
-      flame.url: http://services.o/
+      flame.url: http://docker.o/
       #flame.icon: custom
 ##
 ##____________________ Flame [Management/Homepage]
   flame:
-    container_name: homepage
+    container_name: startpage
     image: pawelmalak/flame
     restart: always
     networks: 
       - web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $DOCKERDIR/homepage/data:/app/data
+      - $DOCKERDIR/startpage/data:/app/data
     environment:
       - PASSWORD=$PW
     ports:
       - 5005:5005
     labels:
-      caddy: http://start.o
+      caddy: http://g.o
       caddy.reverse_proxy: "{{upstreams 5005}}"
 ##
 ##____________________ Guacamole [Management/remote-desktop]
@@ -101,8 +101,9 @@ services:
     ports:
       - 5000:5000
     labels:
-      caddy: http://vpn.o
-      caddy.reverse_proxy: "{{upstreams 5000}}"
+## reverse proxy cannot be used because it's not running in the same network. 
+      #caddy: http://vpn.o
+      #caddy.reverse_proxy: "{{upstreams 5000}}"
       flame.type: app
       flame.name: VPN portal
       flame.url: http://vpn.o/
@@ -158,8 +159,9 @@ services:
        - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
        - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
     labels:
-      caddy: http://adguard.o
-      caddy.reverse_proxy: "{{upstreams 3000}}"
+## reverse proxy cannot be used because it's not running in the same network. 
+      #caddy: http://adguard.o
+      #caddy.reverse_proxy: "{{upstreams 3000}}"
       flame.type: app
       flame.name: AdGuard
       flame.url: http://adguard.o/
