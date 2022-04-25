@@ -1,4 +1,4 @@
-## UPDATED: 24-04-2022, changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.md
+## UPDATED: 24-04-2022, changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
 # Check for typos: docker-compose config 
@@ -106,7 +106,7 @@ services:
       #caddy.reverse_proxy: "{{upstreams 5000}}"
       flame.type: app
       flame.name: VPN portal
-      flame.url: http://vpn.o/
+      flame.url: http://g.o:5000/
       #flame.icon: custom
 ##
 ##____________________ Scrutiny [Management/monitoring]
@@ -164,7 +164,7 @@ services:
       #caddy.reverse_proxy: "{{upstreams 3000}}"
       flame.type: app
       flame.name: AdGuard
-      flame.url: http://adguard.o/
+      flame.url: http://g.o:3000/
       #flame.icon: custom
 ##____________________ Unbound [NETWORK/Adblocking-dnsserver]
   unbound:
