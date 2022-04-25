@@ -24,11 +24,12 @@ Modify docker-compose.yml to your needs and understand the (mostly unique for yo
 ### Step 1 - Customisation and Personalisation of Compose file
 1. Decide which services you want to run and remove others from this file. Note at the bottom you should remove the corresponding networks as well. 
 2. if you remove certain applications, at the bottom also remove unneccary networks.
-3. Comment out containers that you expose via subdomain until after you have finished [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and comment out containers that need access to your datapool unless you have finished [Step 2: Filesystem Configuration](https://github.com/zilexa/Homeserver/tree/master/filesystem). 
+3. If you have not registered your own domain (see [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md), comment out services that are exposed through the internet. 
+4. If your datapool is not configured/mounted (see [Step 2: Filesystem Configuration](https://github.com/zilexa/Homeserver/tree/master/filesystem)) comment out services that have a mount to the datapool.. 
 
-4. _Personalisation_ is done through the .env file. Every variable (for example your domain name and the root path of your datapool) in the docker-compose.yml is listed here. Every service in the compose file that you are planning to use, must have its variable filled in the .env file. 
-5. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) to your liking. Set the root path to your datapool in the .env file. 
-6. docker-compose.yml: Make sure the volume mappings are correct for those that link to the Users or TV folders. 
+5. _Personalisation_ is mostly done through the .env file. Go through it and adjust. Every variable in the compose file (like your domain name, the root path of your datapool, mail credentials) is stored here. 
+6. docker-compose.yml: Change the subdomains (for example: `files.$DOMAIN`) of exposed services and the local domains (like http://g.o or http://sonarr.o) to your liking.
+7. docker-compose.yml: Make sure the volume mappings are correctly reflecting your folder structure, especially for FileRun and the media services like QBittorrent and Sonarr.
 
 ***
 
@@ -42,7 +43,7 @@ Make sure you commented out or removed services that are exposed via a $DOMAIN n
   - Notice all variables will automatically be filled. Fix the errors/missing items in the compose or env file (see Step 2). 
 3. If decided to keep caddy-docker-proxy, create the required external network first:  \
 ```docker network create web-proxy```
-4. No run the file. This will download app impages and configure all containers **NEVER prefix with sudo**:  \
+4. Now run the file. This will download app impages and configure all containers **NEVER prefix with sudo**:  \
 ```docker-compose -f docker-compose.yml up -d```
   - Anytime you change your docker-compose, simply re-run this command. For example if you change a path to your mediafiles or want to change a domain or port number. 
   - If there was a misconfiguration with an app, for example, a password, simply remove that container (through Portainer, see below) and re-run docker compose command. 
@@ -54,7 +55,15 @@ _Notes_
 > - **WARNING: if you accidentally prefix with sudo, everything will be created in the root dir instead of the $HOME/docker dir, the container-specific persistent volumes will be there as well and you will run into permission issues. Plus none of the app-specific preperations done by the script will have affect as they are done in $HOME/docker/. Also the specific docker subvolume is not used and not backupped. And you are providing your Docker apps with full admin access to your OS!**
 > - To correct this, stop and remove all containers and images via Portainer and remove the /root/docker folder, 
 
-#### Go to portainer: http://localhost:9000 (your.server.lan.ip:9000) login and go to containers. Everything should be green or yellow (temporary). Access any service by clicking its the port number.  
+
+### Step 3 -  Configure easy access to your services
+You can now access each service via its port number, for example, check the status of your containers by going to Portainer: http://SERVERIP:9000/ (your.server.lan.ip:9000).  \
+A better solution is to access them via the local domains that you configured through Caddy Labels under each container. For example: http://docker.o to access Portainer.  \
+You need to register these domains in AdGuard Home to get them working:. \
+- Go to http://SERVERIP:3000 and walkthrough the initial wizard. See here for tips. Then go to Filters > DNS Rewrites and add your local domains one by one, each pointing to your SERVERIP without portnumbers.
+- In your home router, replace all DNS addresses (usually under "DHCP"), only your SERVERIP should be listed (there is no such thing as a backup DNS, secondary DNS can be used anytime so remove it).
+- Now disable/enable your server network connection, check if you can access websites and refresh AdGuard page. Stats should show some activity.
+- Go to `http://go.o/`, this is your server start page! Go to Settings > Docker > Enable API, leave settings and notice all your apps are there, configure your Bookmarks at will.  
 
 ***
 
