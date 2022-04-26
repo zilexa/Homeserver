@@ -75,19 +75,14 @@ C. If needed, you can even access the terminal of the container and check files/
 
 **Update individual containers**  \
 To update an application, open that container in Portainer, hit `recreate` and check `pull new image`.  \
-It is not recommended to use tools like Watchtower to auto-update apps (auto-update is a bad practice in general!). Only the media/download related apps can be consired to auto-update (once a month) since they require frequent updates to keep functioning, this will be done via Pullio. Note the Maintenance guide has solutions for auto-updating docker images. 
+- It is not recommended to auto-update all apps (auto-update is a bad practice in general!). Only the media/download related apps can be considered to auto-update (once a month) since they require frequent updates to keep functioning.
+- The Maintenance guide runs Pullio to auto-update images/containers that have the Pullio label in Compose. For other applications, a notification can be emailed when updates are available. 
 
 **Cleanup docker**  \
 To remove all unused containers (be careful, this means any stopped container) and all dangling images and all non-persistent volumes: 
  `sudo docker system prune --all --volumes --force`
 Note this will be done automatically via the scheduled maintenance (next steps). 
  
-**Update apps**  \
-In Portainer, click on a container, then select _Recreate_ and check the box to re-download the image. 
-- The latest image will be downloaded and a new container will be created with it. 
-- It will still use your persistent volume mappings: your configuration and persistent data remains. Just like a normal application update. 
-Note: Monitorr can be used to be notified of updates + update automatically (by default don't do that for all services).  
-
 **Issues:**  \
 Permission issues can be solved with the chown and chmod commands.
 For example Filerun needs you to own the very root of the user folder (/mnt/pool/Users), not root. 
