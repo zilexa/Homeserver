@@ -90,7 +90,7 @@ services:
       SMTP_AUTH_TYPE: LOGIN
       EMAIL_FROM_ADDRESS: $RECIPIENT
       EMAIL_FROM_NAME: $SMTPUSER
-      SESSION_SECRET: HmJg1j3pUN85GcfSiQrfrecgqU8oP8eufy7VWxltbfQ=
+      SESSION_SECRET: $VPNSECRET
     logging:
       driver: json-file
       options:
