@@ -228,11 +228,18 @@ services:
   caddy:
     container_name: web-proxy
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
+## If you use Cloudflare as domain provider, use this image instead:
+   #image: sabrsorensen/caddy-docker-proxy-cloudflare    
     restart: always
     networks: 
       - web-proxy
     environment:
       - CADDY_INGRESS_NETWORKS=web-proxy
+## Only required when you use the Cloudflare image:
+     #- CLOUDFLARE_EMAIL=your.cloudflare@email.com
+     #- CLOUDFLARE_API_TOKEN=your.cloudflare.apitoken
+     #- CADDY_DOCKER_PROXY_SERVICE_TASKS=true
+     #- CADDY_DOCKER_PROCESS_CADDYFILE=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/caddy/caddy_data:/data
