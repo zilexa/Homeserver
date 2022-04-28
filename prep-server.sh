@@ -380,26 +380,6 @@ case ${answer:0:1} in
         echo "SKIPPED getting PIA VPN script for auto-updating QB portforwarding.."
     ;;
 esac
-
-
-echo "---------------------------------------------------------------------------------------------"
-echo "Download preconfigured Organizr config: your portal to all your apps and services? (optional)" 
-read -p "y or n ?" answer
-case ${answer:0:1} in
-    y|Y )
-        # Not sure if this works, it will download my config, a homepage with all services. MANUALLY via the Organizr settings, add the credentials and change the ip:port for each.
-        # Just to get you started with a homepage instead of the basic blank stuff. 
-        # MANUALLY stop the container, delete these files and restart if Organizr doesn't work. 
-        sudo mkdir -p $HOME/docker/organizr/www/organizr/api/config
-        sudo chown -R ${USER}:${USER} $HOME/docker/organizr
-        wget -O $HOME/docker/organizr/www/organizr/api/config/config.php https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/organizr/www/organizr/api/config/config.php
-        wget -O $HOME/docker/organizr/www/organizr/organizrdb.db https://github.com/zilexa/Homeserver/blob/master/docker/organizr/www/organizr/organizrdb.db?raw=true
-    ;;
-    * )
-        echo "SKIPPED downloading Organizr pre-configuration.."
-    ;;
-esac
-
 echo "                                                                               "        
 echo "==============================================================================="
 echo "                                                                               "  
