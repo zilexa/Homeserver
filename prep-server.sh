@@ -375,6 +375,8 @@ case ${answer:0:1} in
         echo "--------------------------------------------"
         mkdir -p $HOME/docker/HOST/vpn-proxy/pia-shared
         wget -O $HOME/docker/HOST/vpn-proxy/pia-shared/updateport-qbittorrent.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/vpn-proxy/pia-shared/updateport-qbittorrent.sh
+        echo "DONE! Don't forget to enter your QBittorrent credentials in the script after you have changed them in the webUI"
+        echo "(default is admin/adminadmin)."
     ;;
     * )
         echo "SKIPPED getting PIA VPN script for auto-updating QB portforwarding.."
