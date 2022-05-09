@@ -66,7 +66,7 @@ _Turn your system into a modern server with 1 click with [prep_server.sh](https:
 
 Read through the [prep_server.sh](https://github.com/zilexa/Homeserver/blob/master/prep-server.sh) and see what it does (everything has comments). 
 The PREP_DOCKER.SH script is carefully created to install the tools required to run all aspects of your server (from docker to mainentance tasks). \
-Official documentation is used to install tools correctly (Docker Rootless Mode) and all but 1 tools will be installed via the Manjaro or AUR repository --> they will be automatically updated by the OS official repositories (compare that to Ubuntu/Debian based systems). 
+Official documentation is used to install tools correctly and all tools will be installed using the offical Manjaro package manager, a single package manager that keeps applications, OS and drivers up to date. 
 
 Download and install it via: 
 ```
@@ -75,7 +75,7 @@ bash prep-server.sh
 ```
 _Note_
 > - A subvolume for Docker will be created --> allows extremely easy daily or hourly backups and recovery.
-> - Installs Docker in rootless mode for enhanced security. This reduces the attack serface of your server. 
+> - Installs Docker and follows [official best practices](https://docs.docker.com/engine/install/linux-postinstall/) to manage docker as non-root user (not rootless). 
 > - Allows OS support to send emails (with minimal set of tools and configuration), several Docker containers and your maintenance tasks will need this.
 > - Installs several other essential tools, essential for example for data migration, backups, maintenance.
 > - Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. The Organizr config might be nice and will save you lots of time building your own "Start" page.
