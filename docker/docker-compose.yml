@@ -71,9 +71,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     #  - $DOCKERDIR/dashboard/config.json:/config.json
     ports:
-      - 8080:3000
+      - 8000:3000
     labels:
-      caddy: http://dashy.homelan
+      caddy: http://g.o
       caddy.reverse_proxy: "{{upstreams 3000}}"
 ##
 ##______PRIVACY_______
@@ -168,7 +168,7 @@ services:
     volumes:
       - $DOCKERDIR/guacamole:/config
     ports:
-     - 8000:8080
+     - 6000:8080
     labels:
       caddy: http://desktop.o
       caddy.reverse_proxy: "{{upstreams 8080}}"
