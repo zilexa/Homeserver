@@ -1,4 +1,4 @@
-## UPDATED: 24-04-2022, changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
+## UPDATED: 16-05-2022, changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
 # Check for typos: docker-compose config 
@@ -14,8 +14,8 @@
 #
 version: "2.4"
 services:
-##_____MANAGEMENT_____
-##____________________ Portainer [Management/Docker]
+##_______SYSTEM_____
+##____________________ Portainer [SYSTEM/Docker]
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
@@ -30,51 +30,104 @@ services:
     labels:
       caddy: http://docker.o
       caddy.reverse_proxy: "{{upstreams 9000}}"
-      flame.type: app
-      flame.name: Container Management
-      flame.url: http://docker.o/
-      #flame.icon: custom
+      plugsy.name: Docker
+      plugsy.link: http://docker.o/
+      plugsy.category: System
+##_____________________ Caddy [SYSTEM/web-proxy]
+  caddy:
+    container_name: web-proxy
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    restart: always
+    networks: 
+      - web-proxy
+    environment:
+      - CADDY_INGRESS_NETWORKS=web-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $DOCKERDIR/caddy/caddy_data:/data
+      - $DOCKERDIR/caddy/config:/config
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 443:443
+      - 80:80
+    labels:
+      caddy.email: $EMAIL
+      caddy_0: http://adguard.o
+      caddy_0.reverse_proxy: host.docker.internal:3000
+      caddy_1: http://vpn.o
+      caddy_1.reverse_proxy: host.docker.internal:5000
+      plugsy.name: Caddy web-proxy
+      plugsy.category: System
 ##
-##____________________ Flame [Management/Homepage]
-  flame:
-    container_name: startpage
-    image: pawelmalak/flame
+##____________________ Plugsy [SYSTEM/Homepage]
+  plugsy:
+    container_name: plugsy
+    image: plugsy/core
     restart: always
     networks: 
       - web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $DOCKERDIR/startpage/data:/app/data
-    environment:
-      - PASSWORD=$PW
+    #  - $DOCKERDIR/dashboard/config.json:/config.json
     ports:
-      - 5005:5005
+      - 8080:3000
     labels:
-      caddy: http://g.o
-      caddy.reverse_proxy: "{{upstreams 5005}}"
+      caddy: http://dashy.homelan
+      caddy.reverse_proxy: "{{upstreams 3000}}"
 ##
-##____________________ Guacamole [Management/remote-desktop]
-  guacamole:
-    container_name: guacamole
-    image: oznu/guacamole
+##______PRIVACY_______
+##______________________ AdGuard Home [PRIVACY/Blocker]
+  adguard:
+    container_name: adguard
+    image: adguard/adguardhome
     restart: always
-    networks: 
-      - web-proxy
-    environment:
-      EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
+    network_mode: host
     volumes:
-      - $DOCKERDIR/guacamole:/config
-    ports:
-     - 8000:8080
+       - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
+       - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
     labels:
-      caddy: http://desktop.o
-      caddy.reverse_proxy: "{{upstreams 8080}}"
-      flame.type: app
-      flame.name: Remote Desktop
-      flame.url: http://desktop.o/
-      #flame.icon: custom
+      plugsy.name: AdGuard
+      plugsy.link: http://adguard.o/
+      plugsy.category: Privacy
+##____________________ Unbound [PRIVACY/dns]
+  unbound:
+    container_name: unbound
+    image: mvance/unbound:latest
+    restart: always
+    healthcheck:
+      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
+      timeout: 3s
+      start_period: 5s
+    networks: 
+      - unbound
+    volumes:
+      - $DOCKERDIR/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
+    ports:
+      - 5335:53/tcp
+      - 5335:53/udp
+    labels:
+      plugsy.name: Unbound DNS
+      plugsy.parents: AdGuard
+##____________________ Castblock [PRIVACY/Chromecastblocker]
+  castblock:
+    container_name: castblock
+    image: erdnaxeli/castblock:latest
+    restart: always
+    network_mode: host
+    cap_add: 
+      - NET_ADMIN
+    environment:
+      DEBUG: true
+      OFFSET: 1
+      CATEGORIES: sponsor,interaction
+      MUTE_ADS: true
+    labels:
+      plugsy.name: CastBlock
+      plugsy.parents: AdGuard
 ##
-##____________________ VPN-portal [Management/VPN]
+##_________ACCESS_______
+##________________________ VPN-portal [ACCESS/vpn]
   VPN-portal:
     container_name: vpn-portal
     image: ngoduykhanh/wireguard-ui:latest
@@ -98,18 +151,32 @@ services:
     volumes:
       - $DOCKERDIR/vpn-portal/db:/app/db
       - /etc/wireguard:/etc/wireguard  
-    ports:
-      - 5000:5000
     labels:
-## reverse proxy cannot be used because it's not running in the same network. 
-      #caddy: http://vpn.o
-      #caddy.reverse_proxy: "{{upstreams 5000}}"
-      flame.type: app
-      flame.name: VPN portal
-      flame.url: http://g.o:5000/
-      #flame.icon: custom
+      plugsy.name: VPN portal
+      plugsy.link: http://vpn.o/
+      plugsy.category: Access
 ##
-##____________________ Scrutiny [Management/monitoring]
+##____________________ Guacamole [ACCESS/remote-desktop]
+  guacamole:
+    container_name: guacamole
+    image: oznu/guacamole
+    restart: always
+    networks: 
+      - web-proxy
+    environment:
+      EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
+    volumes:
+      - $DOCKERDIR/guacamole:/config
+    ports:
+     - 8000:8080
+    labels:
+      caddy: http://desktop.o
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      plugsy.name: Remote Desktop
+      plugsy.link: http://desktop.o/
+      plugsy.category: Access
+##
+##____________________Scrutiny [SYSTEM/Analytics]
   scrutiny:
     container_name: scrutiny
     image: cr.hotio.dev/hotio/scrutiny
@@ -142,115 +209,11 @@ services:
     labels:
       caddy: http://storage.o
       caddy.reverse_proxy: "{{upstreams 8080}}"
-      flame.type: app
-      flame.name: Storage Health
-      flame.url: http://storage.o/
-      #flame.icon: custom
+      plugsy.name: Analytics
+      plugsy.link: http://storage.o/
+      plugsy.category: System
 ##
-##
-##______NETWORK_______
-##____________________ AdGuard Home [NETWORK/Adblocking-dnsserver]
-  adguard:
-    container_name: adguard
-    image: adguard/adguardhome
-    restart: always
-    network_mode: host
-    volumes:
-       - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
-       - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
-    labels:
-## reverse proxy cannot be used because it's not running in the same network. 
-      #caddy: http://adguard.o
-      #caddy.reverse_proxy: "{{upstreams 3000}}"
-      flame.type: app
-      flame.name: AdGuard
-      flame.url: http://g.o:3000/
-      #flame.icon: custom
-##____________________ Unbound [NETWORK/Adblocking-dnsserver]
-  unbound:
-    container_name: unbound
-    image: mvance/unbound:latest
-    restart: always
-    healthcheck:
-      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
-      timeout: 3s
-      start_period: 5s
-    networks: 
-      - unbound
-    volumes:
-      - $DOCKERDIR/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
-    ports:
-      - 5335:53/tcp
-      - 5335:53/udp
-##____________________ Castblock [NETWORK/Adblocking-chromecast]
-  castblock:
-    container_name: blockcast
-    image: erdnaxeli/castblock:latest
-    restart: always
-    network_mode: host
-    cap_add: 
-      - NET_ADMIN
-    environment:
-      DEBUG: true
-      OFFSET: 1
-      CATEGORIES: sponsor,interaction
-      MUTE_ADS: true
-##
-##____________________ Unifi Controller [NETWORK/Wifi]
-  unifi:
-    container_name: unifi
-    image: ghcr.io/linuxserver/unifi-controller
-    #mac_address: d0:ca:ab:cd:ef:03
-    networks: 
-      - web-proxy
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      MEM_LIMIT: 512M #optional
-    volumes:
-      - $DOCKERDIR/unifi/config:/config
-    ports:
-      - 10001:10001/udp #to auto-discover your Access Points
-      - 8080:8080 # Controller communication with Access Points and vice versa
-      - 8443:8443 #to access webUI
-      - 1900:1900/udp #to auto-discover this Controller in your app
-    labels:
-      caddy: http://unifi.o
-      caddy.reverse_proxy: "{{upstreams 8443}}"
-      flame.type: app
-      flame.name: Unifi WiFi
-      flame.url: http://unifi.o/
-      #flame.icon: custom
-##
-##
-##________CLOUD________
-##_____________________ Caddy [CLOUD/web-proxy]
-  caddy:
-    container_name: web-proxy
-    image: lucaslorentz/caddy-docker-proxy:ci-alpine
-## If you use Cloudflare as domain provider, use this image instead:
-   #image: sabrsorensen/caddy-docker-proxy-cloudflare    
-    restart: always
-    networks: 
-      - web-proxy
-    environment:
-      - CADDY_INGRESS_NETWORKS=web-proxy
-## Only required when you use the Cloudflare image:
-     #- CLOUDFLARE_EMAIL=your.cloudflare@email.com
-     #- CLOUDFLARE_API_TOKEN=your.cloudflare.apitoken
-     #- CADDY_DOCKER_PROXY_SERVICE_TASKS=true
-     #- CADDY_DOCKER_PROCESS_CADDYFILE=true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - $DOCKERDIR/caddy/caddy_data:/data
-      - $DOCKERDIR/caddy/config:/config
-    labels:
-      caddy.email: $EMAIL
-      #caddy.log.output: file /data/access.log
-    ports:
-      - 443:443
-      - 80:80
-##
+##________CLOUD______
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
   firefox-sync:
@@ -272,6 +235,8 @@ services:
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
+      plugsy.name: Firefox Sync
+      plugsy.category: Cloud
 ##
 ##_____________________ Bitwarden [CLOUD/Password-manager] 
   vaultwarden:
@@ -299,6 +264,9 @@ services:
       caddy.header.X-Content-Type-Options: "none"
       caddy.reverse_proxy_1: "/notifications/hub/negotiate {{upstreams 80}}"
       caddy.reverse_proxy_2: "/notifications/hub {{upstreams 3012}}"
+      plugsy.name: Vaultwarden
+      plugsy.link: https://vault.$DOMAIN
+      plugsy.category: Cloud
 ##
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
@@ -334,6 +302,9 @@ services:
       caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
       caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
       caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
+      plugsy.name: FileRun
+      plugsy.link: https://files.$DOMAIN
+      plugsy.category: Cloud
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
     container_name: filerun-db
@@ -348,32 +319,63 @@ services:
       MYSQL_DATABASE: filerundb
     volumes:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
+    labels:
+      plugsy.name: FileRun Database
+      plugsy.parents: FileRun
 ##_____________________ OnlyOffice Document Server [Cloud/Office]
-  onlyoffice:
-    container_name: onlyoffice
-    image: onlyoffice/documentserver
-    stdin_open: true
+  office:
+    container_name: office
+    image: onlyoffice/4testing-documentserver:7.1.0.199
+    networks:
+      - office
+    #stdin_open: true
     restart: always
-    networks: 
-      - web-proxy
-    tty: true
-    volumes:
-      - $DOCKERDIR/onlyoffice/data:/var/www/onlyoffice/Data
-      - $DOCKERDIR/onlyoffice/log:/var/log/onlyoffice
-      - $DOCKERDIR/onlyoffice/database:/var/lib/postgresql
-      - /usr/share/fonts:/usr/share/fonts
+    #networks: 
+      #- web-proxy
+    #tty: true
+    #volumes:
+      #- $DOCKERDIR/onlyoffice/data:/var/www/onlyoffice/Data
+      #- $DOCKERDIR/onlyoffice/log:/var/log/onlyoffice
+      #- $DOCKERDIR/onlyoffice/database:/var/lib/postgresql
+      #- /usr/share/fonts:/usr/share/fonts
     environment:
       JWT_ENABLED: true
       JWT_SECRET: $ONLYOFFICEJWT
-    labels:
-      caddy: office.$DOMAIN
-      caddy.reverse_proxy: "{{upstreams 80}}"
-      caddy.encode: gzip
+      AMQP_URI: amqp://officerabbitmq:5672
+      DB_HOST: officedb
+      DB_PORT: 5432
+      DB_NAME: officedb
+      DB_USER: office
+      DB_PWD:  office01
+    ports:
+      - 8811:80
+    #labels:
+      #caddy: office.$DOMAIN
+     #caddy.reverse_proxy: "{{upstreams 80}}"
+     #caddy.encode: gzip
       # Required extra headers
       #caddy.file_server: ""
       #caddy.header.X-Content-Type-Options: "nosniff"
       #caddy.tls_insecure_skip_verify: ""
       #caddy.header: /
+      #plugsy.name: OnlyOffice
+      #plugsy.parents: FileRun
+  officerabbitmq:
+    container_name: officerabbitmq
+    image: rabbitmq
+    restart: always
+    networks:
+    - office
+  officedb:
+    container_name: officedb
+    image: postgres
+    networks:
+      - office
+    restart: always
+    environment:
+      POSTGRES_DB: officedb
+      POSTGRES_USER: office
+      POSTGRES_PASSWORD: office01
 ##
 ##
 ##________MEDIA________
@@ -401,10 +403,9 @@ services:
     labels:
       caddy: http://jellyfin.o
       caddy.reverse_proxy: "{{upstreams 8096}}"
-      flame.type: app
-      flame.name: Jellyfin
-      flame.url: http://jellyfin.o/
-      #flame.icon: custom
+      plugsy.name: Jellyfin
+      plugsy.link: http://jellyfin.o/
+      plugsy.category: Media 
       org.hotio.pullio.update: true
 
 ##____________________ VPN-proxy [MEDIA/vpn-client-for-media]
@@ -455,13 +456,11 @@ services:
     ports:
       - 9090:8080 #Qbittorrent webUI
     labels:
+      org.hotio.pullio.update: true
       caddy: http://downloads.o
       caddy.reverse_proxy: "{{upstreams 8080}}"
-      flame.type: app
-      flame.name: Downloads
-      flame.url: http://downloads.o/
-      #flame.icon: custom
-      org.hotio.pullio.update: true
+      plugsy.name: VPN-Proxy
+      plugsy.parents: Downloads
 ##
 ##____________________ Transmission [MEDIA/download-client]
   qbittorrent:
@@ -480,6 +479,10 @@ services:
       - $DATAPOOL/Media/incoming:/Media/incoming
     labels: 
       org.hotio.pullio.update: true
+      plugsy.name: Downloads
+      plugsy.link: http://downloads.o/
+      plugsy.category: Media
+
 ##
 ##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
   prowlarr:
@@ -503,10 +506,9 @@ services:
     labels:
       caddy: http://torrents.o
       caddy.reverse_proxy: "{{upstreams 9696}}"
-      flame.type: app
-      flame.name: Search Torrents
-      flame.url: http://torrents.o/
-      #flame.icon: custom
+      plugsy.name: Search Torrents
+      plugsy.link: http://torrents.o/
+      plugsy.category: Media
       org.hotio.pullio.update: true
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
@@ -532,10 +534,9 @@ services:
     labels:
       caddy: http://sonarr.o
       caddy.reverse_proxy: "{{upstreams 8989}}"
-      flame.type: app
-      flame.name: Sonarr (series)
-      flame.url: http://sonarr.o/
-      #flame.icon: custom
+      plugsy.name: Sonarr (series)
+      plugsy.link: http://sonarr.o/
+      plugsy.category: Media
       org.hotio.pullio.update: true
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
@@ -561,10 +562,9 @@ services:
     labels:
       caddy: http://radarr.o
       caddy.reverse_proxy: "{{upstreams 7878}}"
-      flame.type: app
-      flame.name: Radarr (movies)
-      flame.url: http://radarr.o/
-      #flame.icon: custom
+      plugsy.name: Radarr (movies)
+      plugsy.link: http://radarr.o/
+      plugsy.category: Media 
       org.hotio.pullio.update: true
 ##
 ##____________________ Bazarr [MEDIA/subtitles]
@@ -590,10 +590,9 @@ services:
     labels:
       caddy: http://bazarr.o
       caddy.reverse_proxy: "{{upstreams 6767}}"
-      flame.type: app
-      flame.name: Bazarr (subtitles)
-      flame.url: http://bazarr.o/
-      #flame.icon: custom
+      plugsy.name: Bazarr (subtitles)
+      plugsy.link: http://bazarr.o/
+      plugsy.category: Media
       org.hotio.pullio.update: true
 ##
 ##____________________ Lidarr [MEDIA/PVR-Music]
@@ -619,10 +618,9 @@ services:
     labels:
       caddy: http://lidarr.o
       caddy.reverse_proxy: "{{upstreams 8686}}"
-      flame.type: app
-      flame.name: Lidarr (music)
-      flame.url: http://lidarr.o/
-      #flame.icon: custom
+      plugsy.name: Lidarr (music)
+      plugsy.link: http://lidarr.o/
+      plugsy.category: Media
       org.hotio.pullio.update: true
 #
 #
@@ -632,4 +630,6 @@ networks:
   filerun:
     driver: bridge
   unbound:
+    driver: bridge
+  office:
     driver: bridge
