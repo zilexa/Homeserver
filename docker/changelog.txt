@@ -1,3 +1,9 @@
+# CHANGELOG 2022-05-16
+# ADDED: all services with a webUI are now proxied through a local domain, including the ones that use network_mode: host (AdGuard Home and VPN-portal (=wireguard-ui)). 
+# REMOVED: obsolete ports sections for VPN portal, since it runs on host network, the port is exposed anyway. 
+# ISSUE: Plugsy cannot be proxied: https://github.com/plugsy/core/issues/31 very annoying.
+# ISSUE: OnlyOffice Documentserver has issues on a Manjaro host. Very strange issue, NOT fixed: https://github.com/ONLYOFFICE/Docker-DocumentServer/issues/426
+#
 # CHANGELOG 2022-04-22
 # ADDED: labels to every non-exposed container to allow access each service via its own local subdomain. Please add these domains to your AdGuard Home>Settings>DNS Rewrites
 # ADDED: labels added to every container with a UI to populate a simple startpage (by flame container)
