@@ -87,7 +87,7 @@ echo "--------------------------------------------"
 echo "to be able to read SMART values of drives" 
 sudo pamac install --no-confirm smartmontools
 
-echo "                   HD PARM                  "
+echo "                 HD PARM                    "
 echo "--------------------------------------------"
 echo "to be able to configure drive parameters" 
 sudo pamac install --no-confirm hdparm
@@ -108,38 +108,10 @@ echo "______________________________________________"
 echo "                                              " 
 echo "                 WIREGUARD VPN                "
 echo "______________________________________________"
-echo " + services to restart Wireguard when conf file has been updated "
+echo "Wireguard tools to allow a docker service to restart via wg-quick"
 echo "-----------------------------------------------------------------"
 # tools to easily start/stop WireGuard networks 
 sudo pamac install --no-confirm wireguard-tools
-
-# Services to monitor conf file and restart WG when changed
-sudo tee -a /etc/systemd/system/wgui.service << EOF
-[Unit]
-Description=Restart WireGuard
-After=network.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/bin/systemctl restart wg-quick@wg0.service
-
-[Install]
-EOF
-
-sudo tee -a /etc/systemd/system/wgui.path << EOF
-[Unit]
-Description=Watch /etc/wireguard/wg0.conf for changes
-
-[Path]
-PathModified=/etc/wireguard/wg0.conf
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Enable services
-systemctl enable wgui.{path,service}
-
 
 echo "______________________________________________"
 echo "                                              " 
@@ -149,7 +121,7 @@ echo "      on-demand systemdrive mountpoint     "
 echo "-------------------------------------------"
 # The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. If that script was not used, create the mountpoint now:
 #Get device path of systemdrive, for example "/dev/nvme0n1p2" via #SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
-if sudo grep -Fq "/mnt/drives/systemdrive" /etc/fstab; then echo already added by post-install script; 
+if sudo grep -Fq "/mnt/drives/system" /etc/fstab; then echo already added by post-install script; 
 else 
 # Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/drives/system")
 sudo mkdir -p /mnt/drives/system
@@ -162,7 +134,6 @@ sudo tee -a /etc/fstab &>/dev/null << EOF
 UUID=${fs_uuid} /mnt/drives/system  btrfs   subvolid=5,defaults,noatime,noauto  0  0
 EOF
 fi
-
 sudo mount -a
 
 
@@ -201,11 +172,10 @@ echo "--------------------------------------------"
 wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
 wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
 
-echo "         server maintenance scripts         "
+echo "               mediacleaner                 "
 echo "--------------------------------------------"
-curl -L https://api.github.com/repos/zilexa/Homeserver/tarball | tar xz --wildcards "*/docker/HOST/" --strip-components=1
-mv $HOME/Downloads/docker/HOST $HOME/docker/
-rm -r $HOME/Downloads/docker
+mkdir -p $HOME/docker/HOST/mediacleaner
+wget -O $HOME/docker/HOST/mediacleaner/media_cleaner https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner.py
 
 echo "      BTRBK config and mail script          "
 echo "--------------------------------------------"
@@ -215,13 +185,51 @@ wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/
 sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
 # MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
 
-echo "PULLIO script to auto update certain services"
-echo "--------------------------------------------"
-# Should only be used for selected services. For all others, Diun (docker container) is used to notify only instead of auto-update.
+echo "Tools to auto-notify or auto-update docker images & containers"
+echo "--------------------------------------------------------------"
+# PULLIO - to auto-update
 mkdir -p $HOME/docker/HOST/updater
 sudo curl -fsSL "https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh" -o $HOME/docker/HOST/updater/pullio
 sudo chmod +x $HOME/docker/HOST/updater/pullio
 sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
+# DIUN - to auto-notify
+# Get the binary
+wget -O /usr/local/bin/diun 
+
+# Required folders for DIUN
+sudo mkdir -p /var/lib/diun
+sudo chmod -R 750 /var/lib/diun/
+sudo mkdir /etc/diun
+sudo chmod 770 /etc/diun
+
+# Get config file
+sudo mkdir -p $HOME/docker/HOST/updater/diun
+sudo tee -a $HOME/docker/HOST/updater/diun/diun.yml &>/dev/null << EOF
+notif:
+  mail:
+    host: 
+    port: 587
+    ssl: false
+    insecureSkipVerify: true
+    username: 
+    password: 
+    from: 
+    to: 
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    watchByDefault: true
+    watchStopped: true
+EOF
+sudo ln -s /etc/diun/diun.yml
+sudo chmod 644 /etc/diun/diun.yml
+
+echo "         server maintenance scripts         "
+echo "--------------------------------------------"
+curl -L https://api.github.com/repos/zilexa/Homeserver/tarball | tar xz --wildcards "*/docker/HOST/" --strip-components=1
+mv $HOME/Downloads/docker/HOST $HOME/docker/
+rm -r $HOME/Downloads/docker
 
 echo "Create the minimum folder structure for drives and datapool"
 echo "--------------------------------------------"
@@ -265,10 +273,27 @@ echo "                                                             "
 read -p 'Enter email address to receive server notifications:' DEFAULTEMAIL
 sudo sh -c "echo default:$DEFAULTEMAIL >> /etc/aliases"
 ## Get config file
-sudo wget -O /etc/msmtprc https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/system/etc/msmtprc
+sudo tee -a /etc/msmtprc &>/dev/null << EOF
+# Set default values for all following accounts.
+defaults
+auth           on
+tls            on
+#tls_trust_file /etc/ssl/certs/ca-certificates.crt
+#logfile        $HOME/docker/HOST/logs/msmtp.log
+aliases        /etc/aliases
+
+# smtp provider
+account        default
+host           mail.smtp2go.com
+port           587
+from           FROMADDRESS
+user           SMTPUSER
+password       SMTPPASS
+EOF
+
 # set SMTP server
-echo "                                                             "
-echo "---------------------------------------"
+echo "         ADD SMTP CREDENTIALS FOR EMAIL NOTIFICATIONS        "
+echo "-------------------------------------------------------------"
 echo "                                                             "
 echo "Would you like to configure sending email now? You need to have an smtp provider account correctly configured with your domain" 
 read -p "Have you done that and do you have your smtp credentials at hand? (y/n)" answer
