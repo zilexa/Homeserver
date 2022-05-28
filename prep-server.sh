@@ -1,11 +1,14 @@
 #!/bin/bash
 # >>> DO NOT USE THIS FILE ON UBUNTU. USE /ARCHIVED/ INSTEAD. THIS FILE HAS BEEN ADJUSTED FOR MANJARO LINUX. <<<
 
+
 echo "______________________________________________________"
-echo "        MANAGE POWER CONSUMPTION AUTOMATICALLY        "
-echo "         always run Powertop autotune at boot         "
+echo "                     SYSTEM CONFIG                    "
 echo "______________________________________________________"
-## Create a service file to run powertop --auto-tune at boot
+
+echo "  Optimise power consumption  "
+echo "------------------------------"
+# Always run Powertop autotune at boot
 sudo tee -a /etc/systemd/system/powertop.service << EOF
 [Unit]
 Description=Powertop tunings
@@ -29,9 +32,9 @@ sudo systemctl start powertop.service
 # Disable automatic suspend
 gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
 
-echo "____________________________________________"
-echo "                SYSTEM CONFIG               "
-echo "____________________________________________"
+
+echo "  Add filemanager bookmarks   "
+echo "------------------------------"
 # Add CLI to Panel Favourites
 gsettings set org.gnome.shell favorite-apps "['nemo.desktop', 'org.gnome.Terminal.desktop', 'firefox.desktop', 'org.gnome.gThumb.desktop', 'pluma.desktop', 'org.gnome.Calculator.desktop']"
 
@@ -49,216 +52,9 @@ file:///home/asterix/Media Media
 EOF
 
 
-echo "____________________________________________"
-echo "                APPLICATIONS                "
-echo "                server tools                "
-echo "____________________________________________"
-echo "                   BTRBK                    "
-echo "--------------------------------------------"
-echo "Swiss handknife-like tool to automate snapshots & backups of personal data" 
-# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
-sudo pamac install --no-confirm btrbk
-
-echo "               RUN-IF-TODAY                 "
-echo "--------------------------------------------"
-echo "simplify scheduling of weekly/monthly tasks"
-sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
-sudo chmod +x /usr/bin/run-if-today
-
-echo "                   NOCACHE                  "
-echo "--------------------------------------------"
-echo "handy when moving lots of files at once in the background, without filling up cache and slowing down the system."
-# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
-sudo pamac install --no-confirm nocache
-
-echo "                    GRSYNC                  "
-echo "--------------------------------------------"
-echo "Friendly UI for rsync"
-sudo pamac install --no-confirm grsync
-
-echo "                LM_SENSORS                  "
-echo "--------------------------------------------"
-echo "to be able to read out all sensors" 
-sudo pamac install --no-confirm lm_sensors
-sudo sensors-detect --auto
-
-echo "          S.M.A.R.T. monitoring             "
-echo "--------------------------------------------"
-echo "to be able to read SMART values of drives" 
-sudo pamac install --no-confirm smartmontools
-
-echo "                 HD PARM                    "
-echo "--------------------------------------------"
-echo "to be able to configure drive parameters" 
-sudo pamac install --no-confirm hdparm
-
-echo "                LM_SENSORS                  "
-echo "--------------------------------------------"
-echo "to be able to read out all sensors" 
-sudo pamac install --no-confirm smartmontools
-
-echo "                 MERGERFS                  "
-echo "-------------------------------------------"
-echo "pool drives to make them appear as 1 without raid"
-# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
-sudo pamac install --no-confirm mergerfs
-
-
-echo "______________________________________________"
-echo "                                              " 
-echo "                 WIREGUARD VPN                "
-echo "______________________________________________"
-echo "Wireguard tools to allow a docker service to restart via wg-quick"
-echo "-----------------------------------------------------------------"
-# tools to easily start/stop WireGuard networks 
-sudo pamac install --no-confirm wireguard-tools
-
-echo "______________________________________________"
-echo "                                              " 
-echo "               DOCKER SUBVOLUME               "
-echo "______________________________________________"
-echo "      on-demand systemdrive mountpoint     "
-echo "-------------------------------------------"
-# The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. If that script was not used, create the mountpoint now:
-#Get device path of systemdrive, for example "/dev/nvme0n1p2" via #SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
-if sudo grep -Fq "/mnt/drives/system" /etc/fstab; then echo already added by post-install script; 
-else 
-# Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/drives/system")
-sudo mkdir -p /mnt/drives/system
-# Get the systemdrive UUID
-fs_uuid=$(findmnt / -o UUID -n)
-# Add mountpoint to FSTAB
-sudo tee -a /etc/fstab &>/dev/null << EOF
-
-# Allow easy manual mounting of btrfs root subvolume                         
-UUID=${fs_uuid} /mnt/drives/system  btrfs   subvolid=5,defaults,noatime,noauto  0  0
-EOF
-fi
-sudo mount -a
-
-
-echo "              Docker subvolume              "
-echo "--------------------------------------------"
-echo "create subvolume for Docker persistent data "
-# Temporarily Mount filesystem root
-sudo mount /mnt/drives/system
-# create a root subvolume for docker
-sudo btrfs subvolume create /mnt/drives/system/@docker
-## unmount root filesystem
-sudo umount /mnt/drives/system
-# Create mountpoint, to be used by fstab
-mkdir $HOME/docker
-# Get system fs UUID, to be used for next command
-fs_uuid=$(findmnt / -o UUID -n)
-# Add @docker subvolume to fstab to mount on mountpoint at boot
-sudo tee -a /etc/fstab &>/dev/null << EOF
-
-# Mount @docker subvolume
-UUID=${fs_uuid} $HOME/docker  btrfs   subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
-EOF
-sudo mount -a
-sudo chown ${USER}:${USER} $HOME/docker
-sudo chmod -R 755 $HOME/docker
-#sudo setfacl -Rdm g:docker:rwx $HOME/docker
-
-
-echo "______________________________________________________________________"
-echo "                                                                      " 
-echo " GET THE homeserver guide DOCKER COMPOSE FILE and MAINTENANCE SCRIPTS "
-echo "______________________________________________________________________"
-cd $HOME/Downloads
-echo "         compose yml and env file           "
-echo "--------------------------------------------"
-wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
-wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
-
-echo "               mediacleaner                 "
-echo "--------------------------------------------"
-mkdir -p $HOME/docker/HOST/mediacleaner
-wget -O $HOME/docker/HOST/mediacleaner/media_cleaner https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner.py
-
-echo "      BTRBK config and mail script          "
-echo "--------------------------------------------"
-mkdir -p $HOME/docker/HOST/btrbk
-wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
-wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
-sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
-# MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
-
-echo "Tools to auto-notify or auto-update docker images & containers"
-echo "--------------------------------------------------------------"
-# PULLIO - to auto-update
-mkdir -p $HOME/docker/HOST/updater
-sudo curl -fsSL "https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh" -o $HOME/docker/HOST/updater/pullio
-sudo chmod +x $HOME/docker/HOST/updater/pullio
-sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
-# DIUN - to auto-notify
-# Get the binary
-wget -O /usr/local/bin/diun 
-
-# Required folders for DIUN
-sudo mkdir -p /var/lib/diun
-sudo chmod -R 750 /var/lib/diun/
-sudo mkdir /etc/diun
-sudo chmod 770 /etc/diun
-
-# Get config file
-sudo mkdir -p $HOME/docker/HOST/updater/diun
-sudo tee -a $HOME/docker/HOST/updater/diun/diun.yml &>/dev/null << EOF
-notif:
-  mail:
-    host: 
-    port: 587
-    ssl: false
-    insecureSkipVerify: true
-    username: 
-    password: 
-    from: 
-    to: 
-
-providers:
-  docker:
-    endpoint: "unix:///var/run/docker.sock"
-    watchByDefault: true
-    watchStopped: true
-EOF
-sudo ln -s /etc/diun/diun.yml
-sudo chmod 644 /etc/diun/diun.yml
-
-echo "         server maintenance scripts         "
-echo "--------------------------------------------"
-curl -L https://api.github.com/repos/zilexa/Homeserver/tarball | tar xz --wildcards "*/docker/HOST/" --strip-components=1
-mv $HOME/Downloads/docker/HOST $HOME/docker/
-rm -r $HOME/Downloads/docker
-
-echo "Create the minimum folder structure for drives and datapool"
-echo "--------------------------------------------"
-sudo mkdir /mnt/drives/data0
-sudo mkdir /mnt/drives/backup1
-sudo mkdir -p /mnt/pool/{Users,Media}
-
-
-echo "________________________________________________"
-echo "                                                " 
-echo "       Install Docker and Docker Compose        "
-echo "________________________________________________"
-# Install Docker and Docker Compose
-sudo pamac install --no-confirm docker docker-compose
-
-# Create non-root user for docker, with privileges (not docker rootless)
-sudo groupadd docker
-sudo usermod -aG docker $USER
-
-# Enable docker at boot
-sudo systemctl enable docker.service
-sudo systemctl enable containerd.service
-
-
-echo "_____________________________________________________________"
-echo "                     SENDING EMAILS                          "
-echo "       allow system to send email notifications              " 
-echo "_____________________________________________________________"
-# Configure smtp according to Arch wiki
+echo "    EMAIL NOTIFICATIONS       "
+echo "------------------------------"
+# allow system to send email notifications - Configure smtp according to Arch wiki
 sudo pamac install --no-confirm msmtp
 sudo pamac install --no-confirm s-nail
 # link sendmail to msmtp
@@ -266,7 +62,7 @@ sudo ln -s /usr/bin/msmtp /usr/bin/sendmail
 sudo ln -s /usr/bin/msmtp /usr/sbin/sendmail
 # set msmtp as mta
 echo "set mta=/usr/bin/msmtp" | sudo tee -a /etc/mail.rc
-echo "---------------------------------------"
+echo ">>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<"
 echo "                                                             "
 echo "To receive important server notifications, please enter your main/default emailaddress that should receive notifications:"
 echo "                                                             "
@@ -290,11 +86,10 @@ from           FROMADDRESS
 user           SMTPUSER
 password       SMTPPASS
 EOF
-
 # set SMTP server
-echo "         ADD SMTP CREDENTIALS FOR EMAIL NOTIFICATIONS        "
-echo "-------------------------------------------------------------"
-echo "                                                             "
+echo "  ADD SMTP CREDENTIALS FOR EMAIL NOTIFICATIONS  "
+echo ">>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<"
+echo "                                                            "
 echo "Would you like to configure sending email now? You need to have an smtp provider account correctly configured with your domain" 
 read -p "Have you done that and do you have your smtp credentials at hand? (y/n)" answer
 case ${answer:0:1} in
@@ -322,9 +117,233 @@ case ${answer:0:1} in
 esac
 
 
+echo "  on-demand btrfs roo mount  "
+echo "-------------------------------"
+# on-demand systemdrive mountpoint 
+## The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. If that script was not used, create the mountpoint now:
+# Get device path of systemdrive, for example "/dev/nvme0n1p2" via #SYSTEMDRIVE=$(df / | grep / | cut -d" " -f1)
+if sudo grep -Fq "/mnt/drives/system" /etc/fstab; then echo already added by post-install script; 
+else 
+# Add an ON-DEMAND mountpoint in FSTAB for the systemdrive, to easily do a manual mount when needed (via "sudo mount /mnt/drives/system")
+sudo mkdir -p /mnt/drives/system
+# Get the systemdrive UUID
+fs_uuid=$(findmnt / -o UUID -n)
+# Add mountpoint to FSTAB
+sudo tee -a /etc/fstab &>/dev/null << EOF
+
+# Allow easy manual mounting of btrfs root subvolume                         
+UUID=${fs_uuid} /mnt/drives/system  btrfs   subvolid=5,defaults,noatime,noauto  0  0
+EOF
+fi
+sudo mount -a
+
+echo "        Docker subvolume       "
+echo "-------------------------------"
+# create subvolume for Docker persistent data
+# Temporarily Mount filesystem root
+sudo mount /mnt/drives/system
+# create a root subvolume for docker
+sudo btrfs subvolume create /mnt/drives/system/@docker
+## unmount root filesystem
+sudo umount /mnt/drives/system
+# Create mountpoint, to be used by fstab
+mkdir $HOME/docker
+# Get system fs UUID, to be used for next command
+fs_uuid=$(findmnt / -o UUID -n)
+# Add @docker subvolume to fstab to mount on mountpoint at boot
+sudo tee -a /etc/fstab &>/dev/null << EOF
+
+# Mount @docker subvolume
+UUID=${fs_uuid} $HOME/docker  btrfs   subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
+EOF
+sudo mount -a
+sudo chown ${USER}:${USER} $HOME/docker
+sudo chmod -R 755 $HOME/docker
+#sudo setfacl -Rdm g:docker:rwx $HOME/docker
+
+echo "Create the minimum folder structure for drives and datapool"
+echo "--------------------------------------------"
+sudo mkdir /mnt/drives/data0
+sudo mkdir /mnt/drives/backup1
+sudo mkdir -p /mnt/pool/{Users,Media}
+
+
+echo "____________________________________________"
+echo "           INSTALL SERVER TOOLS             "
+echo "                                            "
+echo "____________________________________________"
+
+echo "         Docker and Docker Compose          "
+echo "--------------------------------------------"
+# Install Docker and Docker Compose
+sudo pamac install --no-confirm docker docker-compose
+
+# Create non-root user for docker, with privileges (not docker rootless)
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+# Enable docker at boot
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+
+echo "                   BTRBK                    "
+echo "--------------------------------------------"
+echo "Swiss handknife-like tool to automate snapshots & backups of personal data" 
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
+sudo pamac install --no-confirm btrbk
+
+echo "               RUN-IF-TODAY                 "
+echo "--------------------------------------------"
+echo "simplify scheduling of weekly/monthly tasks"
+sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
+sudo chmod +x /usr/bin/run-if-today
+
+echo "                   NOCACHE                  "
+echo "--------------------------------------------"
+echo "handy when moving lots of files at once in the background, without filling up cache and slowing down the system."
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
+sudo pamac install --no-confirm nocache
+
+echo "                    GRSYNC                  "
+echo "--------------------------------------------"
+echo "Friendly UI for rsync"
+sudo pamac install --no-confirm grsync
+
+echo "                  LM_SENSORS                "
+echo "--------------------------------------------"
+echo "to be able to read out all sensors" 
+sudo pamac install --no-confirm lm_sensors
+sudo sensors-detect --auto
+
+echo "          S.M.A.R.T. monitoring             "
+echo "--------------------------------------------"
+echo "to be able to read SMART values of drives" 
+sudo pamac install --no-confirm smartmontools
+
+echo "                 HD PARM                    "
+echo "--------------------------------------------"
+echo "to be able to configure drive parameters" 
+sudo pamac install --no-confirm hdparm
+
+echo "                 MERGERFS                  "
+echo "-------------------------------------------"
+echo "pool drives to make them appear as 1 without raid"
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
+sudo pamac install --no-confirm mergerfs
+
+echo "               WIREGUARD VPN               "
+echo "-------------------------------------------"
+echo "Wireguard tools to allow a docker service to restart via wg-quick"
+echo "-----------------------------------------------------------------"
+# tools to easily start/stop WireGuard networks 
+sudo pamac install --no-confirm wireguard-tools
+
+
+echo "______________________________________________________________________"
+echo "                                                                      " 
+echo " GET THE homeserver guide DOCKER COMPOSE FILE and MAINTENANCE SCRIPTS "
+echo "______________________________________________________________________"
+cd $HOME/Downloads
+echo "         compose yml and env file           "
+echo "--------------------------------------------"
+wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
+wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
+
+echo "               mediacleaner                 "
+echo "--------------------------------------------"
+mkdir -p $HOME/docker/HOST/mediacleaner
+wget -O $HOME/docker/HOST/mediacleaner/media_cleaner https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner.py
+
+echo "      BTRBK config and mail script          "
+echo "--------------------------------------------"
+mkdir -p $HOME/docker/HOST/btrbk
+wget -O $HOME/docker/HOST/btrbk/btrbk.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk.conf
+wget -O $HOME/docker/HOST/btrbk/btrbk-mail.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/btrbk/btrbk-mail.sh
+sudo ln -s $HOME/docker/HOST/btrbk/btrbk.conf /etc/btrbk/btrbk.conf
+# MANUALLY configure the $HOME/docker/HOST/btrbk/btrbk.conf to your needs
+
+echo "                 archiver                   "
+echo "--------------------------------------------"
+mkdir -p $HOME/docker/HOST/archiver
+wget -O $HOME/docker/HOST/archiver/archiver.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/archiver/archiver.sh
+wget -O $HOME/docker/HOST/archiver/archiver_exclude.txt https://github.com/zilexa/Homeserver/blob/master/docker/HOST/archiver/archiver_exclude.txt
+
+echo "Tools to auto-notify or auto-update docker images & containers"
+echo "--------------------------------------------------------------"
+# PULLIO - to auto-update
+mkdir -p $HOME/docker/HOST/updater
+sudo curl -fsSL "https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh" -o $HOME/docker/HOST/updater/pullio
+sudo chmod +x $HOME/docker/HOST/updater/pullio
+sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
+# DIUN - to auto-notify
+# Get the binary
+sudo wget -O /usr/local/bin/diun https://github.com/crazy-max/diun/releases/download/v4.21.0/diun_4.21.0_linux_amd64.tar.gz
+# Required folders for DIUN
+sudo mkdir -p /var/lib/diun
+sudo chmod -R 750 /var/lib/diun/
+sudo mkdir /etc/diun
+sudo chmod 770 /etc/diun
+# Get config file
+sudo mkdir -p $HOME/docker/HOST/updater/diun
+sudo tee -a $HOME/docker/HOST/updater/diun/diun.yml &>/dev/null << EOF
+notif:
+  mail:
+    host: 
+    port: 587
+    ssl: false
+    insecureSkipVerify: true
+    username: 
+    password: 
+    from: 
+    to: 
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    watchByDefault: true
+    watchStopped: true
+EOF
+sudo ln -s /etc/diun/diun.yml
+sudo chmod 644 /etc/diun/diun.yml
+
+
 echo "______________________________________________________"
 echo "           OPTIONAL TOOLS OR CONFIGURATIONS           "
 echo "______________________________________________________"
+echo "--------------------------------------------------------------------------------------------------------------"
+echo "Download recommended/best-practices configuration for QBittorrent: to download media, torrents? (recommended)" 
+read -p "y or n ?" answer
+case ${answer:0:1} in
+    y|Y )
+        sudo mkdir -p $HOME/docker/qbittorrent/config
+        sudo chown ${USER}:${USER} $HOME/docker/qbittorrent/config
+        wget -O $HOME/docker/qbittorrent/config/qBittorrent.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/qbittorrent/config/qBittorrent.conf
+        sudo chmod 644 $HOME/docker/qbittorrent/config/qBittorrent.conf
+    ;;
+    * )
+        echo "SKIPPED downloading QBittorrent config file.."
+    ;;
+esac
+
+
+echo "--------------------------------------------------------------------------------------------------------------"
+echo "Get the PIA VPN script to auto-update Qbittorrent portforwarding? (recommended if you will use PIA VPN for downloads)" 
+read -p "y or n ?" answer
+case ${answer:0:1} in
+    y|Y )
+        echo " PIA VPN script to auto-update Qbittorrent  "
+        echo "--------------------------------------------"
+        mkdir -p $HOME/docker/HOST/vpn-proxy/pia-shared
+        wget -O $HOME/docker/HOST/vpn-proxy/pia-shared/updateport-qb.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/vpn-proxy/pia-shared/updateport-qb.sh
+        echo "DONE! Don't forget to enter your QBittorrent credentials in the script after you have changed them in the webUI"
+        echo "(default is admin/adminadmin)."
+    ;;
+    * )
+        echo "SKIPPED getting PIA VPN script for auto-updating QB portforwarding.."
+    ;;
+esac
+
+
 echo "Install SNAPRAID-BTRFS for parity-based backups? (recommended if you will pool drives via MergerFS instead of BTRFS RAID)"
 read -p "y or n ?" answer
 case ${answer:0:1} in
@@ -375,38 +394,6 @@ case ${answer:0:1} in
     ;;
 esac
 
-echo "--------------------------------------------------------------------------------------------------------------"
-echo "Download recommended/best-practices configuration for QBittorrent: to download media, torrents? (recommended)" 
-read -p "y or n ?" answer
-case ${answer:0:1} in
-    y|Y )
-        sudo mkdir -p $HOME/docker/qbittorrent/config
-        sudo chown ${USER}:${USER} $HOME/docker/qbittorrent/config
-        wget -O $HOME/docker/qbittorrent/config/qBittorrent.conf https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/qbittorrent/config/qBittorrent.conf
-        sudo chmod 644 $HOME/docker/qbittorrent/config/qBittorrent.conf
-    ;;
-    * )
-        echo "SKIPPED downloading QBittorrent config file.."
-    ;;
-esac
-
-
-echo "--------------------------------------------------------------------------------------------------------------"
-echo "Get the PIA VPN script to auto-update Qbittorrent portforwarding? (recommended if you will use PIA VPN for downloads)" 
-read -p "y or n ?" answer
-case ${answer:0:1} in
-    y|Y )
-        echo " PIA VPN script to auto-update Qbittorrent  "
-        echo "--------------------------------------------"
-        mkdir -p $HOME/docker/HOST/vpn-proxy/pia-shared
-        wget -O $HOME/docker/HOST/vpn-proxy/pia-shared/updateport-qb.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/vpn-proxy/pia-shared/updateport-qb.sh
-        echo "DONE! Don't forget to enter your QBittorrent credentials in the script after you have changed them in the webUI"
-        echo "(default is admin/adminadmin)."
-    ;;
-    * )
-        echo "SKIPPED getting PIA VPN script for auto-updating QB portforwarding.."
-    ;;
-esac
 echo "                                                                               "        
 echo "==============================================================================="
 echo "                                                                               "  
