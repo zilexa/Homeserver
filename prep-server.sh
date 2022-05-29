@@ -252,7 +252,11 @@ wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa
 echo "               mediacleaner                 "
 echo "--------------------------------------------"
 mkdir -p $HOME/docker/HOST/mediacleaner
-wget -O $HOME/docker/HOST/mediacleaner/media_cleaner https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner.py
+wget -O $HOME/docker/HOST/mediacleaner/media_cleaner.py https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner.py
+# make it executable
+chmod +x $HOME/docker/HOST/mediacleaner/media_cleaner.py
+# install required dependency
+sudo pamac install --no-confirm python-dateutil
 
 echo "      BTRBK config and mail script          "
 echo "--------------------------------------------"
@@ -276,13 +280,7 @@ sudo curl -fsSL "https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh
 sudo chmod +x $HOME/docker/HOST/updater/pullio
 sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
 # DIUN - to auto-notify
-# Get the binary
-sudo wget -O /usr/local/bin/diun https://github.com/crazy-max/diun/releases/download/v4.21.0/diun_4.21.0_linux_amd64.tar.gz
-# Required folders for DIUN
-sudo mkdir -p /var/lib/diun
-sudo chmod -R 750 /var/lib/diun/
-sudo mkdir /etc/diun
-sudo chmod 770 /etc/diun
+
 # Get config file
 sudo mkdir -p $HOME/docker/HOST/updater/diun
 sudo tee -a $HOME/docker/HOST/updater/diun/diun.yml &>/dev/null << EOF
