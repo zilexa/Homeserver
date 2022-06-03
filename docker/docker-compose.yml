@@ -1,4 +1,5 @@
-## UPDATED: 03-6-2022, changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
+## UPDATED: 03-6-2022, requires the NEW .env file!!
+# changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
 # Check for typos: docker-compose config 
