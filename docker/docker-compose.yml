@@ -1,4 +1,4 @@
-## UPDATED: 16-05-2022, changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
+## UPDATED: 03-6-2022, changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
 # Check for typos: docker-compose config 
@@ -136,6 +136,18 @@ services:
       - NET_ADMIN
     network_mode: host
     environment:
+      SESSION_SECRET: $WGPORTALSECRET
+      WGUI_USERNAME: $USER
+      WGUI_PASSWORD: $PW
+      WGUI_CONFIG_FILE_PATH: /etc/wireguard/wg0.conf
+      WGUI_ENDPOINT_ADDRESS: $DOMAIN
+      WGUI_DNS: $WGIP
+      WGUI_PERSISTENT_KEEPALIVE: 25
+      WGUI_SERVER_INTERFACE_ADDRESSES: $WGIP/24
+      WGUI_SERVER_LISTEN_PORT: $WGPORT
+      WGUI_SERVER_POST_UP_SCRIPT: $WGPOSTUP
+      WGUI_SERVER_POST_DOWN_SCRIPT: $WGPOSTDOWN
+      WGUI_DEFAULT_CLIENT_ALLOWED_IPS: $WGIP/24
       SMTP_HOSTNAME: $SMTP
       SMTP_PORT: $SMTPPORT
       SMTP_USERNAME: $SMTPUSER
@@ -143,7 +155,6 @@ services:
       SMTP_AUTH_TYPE: LOGIN
       EMAIL_FROM_ADDRESS: $RECIPIENT
       EMAIL_FROM_NAME: $SMTPUSER
-      SESSION_SECRET: $VPNSECRET
     logging:
       driver: json-file
       options:
@@ -177,41 +188,94 @@ services:
       plugsy.category: Access
 ##
 ##____________________Scrutiny [SYSTEM/Analytics]
-  scrutiny:
-    container_name: scrutiny
-    image: cr.hotio.dev/hotio/scrutiny
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    container_name: mon-prometheus
     restart: always
-    cap_add:
-      - SYS_RAWIO
-      - SYS_ADMIN
-    devices:
-      - "/dev/nvme0n1"
-      - "/dev/sda"
-      - "/dev/sdb"
-      - "/dev/sdc"
-      - "/dev/sdd"
-      - "/dev/sde" 
-    networks: 
-      - web-proxy
-    #entrypoint: CMD
-    environment:
-      mode: web
-      PUID: $PUID
-      PGID: $PGID
-      UMASK: 002
-      TZ: $TZ
-      API_ENDPOINT: http://scrutiny-web:8080
+    networks:
+      - analytics
+    user: root
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
     volumes:
-      - /run/udev:/run/udev:ro
-      - $DOCKERDIR/scrutiny/config:/config
+      - $DOCKERDIR/analytics/prometheus:/etc/prometheus
+      - $DOCKERDIR/analytics/prometheus_data:/prometheus
     ports:
-      - "8081:8080"
-    labels:
-      caddy: http://storage.o
-      caddy.reverse_proxy: "{{upstreams 8080}}"
-      plugsy.name: Analytics
-      plugsy.link: http://storage.o/
-      plugsy.category: System
+      - 7000:9090 
+  alertmanager:
+    image: prom/alertmanager:v0.24.0
+    container_name: mon-alertmanager
+    networks:
+      - analytics
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+    volumes:
+      - $DOCKERDIR/analytics/alertmanager:/etc/alertmanager
+    ports:
+      - 9093:9093
+  nodeexporter:
+    image: prom/node-exporter:v1.3.1
+    container_name: mon-nodeexporter
+    restart: always
+    network_mode: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - 9100:9100
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.44.0
+    container_name: mon-cadvisor
+    restart: always
+    network_mode: host
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+    ports:
+      - 8080:8080
+  grafana:
+    image: grafana/grafana:8.4.5
+    container_name: mon-grafana
+    networks:
+      - analytics
+    user: root
+    volumes:
+      - $DOCKERDIR/analytics/grafana/data:/var/lib/grafana
+      - $DOCKERDIR/analytics/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - $DOCKERDIR/analytics/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    ports:
+      - 4000:3000
+  pushgateway:
+    image: prom/pushgateway:v1.4.2
+    container_name: mon-pushgateway
+    restart: unless-stopped
+    networks:
+      - analytics
+    ports:
+      - 9091:9091
 ##
 ##________CLOUD______
 ##_____________________ Firefox Sync [CLOUD/Browser] 
@@ -322,60 +386,6 @@ services:
     labels:
       plugsy.name: FileRun Database
       plugsy.parents: FileRun
-##_____________________ OnlyOffice Document Server [Cloud/Office]
-  office:
-    container_name: office
-    image: onlyoffice/4testing-documentserver:7.1.0.199
-    networks:
-      - office
-    #stdin_open: true
-    restart: always
-    #networks: 
-      #- web-proxy
-    #tty: true
-    #volumes:
-      #- $DOCKERDIR/onlyoffice/data:/var/www/onlyoffice/Data
-      #- $DOCKERDIR/onlyoffice/log:/var/log/onlyoffice
-      #- $DOCKERDIR/onlyoffice/database:/var/lib/postgresql
-      #- /usr/share/fonts:/usr/share/fonts
-    environment:
-      JWT_ENABLED: true
-      JWT_SECRET: $ONLYOFFICEJWT
-      AMQP_URI: amqp://officerabbitmq:5672
-      DB_HOST: officedb
-      DB_PORT: 5432
-      DB_NAME: officedb
-      DB_USER: office
-      DB_PWD:  office01
-    ports:
-      - 8811:80
-    #labels:
-      #caddy: office.$DOMAIN
-     #caddy.reverse_proxy: "{{upstreams 80}}"
-     #caddy.encode: gzip
-      # Required extra headers
-      #caddy.file_server: ""
-      #caddy.header.X-Content-Type-Options: "nosniff"
-      #caddy.tls_insecure_skip_verify: ""
-      #caddy.header: /
-      #plugsy.name: OnlyOffice
-      #plugsy.parents: FileRun
-  officerabbitmq:
-    container_name: officerabbitmq
-    image: rabbitmq
-    restart: always
-    networks:
-    - office
-  officedb:
-    container_name: officedb
-    image: postgres
-    networks:
-      - office
-    restart: always
-    environment:
-      POSTGRES_DB: officedb
-      POSTGRES_USER: office
-      POSTGRES_PASSWORD: office01
 ##
 ##
 ##________MEDIA________
@@ -627,9 +637,9 @@ services:
 networks:
   web-proxy:
     external: true
+  analytics:
+    driver: bridge
   filerun:
     driver: bridge
   unbound:
-    driver: bridge
-  office:
     driver: bridge
