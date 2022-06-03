@@ -1,3 +1,9 @@
+# CHANGELOG 2022-06-03
+# ADDED: VPN-Portal now supports lots of env variables to properly configure a mesh network via your Wireguard server config file! 
+# ADDED: The .env file now includes variables for VPN-portal and is restructured. 
+# REMOVED: OnlyOffice Documentserver, cannot get it working. 
+# ADDED: Prometheus, Grafana, Alerts etc from dockprom (see his github). Not working yet. 
+#
 # CHANGELOG 2022-05-16
 # ADDED: all services with a webUI are now proxied through a local domain, including the ones that use network_mode: host (AdGuard Home and VPN-portal (=wireguard-ui)). 
 # REMOVED: obsolete ports sections for VPN portal, since it runs on host network, the port is exposed anyway. 
