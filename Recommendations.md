@@ -8,7 +8,7 @@ The research can be found in [this Dutch forum](https://gathering.tweakers.net/f
 ## Motherboard
 _non-gaming, Intel for lowest power consumption, ECC memory support_
 
-The most important part that goes against most online recommendations:  \
+The most important part that goes against most online recommendations:  
 1. A motherboard designed specifically for 24/7/365 stable operation with low power consumption - Fujitsu D3644-B.  \
 This is the cheapest (yet feature-complete) motherboard with the C246 chipset, one that is specifically meant for embedded devices and edge solutions. It is made of special components for low power consumption and stability. **Almost every other motherboard you find is made up of components focused on performance (for gaming usually)**. Building a home server requires you to think differently. For example. you do not want a motherboard with maximum number of phases, because they exist solely to support high consumption of your CPU. This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server. The Fujitu D3644-B, D3643-H, D3473-B motherboards are smart choices. Unfortunately only the 3644 supports ECC. There are however Asrock motherboards out there with low power consumption and ECC. 
 
@@ -24,7 +24,9 @@ This is the cheapest (yet feature-complete) motherboard with the C246 chipset, o
 7. PicoPSU-90 & Leicke 120W adapter - extremely efficient at low power consumption. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
 
 ## Storage
-- For the OS and applications, use an NVME drive, for example M.2 PCI Express 3.0 x4 are common.
-- Samsung PM981a, WesternDigital SN730, Kioxia G6 are examples of M.2 NVME ssds that have low idle power consumption. There are big differences, look for Anandtech, Tomshardware reviews. Most other reviewers do not test idle power consumption at all! Even though on a 24x7 system, this will be THE power consumption 90% of the time.
-- For data storage, backups etc use SATA instead of NVME: SATA SSDs offer plenty of speed and use less power. They are also cheaper. There are very little usecases for NVME/PCI Express drives in a NAS/Homeserver.
+- For the OS and applications, use an NVME drive, for example M.2 PCI Express 3.0 x4 are common. PCI 4.0 uses more power and the extra speed is useless for our purpose. Choose the M.2 NVME SSD with low idle power consumption. There are big differences, look for Anandtech, Tomshardware reviews. Most other reviewers do not test idle power consumption at all! Even though on a 24x7 system, this will be THE power consumption 90% of the time. The following have very low idle power consumption:
+  - Samsung PM981a
+  - WesternDigital SN730
+  - Kioxia G6 
+- For data storage, backups etc use SATA instead of NVME: SATA SSDs offer plenty of speed (up to 550MB/s) and use less power. They are also cheaper. There are very little usecases for NVME/PCI Express as storage drives in a NAS/Homeserver.
 - When using harddisks, go for 2.5" instead of 3.5" because they use up to 5 times less power, even when idle. Instead of buying the SATA harddisks, buy the Seagate Portable Drive or Seagate Backup Plus 4TB or 5TB: they cost half the price and contain a normal SATA controller. Just remove them from the usb case first. 
