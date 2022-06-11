@@ -9,7 +9,7 @@ The research can be found in [this Dutch forum](https://gathering.tweakers.net/f
 _non-gaming, Intel for lowest power consumption, ECC memory support_
 
 The most important part that goes against most online recommendations:  
-1. A motherboard designed specifically for 24/7/365 stable operation with low power consumption - Fujitsu D3644-B.  \
+1. A motherboard designed specifically for 24/7/365 stable operation with low power consumption - Fujitsu (now: Kontron) D3644-B.  \
 This is the cheapest (yet feature-complete) motherboard with the C246 chipset, one that is specifically meant for embedded devices and edge solutions. It is made of special components for low power consumption and stability. **Almost every other motherboard you find is made up of components focused on performance (for gaming usually)**. Building a home server requires you to think differently. For example. you do not want a motherboard with maximum number of phases, because they exist solely to support high consumption of your CPU. This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server. The Fujitu D3644-B, D3643-H, D3473-B motherboards are smart choices. Unfortunately only the 3644 supports ECC. There are however Asrock motherboards out there with low power consumption and ECC. 
 
 2. There are no AMD chipsets/motherboards with a similar focus (non-gaming) and no combination of AMD motherboard+AMD processor has such low idle power consumption (2-5 WATT).
