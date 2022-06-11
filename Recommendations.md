@@ -3,7 +3,7 @@
 A lot of research has been done to determine the required choices to have a rock stable, future-proof homeserver with the lowest power consumption.
 The system will be running 24/7, so power consumption matters. With the recommendations below you should be able to reach idle power consumption of 2.5W up to 8W.
 
-The research can be found in [this Dutch forum](https://gathering.tweakers.net/forum/list_messages/2096876) (or see [translation](https://gathering-tweakers-net.translate.goog/forum/list_messages/2096876?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=nl&_x_tr_pto=wapp), the first post is long and contains the most important information. Below the concluding recommendations: 
+The research can be found in [this Dutch forum](https://gathering.tweakers.net/forum/list_messages/2096876) (or see [translation](https://gathering-tweakers-net.translate.goog/forum/list_messages/2096876?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=nl&_x_tr_pto=wapp)), the first post is long and contains the most important information. Below the concluding recommendations: 
 
 ## Motherboard
 _non-gaming, Intel for lowest power consumption, ECC memory support_
