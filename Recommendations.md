@@ -23,7 +23,7 @@ This is the cheapest (yet feature-complete) motherboard with the C246 chipset, o
 ## Power consumption
 A PicoPSU-90 or higher, this is a plug on your motherboard and needs an external powerbrick, the following 2 are extremely efficient at low power consumption:
   - Leicke NT03015, 120W 12V
-  - Seasonic SSA-0601HE-12 (60W)
+  - Seasonic SSA-0601HE-12 (60W)  \
 A PicoPSU combined with such very efficient (specifically at low consumption) power bricks will help you reach a low power consumption with minimal overhead. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
 
 ## Storage
