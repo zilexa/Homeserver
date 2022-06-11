@@ -8,21 +8,23 @@ The research can be found in [this Dutch forum](https://gathering.tweakers.net/f
 ## Motherboard
 _non-gaming, Intel for lowest power consumption, ECC memory support_
 The most essential part: A motherboard designed specifically for 24/7/365 stable operation with low power consumption, instead of a motherboard designed for gaming.
-  - (with ECC) mATX: Fujitsu or Kontron D3644-B mATX (supports ECC)
-    - (no ECC) mATX alternatives: Fujitsu or Kontron D3642-B or D3643-H
-  - (no ECC) mITX: Fujitsu or Kontron D3473-B 
+  - (with ECC) mATX: Fujitsu D3644-B mATX (supports ECC)
+    - (no ECC) mATX alternatives: Fujitsu D3642-B or D3643-H
+  - (no ECC) mITX: Fujitsu D3473-B 
   - ASRock H310M-STX, only available with case (barebone): AsRock DeskMini 310  \
 The D3644-B is the cheapest (yet feature-complete) motherboard with the C246 chipset, one that is specifically meant for embedded devices and edge solutions. It is made of special components for low power consumption and stability. **Almost every other motherboard you find is made up of components focused on performance (for gaming usually)**. 
 Building a home server requires you to think differently. For example. you do not want a motherboard with maximum number of phases, because they exist solely to support high consumption of your CPU. This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server. The B motherboards are smart choices. Unfortunately only the 3644 supports ECC. 
 
 _Notes_
-1. There are no AMD chipsets/motherboards with a similar focus (non-gaming) and no combination of AMD motherboard+AMD processor has such low idle power consumption (2-5 WATT).
+1. Motherboards designed to run uninterrupted 24x7x365 like the D3644-B are not refreshed yearly like consumer-focused products. They are being produced for many years and receive lots of support. Newer technologies are usually focused on performance and is therefore not relevant.
 
-2. combined with an Intel Pentium Gold (5400 or newer, not much difference between the old and new ones) your system will be plenty fast. Or go for a quad core i3-8100, i3-9100 or i3-10100 (choose the cheapest one as they are near-identical). They support ECC RAM and hardware transcoding of video and especially the quad-cores are plenty fast for the next 10+ years as a homeserver. 
+2. There are no AMD chipsets/motherboards with a similar focus (non-gaming) and no combination of AMD motherboard+AMD processor has such low idle power consumption (2-5 WATT).
 
-3. Error-correcting memory (non-registered/unbuffered ECC RAM) - even normal computers should have this. Prevents data and disk corruption issues. Very important! Unfortunately due to Intel strategy, very few motherboards support (non-reg) ECC.
+3. combined with an Intel Pentium Gold (5400 or newer, not much difference between the old and new ones) your system will be plenty fast. Or go for a quad core i3-8100, i3-9100 or i3-10100 (choose the cheapest one as they are near-identical). They support ECC RAM and hardware transcoding of video and especially the quad-cores are plenty fast for the next 10+ years as a homeserver. 
 
-4. If you do have an addiction to the highest speed, even though NVME/PCI Express is not recommended for data storage (see Storage section), go for a Motherboard with PCI-Express bifurcation support. In the future when ssds become cheaper, you can replace SATA drives for M.2 drives. You can insert 4 M.2 SSDs with full PCIe 4x speed in a PCIe 16x port. With the Fujitsu/Kontron 3644 motherboard, you can add in total 5x NVME PCI Express 3.0 x4 M.2 SSDs with full speed in addition to the 6 SATA slots.
+4. Error-correcting memory (non-registered/unbuffered ECC RAM) - even normal computers should have this. Prevents data and disk corruption issues. Very important! Unfortunately due to Intel strategy, very few motherboards support (non-reg/unbuffered) ECC.
+
+5. DDR5: again focused on performance and should not be preferred for a homeserver because ECC DDR5 has a form of ECC that only signals a problem with a data refresh on the module itself. That's called on-die ECC. It does not detect erroneous data going to the processor/cache. It is therefore not fail-safe at the single bit level.  
 
 ## Power consumption
 - PicoPSU 90W or higher: A PicoPSU combined with a very efficient (specifically at low consumption) power brick will help you reach a low power consumption with minimal overhead. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
@@ -39,3 +41,9 @@ _Notes_
   - Samsung EVO 860
   - Samsung QVO 870 (<-- cheapest 4TB SSD, performs better than lots of (more expensive) TLC drives, highly recommended) 
 - When using harddisks, go for 2.5" instead of 3.5" because they use up to 5 times less power, even when idle. Instead of buying the SATA harddisks, buy the Seagate Portable Drive or Seagate Backup Plus 4TB or 5TB: they cost half the price and contain a normal SATA controller. Just remove them from the usb case first. 
+
+_Notes_
+1. If you do have an addiction to the highest storage speed and have your mind set on using NVME, go for a Motherboard with PCI-Express bifurcation support (D-3644 and most other Fujitsus support this). PCI-Express bifurcation allows you to use a single PCI-Express port as multiple ports natively, without expensive, energy-slurping bridge chips. PCI Bifurcation splitter cost only 20 bucks and allows you to connect up to 4 NVME SSDS (PCI-E3.0 x4 speed) in a single x16 slot. 
+In the future when ssds become cheaper, you can replace SATA drives for M.2 drives. You can insert 4 M.2 SSDs with full PCIe 4x speed in a PCIe 16x port. With the Fujitsu/Kontron 3644 motherboard, you can add in total 5x NVME PCI Express 3.0 x4 M.2 SSDs with full speed in addition to the 6 SATA slots.
+
+2. Better start with organizing your data. I started with 5x 5TB 2.5" HDDs + 1TB NVME SSD (via PCI Bifurcation) for data storage in addition to my 512GB NVME SSD for OS. 2 years later and I regret the waste of money as I only have 600GB of personal data (excluding backups/snapshots to go back in time) and only need a 2TB drive for my downloads. I am switching completely to 4TB SATA SSDs (Samsung EVO 860 and QVO 870 bought secondhand). 
