@@ -21,11 +21,9 @@ This is the cheapest (yet feature-complete) motherboard with the C246 chipset, o
 5. If you do have an addiction to the highest speed, even though NVME/PCI Express is not recommended for data storage (see Storage section), go for a Motherboard with PCI-Express bifurcation support. In the future when ssds become cheaper, you can replace SATA drives for M.2 drives. You can insert 4 M.2 SSDs with full PCIe 4x speed in a PCIe 16x port. With the Fujitsu/Kontron 3644 motherboard, you can add in total 5x NVME PCI Express 3.0 x4 M.2 SSDs with full speed in addition to the 6 SATA slots.
 
 ## Power consumption
-- PicoPSU 90W: A PicoPSU combined with a very efficient (specifically at low consumption) power brick will help you reach a low power consumption with minimal overhead. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
+- PicoPSU 90W or higher: A PicoPSU combined with a very efficient (specifically at low consumption) power brick will help you reach a low power consumption with minimal overhead. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
   - Leicke NT03015, 120W 12V
   - Seasonic SSA-0601HE-12 (60W)
-
-
 
 ## Storage
 - For the OS and applications, use an NVME drive, for example M.2 PCI Express 3.0 x4 are common. PCI 4.0 uses more power and the extra speed is useless for our purpose. Choose the M.2 NVME SSD with low idle power consumption. There are big differences, look for Anandtech, Tomshardware reviews. Most other reviewers do not test idle power consumption at all! Even though on a 24x7 system, this will be THE power consumption 90% of the time. The following have very low idle power consumption:
