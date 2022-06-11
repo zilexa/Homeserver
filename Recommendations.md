@@ -9,8 +9,13 @@ The research can be found in [this Dutch forum](https://gathering.tweakers.net/f
 _non-gaming, Intel for lowest power consumption, ECC memory support_
 
 The most important part that goes against most online recommendations:  
-1. A motherboard designed specifically for 24/7/365 stable operation with low power consumption - Fujitsu (now: Kontron) D3644-B.  \
-This is the cheapest (yet feature-complete) motherboard with the C246 chipset, one that is specifically meant for embedded devices and edge solutions. It is made of special components for low power consumption and stability. **Almost every other motherboard you find is made up of components focused on performance (for gaming usually)**. Building a home server requires you to think differently. For example. you do not want a motherboard with maximum number of phases, because they exist solely to support high consumption of your CPU. This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server. The Fujitu D3644-B, D3643-H, D3473-B motherboards are smart choices. Unfortunately only the 3644 supports ECC. There are however Asrock motherboards out there with low power consumption and ECC. 
+1. The most essential part: A motherboard designed specifically for 24/7/365 stable operation with low power consumption, instead of a motherboard designed for gaming.
+  - (with ECC) mATX: Fujitsu or Kontron D3644-B mATX (supports ECC)
+    - (no ECC) mATX alternatives: Fujitsu or Kontron D3642-B or D3643-H
+    - (no ECC) mITX: Fujitsu or Kontron D3473-B 
+    - ASRock H310M-STX, only available with case (barebone): AsRock DeskMini 310  \
+The D3644-B is the cheapest (yet feature-complete) motherboard with the C246 chipset, one that is specifically meant for embedded devices and edge solutions. It is made of special components for low power consumption and stability. **Almost every other motherboard you find is made up of components focused on performance (for gaming usually)**. 
+Building a home server requires you to think differently. For example. you do not want a motherboard with maximum number of phases, because they exist solely to support high consumption of your CPU. This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server. The B motherboards are smart choices. Unfortunately only the 3644 supports ECC. 
 
 2. There are no AMD chipsets/motherboards with a similar focus (non-gaming) and no combination of AMD motherboard+AMD processor has such low idle power consumption (2-5 WATT).
 
