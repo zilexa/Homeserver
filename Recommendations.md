@@ -22,9 +22,13 @@ _Notes_
 
 3. combined with an Intel Pentium Gold (5400 or newer, not much difference between the old and new ones) your system will be plenty fast. Or go for a quad core i3-8100, i3-9100 or i3-10100 (choose the cheapest one as they are near-identical). They support ECC RAM and hardware transcoding of video and especially the quad-cores are plenty fast for the next 10+ years as a homeserver. 
 
-4. Error-correcting memory (non-registered/unbuffered ECC RAM) - even normal computers should have this. Prevents data and disk corruption issues. Very important! Unfortunately due to Intel strategy, very few motherboards support (non-reg/unbuffered) ECC.
+## Memory (RAM)
+2x8GB is preferred, but highly depends on what you plan to do with your server. I am running 26 docker containers and still use only 6GB to 12GB max. Yet it can be preferred to have lots of free RAM for specific tasks. If budget allows, consider 2x16GB. 
 
-5. DDR5: again focused on performance and should not be preferred for a homeserver because ECC DDR5 has a form of ECC that only signals a problem with a data refresh on the module itself. That's called on-die ECC. It does not detect erroneous data going to the processor/cache. It is therefore not fail-safe at the single bit level.  
+_Notes_
+1. Error-correcting memory (non-registered/unbuffered ECC RAM) - even normal computers should have this. Prevents data and disk corruption issues. Very important! Unfortunately due to Intel strategy, very few motherboards support (non-reg/unbuffered) ECC.
+
+2. DDR5 is developed for performance and should not be preferred for a homeserver. Besides that, DDR5 has its own power management chip, this means differences per brand/model/revisions. Also, ECC DDR5 is not common yet and ECC DDR5 has a form of ECC that only signals a problem with a data refresh on the module itself. That's called on-die ECC. It does not detect erroneous data going to the processor/cache. It is therefore not fail-safe at the single bit level. Until tests/reviews provide arguments in favor of DDR5 for 24x7x365 low power consumption, stick with DDR4 (ECC unbuffered if your motherboard supports it). 
 
 ## Power consumption
 - PicoPSU 90W or higher: A PicoPSU combined with a very efficient (specifically at low consumption) power brick will help you reach a low power consumption with minimal overhead. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
