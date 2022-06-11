@@ -31,4 +31,7 @@ This is the cheapest (yet feature-complete) motherboard with the C246 chipset, o
   - WesternDigital SN730
   - Kioxia G6 
 - For data storage, backups etc use SATA instead of NVME: SATA SSDs offer plenty of speed (up to 550MB/s) and use less power. They are also cheaper. There are very little usecases for NVME/PCI Express as storage drives in a NAS/Homeserver.
+  - Samsung EVO 850
+  - Samsung EVO 860
+  - Samsung QVO 870 (<-- cheapest 4TB SSD, performs better than lots of (more expensive) TLC drives, highly recommended) 
 - When using harddisks, go for 2.5" instead of 3.5" because they use up to 5 times less power, even when idle. Instead of buying the SATA harddisks, buy the Seagate Portable Drive or Seagate Backup Plus 4TB or 5TB: they cost half the price and contain a normal SATA controller. Just remove them from the usb case first. 
