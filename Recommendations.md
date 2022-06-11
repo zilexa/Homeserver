@@ -10,8 +10,8 @@ _non-gaming, Intel for lowest power consumption, ECC memory support_
 The most essential part: A motherboard designed specifically for 24/7/365 stable operation with low power consumption, instead of a motherboard designed for gaming.
   - (with ECC) mATX: Fujitsu or Kontron D3644-B mATX (supports ECC)
     - (no ECC) mATX alternatives: Fujitsu or Kontron D3642-B or D3643-H
-    - (no ECC) mITX: Fujitsu or Kontron D3473-B 
-    - ASRock H310M-STX, only available with case (barebone): AsRock DeskMini 310  \
+  - (no ECC) mITX: Fujitsu or Kontron D3473-B 
+  - ASRock H310M-STX, only available with case (barebone): AsRock DeskMini 310  \
 The D3644-B is the cheapest (yet feature-complete) motherboard with the C246 chipset, one that is specifically meant for embedded devices and edge solutions. It is made of special components for low power consumption and stability. **Almost every other motherboard you find is made up of components focused on performance (for gaming usually)**. 
 Building a home server requires you to think differently. For example. you do not want a motherboard with maximum number of phases, because they exist solely to support high consumption of your CPU. This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server. The B motherboards are smart choices. Unfortunately only the 3644 supports ECC. 
 
