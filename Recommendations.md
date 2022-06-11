@@ -8,7 +8,7 @@ The research can be found in [this Dutch forum](https://gathering.tweakers.net/f
 ## Motherboard
 _non-gaming, Intel for lowest power consumption, ECC memory support_
 The most essential part: A motherboard designed specifically for 24/7/365 stable operation with low power consumption, instead of a motherboard designed for gaming.
-  - (with ECC) mATX: Fujitsu D3644-B mATX (supports ECC)
+  - (with ECC memory support) mATX: Fujitsu D3644-B mATX (supports ECC)
     - (no ECC) mATX alternatives: Fujitsu D3642-B or D3643-H
   - (no ECC) mITX: Fujitsu D3473-B 
   - ASRock H310M-STX, only available with case (barebone): AsRock DeskMini 310  \
@@ -23,7 +23,8 @@ _Notes_
 3. combined with an Intel Pentium Gold (5400 or newer, not much difference between the old and new ones) your system will be plenty fast. Or go for a quad core i3-8100, i3-9100 or i3-10100 (choose the cheapest one as they are near-identical). They support ECC RAM and hardware transcoding of video and especially the quad-cores are plenty fast for the next 10+ years as a homeserver. 
 
 ## Memory (RAM)
-2x8GB is preferred, but highly depends on what you plan to do with your server. I am running 26 docker containers and still use only 6GB to 12GB max. Yet it can be preferred to have lots of free RAM for specific tasks. If budget allows, consider 2x16GB. 
+2x8GB is preferred, but highly depends on what you plan to do with your server. I am running 26 docker containers and still use only 6GB to 12GB max. Yet it can be preferred to have lots of free RAM for specific tasks. If budget allows, consider 2x16GB.
+Unbuffered ECC RAM is highly recommended for a homeserver/storage solution has it helps prevent data corruption, not just in-memory, but also prevent such corruption to be written to your storage drives, which usually leads to common read errors (and may lead you to the conclusion the storage drive is faulty). 
 
 _Notes_
 1. Error-correcting memory (non-registered/unbuffered ECC RAM) - even normal computers should have this. Prevents data and disk corruption issues. Very important! Unfortunately due to Intel strategy, very few motherboards support (non-reg/unbuffered) ECC.
