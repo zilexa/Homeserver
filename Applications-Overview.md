@@ -9,30 +9,26 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
 
 ### _Server Management & Monitoring_
 _Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
->An complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
-
-\
-_Server Monitoring via [Grafana](https://grafana.com/)
->Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info.\
-
-\
-_Server Applications Portal via [Organizr](https://github.com/causefx/Organizr)_
->A customisable homepage to have quick access to all your services/applications. 
-
-\
-_Home WiFi configuration via [UniFi Controller](https://github.com/goofball222/unifi)_
->Mobile Apps: [Unifi Network](https://play.google.com/store/apps/details?id=com.ubnt.easyunifi)
-> Only if you use Ubiqity/UniFi hardware. Ubiquiti UniFi wireless access points are the best and are easy to seamlessly integrate in your house decoration. Note there are lots of alternatives these days. 
-> Recommended for good WiFi in your home. If you don't use their access points you do not need this. If you do have their APs, this is only needed to setup once, no need to keep it running all the time. 
-
-### _Web Access Security_
+>A complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
+- Required configuration: none.
+- Optional configuration: Settings > Environment > Local, Public IP. Change this value to your local domain name, as configured in AdGuard Home>DNS Rewrites or your systems hosts file (`/etc/hosts`). 
 
 _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)_
->reverse-proxy for HTTPS access to the services that you want to expose online. Takes care of certification renewal etc.\
->Caddy already extremely simplifies the whole https process to allow browsers and apps A+ secure connection to your server. Docker Caddy Proxy goes one step further and allows you to set it up per container with just 2 lines! Alternatives like Traefik are needlessly complicated.
+> Access your services via a pretty domain name, accessible via the internet through HTTPS or locally only.  \
+> For online access, Caddy takes care of all required steps, obtaining and renewing SSL certificates etc. 100% hassle free!  \
+> Caddy-Docker-Proxy is the same as official Caddy but allows you to configure Caddy via Docker Compose file, instead of managing a seperate configuration file (`caddyfile`). Caddy-Docker-Proxy will dynamically built the caddyfile based on labels in your Docker Compose file.
 
-> By default only the password manager (Bitwarden), file+Office cloud (FileRun, OnlyOffice), Firefox Sync server and Syncthing are accessible via web.\
-> All other apps are only available via VPN or within your local network. You can easily expose other apps such as Jellyfin by adding a few labels to its container. 
+> Only services that absolutely need to be accessed online should be exposed to the internet. These are Vault Warden (Bitwarden password manager), FileRun (file and photo cloud) and Firefox Sync (browser profile and configuration syncing).\
+> All other services can still be accessed via a pretty domain, one that is only accessible within your LAN or when connected to your server via VPN. 
+- Required configuration: Caddy is near-zero configuration but does require you to do your homework first.
+  - _To access services via internet securily:_
+    - Make sure you have a fixed IP address from your internet provider or use the DynDNS functionality of your router to obtain an address that always points to your current IP.
+    - Using the DynDNS address, register your own domain name at https://porkbun.com or other good domain provider, login and add 1 AAA DNS domain pointing to your DynDNS address and a CNAME DNS item for each subdomain (files.yourdomain.tld, vault.yourdomain.tld, firefox.yourdomain.tld). Each CNAME item should only point to yourdomain.tld, not your DynDNS address.
+    - personalize the docker-compose file by editing the .env file and setting your own registered domain name and email address.
+    - (Optional) personalize the docker-compose file by changing the subdomains (files., vault., firefox.) to your liking, matching the configuration of your domain provider.
+  - _To access local services via a pretty domain name:_
+    - (Optional) personalize the docker-compose file, update the caddy label of each local service to match the domain you set for each service. e the labels in docker-compose. For example, to access Portainer, http://docker.o/ is used. 
+    - Add the domains of local services to your AdGuard Home DNS Rewrites or to your system `/etc/hosts` file. 
 
 \
 _Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ \
