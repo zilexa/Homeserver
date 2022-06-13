@@ -56,6 +56,7 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 > This webservice does 1 thing: it provides a `VPN-Portal`, a friendly user interface to add/manage clients and manage global default settings for server and clients. This means all it does is edit the configuration file. 
 > Most of its configuration is already taken care of, see the docker-compose file. 
 > The `server-prep.sh` script will ensure the system monitors the config file for changes and restart the host Wireguard VPN program for changes to immediately become effective. 
+> Note your server IP when connected via VPN will be `10.0.0.0` and clients will start at `10.0.0.1`. 
 
 _Server configuration_ 
 - Personalize docker-compose by editing the .env file, setting a user/pw for Portal access, your registered domain name `yourdomain.tld` (see Caddy above for instructions) and your SMTP provider credentials, required to sent clients a QR code or conf file for access. That's all! network and firewall (iptables) configuration is already in the .env file, following best practice documentation. 
@@ -69,12 +70,18 @@ _Client configuration_
 - To automatically connect to your VPN when you leave your home WiFi and disconnect when you are back home, install the [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate) app, go to Community and find and install this [flow](https://llamalab.com/automate/community/flows/39377). Follow the instructions in the description. This is tested to work flawlessly on Android 12 devices!  
 - Wireguard apps are available for all systems. For Linux, install `wireguard-tools` and use the command `wg-quik up wg0` after you have put the client conf file (accessible via the VPN-Portal) in `/etc/wireguard/`. 
 
-
-### _Remote Admin Access_
+### _Remote Admin Access_ 
 > You can manage your server remotely, within LAN or, when not at home via VPN. This can be done through the terminal or simply by accessing the desktop, by sharing the desktop through RDP. 
 > Manjaro Gnome has Gnome RDP builtin by default and the `post-install.sh` script already installed it and allowed you to set the credentials. 
 - Required Configuration: 
-  - Go to Settings > Sharing. Enable it at the top and enable Desktop Sharing and Remote  
+  - Go to Settings > Sharing. Enable it at the top and enable `Remote Desktop` (=RDP) and `Remote Login` (= SSH). 
+  - If you need to, you can change the Remote Desktop credentials. Only use letters and numbers for password. 
+ - Optional: 
+   - For terminal access, open a console or terminal and simply use `ssh serverusername@10.0.0.0` which is your server IP when connected through VPN. 
+   - On Android, terminal SSH access is easy via the Termius app. File access through FTP-over-SSH (SFTP) is easy via the CX Explorer app, which also has webDAV support (for your FileRun filecloud) and is a great Android Filemanager, very user friendly.     
+   - For Remote Desktop via a MacOS, use the Remmina app.   
+   - For Remote Desktop via Manjaro Gnome or other Gnome distribution: use Gnome Connections (`post-install.sh` script installs this already). 
+ 
 
 ### _Cloud Services_
 _Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ 
