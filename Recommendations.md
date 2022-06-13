@@ -50,8 +50,8 @@ _Notes_
 
 3. Do not worry about the DDR5 hype.  DDR5 is developed for performance and should not be preferred for a homeserver. Besides that, DDR5 has its own power management chip, this means differences per brand/model/revisions. Also, ECC DDR5 is not common yet and ECC DDR5 has a form of ECC that only signals a problem with a data refresh on the module itself. That's called on-die ECC. It does not detect erroneous data going to the processor/cache. It is therefore not fail-safe at the single bit level. Until tests/reviews provide arguments in favor of (ECC) DDR5 for 24x7x365 low power consumption, stick with ECC unbuffered/non-registered DDR4.
 
-## Power consumption
-A PicoPSU is the king of PSUs up to 15W idle while still capable of handling peaks, for example at boot or when harddrives spin-up. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver). Stability is also dependent on power delivery. The PicoPSU90 and higher models with a proper power adapter will contribute to a rock-stable system. 
+## Power Suppply
+A PicoPSU (as small as the motherboard power plug itself) is the king of PSUs up to 15W idle while still capable of handling peaks, for example at boot or when harddrives spin-up. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver). Stability is also dependent on power delivery. The PicoPSU90 and higher models with a proper power adapter will contribute to a rock-stable system. 
 - PicoPSU 80: if you only use SSDs or have up to 3-4 2.5" HDDs and no other components with high consumption (for example 2.5Gbit ethernet). Note its cable is short and you will need to buy the P4 cable seperately (required to feed the CPU). 
 - PicoPSU 90: This one comes with P4 cable.
 - PicoPSU 160XT: for systems with more harddisks. Less efficient than the PicoPSU 80. 
