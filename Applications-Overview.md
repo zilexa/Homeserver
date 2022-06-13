@@ -8,12 +8,12 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
 
 
 ### _Server Management & Monitoring_
-_Server Monitoring via [Grafana](https://grafana.com/)
->Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info.\
-
-\
 _Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
 >An complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
+
+\
+_Server Monitoring via [Grafana](https://grafana.com/)
+>Monitoring of system resources, temperature, storage, memory as well as per-docker container resource info.\
 
 \
 _Server Applications Portal via [Organizr](https://github.com/causefx/Organizr)_
