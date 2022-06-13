@@ -28,7 +28,7 @@ _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy
     - (Optional) personalize the docker-compose file by changing the subdomains (files., vault., firefox.) to your liking, matching the configuration of your domain provider.
   - _To access local services via a pretty domain name:_
     - (Optional) personalize the docker-compose file, update the caddy label of each local service to match the domain you set for each service. e the labels in docker-compose. For example, to access Portainer, http://docker.o/ is used. 
-    - Add the domains of local services to your AdGuard Home DNS Rewrites or to your system `/etc/hosts` file. 
+    - Add the domains of local services to your AdGuard Home DNS Rewrites or to your system `/etc/hosts` file, each one pointing to the same LAN IP address of your server, no port numbers (DNS translates domains to IP addresses, ports are not involved here, Caddy makes sure the right service is connected to each domain). 
 
 \
 _Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ \
@@ -42,6 +42,12 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 >By blocking on DNS request level, you easily block 5-15% of internet traffic requests, significantly reducing the data needed to load websites, run apps and play games.\
 >All devices connected to your router such as home speakers, smart devices, mediaplayer etc are automatically protected.\
 >This setup can also be used used remotely via split tunnel VPN (see PiVPN). This means you have 1 adfiltering and DNS resolver for all devices, anywhere in the world.
+- Required configuration: 
+  - walkthrough the first time wizard at http://serverip:3000
+  - Settings>DNS Settings, Upstream DNS servers should only contain your unbound service: `127.0.0.1:5335`
+  - Filters>DNS blocklists: click Add blocklist, select `OISD Blocklist Basic`, hit save, then uncheck others and only check `OISD Blocklist Basic`. 
+  - Filters>DNS Rewrites: Add DNS rewrites for each local (not online exposed) service you want to access via a local domain instead of having to type ip:port all the time. For example, add `docker.o`, `192.168.88.2` to access Portainer by going to `http://docker.o/`, if your server lan IP is 192.168.88.2, and add `adguard.o` to access Adguard itself via this nice domain instead of `192.168.88.2:3000`. 
+    - For services (like Adguard Home!) using `network_mode: host` in docker-compose, this works only when accessing the domain on other devices within your LAN. To access such services in a browser on your host system, add the domain in the `/etc/hosts` file of your server.
 
 
 ### _Cloud Experience_
