@@ -44,8 +44,9 @@ _Requirements_
 Instead of typing 192.168.0.2:9000 for each service you want to access, configure an easy to remember, local domain address.
 This address will only work within your home network. Some routers support configuring this. Alternatively: 
 1. Go to _AdGuard Home (serverip:3000 or https://localhost:3000) > Settings > DNS rewrite_ 
-2. Add a new rule, fill in a domain name for example `s.erver` and the local IP of your server. 
-3. go to http://s.erver:9000, Portainer should open. Also, AdGuard Home is now accessible via http://s.erver:3000. 
+2. Add a new rule, fill in a domain name for example `myserver.o` and the local IP of your server. 
+3. go to http://myserver.o:9000, Portainer should open. Also, AdGuard Home is now accessible via http://myserver.o:3000. 
+4. For further instructions how to use this to access specific services without having to type port numbers, see [Step 6. Configure Docker Services](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md). 
 
 ***
 
