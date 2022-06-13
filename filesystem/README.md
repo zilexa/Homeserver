@@ -6,7 +6,7 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 ## Requirements: 
 1. The OS disk should be BtrFS, this should be chosen during [OS Installation](https://github.com/zilexa/manjaro-gnome-post-install). 
 2. You have ran the prep-docker.sh script and the server tools have been installed. 
-3. You have read the synopsis, had a good night rest and are ready to decide which of the 4 options is best for you!
+3. You have read the synopsis, had a good night rest and are ready to decide which of the 3 options is best for you!
 
 &nbsp;
 
