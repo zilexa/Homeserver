@@ -51,9 +51,20 @@ _Notes_
 3. Do not worry about the DDR5 hype.  DDR5 is developed for performance and should not be preferred for a homeserver. Besides that, DDR5 has its own power management chip, this means differences per brand/model/revisions. Also, ECC DDR5 is not common yet and ECC DDR5 has a form of ECC that only signals a problem with a data refresh on the module itself. That's called on-die ECC. It does not detect erroneous data going to the processor/cache. It is therefore not fail-safe at the single bit level. Until tests/reviews provide arguments in favor of (ECC) DDR5 for 24x7x365 low power consumption, stick with ECC unbuffered/non-registered DDR4.
 
 ## Power consumption
-- PicoPSU 90W or higher: A PicoPSU is extremely efficient at low power and combined with a super efficient (specifically at low consumption) power brick it will help you reach a low power consumption with minimal overhead. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver). Stability is also dependent on power delivery. The PicoPSU90 and higher models with a proper power brick will contribute to a rock-stable system. 
-  - Leicke NT03015, 120W 12V
-  - Seasonic SSA-0601HE-12 (60W)
+A PicoPSU is the king of PSUs up to 15W idle while still capable of handling peaks, for example at boot or when harddrives spin-up. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver). Stability is also dependent on power delivery. The PicoPSU90 and higher models with a proper power adapter will contribute to a rock-stable system. 
+- PicoPSU 90W or higher.  \
+There is a great difference in power adapters when it comes to efficiency and overhead. All of the following options are great choices. 
+- Highest efficiency/lowest overhead when idle consumption is below 10W: 
+  - 96W: FSP FSP096-AHAN3 
+  - 120W: XP Power VES120PS (price is 2x the Leicke adapter)
+- Highest efficiency/lowest overhead when idle consumption is above 10W: 
+  - 60W: FSP060-DHAN3
+  - 60W: Seasonic SSA-0601HE-12
+  - 84W FSP084-DHAN3
+  - 120W: Leicke NT03015 (fantastic low budget option)
+
+_Notes_
+The Leicke is a great option for <10 W and >10W, there are just a few adapters that have even less overhead when <10W. Consider that before you spend too much on the power adapter. 
 
 ## Storage
 - For the OS and applications, use an NVME drive, for example M.2 PCI Express 3.0 x4 are common. PCI 4.0 uses more power and the extra speed is useless for our purpose. Choose the M.2 NVME SSD with low idle power consumption. There are big differences, look for Anandtech, Tomshardware reviews. Most other reviewers do not test idle power consumption at all! Even though on a 24x7 system, this will be THE power consumption 90% of the time. The following have very low idle power consumption:
