@@ -180,8 +180,8 @@ ln -sfn /mnt/pool/Users/local/Shared/Desktop $HOME/Desktop
 ln -sfn /mnt/pool/Media $HOME/Media
 ln -sfn /mnt/pool/Media/Music $HOME/Music
 ```
-Do not forget to delete the `/mnt/disks/systemdrive/userdata` subvolume, simply by deleting it like a folder.
-Note the `Downloads` folder is not in userdata, it is suppose to be a temporary folder that should never be backupped since it can contain a lot of mess. 
+- Do not forget to delete the `/mnt/disks/systemdrive/userdata` subvolume, simply by deleting it like a folder.
+- Note the `/home/username/Downloads` folder is not in `userdata`, following the BTRFS principles used by Manjaro, OpenSUSE and Fedora, the `post-install.sh` moved it to its own subvolume as [explained here](https://github.com/zilexa/manjaro-gnome-post-install#simplify-folder-structure---easy-for-cloud-backupsyncing-or-local-backups) (post-install guide). 
 
 &nbsp;
 Have a look at [Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure), follow the tips in the _Data Migration_ to 100% securily copy your data and verify each read & write is correct (using Rsync or BTRFS send/receive). 
