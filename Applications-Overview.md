@@ -8,12 +8,12 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
 
 
 ### _Server Management & Monitoring_
-_Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
+#### _Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
 >A complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
 - Required configuration: none.
 - Optional configuration: Settings > Environment > Local, Public IP. Change this value to your local domain name, as configured in AdGuard Home>DNS Rewrites or your systems hosts file (`/etc/hosts`). 
 
-_Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)_
+#### _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)_
 > Access your services via a pretty domain name, accessible via the internet through HTTPS or locally only.  \
 > For online access, Caddy takes care of all required steps, obtaining and renewing SSL certificates etc. 100% hassle free!  \
 > Caddy-Docker-Proxy is the same as official Caddy but allows you to configure Caddy via Docker Compose file, instead of managing a seperate configuration file (`caddyfile`). Caddy-Docker-Proxy will dynamically built the caddyfile based on labels in your Docker Compose file.
@@ -31,7 +31,7 @@ _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy
     - Add the domains of local services to your AdGuard Home DNS Rewrites or to your system `/etc/hosts` file, each one pointing to the same LAN IP address of your server, no port numbers (DNS translates domains to IP addresses, ports are not involved here, Caddy makes sure the right service is connected to each domain). 
 
 \
-_Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ \
+#### _Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_ \
 _Your own recursive DNS server to stop shouting your browsing history to the world [Unbound](https://github.com/MatthewVance/unbound-docker)_ 
 >Unbound is a recursive DNS resolver. By using Unbound, no 3rd party will know the full URLs of the sites you are visiting (your ISP, local and international DNS providers).\
 >AdGuardHome is a DNS based malware & ad filter, blocking ad requests but also blocking known malware, coinmining and phishing sites!
@@ -51,12 +51,26 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
     - For services (like Adguard Home!) using `network_mode: host` in docker-compose, this works only when accessing the domain on other devices within your LAN. To access such services in a browser on your host system, add the domain in the `/etc/hosts` file of your server.
 
 
+#### _Remote VPN access [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)_
+> Wireguard VPN protocol runs natively on your host system, it is part of the Linux Kernel. A configuration file containing the VPN server configuration and encryption keys should be generated and stored in a file `/etc/wireguard/wg0.conf`. Clients can be configured by generating keys and adding them to that file. 
+> This webservice does 1 thing: it provides a `VPN-Portal`, a friendly user interface to add/manage clients and manage global default settings for server and clients. This means all it does is edit the configuration file. 
+> Most of its configuration is already taken care of, see the docker-compose file. 
+> The `server-prep.sh` script will ensure the system monitors the config file for changes and restart the host Wireguard VPN program for changes to immediately become effective. 
 
-### _Cloud Experience_
-_Remote VPN access [vpn-server-ui](https://github.com/vx3r/wg-gen-web/)_
-> Notice your container vpn-server-ui (http://serverip:5100). Create an admin account, then add VPN profiles for all your devices.\
-> For Android: install Wireguard on your dev and consider installing Automate (free). Read my post about why and how here: https://www.reddit.com/r/WireGuard/comments/nkn45n/on_android_finally_you_can_automatically_turn/ 
+_Server configuration_  \
+- Personalize docker-compose by editing the .env file, setting a user/pw for Portal access, your registered domain name `yourdomain.tld` (see Caddy above for instructions) and your SMTP provider credentials, required to sent clients a QR code or conf file for access. That's all! network and firewall (iptables) configuration is already in the .env file, following best practice documentation. 
+- Go to the vpn portal via `yourip:5000` or `vpn.o` and add clients. Remove `keepalive` for mobile devices, this should only be used on desktops/laptops. 
+- Ensure to hit save and `Apply Config`. This will save the `/etc/wireguard/wg0.conf` file. 
+- Open a Terminal and start Wireguard: `sudo wg-quick up wg0` and enable start at boot `sudo systemctl enable wg-quick@wg0.service` and `sudo systemctl start wg-quick@wg0.service`
+- To monitor the wg0.conf file for changes (whenever you change something via the VPN-Portal) and restart the VPN server, also start and enable 2 services that were created via the `prep-server.sh` script: `systemctl enable wgui.{path,service}` and `systemctl start wgui.{path,service}`. This will ensure `sudo systemctl restart wg-quick@wg0.service` is run every time the VPN-Portal is used to make changes. 
 
+_Client configuration_  \
+- You can easily ensure Android devices are always using your server DNS (and have access to all local non-exposed services!) by installing [the Wireguard app](https://play.google.com/store/apps/details?id=com.wireguard.android), adding the configuration through QR code or file, which you can share via the `VPN-Portal` via email to your devices Portal. 
+- To automatically connect to your VPN when you leave your home WiFi and disconnect when you are back home, install the [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate) app, go to Community and find and install this [flow](https://llamalab.com/automate/community/flows/39377). Follow the instructions in the description. This is tested to work flawlessly on Android 12 devices!  
+- Wireguard apps are available for all systems. For Linux, install `wireguard-tools` and use the command `wg-quik up wg0` after you have put the client conf file (accessible via the VPN-Portal) in `/etc/wireguard/`. 
+
+
+### _Cloud Services_
 _Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ 
 >Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use.\
