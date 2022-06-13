@@ -70,6 +70,12 @@ _Client configuration_
 - Wireguard apps are available for all systems. For Linux, install `wireguard-tools` and use the command `wg-quik up wg0` after you have put the client conf file (accessible via the VPN-Portal) in `/etc/wireguard/`. 
 
 
+### _Remote Admin Access_
+> You can manage your server remotely, within LAN or, when not at home via VPN. This can be done through the terminal or simply by accessing the desktop, by sharing the desktop through RDP. 
+> Manjaro Gnome has Gnome RDP builtin by default and the `post-install.sh` script already installed it and allowed you to set the credentials. 
+- Required Configuration: 
+  - Go to Settings > Sharing. Enable it at the top and enable Desktop Sharing and Remote  
+
 ### _Cloud Services_
 _Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ 
 >Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
