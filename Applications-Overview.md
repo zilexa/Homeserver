@@ -1,4 +1,4 @@
-## Overview of applications and services
+# Overview of applications and services
 
 Almost everything will run isolated in [Docker containers](https://www.docker.com/resources/what-container). The setup is easy with the provided docker-compose.yml file, which is a declarative way to pull the images from the internet, create containers and configure everything with a single command! See the [subguide for Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker) on how to get up and running, **this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.** and the correct, well-maintained docker images have been selected, sometimes you spend hours finding the right one as there are often multiple available. 
 
@@ -7,13 +7,13 @@ Below a description of each application that are in Docker-Compose.yml. Choose t
 The only exceptions -apps that run natively on the OS for specific reasons- are Netdata, PiVPN and AdGuard Home. These apps have very easy installation instructions.
 
 
-### _Server Management & Monitoring_
-#### _Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
+## _Server Management & Monitoring_
+### _Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
 >A complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
 - Required configuration: none.
 - Optional configuration: Settings > Environment > Local, Public IP. Change this value to your local domain name, as configured in AdGuard Home>DNS Rewrites or your systems hosts file (`/etc/hosts`). 
 
-#### _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)_
+### _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)_
 > Access your services via a pretty domain name, accessible via the internet through HTTPS or locally only.  \
 > For online access, Caddy takes care of all required steps, obtaining and renewing SSL certificates etc. 100% hassle free!  \
 > Caddy-Docker-Proxy is the same as official Caddy but allows you to configure Caddy via Docker Compose file, instead of managing a seperate configuration file (`caddyfile`). Caddy-Docker-Proxy will dynamically built the caddyfile based on labels in your Docker Compose file.
@@ -30,8 +30,7 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
     - (Optional) personalize the docker-compose file, update the caddy label of each local service to match the domain you set for each service. e the labels in docker-compose. For example, to access Portainer, http://docker.o/ is used. 
     - Add the domains of local services to your AdGuard Home DNS Rewrites or to your system `/etc/hosts` file, each one pointing to the same LAN IP address of your server, no port numbers (DNS translates domains to IP addresses, ports are not involved here, Caddy makes sure the right service is connected to each domain). 
 
-
-#### _Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_
+### _Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_
 _Your own recursive DNS server to stop shouting your browsing history to the world [Unbound](https://github.com/MatthewVance/unbound-docker)_ 
 >Unbound is a recursive DNS resolver. By using Unbound, no 3rd party will know the full URLs of the sites you are visiting (your ISP, local and international DNS providers).\
 >AdGuardHome is a DNS based malware & ad filter, blocking ad requests but also blocking known malware, coinmining and phishing sites!
@@ -50,8 +49,7 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
     - Browsers convert addressess automatically to HTTPS, type a "/" at the end of the address (and try with http:// in front of it) to force it to use http instead. HTTPS TLS encryption is not necessary (and more work to setup for local services) since these domains only work within your LAN (or via VPN which is already encrypted).  
     - For services (like Adguard Home!) using `network_mode: host` in docker-compose, this works only when accessing the domain on other devices within your LAN. To access such services in a browser on your host system, add the domain in the `/etc/hosts` file of your server.
 
-
-#### _Remote VPN access [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)_
+### _Remote VPN access [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)_
 > Wireguard VPN protocol runs natively on your host system, it is part of the Linux Kernel. A configuration file containing the VPN server configuration and encryption keys should be generated and stored in a file `/etc/wireguard/wg0.conf`. Clients can be configured by generating keys and adding them to that file. 
 > This webservice does 1 thing: it provides a `VPN-Portal`, a friendly user interface to add/manage clients and manage global default settings for server and clients. This means all it does is edit the configuration file. 
 > Most of its configuration is already taken care of, see the docker-compose file. 
@@ -83,7 +81,7 @@ _Client configuration_
    - For Remote Desktop via Manjaro Gnome or other Gnome distribution: use Gnome Connections (`post-install.sh` script installs this already). 
  
 
-### _Cloud Services_
+## _Cloud Services_
 _Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ 
 >Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use.\
