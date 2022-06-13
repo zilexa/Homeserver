@@ -56,9 +56,13 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 
 ### _VPN Portal [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)_
 > Wireguard VPN protocol runs natively on your host system, it is part of the Linux Kernel. A configuration file containing the VPN server configuration and encryption keys should be generated and stored in a file `/etc/wireguard/wg0.conf`. Clients can be configured by generating keys and adding them to that file.  \
-> This webservice does 1 thing: it provides a `VPN-Portal`, a friendly user interface to add/manage clients and manage global default settings for server and clients. This means all it does is edit the configuration file. 
-> Most of its configuration is already taken care of, see the docker-compose file. 
-> The `server-prep.sh` script will ensure the system monitors the config file for changes and restart the host Wireguard VPN program for changes to immediately become effective. 
+
+> This webservice does 1 thing: it provides a `VPN-Portal`, a friendly user interface to add/manage clients and manage global default settings for server and clients. This means all it does is edit the configuration file.  \
+
+> Most of its configuration is already taken care of, see the docker-compose file.  \
+
+> The `server-prep.sh` script will ensure the system monitors the config file for changes and restart the host Wireguard VPN program for changes to immediately become effective.  \
+
 > Note your server IP when connected via VPN will be `10.0.0.0` and clients will start at `10.0.0.1`. 
 
 _Server configuration_ 
