@@ -66,7 +66,7 @@ There is a great difference in power adapters when it comes to efficiency and ov
   - 84W FSP084-DHAN3
   - 120W: Leicke NT03015 (fantastic low budget option)
 
-_Notes_
+_Notes_  \
 The Leicke is a great, affordable option for <10 W and >10W, there are just a few adapters that have even less overhead when <10W. Consider that before you spend too much on the power adapter. 
 
 
