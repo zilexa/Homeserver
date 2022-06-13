@@ -57,14 +57,14 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 > Most of its configuration is already taken care of, see the docker-compose file. 
 > The `server-prep.sh` script will ensure the system monitors the config file for changes and restart the host Wireguard VPN program for changes to immediately become effective. 
 
-_Server configuration_  \
+_Server configuration_ 
 - Personalize docker-compose by editing the .env file, setting a user/pw for Portal access, your registered domain name `yourdomain.tld` (see Caddy above for instructions) and your SMTP provider credentials, required to sent clients a QR code or conf file for access. That's all! network and firewall (iptables) configuration is already in the .env file, following best practice documentation. 
 - Go to the vpn portal via `yourip:5000` or `vpn.o` and add clients. Remove `keepalive` for mobile devices, this should only be used on desktops/laptops. 
 - Ensure to hit save and `Apply Config`. This will save the `/etc/wireguard/wg0.conf` file. 
 - Open a Terminal and start Wireguard: `sudo wg-quick up wg0` and enable start at boot `sudo systemctl enable wg-quick@wg0.service` and `sudo systemctl start wg-quick@wg0.service`
 - To monitor the wg0.conf file for changes (whenever you change something via the VPN-Portal) and restart the VPN server, also start and enable 2 services that were created via the `prep-server.sh` script: `systemctl enable wgui.{path,service}` and `systemctl start wgui.{path,service}`. This will ensure `sudo systemctl restart wg-quick@wg0.service` is run every time the VPN-Portal is used to make changes. 
 
-_Client configuration_  \
+_Client configuration_ 
 - You can easily ensure Android devices are always using your server DNS (and have access to all local non-exposed services!) by installing [the Wireguard app](https://play.google.com/store/apps/details?id=com.wireguard.android), adding the configuration through QR code or file, which you can share via the `VPN-Portal` via email to your devices Portal. 
 - To automatically connect to your VPN when you leave your home WiFi and disconnect when you are back home, install the [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate) app, go to Community and find and install this [flow](https://llamalab.com/automate/community/flows/39377). Follow the instructions in the description. This is tested to work flawlessly on Android 12 devices!  
 - Wireguard apps are available for all systems. For Linux, install `wireguard-tools` and use the command `wg-quik up wg0` after you have put the client conf file (accessible via the VPN-Portal) in `/etc/wireguard/`. 
