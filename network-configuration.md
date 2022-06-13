@@ -56,7 +56,7 @@ Setting up your own selfhosted SMTP server is a nightmare, because your domain i
 * Create a free account with https://smtp2go.com 
 * Login to smtp2go, go to Settings, add an SMTP user for your server to sent notifications and for each docker service that you want to receive notifications from ("send from" accounts). 
   * Make sure the SMTP user name & address correspond with each other. 
-    * For example, if want emails to appear to have come from "Jimmies", and your registered domain is ` jimmies.cloud` create an SMTP user `jimmies`. 
-    * If you want emails to appear to have come from FileRun, use filerun.jimmies, so that you can use "FileRun <filerun@jimmies.cloud>" as sender when configuring your services. 
+    * For example, if want emails to appear to have come from `Jimmies`, and your registered domain is ` jimmies.cloud` create an SMTP user `jimmies`. 
+    * If you want emails to appear to have come from FileRun, use `filerun.jimmies`, so that you can use `"FileRun <filerun@jimmies.cloud>"` as sender when configuring your services. 
     * Microsoft refuses to implement common anti-spam protocols for Exchange and outlook.com, as a result some emails can still end up in junk folder, but once marked as non-junk, without having to whitelist, it should be OK. 
 
