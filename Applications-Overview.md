@@ -8,7 +8,7 @@ The best, well-maintained docker images have been selected, sometimes you spend 
 
 - You can easily find other applications via https://hub.docker.com/
 - For VPN through WireGuard, Remote Desktop through RDP and terminal access through SSH, the host OS, Manjaro Gnome, is leveraged. 
-- To remove the complexity of configuring Wireguard VPN, a nice Portal as webervice is used and the most complex part of a VPN server configuration is already taken care of in the docker-compose.yml file!
+- To remove the complexity of configuring Wireguard VPN, a friendly VPN-Portal webservice is included and the most complex part of a VPN server configuration is already taken care of in the docker-compose.yml file!
 
 Below a description and recommended or required configuration of each service that are in Docker-Compose.yml. Choose the ones you need.
 
