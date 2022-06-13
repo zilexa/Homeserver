@@ -46,8 +46,8 @@ sudo wipefs --all /dev/sda
 &nbsp;
 ## Step 2: Create filesystems 
 Make sure you have the correct device path for each drive when you use this command. 
-Your OS drive should beon an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
-1. Decide the purpose of each of your drives. The following purposes are available: 
+Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
+1. Decide the purpose of each of your drives. The following purposes make sense for most users: 
     - `data0, data1, data2` etc: drive containing your user and media data. 
     - `backup1, backup2` etc: drive containing backups. 
     - `parity1, parity2` etc: drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
@@ -66,7 +66,7 @@ Your OS drive should beon an NVME drive (`/dev/nvmen0p1`), easy to identify and 
 ## Step 3: Create mountpoints for each drive
 Now that each drive has a filesystem (or in case of BTRFS RAID1 is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
 1. Open the folder /mnt in your file manager, right click and open it with root rights.This will give you a nice view of the structure.
-2. With the following command, you create multiple folders.   
+2. Go back to Terminal: with the following command, you create multiple folders.   
 ```
 sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
 ```
