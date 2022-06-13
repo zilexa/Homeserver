@@ -31,9 +31,9 @@ Below a description and recommended or required configuration of each service th
     - Complete [Step 3. Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) of the main guide.
     - personalize the docker-compose file by editing the .env file and setting your own registered domain name and email address.
     - (Optional) personalize the docker-compose file by changing the subdomains (files., vault., firefox.) to your liking, matching the configuration of your domain provider.
-  - _To access local services via a pretty domain name:_
-    - (Optional) personalize the docker-compose file, update the caddy label of each local service to match the domain you set for each service. e the labels in docker-compose. For example, to access Portainer, http://docker.o/ is used. 
-    - Add the domains of local services to your AdGuard Home DNS Rewrites or to your system `/etc/hosts` file, each one pointing to the same LAN IP address of your server, no port numbers (DNS translates domains to IP addresses, ports are not involved here, Caddy makes sure the right service is connected to each domain). 
+  - _To access local services via a pretty domain name:_`
+    - (Optional) personalize the docker-compose file, changing the caddy label under each service to a domain name of your liking. For example, to access Portainer, `http://docker.o/` is used, you could also use `http://docker.home/` or something else instead.  
+    - Add all the local domain names as they appear in the compose file to AdGuard Home (see below) or to your system `/etc/hosts` file, each one pointing to the same LAN IP address of your server, no port numbers (DNS translates domains to IP addresses, ports are not involved here, Caddy makes sure the right service is connected to each domain). 
 
 ### _Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_
 _Your own recursive DNS server to stop shouting your browsing history to the world [Unbound](https://github.com/MatthewVance/unbound-docker)_ 
