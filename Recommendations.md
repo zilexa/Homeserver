@@ -8,8 +8,8 @@ The system will be running 24/7, so power consumption matters! With the recommen
 
 The research can be found in [this Dutch forum](https://gathering.tweakers.net/forum/list_messages/2096876) (or see [translation](https://gathering-tweakers-net.translate.goog/forum/list_messages/2096876?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=nl&_x_tr_pto=wapp)), the first post is long and contains the most important information. Below the concluding recommendations: 
 
-## Motherboard (non-gaming, with parts focused on power consumption/efficiency, with ECC memory support) 
-_non-gaming, Intel for lowest power consumption, ECC memory support_
+## Motherboard 
+_*non-gaming, with parts focused on power consumption/efficiency, with ECC memory support*_
 The most essential part: A motherboard designed specifically for 24/7/365 stable operation with low power consumption, instead of a motherboard designed for gaming.
   - (with ECC memory support) mATX: Fujitsu D3644-B mATX (supports ECC)
     - (no ECC) mATX alternatives: Fujitsu D3642-B or D3643-H
@@ -26,7 +26,17 @@ _Notes_
 
 3. Although the importance of error-correcting memory cannot be ignored, Intel has denied consumers to reap its benefits. You need a motherboard, CPU and memory that supports it. Most Intel chipset motherboards do not support ECC (unbuffered).  
 
-## CPU (with ECC support)
+
+## CPU 
+_*(with ECC support)*_
+Error-Correcting RAM is beneficial for most purposes and should be more mainstream. Unfortunately, Intel uses this feature to upsell their Xeon line-up in favor of their Core and Pentium line-up. While the Core-i3 8100 and Core i3 9100 support ECC memory, the 10th and 12th gen Core CPUs do not support ECC! Luckily, the 10th generation cpu (Core i3 10100) is marginally faster than both the 9100 and the 8100. Pick one of those two based on which one has the lowest price.
+
+_Notes_
+- Since the Intel 8th gen, Core i3 series are always quad-core. The i3-8100 is comparable to the i5-7100. The i3-8100 therefore has plenty of power available for homeserver purposes and is even powerful enough to use in a system that will function both as homeserver and as regular desktop PC.
+- The upgrade to 9100 is not massive. Still the 9100 is a great choice and also supports Intel QuickSync for video encoding/transcoding, which is required if you want to stream your movies/series to devices outside your home network. 
+- I am an AMD-fan, since the K6-II, but AMD idle power consumption is much higher. Makes sense as their market is gamers/people seeking high performance. 
+- There are rumours Intel will release Core CPUs with ECC again, however, since there is no new motherboard coming anytime soon, there is no reason to wait for it. The 9100/8100 Core i3 really have all the performance you need. 
+
 
 ## Memory (RAM)
 2x8GB is preferred, but highly depends on what you plan to do with your server. I am running 26 docker containers and still use only 6GB to 12GB max. Yet it can be preferred to have lots of free RAM for specific tasks. If budget allows, consider 2x16GB.
