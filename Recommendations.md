@@ -9,7 +9,7 @@ The system will be running 24/7, so power consumption matters! With the recommen
 The research can be found in [this Dutch forum](https://gathering.tweakers.net/forum/list_messages/2096876) (or see [translation](https://gathering-tweakers-net.translate.goog/forum/list_messages/2096876?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=nl&_x_tr_pto=wapp)), the first post is long and contains the most important information. Below the concluding recommendations: 
 
 ## Motherboard 
-_*non-gaming, with parts focused on power consumption/efficiency, with ECC memory support*_
+_*non-gaming, with parts focused on power consumption/efficiency, with ECC memory support*_  \
 The most essential part: A motherboard designed specifically for 24/7/365 stable operation with low power consumption, instead of a motherboard designed for gaming.
   - (with ECC memory support) mATX: Fujitsu D3644-B mATX (supports ECC)
     - (no ECC) mATX alternatives: Fujitsu D3642-B or D3643-H
@@ -28,7 +28,7 @@ _Notes_
 
 
 ## CPU 
-_*(with ECC support)*_
+_*(with ECC support)*_  \
 Error-Correcting RAM is beneficial for most purposes and should be more mainstream. Unfortunately, Intel uses this feature to upsell their Xeon line-up in favor of their Core and Pentium line-up. While the Core-i3 8100 and Core i3 9100 support ECC memory, the 10th and 12th gen Core CPUs do not support ECC! Luckily, the 10th generation cpu (Core i3 10100) is marginally faster than both the 9100 and the 8100. Pick one of those two based on which one has the lowest price.
 
 _Notes_
@@ -39,16 +39,19 @@ _Notes_
 
 
 ## Memory (RAM)
+_*(unbuffered/non-registered ECC)*_  \
 2x8GB is preferred, but highly depends on what you plan to do with your server. I am running 26 docker containers and still use only 6GB to 12GB max. Yet it can be preferred to have lots of free RAM for specific tasks. If budget allows, consider 2x16GB.
 Unbuffered ECC RAM is highly recommended for a homeserver/storage solution has it helps prevent data corruption, not just in-memory, but also prevent such corruption to be written to your storage drives, which usually leads to common read errors (and may lead you to the conclusion the storage drive is faulty). 
 
 _Notes_
 1. Error-correcting memory (non-registered/unbuffered ECC RAM) - even normal computers should have this. Prevents data and disk corruption issues. Very important! Unfortunately due to Intel strategy, very few motherboards support (non-reg/unbuffered) ECC.
 
-2. DDR5 is developed for performance and should not be preferred for a homeserver. Besides that, DDR5 has its own power management chip, this means differences per brand/model/revisions. Also, ECC DDR5 is not common yet and ECC DDR5 has a form of ECC that only signals a problem with a data refresh on the module itself. That's called on-die ECC. It does not detect erroneous data going to the processor/cache. It is therefore not fail-safe at the single bit level. Until tests/reviews provide arguments in favor of DDR5 for 24x7x365 low power consumption, stick with DDR4 (ECC unbuffered if your motherboard supports it). 
+2. Always download the Memory Compatibility List of your motherboard and find compatible memory. 
+
+3. Do not worry about the DDR5 hype.  DDR5 is developed for performance and should not be preferred for a homeserver. Besides that, DDR5 has its own power management chip, this means differences per brand/model/revisions. Also, ECC DDR5 is not common yet and ECC DDR5 has a form of ECC that only signals a problem with a data refresh on the module itself. That's called on-die ECC. It does not detect erroneous data going to the processor/cache. It is therefore not fail-safe at the single bit level. Until tests/reviews provide arguments in favor of (ECC) DDR5 for 24x7x365 low power consumption, stick with ECC unbuffered/non-registered DDR4.
 
 ## Power consumption
-- PicoPSU 90W or higher: A PicoPSU combined with a very efficient (specifically at low consumption) power brick will help you reach a low power consumption with minimal overhead. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver).
+- PicoPSU 90W or higher: A PicoPSU is extremely efficient at low power and combined with a super efficient (specifically at low consumption) power brick it will help you reach a low power consumption with minimal overhead. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver). Stability is also dependent on power delivery. The PicoPSU90 and higher models with a proper power brick will contribute to a rock-stable system. 
   - Leicke NT03015, 120W 12V
   - Seasonic SSA-0601HE-12 (60W)
 
