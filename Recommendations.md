@@ -1,11 +1,14 @@
 ## Hardware recommendations
 
 A lot of research has been done to determine the required choices to have a rock stable, future-proof homeserver with the lowest power consumption.
-The system will be running 24/7, so power consumption matters. With the recommendations below you should be able to reach idle power consumption of 2.5W up to 8W.
+The system will be running 24/7, so power consumption matters! With the recommendations below you should be able to reach idle power consumption of 2.5W up to 8W.
+
+- Goal 1: find parts with the lowest power consumption or parts that have high efficiency (wich is variable based on consumption) at low wattage. 
+- Goal 2: identify parts specifically built to run continuously 24x7x365 (which is often the opposite of parts built for gaming/performance!)
 
 The research can be found in [this Dutch forum](https://gathering.tweakers.net/forum/list_messages/2096876) (or see [translation](https://gathering-tweakers-net.translate.goog/forum/list_messages/2096876?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=nl&_x_tr_pto=wapp)), the first post is long and contains the most important information. Below the concluding recommendations: 
 
-## Motherboard
+## Motherboard (non-gaming, with parts focused on power consumption/efficiency, with ECC memory support) 
 _non-gaming, Intel for lowest power consumption, ECC memory support_
 The most essential part: A motherboard designed specifically for 24/7/365 stable operation with low power consumption, instead of a motherboard designed for gaming.
   - (with ECC memory support) mATX: Fujitsu D3644-B mATX (supports ECC)
@@ -17,11 +20,13 @@ The D3644-B is the cheapest (yet feature-complete) motherboard with the C246 chi
 Building a home server requires you to think differently. For example. you do not want a motherboard with maximum number of phases, because they exist solely to support high consumption of your CPU. This goes against the philosophy behind this guide: creating a highly efficient, stable, durable, high availability had high performance home server. The B motherboards are smart choices. Unfortunately only the 3644 supports ECC. 
 
 _Notes_
-1. Motherboards designed to run uninterrupted 24x7x365 like the D3644-B are not refreshed yearly like consumer-focused products. They are being produced for many years and receive lots of support. Newer technologies are usually focused on performance and is therefore not relevant.
+1. Motherboards designed to run uninterrupted 24x7x365 like the D3644-B are not refreshed yearly like consumer-focused products. They are being produced for many years and receive lots of support. Newer technologies are usually focused on performance and is therefore not relevant. Intel has the C246 chipset specifically for embedded/continuously running systems.  This special chipset has not seen a successor yet, simply because no new technologies have been released that would be beneficial for such systems. 
 
 2. There are no AMD chipsets/motherboards with a similar focus (non-gaming) and no combination of AMD motherboard+AMD processor has such low idle power consumption (2-5 WATT).
 
-3. combined with an Intel Pentium Gold (5400 or newer, not much difference between the old and new ones) your system will be plenty fast. Or go for a quad core i3-8100, i3-9100 or i3-10100 (choose the cheapest one as they are near-identical). They support ECC RAM and hardware transcoding of video and especially the quad-cores are plenty fast for the next 10+ years as a homeserver. 
+3. Although the importance of error-correcting memory cannot be ignored, Intel has denied consumers to reap its benefits. You need a motherboard, CPU and memory that supports it. Most Intel chipset motherboards do not support ECC (unbuffered).  
+
+## CPU (with ECC support)
 
 ## Memory (RAM)
 2x8GB is preferred, but highly depends on what you plan to do with your server. I am running 26 docker containers and still use only 6GB to 12GB max. Yet it can be preferred to have lots of free RAM for specific tasks. If budget allows, consider 2x16GB.
