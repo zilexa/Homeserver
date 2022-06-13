@@ -18,27 +18,13 @@ Technologies used:
 - Online filesystem defragmentation.
 - Great for SSDs and HDDs.</details>
 
-## Use Btrfs data duplication? 2 options
-BtrFS offers 3 ways to create a single fileystem across multiple devices, I only mention 2 here: 
-- **BtrFS Single**: data is allocated to disks linearly, metadata is duplicated (`mkfs.btrfs -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
-  - Pros: 
-    - Maximum space available: disk size = available space.
-    - Flexible: use disks of different sizes.
-    - When 1 disk fails, the filesystem is recoverable (compared to raid0). 
-  - Cons
-    - When 1 disk fails, data from that disk is not recoverable.
-    - When 1 disk fails, files larger than 1GB might have been partially stored on that disk. 
-    - What files are stored on which disks is not obvious: especially blocks of a single file (>1GB) can be spread across disks. 
-- **BtrFS Raid1**: data is striped and duplicated, metadata is duplicated (`mkfs.btrfs -d dup /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
-  - Pros
-    - Data is mirrored on other disks in realtime, when a disk fails, the data is easily recoverable. 
-    - The most secure method to store precious data. 
-  - Cons
-    - Expensive: you need twice the disks to get same amount as storage as Btrfs Single. 
-    - Requirements around disk sizes because of duplication. 
-    - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
 
-## Option 3: individual filesystems, drives pooled via MergerFS
+## Option 1: all your data easily fits on a single disk
+- If your data does not fill much more than half of a single drive and the data does not grow fast, there is no need for data pooling. 
+- In addition to the single data drive, you would want at least 1 backup drives inside your system. Also see [Step 7. Configure & Run Backups](https://github.com/zilexa/Homeserver#step-7---configure--run-backups). 
+- If you do need more storage in the future, you can always add a drive and move to option 2. 
+
+## Option 2: individual filesystems, drives pooled via MergerFS
 _A more home-friendly and economical solution:_
 Instead of using any type of RAID, consider why that would be a default option? Your #1 goal is to have a single storage path, for all your data, regardless whether it is spread over multiple drives. For that, _RAID is not the default option_. Because this is called drive pooling. It is just an extra convenience of RAID. But you can also simply use a drive pooling tool, that only pools the drives into a single path! (while keeping them accessible seperatly). This tool is MergerFS. 
 
@@ -59,18 +45,32 @@ Reasons to use MergerFS:
 - You choose whether data is balanced over the disks (writing data to disks with most free space) or stored linearly: fill up 1 disk before using the next. 
 - Protecting against drive failure (like with raid1) can be done through SnapRAID! This will only cost you 1 disk per 4 disks. 
 
-## Option 4: single disk, backup disks
-- If your data does not fill much more than half of a single drive and the data does not grow fast, there is no need for data pooling. 
-- Just make sure you have 1 or 2 backup drives inside your system. Also see the Backup Strategy Guide since you will need backup drives regardless of the chosen option. 
-- If you do need more storage in the future, you can always add a drive and enable MergerFS or convert the existing drive to BTRFS single or raid1. 
-
+## Option 3: Use Btrfs data duplication?
+BtrFS offers 3 ways to create a single fileystem across multiple devices, I only mention 2 here: 
+- **BtrFS Single**: data is allocated to disks linearly, metadata is duplicated (`mkfs.btrfs -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
+  - Pros: 
+    - Maximum space available: disk size = available space.
+    - Flexible: use disks of different sizes.
+    - When 1 disk fails, the filesystem is recoverable (compared to raid0). 
+  - Cons
+    - When 1 disk fails, data from that disk is not recoverable.
+    - When 1 disk fails, files larger than 1GB might have been partially stored on that disk. 
+    - What files are stored on which disks is not obvious: especially blocks of a single file (>1GB) can be spread across disks. 
+- **BtrFS Raid1**: data is striped and duplicated, metadata is duplicated (`mkfs.btrfs -d dup /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
+  - Pros
+    - Data is mirrored on other disks in realtime, when a disk fails, the data is easily recoverable. 
+    - The most secure method to store precious data. 
+  - Cons
+    - Expensive: you need twice the disks to get same amount as storage as Btrfs Single. 
+    - Requirements around disk sizes because of duplication. 
+    - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
 
 &nbsp;
 
 ## What should you choose? 
-- it all depends on your personal situation. By default, start with drive pooling through MergerFS unless you have plenty of drives. 
+- it all depends on your personal situation. By default, decide if Option 1 applies, otherwise move on to drive pooling through MergerFS or consider the less economical BTRFS-RAID1, wich is still handy especially if your total storage space is >2.5x your storage needs. 
 - As a best practice your precious personal data (documents, photos, videos, music albums) should be on seperate drives from your downloaded media/download drive. 
-- Note SnapRAID is only useful if you have more than 1 drive with data and is not practical to use in combination with a drive that has constantly changing data (like a download drive for your series/movies). 
+- Note SnapRAID is only useful if you have more than 1 drive with data. 
 
 ### About snapraid/snapraid-btrfs
 - Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) for scheduled parity, the disk will be less active than data disks, **extending its lifecycle** compared to the realtime duplication of Raid1.
