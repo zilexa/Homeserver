@@ -30,7 +30,7 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
     - (Optional) personalize the docker-compose file, update the caddy label of each local service to match the domain you set for each service. e the labels in docker-compose. For example, to access Portainer, http://docker.o/ is used. 
     - Add the domains of local services to your AdGuard Home DNS Rewrites or to your system `/etc/hosts` file, each one pointing to the same LAN IP address of your server, no port numbers (DNS translates domains to IP addresses, ports are not involved here, Caddy makes sure the right service is connected to each domain). 
 
-\
+
 #### _Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_
 _Your own recursive DNS server to stop shouting your browsing history to the world [Unbound](https://github.com/MatthewVance/unbound-docker)_ 
 >Unbound is a recursive DNS resolver. By using Unbound, no 3rd party will know the full URLs of the sites you are visiting (your ISP, local and international DNS providers).\
