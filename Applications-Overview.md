@@ -22,8 +22,7 @@ The only exceptions -apps that run natively on the OS for specific reasons- are 
 > All other services can still be accessed via a pretty domain, one that is only accessible within your LAN or when connected to your server via VPN. 
 - Required configuration: Caddy is near-zero configuration but does require you to do your homework first.
   - _To access services via internet securily:_
-    - Make sure you have a fixed IP address from your internet provider or use the DynDNS functionality of your router to obtain an address that always points to your current IP.
-    - Using the DynDNS address, register your own domain name at https://porkbun.com or other good domain provider, login and add 1 AAA DNS domain pointing to your DynDNS address and a CNAME DNS item for each subdomain (files.yourdomain.tld, vault.yourdomain.tld, firefox.yourdomain.tld). Each CNAME item should only point to yourdomain.tld, not your DynDNS address.
+    - Complete [Step 3. Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) of the main guide.
     - personalize the docker-compose file by editing the .env file and setting your own registered domain name and email address.
     - (Optional) personalize the docker-compose file by changing the subdomains (files., vault., firefox.) to your liking, matching the configuration of your domain provider.
   - _To access local services via a pretty domain name:_
