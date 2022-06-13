@@ -49,7 +49,7 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
     - Browsers convert addressess automatically to HTTPS, type a "/" at the end of the address (and try with http:// in front of it) to force it to use http instead. HTTPS TLS encryption is not necessary (and more work to setup for local services) since these domains only work within your LAN (or via VPN which is already encrypted).  
     - For services (like Adguard Home!) using `network_mode: host` in docker-compose, this works only when accessing the domain on other devices within your LAN. To access such services in a browser on your host system, add the domain in the `/etc/hosts` file of your server.
 
-### _Remote VPN access [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)_
+### _VPN Portal [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)_
 > Wireguard VPN protocol runs natively on your host system, it is part of the Linux Kernel. A configuration file containing the VPN server configuration and encryption keys should be generated and stored in a file `/etc/wireguard/wg0.conf`. Clients can be configured by generating keys and adding them to that file. 
 > This webservice does 1 thing: it provides a `VPN-Portal`, a friendly user interface to add/manage clients and manage global default settings for server and clients. This means all it does is edit the configuration file. 
 > Most of its configuration is already taken care of, see the docker-compose file. 
