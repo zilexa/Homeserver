@@ -17,7 +17,7 @@ Below a description and recommended or required configuration of each service th
 ### _Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
 >A complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
 - Required configuration: none.
-- Optional configuration: Settings > Environment > Local, Public IP. Change this value to your local domain name, as configured in AdGuard Home>DNS Rewrites or your systems hosts file (`/etc/hosts`), more details below in the AdGuard Home section. 
+- Recommended configuration: Settings > Environment > Local, Public IP. Change this value to your local domain name, as configured in AdGuard Home>DNS Rewrites or your systems hosts file (`/etc/hosts`), more details below in the AdGuard Home section. 
 
 ### _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)_
 > Access your services via a pretty domain name, accessible via the internet through HTTPS or locally only.  \
