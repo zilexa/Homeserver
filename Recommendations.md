@@ -52,8 +52,11 @@ _Notes_
 
 ## Power consumption
 A PicoPSU is the king of PSUs up to 15W idle while still capable of handling peaks, for example at boot or when harddrives spin-up. Normal PSUs are only efficient at higher consumption levels (doesn't make sense for a 24/7 homeserver). Stability is also dependent on power delivery. The PicoPSU90 and higher models with a proper power adapter will contribute to a rock-stable system. 
-- PicoPSU 90W or higher.  \
-There is a great difference in power adapters when it comes to efficiency and overhead. All of the following options are great choices. 
+- PicoPSU 80: if you only use SSDs or have up to 3-4 2.5" HDDs and no other components with high consumption (for example 2.5Gbit ethernet). Note its cable is short and you will need to buy the P4 cable seperately (required to feed the CPU). 
+- PicoPSU 90: This one comes with P4 cable.
+- PicoPSU 160XT: for systems with more harddisks. Less efficient than the PicoPSU 80. 
+
+There is a great difference in power adapters when it comes to efficiency and overhead, and it varies depending on the power demand of the sysyem. All of the following options are great choices. A great, in-depth review can be found [here](https://mrmrmr.tweakblogs.net/blog/19706/efficiency-tests-van-12v-adapters-voor-zuinige-servers), English version [here](https://mrmrmr-tweakblogs-net.translate.goog/blog/19706/efficiency-tests-van-12v-adapters-voor-zuinige-servers?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=nl&_x_tr_pto=wapp). 
 - Highest efficiency/lowest overhead when idle consumption is below 10W: 
   - 96W: FSP FSP096-AHAN3 
   - 120W: XP Power VES120PS (price is 2x the Leicke adapter)
@@ -64,7 +67,8 @@ There is a great difference in power adapters when it comes to efficiency and ov
   - 120W: Leicke NT03015 (fantastic low budget option)
 
 _Notes_
-The Leicke is a great option for <10 W and >10W, there are just a few adapters that have even less overhead when <10W. Consider that before you spend too much on the power adapter. 
+The Leicke is a great, affordable option for <10 W and >10W, there are just a few adapters that have even less overhead when <10W. Consider that before you spend too much on the power adapter. 
+
 
 ## Storage
 - For the OS and applications, use an NVME drive, for example M.2 PCI Express 3.0 x4 are common. PCI 4.0 uses more power and the extra speed is useless for our purpose. Choose the M.2 NVME SSD with low idle power consumption. There are big differences, look for Anandtech, Tomshardware reviews. Most other reviewers do not test idle power consumption at all! Even though on a 24x7 system, this will be THE power consumption 90% of the time. The following have very low idle power consumption:
