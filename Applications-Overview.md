@@ -1,10 +1,14 @@
 # Overview & Configuration tips for your services
 
-Almost everything will run isolated in [Docker containers](https://www.docker.com/resources/what-container). The setup is easy with the provided docker-compose.yml file, which is a declarative way to pull the images from the internet, create containers and configure everything with a single command! See the [subguide for Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker) on how to get up and running, **this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.** and the correct, well-maintained docker images have been selected, sometimes you spend hours finding the right one as there are often multiple available. 
+Your services will run isolated in [Docker containers](https://www.docker.com/resources/what-container). The setup is easy with the provided docker-compose.yml file, which is a declarative way to pull the images from the internet, create containers and configure everything with a single command!  \ 
+See the [subguide for Docker Compose](https://github.com/zilexa/Homeserver/tree/master/docker) on how to get up and running. *this is the unique part of this guide, a complete and carefully built working Docker-Compose.yml file with variables.*  \
+The best, well-maintained docker images have been selected, sometimes you spend hours finding the right one as there are often multiple available.  \ 
 
-You can easily find other applications via https://hub.docker.com/
-Below a description of each application that are in Docker-Compose.yml. Choose the ones you need.
-The only exceptions -apps that run natively on the OS for specific reasons- are Netdata, PiVPN and AdGuard Home. These apps have very easy installation instructions.
+- You can easily find other applications via https://hub.docker.com/
+- For VPN through WireGuard, Remote Desktop through RDP and terminal access through SSH, the host OS, Manjaro Gnome, is leveraged. 
+- To remove the complexity of configuring Wireguard VPN, a nice Portal as webervice is used and the most complex part of a VPN server configuration is already taken care of in the docker-compose.yml file!  \
+
+Below a description and recommended or required configuration of each service that are in Docker-Compose.yml. Choose the ones you need.
 
 
 ## _Server Management & Monitoring_
