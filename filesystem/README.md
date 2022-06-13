@@ -168,7 +168,7 @@ If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blo
 3. Realize that all data in `/mnt/pool/no-cache` is also in `/mnt/pool/` since one is a subset of the other. 
 
 #### Why do we mount subvolumes instead of the root of the drive?
---> In /mnt/pool/ you only want to see Users and Media. The Backup Guide will require additional folders in the root of each drive (for snapshots and/or parity). As a best practice, you should only expose folders to users and applications that must be exposed. Exposing your backup/snapshots folder serves no purpose. 
+--> In `/mnt/pool/` you only want to see Users and Media. The Backup Guide will require additional folders in the root of each drive (for snapshots and/or parity). As a best practice, you should only expose folders to users and applications that must be exposed. Exposing your backup/snapshots folder serves no purpose. 
 
 &nbsp;
 ## Step 8: Fix the personal folder links in $HOME
