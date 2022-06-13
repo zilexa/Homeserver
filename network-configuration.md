@@ -52,6 +52,11 @@ This address will only work within your home network. Some routers support confi
 ### Email notifications
 Imagine you need to reset your file cloud password, you need a confirmation if someone downloaded a file that you shared or you want confirmation that your nightly backups ran successfully. 
 Setting up your own selfhosted SMTP server is a nightmare, because your domain is easily blocked by Gmail, Outlook.com etc. The solution is to use an SMTP service.
+* In Porkbun or your domain provider, add an Email Forwarder, *from* `yourname@yourdomain.tld` *to* `yourprivate@email.com`. 
 * Create a free account with https://smtp2go.com 
-* configure "send from" addresses for each service/subdomain and one for your server. 
+* Login to smtp2go, go to Settings, add an SMTP user for your server to sent notifications and for each docker service that you want to receive notifications from ("send from" accounts). 
+  * Make sure the SMTP user name & address correspond with each other. 
+    * For example, if want emails to appear to have come from "Jimmies", and your registered domain is ` jimmies.cloud` create an SMTP user `jimmies`. 
+    * If you want emails to appear to have come from FileRun, use filerun.jimmies, so that you can use "FileRun <filerun@jimmies.cloud>" as sender when configuring your services. 
+    * Microsoft refuses to implement common anti-spam protocols for Exchange and outlook.com, as a result some emails can still end up in junk folder, but once marked as non-junk, without having to whitelist, it should be OK. 
 
