@@ -56,7 +56,7 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 > Note your server IP when connected via VPN will be `10.0.0.0` and clients will start at `10.0.0.1`. 
 
 _Server configuration_ 
-- Personalize docker-compose by editing the .env file, setting a user/pw for Portal access, your registered domain name `yourdomain.tld` (see Caddy above for instructions) and your SMTP provider credentials, required to sent clients a QR code or conf file for access. *That's all! network and firewall (iptables) configuration is already in the .env file, following best practice documentation.*
+- Personalize docker-compose by editing the .env file, setting a user/pw for Portal access, your registered domain name `yourdomain.tld` (see Caddy above for instructions) and your SMTP provider credentials, required to sent clients a QR code or conf file for access. **That's all! network and firewall (iptables) configuration is already in the .env file, following best practice documentation.**
 - Go to the vpn portal via `yourip:5000` or `vpn.o` and add clients. Remove `keepalive` for mobile devices, this should only be used on desktops/laptops. 
 - Ensure to hit save and `Apply Config`. This will save the `/etc/wireguard/wg0.conf` file. 
 - Open a Terminal and start Wireguard: `sudo wg-quick up wg0` and enable start at boot `sudo systemctl enable wg-quick@wg0.service` and `sudo systemctl start wg-quick@wg0.service`
