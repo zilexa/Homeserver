@@ -67,9 +67,9 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 
 _Server configuration_ 
 - Personalize docker-compose by editing the .env file, setting a user/pw for Portal access, your registered domain name `yourdomain.tld` (see Caddy above for instructions) and your SMTP provider credentials, required to sent clients a QR code or conf file for access. **That's all! network and firewall (iptables) configuration is already in the .env file, following best practice documentation.**
-- Go to the vpn portal via `yourip:5000` or `vpn.o` and add clients. Remove `keepalive` for mobile devices, this should only be used on desktops/laptops. 
+- Go to the vpn portal via `yourip:5000` or `vpn.o` and add clients, while doing that remove `keepalive` when creating mobile phone clients, this should only be used on desktops/laptops. 
 - Ensure to hit save and `Apply Config`. This will save the `/etc/wireguard/wg0.conf` file. 
-- Open a Terminal and start Wireguard: `sudo wg-quick up wg0` and enable start at boot `sudo systemctl enable wg-quick@wg0.service` and `sudo systemctl start wg-quick@wg0.service`
+- Open a Terminal, verify WireGuard starts correctly (no errors): `sudo wg-quick up wg0` then enable start at boot: `sudo systemctl enable wg-quick@wg0.service` and `sudo systemctl start wg-quick@wg0.service`.
 - To monitor the wg0.conf file for changes (whenever you change something via the VPN-Portal) and restart the VPN server, also start and enable 2 services that were created via the `prep-server.sh` script: `systemctl enable wgui.{path,service}` and `systemctl start wgui.{path,service}`. This will ensure `sudo systemctl restart wg-quick@wg0.service` is run every time the VPN-Portal is used to make changes. 
 
 _Client configuration_ 
