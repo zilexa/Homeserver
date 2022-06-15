@@ -108,13 +108,20 @@ _Client configuration_
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use.\
 > Additionally allows you to securely share passwords and personal files or documents (IDs, salary slips, insurance) with others via Bitwarden Send.\
 > By using `bitwarden_rs`, written in the modern language RUST, it uses exponentially less resources than the conventional Bitwarden-server.
-
+- Required documentation:
+  - Follow the documentation to login to the admin environment (hint: the secret in your `.env` file). 
+    - User registeration is disabled by default, you can invite users via email.
+    - Fill in your SMTP credentials first and perform the test. See [E-mail notifications](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#email-notifications) in [Step 3. Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).   
 \
-### _Files cloud_ via FileRun [documentation](https://docs.filerun.com/) and [support](https://feedback.filerun.com)_ 
+### _Files cloud_ via FileRun - [documentation](https://docs.filerun.com/) and [support](https://feedback.filerun.com)_ 
 >Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) (for file browsing) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for 2-way or 1-way sync, automated or scheduled) or Goodreader for iOS.
 > - FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes.
 > - FileRun support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc.
 >Limits compared to Nextcloud: It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no calendar/contacts/calls etc features like Nextcloud.
+- Required configuration: walk through the Control Panel and personalize at will. 
+- In `Thumbs and Previews` enable all options except LibreOffice and hit "Check version", output should be green. 
+- In `Plugins`, enable what you need, disable overlapping stuff that you do not need. In `defaults` it is recommended to use `Office web viewer` for Office documents instead of alternatives.
+- OnlyOffice DocumentServer unfortunately does not work properly, otherwise you could configure OnlyOffice as default to edit office documents (having your own google docs/office online alternative!). 
 
 **How to sync devices, external users laptops**
 > - Filerun supports webDAV, see [helpful tips](https://docs.filerun.com/webdav). This way you benefit from instant file indexing (for search) and server-side photo thumbails & previews. Consider using webDAV to sync your User files with your mobile devices.
@@ -125,20 +132,19 @@ _Client configuration_
 > - Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
 \
-_Your own Office Online/Google Docs via FileRun [OnlyOffice DocumentServer](https://www.onlyoffice.com/office-suite.aspx?from=default)_
->Your own selfhosted Google Docs/Office365 alternative! This works well with both FileRun and NextCloud.
-
-\
-_Your own browser sync engine [Firefox Sync](https://github.com/mozilla-services/syncserver)_
+_Your own browser sync engine via Firefox Sync - [documentation](https://github.com/mozilla-services/syncserver)_
 >By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla.\
 >Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
+- Required Configuration: 
+  - Test your sync server is running properly by visiting the subdomain `firefox.yourdomain.tld`. 
+  - by default, new accounts cannot register to your server. You can control this in your docker-compose file via `FF_SYNCSERVER_ALLOW_NEW_USERS:` make sure to set it to false after all users have registered, to prevent strangers from using your sync server. 
 
 \
 _Paper document management [Paperless](https://github.com/jonaswinkler/paperless-ng)_
 >Scan files and auto-organise for your administration archive with a webUI to see and manage them. [Background](https://blog.kilian.io/paperless/) of Paperless. No more paper archives!
 
 ## _Media Server_
-### _[Qbittorrent](https://hotio.dev/containers/qbittorrent/)_ through VPN-proxy via PIA Wireguard VPN [documentation](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_ 
+### _[Qbittorrent](https://hotio.dev/containers/qbittorrent/)_ through VPN-proxy via PIA Wireguard VPN - [documentation](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_ 
 >Downloading files should always be done through a proper VPN provider, one that allows for port forwarding otherwise finding peers will be difficult.\
 >The `docker-wireguard-pia` image created by `thrnz` automatically connects/reconnects/finds fastest server and even updates the forwarded port in QBittorrent, as your PIA provider will change it often.
 - Required configuration: 
