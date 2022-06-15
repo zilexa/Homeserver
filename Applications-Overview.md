@@ -69,7 +69,7 @@ _Server configuration_
 - Personalize docker-compose by editing your (hidden) `/home/username/docker/.env` file [see example](https://github.com/zilexa/Homeserver/blob/master/docker/.env).
   1. Set a user/pw for VPN-Portal access
   2. Generate a key for VPN-Portal access encryption key `WGPORTALSECRET`, see the command listed in the file under section TOKENS.  
-  3. your registered domain name `yourdomain.tld` (see Caddy above for instructions) 
+  3. your registered domain name `yourdomain.tld` (see [Step 3. Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md)) 
   4. your SMTP provider credentials, required to sent clients a QR code or conf file for access.
   5. verify `WGPORT` is properly forwarded in your router and `LAN_ADDRESS_RANGE` corresponds with your router DHCP range. 
   6. Set the correct LAN network device in `POSTUP` and `POSTDOWN` by changing `eno1` to yours, can be found via command `ip route`, the value next to "dev" on the 'default' or first line. 
