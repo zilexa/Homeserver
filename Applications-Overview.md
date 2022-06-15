@@ -72,7 +72,8 @@ _Server configuration_
   3. your registered domain name `yourdomain.tld` (see Caddy above for instructions) 
   4. your SMTP provider credentials, required to sent clients a QR code or conf file for access.
   5. verify `WGPORT` is properly forwarded in your router and `LAN_ADDRESS_RANGE` corresponds with your router DHCP range. 
-  6.  In Terminal, verify no errors have been made: `docker-compose config` and check all values from .env are present. Then run `docker-compose up -d`. 
+  6. Set the correct LAN network device in `POSTUP` and `POSTDOWN` by changing `eno1` to yours, can be found via command `ip route`, the value next to "dev" on the 'default' or first line. 
+  7.  In Terminal, verify no errors have been made: `docker-compose config` and check all values from .env are present. Then run `docker-compose up -d`. 
 - Go to the vpn portal via `yourip:5000` or `http://vpn.o/` and verify your `.env` values are filled in. 
 - Go to `Clients` and add clients. 
   - Change `AllowedIPs`: `10.0.0.0/24` =  access to server and VPN peers, `192.....` = access to all LAN devices (like printer, camera). If you want all traffic to go through VPN, also internet traffic: `0.0.0.0, ::/0` (= all IPv4 and IPv6 traffic). If you only want to allow access to 1 IP instead of a whole range use `/32`. Also see this [range calculator](https://www.ipaddressguide.com/cidr). 
