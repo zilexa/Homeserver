@@ -75,6 +75,8 @@ _Server configuration_
   6.  In Terminal, verify no errors have been made: `docker-compose config` and check all values from .env are present. 
 - Go to the vpn portal via `yourip:5000` or `http://vpn.o/` and verify your `.env` values are filled in. 
 - Go to `Clients` and add clients. 
+  - Change `AllowedIPs`: `10.0.0.0/24` =  access to server and VPN peers, `192.....` = access to all LAN devices (like printer, camera). If you want all traffic to go through VPN, also internet traffic: `0.0.0.0, ::/0` (= all IPv4 and IPv6 traffic). If you only want to allow access to 1 IP instead of a whole range use `/32`. Also see this (range calculator)[https://www.ipaddressguide.com/cidr]. 
+    - You can always change `AllowedIPs`, later, on your client itself. If you want to prevent clients from having access to certain IP addresses or server ports, change the POST UP and POST DOWN lines, as this configures the server firewall. For inspiration, see [here](https://gist.github.com/qdm12/4e0e4f9d1a34db9cf63ebb0997827d0d). 
   - If you add a client config to be used on a mobile phone, remove the value for `keepalive`. This is only necessary to reach clients (desktops, servers, laptops), from your server or from other clients, not to reach your server (which can always be found through the domain address). 
 - Ensure to hit save and `Apply Config`. This will save the `/etc/wireguard/wg0.conf` file. 
 - Open a Terminal, verify WireGuard starts correctly (no errors): `sudo wg-quick up wg0`, if there were no errors, stop it again `sudo wg-quick up wg0`. 
