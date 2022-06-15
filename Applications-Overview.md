@@ -66,7 +66,7 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 > Note your server IP when connected via VPN will be `10.0.0.0` and clients will start at `10.0.0.1`. 
 
 _Server configuration_ 
-- Personalize docker-compose by editing your (hidden) `/home/username/docker/.env` file (see example)[https://github.com/zilexa/Homeserver/blob/master/docker/.env].
+- Personalize docker-compose by editing your (hidden) `/home/username/docker/.env` file [see example](https://github.com/zilexa/Homeserver/blob/master/docker/.env).
   - Set a user/pw for Portal access, 
   - your registered domain name `yourdomain.tld` (see Caddy above for instructions) 
   - your SMTP provider credentials, required to sent clients a QR code or conf file for access.
