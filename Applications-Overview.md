@@ -54,7 +54,7 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
     - Browsers convert addressess automatically to HTTPS. Disable this in your browser security settings. Type a `/` at the end of the address (if that's not enough also add `http://` in front of it) to force it to use http instead. HTTPS TLS encryption is not necessary (and more work to setup for local services) since these domains only work within your LAN (or via VPN which is already encrypted).  
     - For services (like Adguard Home!) using `network_mode: host` in docker-compose, this works only when accessing the domain on other devices within your LAN. To access such services in a browser on your host system, add the domain in the `/etc/hosts` file of your server.
 
-### _VPN Portal [wireguard-ui](https://github.com/ngoduykhanh/wireguard-ui)_
+### _VPN Portal ("wireguard-ui"), [documentation](https://github.com/ngoduykhanh/wireguard-ui)_
 > Wireguard VPN protocol runs natively on your host system, it is part of the Linux Kernel. A configuration file containing the VPN server configuration and encryption keys should be generated and stored in a file `/etc/wireguard/wg0.conf`. Clients can be configured by generating keys and adding them to that file.
 
 > This webservice does 1 thing: it provides a `VPN-Portal`, a friendly user interface to add/manage clients and manage global default settings for server and clients. This means all it does is edit the configuration file.
@@ -72,10 +72,10 @@ _Server configuration_
   3. your registered domain name `yourdomain.tld` (see Caddy above for instructions) 
   4. your SMTP provider credentials, required to sent clients a QR code or conf file for access.
   5. verify `WGPORT` is properly forwarded in your router and `LAN_ADDRESS_RANGE` corresponds with your router DHCP range. 
-  6.  In Terminal, verify no errors have been made: `docker-compose config` and check all values from .env are present. 
+  6.  In Terminal, verify no errors have been made: `docker-compose config` and check all values from .env are present. Then run `docker-compose up -d`. 
 - Go to the vpn portal via `yourip:5000` or `http://vpn.o/` and verify your `.env` values are filled in. 
 - Go to `Clients` and add clients. 
-  - Change `AllowedIPs`: `10.0.0.0/24` =  access to server and VPN peers, `192.....` = access to all LAN devices (like printer, camera). If you want all traffic to go through VPN, also internet traffic: `0.0.0.0, ::/0` (= all IPv4 and IPv6 traffic). If you only want to allow access to 1 IP instead of a whole range use `/32`. Also see this (range calculator)[https://www.ipaddressguide.com/cidr]. 
+  - Change `AllowedIPs`: `10.0.0.0/24` =  access to server and VPN peers, `192.....` = access to all LAN devices (like printer, camera). If you want all traffic to go through VPN, also internet traffic: `0.0.0.0, ::/0` (= all IPv4 and IPv6 traffic). If you only want to allow access to 1 IP instead of a whole range use `/32`. Also see this [range calculator](https://www.ipaddressguide.com/cidr). 
     - You can always change `AllowedIPs`, later, on your client itself. If you want to prevent clients from having access to certain IP addresses or server ports, change the POST UP and POST DOWN lines, as this configures the server firewall. For inspiration, see [here](https://gist.github.com/qdm12/4e0e4f9d1a34db9cf63ebb0997827d0d). 
   - If you add a client config to be used on a mobile phone, remove the value for `keepalive`. This is only necessary to reach clients (desktops, servers, laptops), from your server or from other clients, not to reach your server (which can always be found through the domain address). 
 - Ensure to hit save and `Apply Config`. This will save the `/etc/wireguard/wg0.conf` file. 
