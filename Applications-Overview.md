@@ -67,7 +67,8 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 
 _Server configuration_ 
 - Personalize docker-compose by editing your (hidden) `/home/username/docker/.env` file [see example](https://github.com/zilexa/Homeserver/blob/master/docker/.env).
-  - Set a user/pw for Portal access, 
+  - Set a user/pw for VPN-Portal access
+  - Generate a key for VPN-Portal access encryption key `WGPORTALSECRET`, see the command listed in the file under section TOKENS.  
   - your registered domain name `yourdomain.tld` (see Caddy above for instructions) 
   - your SMTP provider credentials, required to sent clients a QR code or conf file for access.
   - verify `WGPORT` is properly forwarded in your router and `LAN_ADDRESS_RANGE` corresponds with your router DHCP range. 
