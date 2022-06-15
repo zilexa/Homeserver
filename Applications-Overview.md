@@ -66,11 +66,19 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 > Note your server IP when connected via VPN will be `10.0.0.0` and clients will start at `10.0.0.1`. 
 
 _Server configuration_ 
-- Personalize docker-compose by editing the .env file, setting a user/pw for Portal access, your registered domain name `yourdomain.tld` (see Caddy above for instructions) and your SMTP provider credentials, required to sent clients a QR code or conf file for access. **That's all! network and firewall (iptables) configuration is already in the .env file, following best practice documentation.**
-- Go to the vpn portal via `yourip:5000` or `vpn.o` and add clients, while doing that remove `keepalive` when creating mobile phone clients, this should only be used on desktops/laptops. 
+- Personalize docker-compose by editing your (hidden) `/home/username/docker/.env` file (see example)[https://github.com/zilexa/Homeserver/blob/master/docker/.env].
+  - Set a user/pw for Portal access, 
+  - your registered domain name `yourdomain.tld` (see Caddy above for instructions) 
+  - your SMTP provider credentials, required to sent clients a QR code or conf file for access.
+  - verify `WGPORT` is properly forwarded in your router and `LAN_ADDRESS_RANGE` corresponds with your router DHCP range. 
+  -  In Terminal, verify no errors have been made: `docker-compose config` and check all values from .env are present. 
+- Go to the vpn portal via `yourip:5000` or `http://vpn.o/` and verify your `.env` values are filled in. 
+- Go to `Clients` and add clients. 
+  - If you add a client config to be used on a mobile phone, remove the value for `keepalive`. This is only necessary to reach clients (desktops, servers, laptops), from your server or from other clients, not to reach your server (which can always be found through the domain address). 
 - Ensure to hit save and `Apply Config`. This will save the `/etc/wireguard/wg0.conf` file. 
-- Open a Terminal, verify WireGuard starts correctly (no errors): `sudo wg-quick up wg0` then enable start at boot: `sudo systemctl enable wg-quick@wg0.service` and `sudo systemctl start wg-quick@wg0.service`.
-- To monitor the wg0.conf file for changes (whenever you change something via the VPN-Portal) and restart the VPN server, also start and enable 2 services that were created via the `prep-server.sh` script: `systemctl enable wgui.{path,service}` and `systemctl start wgui.{path,service}`. This will ensure `sudo systemctl restart wg-quick@wg0.service` is run every time the VPN-Portal is used to make changes. 
+- Open a Terminal, verify WireGuard starts correctly (no errors): `sudo wg-quick up wg0`, if there were no errors, stop it again `sudo wg-quick up wg0`. 
+- Enable starting it as service (will autostart at boot): `sudo systemctl enable wg-quick@wg0.service` and `sudo systemctl start wg-quick@wg0.service`.
+- To automatically apply any changes made via VPN-Portal, Wireguard needs to be restarted when the `wg0.conf` file is modified by VPN-Portal. This is taken care of by 2 services created by the `prep-server.sh` script. All you have to to is enable & start them: : `systemctl enable wgui.{path,service}` and `systemctl start wgui.{path,service}`. This will ensure `sudo systemctl restart wg-quick@wg0.service` is run every time the VPN-Portal is used to make changes. 
 
 _Client configuration_ 
 - You can easily ensure Android devices are always using your server DNS (and have access to all local non-exposed services!) by installing [the Wireguard app](https://play.google.com/store/apps/details?id=com.wireguard.android), adding the configuration through QR code or file, which you can share via the `VPN-Portal` via email to your devices Portal. 
