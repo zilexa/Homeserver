@@ -1,4 +1,4 @@
-# Overview & Configuration tips for your services
+# Step 6. Services & Apps - Overview & Configuration
 
 Your services will run isolated in [Docker containers](https://www.docker.com/resources/what-container). The setup is easy with the provided docker-compose.yml file, which is a declarative way to pull the images from the internet, create containers and configure everything with a single command!
 
