@@ -139,22 +139,23 @@ _Paper document management [Paperless](https://github.com/jonaswinkler/paperless
 
 
 ### _Media Server_
-_Media server [Jellyfin](https://jellyfin.org/)_
->Mobile & TV Apps: [Jellyfin clients](https://jellyfin.org/clients/) (for series/movies), [Gelli](https://github.com/dkanada/gelli/releases) (amazing Music Player)
+_[Qbittorrent](https://hotio.dev/containers/qbittorrent/)_
+_[PIA Wireguard VPN](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_ 
+>Sonarr, Radarr, Jackett (automatically) add stuff to Qbittorent which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.\
+>Via the `docker-wireguard-pia` image created by `thrnz`, your downloads are obscured while still allowing you to reach high speeds via the open port in the VPN tunnel, and you can even automatically change the port in Transmission when PIA assigns a new open port, which happens every 90 days.
+- Required configuration: 
+  - Open the file `/home/username/docker/VPN-proxy/pia-shared/` and fill in your QBittorrent username & password and the LAN IP of your server. This way, this script can access QBittorrent to automatically update the forwarded port when PIA changes it (happens after every reboot, restart or reconnect). 
+
+\
+_Series/Movies/Subtitles/Music via Sonarr/Radarr/Bazarr/Lidarr and torrentsites proxy Prowlarr - [Documentation](https://wiki.servarr.com/Docker_Guide)_
+>A visual, user-friendly tool allowing you to search & add your favourite TV shows (Sonarr) or Movies (Radarr) and subtitles (Bazarr), see a schedule of when the next episodes will air and completely take care of obtaining the requires files (by searching magnets/torrents via Jackett, a proxy for all torrentsites) and organising them, all in order to get a full-blown Nextflix experience served by JellyFin.| For years I have messed with FlexGet, but it can't beat Sonarr.   
+- [BLACK app for Android](https://play.google.com/store/apps/details?id=com.advice.drone): all-in-1 app allows you to perform most popular actions in your "\*arr" apps.
+- [NZB360 app for Android](https://play.google.com/store/apps/details?id=com.advice.drone): all-in-1 app allows you to discover new content, find/add/remove content, view status and manage all your "\*arr" services and downloads in 1 single app. User friendly and completely replaces the need to access your web apps. 
+
+\
+_Media server via Jellyfin - [documentation](https://jellyfin.org/)_
 >A mediaserver to serve clients (Web, Android, iOS, iPadOS, Tizen, LG WebOS, Windows) your tvshows, movies and music in a slick and easy to use interface just like the famous streaming giants do.\
 >Jellyfin is user-friendly and has easy features that you might miss from the streaming giants such as watched status management etc.\
 The mediaserver can transcode media on the fly to your clients, adjusting for available bandwith. It can use hardware encoding capabilities of your server.\
 > By using the Gelli app, Jellyfin competes with music servers such as SubSonic/AirSonic. Gelli is more slick and in active development.\
 > Allows you to listen to your old AudioCDs! A HiRes Audio alternative to Spotify/Apple Music etc. 
-
-\
-_[Sonarr (tvshows), Radarr (movies) Bazarr (subtitles), Jackett (torrentproxy)](https://wiki.servarr.com/Docker_Guide)_
->A visual, user-friendly tool allowing you to search & add your favourite TV shows (Sonarr) or Movies (Radarr) and subtitles (Bazarr), see a schedule of when the next episodes will air and completely take care of obtaining the requires files (by searching magnets/torrents via Jackett, a proxy for all torrentsites) and organising them, all in order to get a full-blown Nextflix experience served by JellyFin.| For years I have messed with FlexGet, but it can't beat Sonarr.   
->[BLACK app for Android](https://play.google.com/store/apps/details?id=com.advice.drone): Recommended wife/kids friendly app to add series/movies, discover new, enable/disable automatic monitoring of episodes per show and monitor QBittorrent downloads: 
-
-\
-_[Qbittorrent](https://hotio.dev/containers/qbittorrent/)_
-_[PIA Wireguard VPN](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_ 
->Sonarr, Radarr, Jackett (automatically) add stuff to Qbittorent which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.\
->Via the `docker-wireguard-pia` image created by `thrnz`, your downloads are obscured while still allowing you to reach high speeds via the open port in the VPN tunnel, and you can even automatically change the port in Transmission when PIA assigns a new open port, which happens every 90 days.
-
