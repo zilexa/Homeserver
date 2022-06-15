@@ -19,7 +19,7 @@ Below a description and recommended or required configuration of each service th
 - Required configuration: none.
 - Recommended configuration: Settings > Environment > Local, Public IP. Change this value to your local domain name, as configured in AdGuard Home>DNS Rewrites or your systems hosts file (`/etc/hosts`), more details below in the AdGuard Home section. 
 
-### _Secure Web Proxy via [docker caddy proxy](https://github.com/lucaslorentz/caddy-docker-proxy)_
+### _Secure Web Proxy via docker **caddy-docker-proxy**, [documentation](https://github.com/lucaslorentz/caddy-docker-proxy)_
 > Access your services via a pretty domain name, accessible via the internet through HTTPS or locally only.  \
 > For online access, Caddy takes care of all required steps, obtaining and renewing SSL certificates etc. 100% hassle free!  \
 > Caddy-Docker-Proxy is the same as official Caddy but allows you to configure Caddy via Docker Compose file, instead of managing a seperate configuration file (`caddyfile`). Caddy-Docker-Proxy will dynamically built the caddyfile based on labels in your Docker Compose file.
