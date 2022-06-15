@@ -67,12 +67,12 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
 
 _Server configuration_ 
 - Personalize docker-compose by editing your (hidden) `/home/username/docker/.env` file [see example](https://github.com/zilexa/Homeserver/blob/master/docker/.env).
-  - Set a user/pw for VPN-Portal access
-  - Generate a key for VPN-Portal access encryption key `WGPORTALSECRET`, see the command listed in the file under section TOKENS.  
-  - your registered domain name `yourdomain.tld` (see Caddy above for instructions) 
-  - your SMTP provider credentials, required to sent clients a QR code or conf file for access.
-  - verify `WGPORT` is properly forwarded in your router and `LAN_ADDRESS_RANGE` corresponds with your router DHCP range. 
-  -  In Terminal, verify no errors have been made: `docker-compose config` and check all values from .env are present. 
+  1. Set a user/pw for VPN-Portal access
+  2. Generate a key for VPN-Portal access encryption key `WGPORTALSECRET`, see the command listed in the file under section TOKENS.  
+  3. your registered domain name `yourdomain.tld` (see Caddy above for instructions) 
+  4. your SMTP provider credentials, required to sent clients a QR code or conf file for access.
+  5. verify `WGPORT` is properly forwarded in your router and `LAN_ADDRESS_RANGE` corresponds with your router DHCP range. 
+  6.  In Terminal, verify no errors have been made: `docker-compose config` and check all values from .env are present. 
 - Go to the vpn portal via `yourip:5000` or `http://vpn.o/` and verify your `.env` values are filled in. 
 - Go to `Clients` and add clients. 
   - If you add a client config to be used on a mobile phone, remove the value for `keepalive`. This is only necessary to reach clients (desktops, servers, laptops), from your server or from other clients, not to reach your server (which can always be found through the domain address). 
