@@ -103,14 +103,14 @@ _Client configuration_
  
 
 ## _Cloud Services_
-_Password Manager_ via Vaultwarden [documentation](https://github.com/dani-garcia/vaultwarden)
+### _Password Manager_ via Vaultwarden [documentation](https://github.com/dani-garcia/vaultwarden)
 >Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use.\
 > Additionally allows you to securely share passwords and personal files or documents (IDs, salary slips, insurance) with others via Bitwarden Send.\
 > By using `bitwarden_rs`, written in the modern language RUST, it uses exponentially less resources than the conventional Bitwarden-server.
 
 \
-_Files cloud_ via FileRun [documentation](https://docs.filerun.com/) and [support](https://feedback.filerun.com)_ 
+### _Files cloud_ via FileRun [documentation](https://docs.filerun.com/) and [support](https://feedback.filerun.com)_ 
 >Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) (for file browsing) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for 2-way or 1-way sync, automated or scheduled) or Goodreader for iOS.
 > - FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes.
 > - FileRun support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc.
@@ -137,12 +137,10 @@ _Your own browser sync engine [Firefox Sync](https://github.com/mozilla-services
 _Paper document management [Paperless](https://github.com/jonaswinkler/paperless-ng)_
 >Scan files and auto-organise for your administration archive with a webUI to see and manage them. [Background](https://blog.kilian.io/paperless/) of Paperless. No more paper archives!
 
-
-### _Media Server_
-_[Qbittorrent](https://hotio.dev/containers/qbittorrent/)_
-_[PIA Wireguard VPN](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_ 
->Sonarr, Radarr, Jackett (automatically) add stuff to Qbittorent which is a p2p client. It should run behind the chosen VPN provider.Many alternatives. Transmission is lightweight and originally has a bit better integration with the tools mentioned + allows for port change via the VPN provider.\
->Via the `docker-wireguard-pia` image created by `thrnz`, your downloads are obscured while still allowing you to reach high speeds via the open port in the VPN tunnel, and you can even automatically change the port in Transmission when PIA assigns a new open port, which happens every 90 days.
+## _Media Server_
+### _[Qbittorrent](https://hotio.dev/containers/qbittorrent/)_ through VPN-proxy via PIA Wireguard VPN [documentation](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_ 
+>Downloading files should always be done through a proper VPN provider, one that allows for port forwarding otherwise finding peers will be difficult.\
+>The `docker-wireguard-pia` image created by `thrnz` automatically connects/reconnects/finds fastest server and even updates the forwarded port in QBittorrent, as your PIA provider will change it often.
 - Required configuration: 
   - Open the file `/home/username/docker/VPN-proxy/pia-shared/` and fill in your QBittorrent username & password and the LAN IP of your server. This way, this script can access QBittorrent to automatically update the forwarded port when PIA changes it (happens after every reboot, restart or reconnect). 
 
