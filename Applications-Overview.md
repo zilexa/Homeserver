@@ -14,12 +14,12 @@ Below a description and recommended or required configuration of each service th
 
 
 ## _Server Management & Monitoring_
-### _Container management via [Portainer](https://www.portainer.io/products/community-edition)_ 
+### _Container management_ via [Portainer](https://www.portainer.io/products/community-edition)
 >A complete overview of your containers and related elements in a nice visual UI, allowing you to easily check the status, inspect issues, stop, restart, update or remove containers that you launched via Docker Compose. Strangely, the tool cannot inform you of updates.
 - Required configuration: none.
 - Recommended configuration: Settings > Environment > Local, Public IP. Change this value to your local domain name, as configured in AdGuard Home>DNS Rewrites or your systems hosts file (`/etc/hosts`), more details below in the AdGuard Home section. 
 
-### caddy-docker-proxy _Secure Web Proxy_, [documentation](https://github.com/lucaslorentz/caddy-docker-proxy)_
+### _Secure Web Proxy_ via caddy-docker-proxy - [documentation](https://github.com/lucaslorentz/caddy-docker-proxy)
 > Access your services via a pretty domain name, accessible via the internet through HTTPS or locally only.  \
 > For online access, Caddy takes care of all required steps, obtaining and renewing SSL certificates etc. 100% hassle free!  \
 > Caddy-Docker-Proxy is the same as official Caddy but allows you to configure Caddy via Docker Compose file, instead of managing a seperate configuration file (`caddyfile`). Caddy-Docker-Proxy will dynamically built the caddyfile based on labels in your Docker Compose file.
@@ -35,8 +35,8 @@ Below a description and recommended or required configuration of each service th
     - (Optional) personalize the docker-compose file, changing the caddy label under each service to a domain name of your liking. For example, to access Portainer, `http://docker.o/` is used, you could also use `http://docker.home/` or something else instead.  
     - Add all the local domain names as they appear in the compose file to AdGuard Home (see below) or to your system `/etc/hosts` file, each one pointing to the same LAN IP address of your server, no port numbers (DNS translates domains to IP addresses, ports are not involved here, Caddy makes sure the right service is connected to each domain). 
 
-### _Safe browsing ad- and malware free [AdGuardHome](https://adguard.com/en/adguard-home/overview.html)_
-_Your own recursive DNS server to stop shouting your browsing history to the world [Unbound](https://github.com/MatthewVance/unbound-docker)_ 
+### _Safe browsing ad- and malware free_ via AdGuardHome - [documentation](https://adguard.com/en/adguard-home/overview.html)
+_Your own recursive DNS server to stop sharing your browsing history with the world_ Unbound - [documentation](https://github.com/MatthewVance/unbound-docker)_ 
 >Unbound is a recursive DNS resolver. By using Unbound, no 3rd party will know the full URLs of the sites you are visiting (your ISP, local and international DNS providers).\
 >AdGuardHome is a DNS based malware & ad filter, blocking ad requests but also blocking known malware, coinmining and phishing sites!
 
@@ -54,7 +54,7 @@ _Your own recursive DNS server to stop shouting your browsing history to the wor
     - Browsers convert addressess automatically to HTTPS. Disable this in your browser security settings. Type a `/` at the end of the address (if that's not enough also add `http://` in front of it) to force it to use http instead. HTTPS TLS encryption is not necessary (and more work to setup for local services) since these domains only work within your LAN (or via VPN which is already encrypted).  
     - For services (like Adguard Home!) using `network_mode: host` in docker-compose, this works only when accessing the domain on other devices within your LAN. To access such services in a browser on your host system, add the domain in the `/etc/hosts` file of your server.
 
-### _VPN Portal ("wireguard-ui"), [documentation](https://github.com/ngoduykhanh/wireguard-ui)_
+### _VPN Portal_ via wireguard-ui - [documentation](https://github.com/ngoduykhanh/wireguard-ui)
 > Wireguard VPN protocol runs natively on your host system, it is part of the Linux Kernel. A configuration file containing the VPN server configuration and encryption keys should be generated and stored in a file `/etc/wireguard/wg0.conf`. Clients can be configured by generating keys and adding them to that file.
 
 > This webservice does 1 thing: it provides a `VPN-Portal`, a friendly user interface to add/manage clients and manage global default settings for server and clients. This means all it does is edit the configuration file.
@@ -88,7 +88,7 @@ _Client configuration_
 - To automatically connect to your VPN when you leave your home WiFi and disconnect when you are back home, install the [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate) app, go to Community and find and install this [flow](https://llamalab.com/automate/community/flows/39377). Follow the instructions in the description. This is tested to work flawlessly on Android 12 devices!  
 - Wireguard apps are available for all systems. For Linux, install `wireguard-tools` and use the command `wg-quik up wg0` after you have put the client conf file (accessible via the VPN-Portal) in `/etc/wireguard/`. 
 
-### _Remote Admin Access_ 
+### _Remote Admin Access_ via RDP and SSH
 > You can manage your server remotely, within LAN or, when not at home via VPN. This can be done through the terminal or simply by accessing the desktop, by sharing the desktop through RDP. 
 > Manjaro Gnome has Gnome RDP builtin by default and the `post-install.sh` script already installed it and allowed you to set the credentials. 
 - Required Configuration: 
@@ -102,7 +102,7 @@ _Client configuration_
  
 
 ## _Cloud Services_
-_Password Manager [Vaultwarden](https://github.com/dani-garcia/vaultwarden)_ 
+_Password Manager_ via Vaultwarden [documentation](https://github.com/dani-garcia/vaultwarden)
 >Mobile App: [Bitwarden](https://play.google.com/store/apps/details?id=com.x8bit.bitwarden)
 > Easily the best, user friendly password manager out there. Open source and therefore fully audited to be secure. The mobile apps are extremely easy to use.\
 > Additionally allows you to securely share passwords and personal files or documents (IDs, salary slips, insurance) with others via Bitwarden Send.\
