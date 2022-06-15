@@ -112,7 +112,7 @@ _Client configuration_
   - Follow the documentation to login to the admin environment (hint: the secret in your `.env` file). 
     - User registeration is disabled by default, you can invite users via email.
     - Fill in your SMTP credentials first and perform the test. See [E-mail notifications](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md#email-notifications) in [Step 3. Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).   
-\
+
 ### _Files cloud_ via FileRun - [documentation](https://docs.filerun.com/) and [support](https://feedback.filerun.com)_ 
 >Mobile Apps: [CX File Explorer](https://play.google.com/store/apps/details?id=com.cxinventor.file.explorer) (for file browsing) and [FolderSync](https://play.google.com/store/apps/details?id=dk.tacit.android.foldersync.lite) (for 2-way or 1-way sync, automated or scheduled) or Goodreader for iOS.
 > - FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes.
