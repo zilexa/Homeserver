@@ -148,7 +148,7 @@ _Paper document management [Paperless](https://github.com/jonaswinkler/paperless
 >Downloading files should always be done through a proper VPN provider, one that allows for port forwarding otherwise finding peers will be difficult.\
 >The `docker-wireguard-pia` image created by `thrnz` automatically connects/reconnects/finds fastest server and even updates the forwarded port in QBittorrent, as your PIA provider will change it often.
 - Required configuration: 
-  - Open the file `/home/username/docker/VPN-proxy/pia-shared/` and fill in your QBittorrent username & password and the LAN IP of your server. This way, this script can access QBittorrent to automatically update the forwarded port when PIA changes it (happens after every reboot, restart or reconnect). 
+  - Open the file `/home/username/docker/VPN-proxy/pia-shared/updateport-qb.sh` and fill in your QBittorrent username & password and the LAN IP of your server. This way, this script can access QBittorrent to automatically update the forwarded port when PIA changes it (happens after every reboot, restart or reconnect). 
 
 \
 _Series/Movies/Subtitles/Music via Sonarr/Radarr/Bazarr/Lidarr and torrentsites proxy Prowlarr - [Documentation](https://wiki.servarr.com/Docker_Guide)_
