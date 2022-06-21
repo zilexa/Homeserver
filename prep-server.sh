@@ -1,10 +1,101 @@
 #!/bin/bash
 # >>> DO NOT USE THIS FILE ON UBUNTU. USE /ARCHIVED/ INSTEAD. THIS FILE HAS BEEN ADJUSTED FOR MANJARO LINUX. <<<
 
+echo "____________________________________________"
+echo "           INSTALL SERVER TOOLS             "
+echo "                                            "
+echo "____________________________________________"
+
+echo "         Docker and Docker Compose          "
+echo "--------------------------------------------"
+# Install Docker and Docker Compose
+sudo pamac install --no-confirm docker docker-compose
+
+# Create non-root user for docker, with privileges (not docker rootless)
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+# Enable docker at boot
+sudo systemctl enable docker.service
+sudo systemctl enable containerd.service
+
+
+echo "            Wireguard VPN Tools             "
+echo "--------------------------------------------"
+# If you used the post-install script, this should already be installed
+sudo pamac install --no-confirm wireguard-tools
+
+echo "                   BTRBK                    "
+echo "--------------------------------------------"
+echo "Swiss handknife-like tool to automate snapshots & backups of personal data" 
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
+sudo pamac install --no-confirm btrbk
+
+echo "               RUN-IF-TODAY                 "
+echo "--------------------------------------------"
+echo "simplify scheduling of weekly/monthly tasks"
+sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
+sudo chmod +x /usr/bin/run-if-today
+
+echo "                   NOCACHE                  "
+echo "--------------------------------------------"
+echo "handy when moving lots of files at once in the background, without filling up cache and slowing down the system."
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
+sudo pamac install --no-confirm nocache
+
+echo "                    GRSYNC                  "
+echo "--------------------------------------------"
+echo "Friendly UI for rsync"
+sudo pamac install --no-confirm grsync
+
+echo "                  LM_SENSORS                "
+echo "--------------------------------------------"
+echo "to be able to read out all sensors" 
+sudo pamac install --no-confirm lm_sensors
+sudo sensors-detect --auto
+
+echo "          S.M.A.R.T. monitoring             "
+echo "--------------------------------------------"
+echo "to be able to read SMART values of drives" 
+sudo pamac install --no-confirm smartmontools
+
+echo "                 HD PARM                    "
+echo "--------------------------------------------"
+echo "to be able to configure drive parameters" 
+sudo pamac install --no-confirm hdparm
+
+echo "                 MERGERFS                  "
+echo "-------------------------------------------"
+echo "pool drives to make them appear as 1 without raid"
+# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
+sudo pamac install --no-confirm mergerfs
+
 
 echo "______________________________________________________"
 echo "                     SYSTEM CONFIG                    "
 echo "______________________________________________________"
+
+echo " Add useful items to App Menu "
+echo "------------------------------"
+gsettings set org.gnome.shell.extensions.arcmenu pinned-app-list "['ONLYOFFICE Desktop Editors', '', 'org.onlyoffice.desktopeditors.desktop', 'LibreOffice Writer', '', 'libreoffice-writer.desktop', 'LibreOffice Calc', '', 'libreoffice-calc.desktop', 'LibreOffice Impress', '', 'libreoffice-impress.desktop', 'Document Scanner', '', 'simple-scan.desktop', 'Text Editor', '', 'pluma.desktop', 'Calculator', '', 'org.gnome.Calculator.desktop', 'digiKam', '', 'org.kde.digikam.desktop', 'Pinta Image Editor', '', 'pinta.desktop', 'GNU Image Manipulation Program', '', 'gimp.desktop', 'Strawberry', '', 'org.strawberrymusicplayer.strawberry.desktop', 'Audacity', '', 'audacity.desktop', 'LosslessCut', '', 'losslesscut-bin.desktop', 'HandBrake', '', 'fr.handbrake.ghb.desktop', 'BleachBit', '', 'org.bleachbit.BleachBit.desktop', 'Tweaks', '', 'org.gnome.tweaks.desktop', 'Extension Manager', '', 'com.mattjakeman.ExtensionManager.desktop', 'Add/Remove Software', '', 'org.manjaro.pamac.manager.desktop', 'System Monitor', '', 'gnome-system-monitor.desktop', 'Disks', '', 'org.gnome.DiskUtility.desktop']"
+
+echo "  Add filemanager bookmarks   "
+echo "------------------------------"
+# Add CLI to Panel Favourites
+gsettings set org.gnome.shell favorite-apps "['nemo.desktop', 'org.gnome.Terminal.desktop', 'firefox.desktop', 'org.gnome.gThumb.desktop', 'pluma.desktop', 'org.gnome.Calculator.desktop']"
+
+# Set Nemo bookmarks, reflecting folder that will be renamed later (Videos>Media)
+truncate -s 0 $HOME/.config/gtk-3.0/bookmarks
+tee -a $HOME/.config/gtk-3.0/bookmarks &>/dev/null << EOF
+file:///home/${USER}/docker Docker
+file:///mnt/drives Drives
+file:///mnt/pool Pool
+file:///home/${USER}/Downloads Downloads
+file:///home/${USER}/Documents Documents
+file:///home/${USER}/Music Music
+file:///home/${USER}/Pictures Pictures
+file:///home/${USER}/Media Media
+EOF
 
 echo "  Optimise power consumption  "
 echo "------------------------------"
@@ -33,23 +124,36 @@ sudo systemctl start powertop.service
 gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
 
 
-echo "  Add filemanager bookmarks   "
-echo "------------------------------"
-# Add CLI to Panel Favourites
-gsettings set org.gnome.shell favorite-apps "['nemo.desktop', 'org.gnome.Terminal.desktop', 'firefox.desktop', 'org.gnome.gThumb.desktop', 'pluma.desktop', 'org.gnome.Calculator.desktop']"
+echo "    Auto-restart VPN server   "
+echo "------------------------------" 
+# Automatically restart Wireguard VPN server when the wireguard config file is modified (by VPN-Portal webUI)
+# Monitor the wireguard config file for changes
+sudo tee -a /etc/systemd/system/wgui.path << EOF
+[Unit]
+Description=Watch /etc/wireguard/wg0.conf for changes
 
-# Set Nemo bookmarks, reflecting folder that will be renamed later (Videos>Media)
-truncate -s 0 $HOME/.config/gtk-3.0/bookmarks
-tee -a $HOME/.config/gtk-3.0/bookmarks &>/dev/null << EOF
-file:///home/${USER}/docker Docker
-file:///mnt/drives Drives
-file:///mnt/pool Pool
-file:///home/${USER}/Downloads Downloads
-file:///home/${USER}/Documents Documents
-file:///home/${USER}/Music Music
-file:///home/${USER}/Pictures Pictures
-file:///home/${USER}/Media Media
+[Path]
+PathModified=/etc/wireguard/wg0.conf
+
+[Install]
+WantedBy=multi-user.target
 EOF
+# Restart wireguard service automatically
+sudo tee -a /etc/systemd/system/wgui.service << EOF
+[Unit]
+Description=Restart WireGuard
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl restart wg-quick@wg0.service
+
+[Install]
+RequiredBy=wgui.path
+EOF
+# Apply these services
+systemctl enable wgui.{path,service}
+systemctl start wgui.{path,service}
 
 
 echo "    EMAIL NOTIFICATIONS       "
@@ -117,7 +221,7 @@ case ${answer:0:1} in
 esac
 
 
-echo "  on-demand btrfs roo mount  "
+echo "  on-demand btrfs root mount  "
 echo "-------------------------------"
 # on-demand systemdrive mountpoint 
 ## The MANJARO GNOME POST INSTALL SCRIPT has created a mountpoint for systemdrive. If that script was not used, create the mountpoint now:
@@ -166,77 +270,6 @@ echo "--------------------------------------------"
 sudo mkdir /mnt/drives/data0
 sudo mkdir /mnt/drives/backup1
 sudo mkdir -p /mnt/pool/{Users,Media}
-
-
-echo "____________________________________________"
-echo "           INSTALL SERVER TOOLS             "
-echo "                                            "
-echo "____________________________________________"
-
-echo "         Docker and Docker Compose          "
-echo "--------------------------------------------"
-# Install Docker and Docker Compose
-sudo pamac install --no-confirm docker docker-compose
-
-# Create non-root user for docker, with privileges (not docker rootless)
-sudo groupadd docker
-sudo usermod -aG docker $USER
-
-# Enable docker at boot
-sudo systemctl enable docker.service
-sudo systemctl enable containerd.service
-
-echo "                   BTRBK                    "
-echo "--------------------------------------------"
-echo "Swiss handknife-like tool to automate snapshots & backups of personal data" 
-# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
-sudo pamac install --no-confirm btrbk
-
-echo "               RUN-IF-TODAY                 "
-echo "--------------------------------------------"
-echo "simplify scheduling of weekly/monthly tasks"
-sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
-sudo chmod +x /usr/bin/run-if-today
-
-echo "                   NOCACHE                  "
-echo "--------------------------------------------"
-echo "handy when moving lots of files at once in the background, without filling up cache and slowing down the system."
-# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
-sudo pamac install --no-confirm nocache
-
-echo "                    GRSYNC                  "
-echo "--------------------------------------------"
-echo "Friendly UI for rsync"
-sudo pamac install --no-confirm grsync
-
-echo "                  LM_SENSORS                "
-echo "--------------------------------------------"
-echo "to be able to read out all sensors" 
-sudo pamac install --no-confirm lm_sensors
-sudo sensors-detect --auto
-
-echo "          S.M.A.R.T. monitoring             "
-echo "--------------------------------------------"
-echo "to be able to read SMART values of drives" 
-sudo pamac install --no-confirm smartmontools
-
-echo "                 HD PARM                    "
-echo "--------------------------------------------"
-echo "to be able to configure drive parameters" 
-sudo pamac install --no-confirm hdparm
-
-echo "                 MERGERFS                  "
-echo "-------------------------------------------"
-echo "pool drives to make them appear as 1 without raid"
-# available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
-sudo pamac install --no-confirm mergerfs
-
-echo "               WIREGUARD VPN               "
-echo "-------------------------------------------"
-echo "Wireguard tools to allow a docker service to restart via wg-quick"
-echo "-----------------------------------------------------------------"
-# tools to easily start/stop WireGuard networks 
-sudo pamac install --no-confirm wireguard-tools
 
 
 echo "______________________________________________________________________"
