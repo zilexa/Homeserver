@@ -406,25 +406,6 @@ case ${answer:0:1} in
     ;;
 esac
 
-echo "-------------------------------------------------------------------------------------------"
-echo "Prepare for Scrutiny: a nice webUI to monitor your SSD & HDD drives health? (recommended)" 
-read -p "y or n ?" answer
-case ${answer:0:1} in
-    y|Y )
-        # Scrutiny (S.M.A.R.T. disk health monitoring)
-        # --------------------------------------------
-        sudo mkdir -p $HOME/docker/scrutiny/config
-        sudo chown ${USER}:${USER} $HOME/docker/scrutiny/config
-        wget -O $HOME/docker/scrutiny/config/collector.yaml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/scrutiny/collector.yaml
-        sudo chmod 644 $HOME/docker/scrutiny/config/collector.yaml
-        echo "Done, Before running compose, manually adjust the file /docker/scrutiny/config/collector.yaml to the number of nvme drives you have."
-        read -p "hit a button to continue..."
-    ;;
-    * )
-        echo "SKIPPED downloading config yml file.."
-    ;;
-esac
-
 echo "                                                                               "        
 echo "==============================================================================="
 echo "                                                                               "  
