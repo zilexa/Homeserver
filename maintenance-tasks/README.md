@@ -60,7 +60,8 @@ python3 media_cleaner.py
 - The Nightly file contains maintenance tasks that run globally for all users and tasks that can only be run per user. Replace `filerunuserX` for the correct usernames and copy these lines to run this task for all users. This task is necessary to create thumbnails and previews for files created outside of FileRun web environment or webDAV clients. 
 
 ### STEP 5: Test the Nightly and the Monthly. 
-- simply run them via `sudo bash $HOME/docker/HOST/nightly.sh` and `sudo bash $HOME/docker/HOST/monthly.sh`. 
+- Make sure you finished [Backup Guide](https://github.com/zilexa/Homeserver/tree/master/backup-strategy).
+- Run the Nightly and the Monthly to check for errors/mistakes `sudo bash $HOME/docker/HOST/nightly.sh` and `sudo bash $HOME/docker/HOST/monthly.sh`. 
 <sub>Note we only use sudo because it is required to create snapshots/backups. This is also why we use `sudo crontab` instead of `crontab` even though all other tasks do not need sudo. Using 2 different crontabs might cause running tasks to overlap. </sub>
 
 ### STEP 6. Schedule Nightly and Monthly
