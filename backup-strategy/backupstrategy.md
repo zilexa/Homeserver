@@ -17,13 +17,16 @@ To protect against disk failure, SnapRAID is used to protect essential data & la
   - Since /Media can contain huge files (movies, seasons in 4K) that often change, you might not want to snapshot that subvolume at all, as it will cost you more storage.   
 
 ### 2. Timeline backups
-The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives: 1) Snapper, does not do backups, only snapshots and creates them against logic within the snapshotted subvolume. 2)Timeshift is very user friendly but again only snapshots, does not take care of backing up to other location. Timeshift is recommended for laptops and personal computers, to protect the system drive.  
+The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives: 
+1. Snapper, does not do backups, only snapshots and creates them against logic within the snapshotted subvolume. 
+2. Timeshift, very user friendly and already takes care of automatic snapshots before system updates and regular snapshots configured in its interface. Also, it adds them to the boot menu, allowing you to easily "go back in time" when there is a system failure. But Timeshift cannot send those snapshots to other locations. 
 With [btrbk](https://digint.ch/btrbk): 
-- The system subvolumes (`/`, `/docker`, `/home`) and subvolumes on data disks (`/Users`) can be snapshotted with a chosen retention policy on their respective disks in a root folder (for example `/mnt/disks/data1/.timeline`). 
+- Your `Users` snapshot on all `dataX` drives can be snapshotted with a chosen retention policy on their respective disks in a root folder (for example `/mnt/disks/data1/.timeline`). 
 - In addition, using BTRFS native send/receive mechanism the snapshots are efficiently and securely copied to a seperate backup disk (`mnt/disks/backup1`).
 - For all snapshots/backups, you have a nice timeline-like overview of snapshots (folders) on the backup disk and in the `.timeline` folder of each disk. 
 - btrbk will manage the retention policy and cleanup of both snapshots and backups. 
 - Periodically, connect a USB disk (`backup2`, `backup3`), btrbk will notice and immediately send all backups from the backup disk to the connected disk. This is called archiving. Note the UUID of the connected USB disk needs to be configured in the system first.
+- Leveraging Timeshift by sending its system snapshots to backup targets is under investigation, see [Timeshift feature request](https://github.com/linuxmint/timeshift/issues/16) and [btrbk discussion](https://github.com/digint/btrbk/issues/480). 
 
 ### 3. Online backup
 We can use other tools to periodically send encrypted versions of snapshots to a cloud storage. I haven't figured this part out yet, but I did buy a pcloud.com lifetime subscription for €245 during december discounts (recommended). Most likely, this will be done via a docker container (duplicacy or duplicati or similar). 
