@@ -4,9 +4,9 @@ _(read the synopsis first)_
 
 Contents:
   - [Prerequisities](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#prequisities)
-  - [I. Configure parity-based backups](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#i-configure-parity-based-backups-via-snapraid-btrfs)
-  - [II. Configure subvolume backups](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#ii-configure-subvolume-backups-via-btrbk)
-  - [III. Configure auto-archiving to USB disk](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#iii-configure-auto-archiving-to-usb-disk-via-btrbk)
+  - [I. Configure parity-based backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#i-configure-parity-based-backups-via-snapraid-btrfs)
+  - [II. Configure subvolume backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk)
+  - [III. Configure auto-archiving to USB disk](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#iii-configure-auto-archiving-to-usb-disk-via-btrbk)
   - IV. Configure encrypted backups to a trusted online location (to-do)
 
 
