@@ -38,7 +38,9 @@ The other folders contain the tools used and their config files.
 ### STEP 1: Decide what tools and tasks you need
 - If you do not use a MergerFS Tiered Cache drive: remove the Archiver command from the Nightly script. 
 - If you do not download series/movies/etc: remove Mediacleaner command and its folder. 
-- If you are not planning to use SnapRAID, remove the command and its folder and uninstall Snapper and Snapraid:  
+- If you are not planning to use SnapRAID, remove the command and its folder and uninstall Snapper and Snapraid.
+- Add your drives to the Monthly file and make sure the path to the drives is correct, both the `/mnt/drives/..` paths and the `/dev/sdX/` paths. 
+  - Do the same for your Nightly file as it contains Monthly tasks, that will be performed after nightly backups. 
 
 
 ### STEP 2: Configure Archiver, MergerFS SSD cache unloading
@@ -55,7 +57,7 @@ python3 media_cleaner.py
 - A file `HOST/media-cleaner/media_cleaner.conf` will be created. Done! To change your settings, Simply edit the .conf file in your text editor.
 
 ### STEP 4. Schedule Nightly and Monthly
-- In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive cryptic error messages, use `""` instead. 
+- In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive unneccesary emails, use `""` instead. 
 ```
 MAILTO=""
 30 5 * * * /usr/bin/bash /home/YOURUSERNAME/docker/HOST/nightly.sh
