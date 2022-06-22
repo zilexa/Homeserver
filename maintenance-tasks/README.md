@@ -56,6 +56,9 @@ python3 media_cleaner.py
 - Follow the steps.
 - A file `HOST/media-cleaner/media_cleaner.conf` will be created. Done! To change your settings, Simply edit the .conf file in your text editor.
 
+### STEP 3: Add FileRun users
+- The Nightly file contains maintenance tasks that run globally for all users and tasks that can only be run per user. Replace `filerunuserX` for the correct usernames and copy these lines to run this task for all users. This task is necessary to create thumbnails and previews for files created outside of FileRun web environment or webDAV clients. 
+
 ### STEP 4. Schedule Nightly and Monthly
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive unneccesary emails, use `""` instead. 
 ```
