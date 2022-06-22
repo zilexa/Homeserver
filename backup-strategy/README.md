@@ -17,9 +17,9 @@ Necessary tools have been installed by prep-server.sh in [Step 1B:Install Essent
 - Ready to use config files for btrbk and snapraid.
 - A folder `/mnt/disks/systemdrive/timeline` is created to store snapshots of the system drive. 
 
-_All you have to do:
+_All you have to do following the below steps:
 - Create a folder `timeline` in the root of each datadrive (for example `/mnt/disks/data1/timeline`); at least the drives containing a `Users` subvolume. 
-- Tailor the `.conf` files of snapraid, snapraid-btrfs-runner and btrbk to your needs.  
+- Tailor the `.conf` files of [snapraid](https://www.snapraid.it/), [snapraid-btrfs-runner](https://github.com/fmoledina/snapraid-btrfs-runner) and [btrbk](https://digint.ch/btrbk/) to your needs, read their documentation.   
 - Run snapraid-btrfs-runner for the first time manually to create the parity file (on `mnt/disks/parity1)`. 
 - Run btrbk for the first time manually to create the first snapshots and back those up to your backup drives (`mnt/disks/backup1`, `mnt/disks/backup2` etc). 
 
