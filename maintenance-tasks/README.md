@@ -4,9 +4,9 @@ To keep your server spinning and purring everyday like its very first day, sever
 Below the tasks are explained. Note the order of execution has been chosen carefully. If you remove/add tasks, keep that in mind. 
 
 The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/HOST/`. Most importantly: 
-- [nightly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh)
-- [monthly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/monthly.sh)
-- /logs
+- [/docker/HOST/nightly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh)
+- [/docker/HOST/monthly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/monthly.sh)
+- /docker/HOST//logs
 
 The other folders contain the tools used and their config files. 
 
