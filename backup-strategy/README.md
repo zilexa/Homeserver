@@ -107,5 +107,6 @@ To schedule backups to run at least nightly, continue to the [Maintenance Guide]
 &nbsp;
 
 ## III. Configure auto-archiving to USB disk _via btrbk_
+See https://digint.ch/btrbk/doc/readme.html, section "Example: Backups to USB Disk". 
 
 ## IV. Configure encrypted backups to a trusted online location _via rclone_
