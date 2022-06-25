@@ -31,11 +31,13 @@ echo "Swiss handknife-like tool to automate snapshots & backups of personal data
 # available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
 sudo pamac install --no-confirm btrbk
 
-echo "               RUN-IF-TODAY                 "
+echo "        RUN-IF-TODAY & ENABLE CRON          "
 echo "--------------------------------------------"
 echo "simplify scheduling of weekly/monthly tasks"
 sudo wget -O /usr/bin/run-if-today https://raw.githubusercontent.com/xr09/cron-last-sunday/master/run-if-today
 sudo chmod +x /usr/bin/run-if-today
+echo "enable cron service" 
+systemctl enable --now cronie.service
 
 echo "                   NOCACHE                  "
 echo "--------------------------------------------"
@@ -152,8 +154,7 @@ ExecStart=/usr/bin/systemctl restart wg-quick@wg0.service
 RequiredBy=wgui.path
 EOF
 # Apply these services
-systemctl enable wgui.{path,service}
-systemctl start wgui.{path,service}
+systemctl enable --now wgui.{path,service}
 
 
 echo "    EMAIL NOTIFICATIONS       "
