@@ -287,6 +287,7 @@ echo "               mediacleaner                 "
 echo "--------------------------------------------"
 mkdir -p $HOME/docker/HOST/mediacleaner
 wget -O $HOME/docker/HOST/mediacleaner/media_cleaner.py https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner.py
+wget -O $HOME/docker/HOST/mediacleaner/media_cleaner_config_defaults.py https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner_config_defaults.py
 # make it executable
 chmod +x $HOME/docker/HOST/mediacleaner/media_cleaner.py
 # install required dependency
