@@ -29,7 +29,7 @@ Visual: App menu > Disks. Alternatively the following commands can be used.  \
 &nbsp;
 ## Step 1: Erase existing filesystems, partitions, create GPT new partition table
 To start clean, remove all filesystems and partition tables. You will have an empty disk without filesystems, partitions, partition table.
-```sudo wipefs --all /dev/sda```` 
+```sudo wipefs --all /dev/sda```
 
 ## Step 2: Create filesystems 
 Make sure you have the correct device path for each drive when you use this command. 
