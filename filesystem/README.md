@@ -21,29 +21,16 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 - If the drive name, the path to mount to etc are incorrect in /etc/fstab, you will boot into command line and will need to fix it (or comment out) using `sudo nano /etc/fstab`. Alternatively, you can simply restore since this guide requires you to make a backup. Restoring: `sudo mv /etc/fstabbackup /etc/fstab` and reboot again. 
 
 ## How to properly list your drives
-Besides the Disks app (look it up in your Menu), There are multiple commands allowing you to view your drives and all its details.  \
-```
-sudo lsblk -f
-```
-This will give you the most useful and readable overview of disks, partitions, labels, UUID, remaining space. 
-Alternatives are `blkid` and `sudo fdisk -l`. That last can be useful to identify drives by size. 
-
-## Step 1: Erase existing filesystems, partitions, create GPT new partition table
-The end goal is to have no partitions, single GPT partition table. 
-Yes, you can use tools for this. But to ensure your disks start with a fresh, clean partition table without any floating partitions, this is the way to go: 
-1. For each disk, wipe all existing filesystems: 
-```
-sudo wipefs --all /dev/sda
-```` 
-2.  Alternatively go directly into fdisk to delete existing partitionsand create a GPT partition table. The most important steps below, [full steps in the Arch Wiki](https://wiki.archlinux.org/title/fdisk#Create_a_partition_table_and_partitions). 
-   ```
-   sudo fdisk /dev/sda
-   ```
-   - Hit `m` to list commands, `p` to show the list of partitions, `d` to delete them one by one, `w` to save changes.
-   - Hit `g` to remove partition table and create a new GPT partition table.
-   - Hit `w` to write changes. This is irriversible. 
+Visual: App menu > Disks. Alternatively the following commands can be used.  \
+- `sudo fdisk -l` - lists physical drives and their partitions. Recommended especially for drives without filesystems. 
+- `sudo lsblk -f` - Shows drives, partitions and filesystems in a nice tree-view. Recommended. 
+- `blkid` shows all UUIDs note usually you are only interested in the first UUID of each.
 
 &nbsp;
+## Step 1: Erase existing filesystems, partitions, create GPT new partition table
+To start clean, remove all filesystems and partition tables. You will have an empty disk without filesystems, partitions, partition table.
+```sudo wipefs --all /dev/sda```` 
+
 ## Step 2: Create filesystems 
 Make sure you have the correct device path for each drive when you use this command. 
 Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
