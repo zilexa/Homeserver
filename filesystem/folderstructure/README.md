@@ -90,50 +90,62 @@ If you use MergerFS, do the above for each drive that contains your Media/incomi
 &nbsp;
 
 ## 4. Data migration 
-#### 4.1 Moving files to your server
-- To copy files from existing disks, connect them via USB. 
-- Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your SSD! You will still see all data in `/mnt/pool`
-- While copying via the file manager is an option I highly recommend using rsync as it will verify each disk read and write action, to ensure the files are copied correctly. Also it includes options to have 100% identical copy with all of your files metadata and attributes. 
+### 4.1 Moving files to your server
+To migrate data to your pool `/mnt/pool/` it is best and fastest to use `btrfs send | btrfs receive` if both source and destination use btrfs filesystem. Otherwise, always securily copy data using `rsync` or it's GUI version `grsync`.
+> Use MergerFS cache? Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your cache! You will still see all data in `/mnt/pool`.
 
-From non-btrfs disk to btrfs disk (For a GUI, install the Grsync app: `sudo apt install grsync`):\
+
+#### From any drive or folder, regardless of filesystem 
 `nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
 
-Between btrfs disks, if your data is in a subvolume, create a read-only snapshot first:\
-`sudo btrfs subvolume snapshot -r /media/myname/usbdrive/mysubvol /media/myname/usbdrive/mysnapshot`\
-Then send it to the destination:\
-`sudo btrfs send /media/myname/usbdrive/mysnapshot | sudo btrfs receive /mnt/disks/data1`\
-Verify the copied data is identical to the original data:  \
-- Fast method: `diff -qrs /source/folder/snapshot/ /destination/folder/snapshot/`
-- Checksum based (slower): `rsync --dry-run -crv --delete /source/folder/snapshot/ /destination/folder/snapshot/` <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
+#### From BTRFS to BTRFS subvolume
+While rsync needs to generate checksums, BTRFS filesystem already has full metadata available, hence copying using `btrfs send|btrfs receive` is much faster than rsync. 
+You can only send a _read-only_ snapshot of the subvolume, not the original subvolume itself. 
+1. Create a read-only snapshot using `-r` option:
+  `sudo btrfs subvolume snapshot -r /source/folder/subvolumename /source/otherfolder/snapshot`
+2. Then send it to the destination:  \
+  `sudo btrfs send /source/otherfolder/snapshot | sudo btrfs receive /destination/folder/`
+3. Verify the copied data is identical to the original data: 
+  - Fast method: `diff -qrs /source/otherfolder/snapshot/ /destination/folder/snapshot/`
+  - Checksum based (slower): `rsync --dry-run -crv --delete /source/otherfolder/snapshot/ /destination/folder/snapshot/` <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
+4. The destination snapshot is still a read-only filesystem. To be able to use it, simply create a read-write snapshot from it in its final destination.
+  `sudo btrfs subvolume snapshot /destination/folder/snapshot /destination/folder/subvolumename`
+  Then you can then delete the read-only snapshot using `sudo btrfs subvolume delete ...`. 
 
-#### 4.2 Move files within your filesystem
-To move files within a subvolume, copy them first, note this action will be instant on btrfs! Files won't be physically moved:\
+#### 4.2 HINT: Copy or move files within a btrfs filesystem, subvolume or between subvolumes
+To easily copy files when using BTFS, files do not actually have to be moved. Not even between subvolumes. Instead, references are made to the new destination. Files will only be stored _once_ saving you lots of space! Note Nemo Filemanager will (or should) use this option by default on btrfs.\
 ```
 cp --reflink=always /my/source /my/destination
 ```
-Then when you are satisfied, delete the source folder/files. Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. Note you can use mv also on subvolumes to rename them. 
+Then when you are satisfied, delete the source folder/files. Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. Note you can use mv also on subvolumes to rename them!
 
 
 ## 5. Sharing between partners and devices
 #### 5.1 Sharing data locally
-NFSv4.2 is the fastest network protocol, allows server-side copy just like more common smb/samba and works on all OS's, although only for free on Mac and Linux. 
+[How-To NFSv4.2](https://github.com/zilexa/Homeserver/tree/master/filesystem/networkshares_HowTo-NFSv4.2) is the fastest network protocol, allows server-side copy just like more common smb/samba and works on all OS's, although only for free on Mac and Linux. 
 I only use this to share folders that are too large to actually sync with my laptop. For example photo albums. To sync files to laptops/PCs, Syncthing is the recommended application (installed via docker). 
 
 &nbsp;
 
 #### 5.2 Sharing files between partners/family with a structure that supports online access for all
-The issue: My partner and I share photo albums, administrative documents etc. With Google Drive/DropBox/Onedrive, 1 user would own those files and share them with the other, but this only works in the online environment. The files are still stored in your folder. 
-But your partner won't see those files on the local filesystem of your laptop, PC, workstation or server: only if she uses the web application (FileRun or NextCloud). As you will prefer to use the local files directly, this can be frustrating and annoying as she has to go find your folder with those files.
+The issue: My partner and I share photo albums, administrative documents etc. How to ensure these files are not owned by just 1 of us? Because if 1 of us owns it, the other will not have direct online access. This is the same limitation you have when using Dropbox/Google/OneDrive, only 1 of you owns the files and has to share them with the other. This complicates the organisation of your shared data. 
+
+Just like that, on the local filesystem, whether shared in your home network, synced to your laptops, you will each be forced to look into each others folders to find the shared stuff. 
+
+To ensure the local filesystem AND the online filecloud always allows direct access to the stuff you share with your partner, the easiest solution is to create a `third user` that owns a userfolder called `shared`. On the local server filesystem, those shared files can simply be made accessible in _$HOME/Documents, Pictures, Desktop_ while actually being stored in `mnt/pool/users/Shared`. Your own data of each of you can be made accessible via `$HOME/yourname` and `$HOME/partnername`. Simple, clean and neat organisation of your data! 
 
 #### Solution
-1. To keep the filesystem structure simple, we create a 3rd user called `Shared`. 
-2. `/mnt/pool/Users/Shared/{Documents, Desktop, Photos}` contains our shared photo albums, shared documents etc and symlinks to these folders replace the common personal folders in $HOME. 
-3. in $HOME, the common personal folders are replaced with symlinks to `Users/Myusername` and `Users/Herusername`. 
-4. Each one of our user folders (`/mnt/pool/Users/Myname` and `mnt/pool/Users/Hername` are also symlinked into `$HOME` and visible next to the symlinked Documents, Photos etc.
-7. Extra benefit: on a shared home laptop, via Syncthing you can have a copy of yours and her Users/ folders via (Syncthing manages a realtime 2-way sync of folders) and you can sync the Documents, Desktop etc folder as well. 
-  - This way, whether you work on your server or laptop, you will have the same files. And you can work offline on those files (syncthing will sync when there is a connection). 
-  - You can have the same desktop/documents etc folders on multiple systems. 
-  - You can mount folders that are too large for the laptop like Photosvia NFS, allowing the exact same folder structure (and files) in $HOME on your laptop as on your server! 
+To keep the filesystem structure simple, we create a 3rd user called `Shared`. OPTION 1: 
+If you used my [post-install](https://github.com/zilexa/manjaro-gnome-post-install) script, the folders _Desktop, Documents, Pictures, Media_ are already in a seperate subvolume in `/mnt/users/systemusername`. 
+- This could simply become the folder of your `Shared` user, just migrate that folder to your `/mnt/pool/users/`. 
+- Then update the symlinks to `$HOME` using `ln -nfs /mnt/pool/users/Shared/Desktop $HOME/Desktop` and do that for _Documents, Pictures_ as well.  
+
+OPTION 2: 
+- If you did not use my post-install simply create a folder in your pool `mnt/pool/users/Shared` and create _Desktop, Documents, Pictures_ in there.
+- Then symlink each of them to your $HOME like this: `ln -s mnt/pool/users/Shared/Documents $HOME/Documents`. 
+  - Before you do this, you must delete the folders in $HOME first (migrating any folder contents to the respective folder in `/mnt/pool/users/Shared`). 
+  - You cannot delete the `$HOME/Desktop` folder easily. Rename it first (`$HOME/Desktoptemp`), then create the symlink. Then edit the file `$HOME/.config/user-dirs.dirs` changing the path of _Desktop_ back to `$HOME/Desktop`. Then delete `Desktoptemp`. 
+
 
 ## How to use the setup-folderstructure script
 The script prep-folderstructure.sh will create the folder structure as described AND map those `Shared` documents and media folders to the server /home dir, replacing those personal folders for symlinks. Adjust at will before running it.
