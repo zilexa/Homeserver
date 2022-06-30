@@ -106,8 +106,8 @@ You can only send a _read-only_ snapshot of the subvolume, not the original subv
 2. Then send it to the destination:  \
   `sudo btrfs send /source/otherfolder/snapshot | sudo btrfs receive /destination/folder/`
 3. Verify the copied data is identical to the original data: 
-  - Fast method: `diff -qrs /source/otherfolder/snapshot/ /destination/folder/snapshot/`
-  - Checksum based (slower): `rsync --dry-run -crv --delete /source/otherfolder/snapshot/ /destination/folder/snapshot/` <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
+    - Fast method: `diff -qrs /source/otherfolder/snapshot/ /destination/folder/snapshot/`
+    - Checksum based (slower): `rsync --dry-run -crv --delete /source/otherfolder/snapshot/ /destination/folder/snapshot/` <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
 4. The destination snapshot is still a read-only filesystem. To be able to use it, simply create a read-write snapshot from it in its final destination.
   `sudo btrfs subvolume snapshot /destination/folder/snapshot /destination/folder/subvolumename`
   Then you can then delete the read-only snapshot using `sudo btrfs subvolume delete ...`. 
