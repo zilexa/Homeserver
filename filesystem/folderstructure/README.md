@@ -96,7 +96,14 @@ To migrate data to your pool `/mnt/pool/` it is best and fastest to use `btrfs s
 
 
 #### From any drive or folder, regardless of filesystem 
+- Moving files from one drive to the other 
+  You want to make sure files are correctly read and written, without read or write errors. For that, we have `rsync`: 
 `nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
+- Moving files from folder to folder on the same drive: 
+  Normally you can simply use `mv /source/folder /destination/folder` but that will not include hidden files. To ensure _all_ files are copied, use this command instead. 
+```
+sudo find /run/media/asterix/data1/Users/extern/Madhuri -mindepth 1 -prune -exec mv '{}' /run/media/asterix/data1/users/Madhuri \;   
+```
 
 #### From BTRFS to BTRFS subvolume
 While rsync needs to generate checksums, BTRFS filesystem already has full metadata available, hence copying using `btrfs send|btrfs receive` is much faster than rsync. 
