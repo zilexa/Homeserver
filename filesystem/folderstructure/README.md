@@ -42,7 +42,7 @@ _Notes_
 - `docker/HOST` folder: containing configs and scripts for maintenance, cleanup, backup. This way, you backup a single folder, /docker == equals backup of your complete server configuration. 
 
 ### 2. Overview mountpoints: 
-- `/mnt/disks` --> Just a folder with the mountpoints of your drives.
+- `/mnt/drives` --> Just a folder with the mountpoints of your drives.
   - 
   - `/mnt/disks/{data1,data2,data3,data4}` (unless you use BTRFS RAID1 filesystem). 
   - `/mnt/disks/parity1` not automounted, will be mounted during backup run.  
