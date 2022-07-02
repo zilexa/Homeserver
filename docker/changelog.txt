@@ -1,3 +1,8 @@
+# CHANGELOG 2022-07-02
+# REMOVED: Guacamole, as it isn't a much used tool in a homeserver situation and native clients such as Remmina (Mac, Linux, Android) or Windows RDP client work better.
+# REMOVED: The whole Grafana/Prometheus stack as it didn't work. 
+# CHANGED: renamed Media to media and Users to users to follow the filesystem guide; non-user folders should not have caps. 
+#
 # CHANGELOG 2022-06-03
 # ADDED: VPN-Portal now supports lots of env variables to properly configure a mesh network via your Wireguard server config file! 
 # ADDED: The .env file now includes variables for VPN-portal and is restructured. 
