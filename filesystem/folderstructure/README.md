@@ -80,12 +80,11 @@ If you use MergerFS, do the above for each drive that contains your Media/incomi
 &nbsp;
 
 ## 4. Data migration 
-### 4.1 Moving files to your server
 To migrate data to your pool `/mnt/pool/` it is best and fastest to use `btrfs send | btrfs receive` if both source and destination use btrfs filesystem. Otherwise, always securily copy data using `rsync` or it's GUI version `grsync`.
 > Use MergerFS cache? Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your cache! You will still see all data in `/mnt/pool`.
 
 
-#### From any drive or folder, regardless of filesystem 
+### From any drive or folder, regardless of filesystem 
 - _Moving files and folders from one drive to the other_
   You want to make sure files are correctly read and written, without read or write errors. For that, we have rsync. If you are copying lots of data while doing other activities, make sure to append `nocache`: 
 ```
@@ -97,7 +96,7 @@ The `mv` command is used to move or rename folders. But it doesn't include hidde
 sudo find /source/folder -mindepth 1 -prune -exec mv '{}' /destination/folder \;   
 ```
 
-#### From BTRFS to BTRFS subvolume
+### From BTRFS to BTRFS subvolume
 While rsync needs to generate checksums, BTRFS filesystem already has full metadata available, hence copying a subvolume using `btrfs send|btrfs receive` is much faster than rsync while just as secure. 
 1. You must create a read-only snapshot of your subvolume first, using `-r` option: 
   ```
@@ -113,7 +112,7 @@ While rsync needs to generate checksums, BTRFS filesystem already has full metad
   ```
 Then you can then delete the read-only snapshot using `sudo btrfs subvolume delete /destination/folder/readonlysnapshot`. 
 
-### Verify yout copied data to be 100% identical to the source
+### Verify your copied data!
 Highly recommended for precious data to double-check all data is really identical to the source. 
 - Fast method:
   ```
