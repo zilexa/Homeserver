@@ -32,7 +32,7 @@ While rsync needs to generate checksums, BTRFS filesystem already has full metad
   ```
   sudo btrfs subvolume snapshot /destination/folder/readonlysnapshot /destination/folder/subvolumename
   ```
-Then you can then delete the read-only snapshot using `sudo btrfs subvolume delete /destination/folder/readonlysnapshot`. 
+After you have verified the data, you can then delete the read-only snapshot using `sudo btrfs subvolume delete /destination/folder/readonlysnapshot`. 
 
 ***
 
