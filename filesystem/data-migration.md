@@ -28,7 +28,7 @@ While rsync needs to generate checksums, BTRFS filesystem already has full metad
   ```
   sudo btrfs send /source/otherfolder/readonlysnapshot | sudo btrfs receive /destination/folder/
   ```
-3. And finally create a read-write snapshot, to make it usable, this will be the final destination:  \
+3. And finally create a read-write snapshot, to make it usable, this will be the final destination:  
   ```
   sudo btrfs subvolume snapshot /destination/folder/readonlysnapshot /destination/folder/subvolumename
   ```
