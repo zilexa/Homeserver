@@ -70,19 +70,10 @@ In the mountpoint of each cache/data disk:
 
 #### HIGHLY RECOMMENDED:
 The `incomplete` folder should be created as nested subvolume and should have BTRFS Copy-On-Write feature disabled for it. This will ensure 0% fragmentation:  \
-  Create the subvolume:
-```
-sudo btrfs subvolume create /mnt/drives/data0/Media/incoming/incomplete
-```
-  Make the current user instead of root owner: 
-```
-sudo chown asterix:asterix /mnt/drives/data0/Media/incoming/incomplete
-``` 
-  Disable CoW:
-```
-chattr -R +C /mnt/drives/data0/Media/Incoming/incomplete
-``` 
-  Now, completed downloads will be moved outside this subvolume to the `complete` folder, ensuring 0 fragmentation. Also, with CoW disabled for the incomplete dir, writing will be much faster. Since this is a temporary location for downloads, there is no reason to have CoW running.  \
+- Create the subvolume: `sudo btrfs subvolume create /mnt/drives/data0/Media/incoming/incomplete` 
+- Make the current user instead of root owner: `sudo chown ${USER}:${USER} /mnt/drives/data0/Media/incoming/incomplete
+- Disable CoW: `chattr -R +C /mnt/drives/data0/Media/Incoming/incomplete` 
+Now, completed downloads will be moved outside this subvolume to the `complete` folder, ensuring 0 fragmentation. Also, with CoW disabled for the incomplete dir, writing will be much faster. Since this is a temporary location for downloads, there is no reason to have CoW running.  \
 If you use MergerFS, do the above for each drive that contains your Media/incoming folders.  \
 
 
@@ -96,39 +87,51 @@ To migrate data to your pool `/mnt/pool/` it is best and fastest to use `btrfs s
 
 #### From any drive or folder, regardless of filesystem 
 - _Moving files and folders from one drive to the other_
-  You want to make sure files are correctly read and written, without read or write errors. For that, we have rsync. If you are copying lots of data while doing other activities, make sure to append `nocache`:  \
-`nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
+  You want to make sure files are correctly read and written, without read or write errors. For that, we have rsync. If you are copying lots of data while doing other activities, make sure to append `nocache`: 
+```
+nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache
+```
 - _Moving files and folders to another folder on the same drive_ 
-The `mv` command is used to move or rename folders. But it doesn't include hidden files. This way it does:  \
-`
+The `mv` command is used to move or rename folders. But it doesn't include hidden files. This way it does:
+```
 sudo find /source/folder -mindepth 1 -prune -exec mv '{}' /destination/folder \;   
-`
+```
 
 #### From BTRFS to BTRFS subvolume
 While rsync needs to generate checksums, BTRFS filesystem already has full metadata available, hence copying a subvolume using `btrfs send|btrfs receive` is much faster than rsync while just as secure. 
-1. You must create a read-only snapshot of your subvolume first, using `-r` option:  \
-  `sudo btrfs subvolume snapshot -r /source/folder/subvolumename /source/otherfolder/snapshot`
-2. Then send it to the destination:  \
-  `sudo btrfs send /source/otherfolder/snapshot | sudo btrfs receive /destination/folder/`
+1. You must create a read-only snapshot of your subvolume first, using `-r` option: 
+  ```
+  sudo btrfs subvolume snapshot -r /source/folder/subvolumename /source/otherfolder/readonlysnapshot
+  ```
+2. Then send it to the destination:
+  ```
+  sudo btrfs send /source/otherfolder/readonlysnapshot | sudo btrfs receive /destination/folder/
+  ```
 3. And finally create a read-write snapshot, to make it usable, this will be the final destination:  \
-  `sudo btrfs subvolume snapshot /destination/folder/snapshot /destination/folder/subvolumename`
-Then you can then delete the read-only snapshot using `sudo btrfs subvolume delete ...`. 
+  ```
+  sudo btrfs subvolume snapshot /destination/folder/readonlysnapshot /destination/folder/subvolumename
+  ```
+Then you can then delete the read-only snapshot using `sudo btrfs subvolume delete /destination/folder/readonlysnapshot`. 
 
 ### Verify yout copied data to be 100% identical to the source
 Highly recommended for precious data to double-check all data is really identical to the source. 
-- Fast method:  \
-`diff -qrs /source/otherfolder/snapshot/ /destination/folder/snapshot/`
- - Checksum based (slower)  \
- `rsync --dry-run -crv --delete /source/otherfolder/snapshot/ /destination/folder/snapshot/` 
+- Fast method:
+  ```
+  diff -qrs /source/otherfolder/snapshot/ /destination/folder/snapshot/
+  ```
+ - Checksum based (slower):
+   ```
+   rsync --dry-run -crv --delete /source/otherfolder/snapshot/ /destination/folder/snapshot/
+   ``` 
  <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
  
+&nbsp;
 
 ## 5. Sharing between partners and devices
 #### 5.1 Sharing data locally
 [How-To NFSv4.2](https://github.com/zilexa/Homeserver/tree/master/filesystem/networkshares_HowTo-NFSv4.2) is the fastest network protocol, allows server-side copy just like more common smb/samba and works on all OS's, although only for free on Mac and Linux. 
 I only use this to share folders that are too large to actually sync with my laptop. For example photo albums. To sync files to laptops/PCs, Syncthing is the recommended application (installed via docker). 
 
-&nbsp;
 
 #### 5.2 Sharing files between partners/family with a structure that supports online access for all
 The issue: My partner and I share photo albums, administrative documents etc. How to ensure these files are not owned by just 1 of us? Because if 1 of us owns it, the other will not have direct online access. This is the same limitation you have when using Dropbox/Google/OneDrive, only 1 of you owns the files and has to share them with the other. This complicates the organisation of your shared data. 
