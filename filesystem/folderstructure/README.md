@@ -95,36 +95,33 @@ To migrate data to your pool `/mnt/pool/` it is best and fastest to use `btrfs s
 
 
 #### From any drive or folder, regardless of filesystem 
-- Moving files from one drive to the other 
-  You want to make sure files are correctly read and written, without read or write errors. For that, we have `rsync`: 
+- _Moving files and folders from one drive to the other_
+  You want to make sure files are correctly read and written, without read or write errors. For that, we have rsync. If you are copying lots of data while doing other activities, make sure to append `nocache`:  \
 `nocache rsync -axHAXE --info=progress2 --inplace --no-whole-file --numeric-ids  /media/my/usb/drive/ /mnt/pool-nocache`
-- Moving files from folder to folder on the same drive: 
-  Normally you can simply use `mv /source/folder /destination/folder` but that will not include hidden files. To ensure _all_ files are copied, use this command instead. 
-```
-sudo find /run/media/asterix/data1/Users/extern/Madhuri -mindepth 1 -prune -exec mv '{}' /run/media/asterix/data1/users/Madhuri \;   
-```
+- _Moving files and folders to another folder on the same drive_ 
+The `mv` command is used to move or rename folders. But it doesn't include hidden files. This way it does:  \
+`
+sudo find /source/folder -mindepth 1 -prune -exec mv '{}' /destination/folder \;   
+`
 
 #### From BTRFS to BTRFS subvolume
-While rsync needs to generate checksums, BTRFS filesystem already has full metadata available, hence copying using `btrfs send|btrfs receive` is much faster than rsync. 
-You can only send a _read-only_ snapshot of the subvolume, not the original subvolume itself. 
-1. Create a read-only snapshot using `-r` option:  \
+While rsync needs to generate checksums, BTRFS filesystem already has full metadata available, hence copying a subvolume using `btrfs send|btrfs receive` is much faster than rsync while just as secure. 
+1. You must create a read-only snapshot of your subvolume first, using `-r` option:  \
   `sudo btrfs subvolume snapshot -r /source/folder/subvolumename /source/otherfolder/snapshot`
 2. Then send it to the destination:  \
   `sudo btrfs send /source/otherfolder/snapshot | sudo btrfs receive /destination/folder/`
-3. Verify the copied data is identical to the original data: 
-    - Fast method: `diff -qrs /source/otherfolder/snapshot/ /destination/folder/snapshot/`
-    - Checksum based (slower): `rsync --dry-run -crv --delete /source/otherfolder/snapshot/ /destination/folder/snapshot/` <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
-4. The destination snapshot is still a read-only filesystem. To be able to use it, simply create a read-write snapshot from it in its final destination.  \
+3. And finally create a read-write snapshot, to make it usable, this will be the final destination:  \
   `sudo btrfs subvolume snapshot /destination/folder/snapshot /destination/folder/subvolumename`
-  Then you can then delete the read-only snapshot using `sudo btrfs subvolume delete ...`. 
+Then you can then delete the read-only snapshot using `sudo btrfs subvolume delete ...`. 
 
-#### 4.2 HINT: Copy or move files within a btrfs filesystem, subvolume or between subvolumes
-To easily copy files when using BTFS, files do not actually have to be moved. Not even between subvolumes. Instead, references are made to the new destination. Files will only be stored _once_ saving you lots of space! Note Nemo Filemanager will (or should) use this option by default on btrfs.\
-```
-cp --reflink=always /my/source /my/destination
-```
-Then when you are satisfied, delete the source folder/files. Alternatively, you can use the rename/move command `mv /my/source /my/destination` to rename or move files/folders. It will also be instant. Note you can use mv also on subvolumes to rename them!
-
+### Verify yout copied data to be 100% identical to the source
+Highly recommended for precious data to double-check all data is really identical to the source. 
+- Fast method:  \
+`diff -qrs /source/otherfolder/snapshot/ /destination/folder/snapshot/`
+ - Checksum based (slower)  \
+ `rsync --dry-run -crv --delete /source/otherfolder/snapshot/ /destination/folder/snapshot/` 
+ <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
+ 
 
 ## 5. Sharing between partners and devices
 #### 5.1 Sharing data locally
