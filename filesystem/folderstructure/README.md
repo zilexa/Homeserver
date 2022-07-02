@@ -22,7 +22,10 @@ Run this command and look at the `systemdrive` folder. You should see:
   - `@cache`, mapped to path `/` = to exclude it from snapshots of the system (= snapshot of `@`)
   - `@log` mapped to path `/var/log` = to exclude it from snapshots of the system (= snapshot of `@`)
   - `@home` mapped to path`/home` = OS user account folder, will be snapshotted and backupped.
-- Subvolume created by prep-server script: 
+- Recommended subvolumes, created by the (post-install script)[https://github.com/zilexa/manjaro-gnome-post-install]: 
+  - `@usercache` mapped to `$HOME/.cache` = to exclude it from snapshots of @home. Contains temp files only like browser cache, not browserhistory. 
+  - `@downloads` mapped to `$HOME/Downloads = to exclude it from snapshots of @home.
+- Subvolumes created by prep-server script: 
   - `@docker` mapped to path `$HOME/docker` = docker persistent data per container, will be snapshotted and backupped. 
 - Folders created by prep-server script: 
   - `/mnt/drives/systemdrive` = the mountpoint to access the root filesystem when needed. Not mounted by default/not mounted at boot. 
