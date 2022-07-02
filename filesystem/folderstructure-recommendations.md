@@ -4,8 +4,7 @@
 1. [Overview of system folders](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#1-overview-of-system-folders)
 2. [Overview of mountpoints](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#2-overview-mountpoints)
 3. [A folder structure for your data](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#3-a-folder-structure-of-your-data)
-4. [Data Migration](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#4-data-migration)
-5. [How to handle shared files between users](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#5-sharing-between-partners-and-devices)
+4. [How to handle shared files between users](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure#5-sharing-between-partners-and-devices)
 
 
 ## Folder Structure Recommendations
@@ -81,13 +80,13 @@ If you use MergerFS, do the above for each drive that contains your Media/incomi
 
 &nbsp;
 
-## 5. Sharing between partners and devices
-#### 5.1 Sharing data locally
+## 4. Sharing between partners and devices
+#### 4.1 Sharing data locally
 [How-To NFSv4.2](https://github.com/zilexa/Homeserver/tree/master/filesystem/networkshares_HowTo-NFSv4.2) is the fastest network protocol, allows server-side copy just like more common smb/samba and works on all OS's, although only for free on Mac and Linux. 
 I only use this to share folders that are too large to actually sync with my laptop. For example photo albums. To sync files to laptops/PCs, Syncthing is the recommended application (installed via docker). 
 
 
-#### 5.2 Sharing files between partners/family with a structure that supports online access for all
+#### 4.2 Sharing files between partners/family with a structure that supports online access for all
 The issue: My partner and I share photo albums, administrative documents etc. How to ensure these files are not owned by just 1 of us? Because if 1 of us owns it, the other will not have direct online access. This is the same limitation you have when using Dropbox/Google/OneDrive, only 1 of you owns the files and has to share them with the other. This complicates the organisation of your shared data. 
 
 Just like that, on the local filesystem, whether shared in your home network, synced to your laptops, you will each be forced to look into each others folders to find the shared stuff. 
