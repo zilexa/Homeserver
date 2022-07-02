@@ -42,9 +42,9 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
     - `parity1, parity2` etc: drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
     - `cache`: only when using MergerFS Tiered Caching. 
 2. depending on the filesystem option you have chosen (see Filesystem Synopsis), create the filesystem as follows and replace LABEL for one of the purposes above.
-- For (Option 1 and 2)[https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk]: Create individual filesystems per drive: 
+- For [Option 1 and 2](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): Create individual filesystems per drive: 
     ```mkfs.btrfs -m dup -L data0 /dev/sda```
-- (Option 3)[https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication]: BTRFS RAID1: 
+- [Option 3](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication): BTRFS RAID1: 
     ```mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd```
 
 - Create filesystem for your SnapRAID drive (should be EXT4 with these options): 
