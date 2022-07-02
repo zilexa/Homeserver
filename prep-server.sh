@@ -277,7 +277,7 @@ echo "Create the minimum folder structure for drives and datapool"
 echo "--------------------------------------------"
 sudo mkdir /mnt/drives/data0
 sudo mkdir /mnt/drives/backup1
-sudo mkdir -p /mnt/pool/{Users,Media}
+sudo mkdir -p /mnt/pool/{users,media}
 
 
 echo "______________________________________________________________________"
