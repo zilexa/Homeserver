@@ -1,4 +1,4 @@
-To learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure have a look at [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md). 
+To learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure have a look at [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md), which is independent of the filesystem options described below. 
 
 ## SYNOPSIS
 Technologies used: 
