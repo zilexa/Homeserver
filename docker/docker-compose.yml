@@ -1,4 +1,4 @@
-## UPDATED: 03-6-2022, requires the NEW .env file!!
+## UPDATED: 02-7-2022, requires the NEW .env file since 03-06-2022!!
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -168,116 +168,6 @@ services:
       plugsy.link: http://vpn.o/
       plugsy.category: Access
 ##
-##____________________ Guacamole [ACCESS/remote-desktop]
-  guacamole:
-    container_name: guacamole
-    image: maxwaldorf/guacamole
-    restart: always
-    networks: 
-      - web-proxy
-    environment:
-      EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
-    volumes:
-      - $DOCKERDIR/guacamole:/config
-    ports:
-     - 6000:8080
-    labels:
-      caddy: http://desktop.o
-      caddy.reverse_proxy: "{{upstreams 8080}}"
-      plugsy.name: Remote Desktop
-      plugsy.link: http://desktop.o/
-      plugsy.category: Access
-##
-##____________________Scrutiny [SYSTEM/Analytics]
-  prometheus:
-    image: prom/prometheus:v2.35.0
-    container_name: mon-prometheus
-    restart: always
-    networks:
-      - analytics
-    user: root
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=200h'
-      - '--web.enable-lifecycle'
-    volumes:
-      - $DOCKERDIR/analytics/prometheus:/etc/prometheus
-      - $DOCKERDIR/analytics/prometheus_data:/prometheus
-    ports:
-      - 7000:9090 
-  alertmanager:
-    image: prom/alertmanager:v0.24.0
-    container_name: mon-alertmanager
-    networks:
-      - analytics
-    command:
-      - '--config.file=/etc/alertmanager/config.yml'
-      - '--storage.path=/alertmanager'
-    volumes:
-      - $DOCKERDIR/analytics/alertmanager:/etc/alertmanager
-    ports:
-      - 9093:9093
-  nodeexporter:
-    image: prom/node-exporter:v1.3.1
-    container_name: mon-nodeexporter
-    restart: always
-    network_mode: host
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    ports:
-      - 9100:9100
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.44.0
-    container_name: mon-cadvisor
-    restart: always
-    network_mode: host
-    privileged: true
-    devices:
-      - /dev/kmsg:/dev/kmsg
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker:/var/lib/docker:ro
-      - /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
-    ports:
-      - 8080:8080
-  grafana:
-    image: grafana/grafana:8.4.5
-    container_name: mon-grafana
-    networks:
-      - analytics
-    user: root
-    volumes:
-      - $DOCKERDIR/analytics/grafana/data:/var/lib/grafana
-      - $DOCKERDIR/analytics/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
-      - $DOCKERDIR/analytics/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-    environment:
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-      - GF_USERS_ALLOW_SIGN_UP=false
-    restart: unless-stopped
-    ports:
-      - 4000:3000
-  pushgateway:
-    image: prom/pushgateway:v1.4.2
-    container_name: mon-pushgateway
-    restart: unless-stopped
-    networks:
-      - analytics
-    ports:
-      - 9091:9091
-##
 ##________CLOUD______
 ##_____________________ Firefox Sync [CLOUD/Browser] 
 # generate secret.txt first see docker-config.sh
@@ -355,7 +245,7 @@ services:
       - filerun-db
     volumes:
       - $DOCKERDIR/filerun/html:/var/www/html
-      - $DATAPOOL/Users:/user-files
+      - $DATAPOOL/users:/user-files
     labels:
       caddy: files.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
@@ -408,7 +298,7 @@ services:
       UMASK_SET: 002 #optional
     volumes:
       - $DOCKERDIR/jellyfin/config:/config
-      - $DATAPOOL/Media:/data
+      - $DATAPOOL/media:/data
     ports:
       - 8096:8096
     labels:
@@ -487,7 +377,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/qbittorrent:/config
-      - $DATAPOOL/Media/incoming:/Media/incoming
+      - $DATAPOOL/media/incoming:/media/incoming
     labels: 
       org.hotio.pullio.update: true
       plugsy.name: Downloads
@@ -511,7 +401,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/prowlarr/config:/config
-      - $DATAPOOL/Media/incoming:/Media/incoming
+      - $DATAPOOL/media/incoming:/media/incoming
     ports:
       - 9696:9696
     labels:
@@ -539,7 +429,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/sonarr/config:/config
-      - $DATAPOOL/Media:/Media
+      - $DATAPOOL/media:/media
     ports:
       - 8989:8989
     labels:
@@ -567,7 +457,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/radarr/config:/config
-      - $DATAPOOL/Media:/Media
+      - $DATAPOOL/media:/media
     ports:
       - 7878:7878
     labels:
@@ -595,7 +485,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/bazarr/config:/config
-      - $DATAPOOL/Media:/Media
+      - $DATAPOOL/media:/media
     ports:
       - 6767:6767
     labels:
@@ -623,7 +513,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/lidarr/config:/config
-      - $DATAPOOL/Media:/Media
+      - $DATAPOOL/media:/media
     ports:
       - 8686:8686
     labels:
