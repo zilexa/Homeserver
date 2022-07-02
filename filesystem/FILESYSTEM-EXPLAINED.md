@@ -1,3 +1,5 @@
+To learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure have a look at [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md). 
+
 ## SYNOPSIS
 Technologies used: 
 - [BtrFS](https://linuxhint.com/btrfs-filesystem-beginner-guide/), an advanced filesystem. 
