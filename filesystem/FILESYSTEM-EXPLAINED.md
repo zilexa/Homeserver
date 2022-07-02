@@ -20,20 +20,22 @@ Technologies used:
 
 
 ## Option 1: all your data easily fits on a single disk
-- If your data does not fill much more than half of a single drive and the data does not grow fast, there is no need for data pooling. 
+- If your data does not fill much more than half of a single drive and the data does not grow fast, there is no need for RAID or data pooling. 
+- Also no need for RAID or MergerFS pooling if you can clearly seperate data per drive and the data will never exceed the size of the drive, for example: media downloads on drive 0, personal files of users A and B on drive 1 and personal files of users C and D on drive 2. 
 - In addition to the single data drive, you would want at least 1 backup drives inside your system. Also see [Step 7. Configure & Run Backups](https://github.com/zilexa/Homeserver#step-7---configure--run-backups). 
 - If you do need more storage in the future, you can always add a drive and move to option 2. 
 
 ## Option 2: individual filesystems, drives pooled via MergerFS
 _A more home-friendly and economical solution:_
-Instead of using any type of RAID, consider why that would be a default option? Your #1 goal is to have a single storage path, for all your data, regardless whether it is spread over multiple drives. For that, _RAID is not the default option_. Because this is called drive pooling. It is just an extra convenience of RAID. But you can also simply use a drive pooling tool, that only pools the drives into a single path! (while keeping them accessible seperatly). This tool is MergerFS. 
+- Instead of using any type of RAID, consider why that would be a default option? Your #1 goal is to have a single storage path, for all your data, regardless whether it is spread over multiple drives. For that, _RAID is not the default option_. Because 1) Linux already requires you to map physical drives to folders (you can map each drive to a subfolder). 
+- Besides that, if you really need a single folder with multiple underlying drives (not subfolders), this is called _drive pooling_. It is just an extra convenience of RAID. But you can also simply use a drive pooling tool, that only pools the drives into a single path! (while keeping them accessible seperatly). This tool is MergerFS. 
 
 Reasons to use MergerFS:
 1. You only need drive pooling.
 2. MergerFS has a slight drawback in speed, this should not be an issue for most users. 
 3. BTRFS Single is not secure enough for your personal data. 
 4. BTRFS Raid1 isn't for everyone: You need twice the disks, this can be uneconomical. When your data grows >50% of disks you need more disks again. 
-5. RAID (single/raid1) is not a backup. This means you still need other drives to store backups on. 
+5. RAID (single/raid1) is not a backup, even though raid1 can protect against single drive failure, there is a big chance both drives will fail as there is equal usage and wear. This means you still need other drives to store backups on. 
 
 ### Benefits of using individual drives, pooled through MergerFS:
 - Drives each have _individual BtrFS_ filesystems: metadata is duplicated to help the filesystem recover itself from errors/corruption.. 
@@ -55,7 +57,7 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
   - Cons
     - When 1 disk fails, data from that disk is not recoverable.
     - When 1 disk fails, files larger than 1GB might have been partially stored on that disk. 
-    - What files are stored on which disks is not obvious: especially blocks of a single file (>1GB) can be spread across disks. 
+    - What files are stored on which disks is _not obvious_: especially blocks of a single file (>1GB) can be spread across disks. 
 - **BtrFS Raid1**: data is striped and duplicated, metadata is duplicated (`mkfs.btrfs -d dup /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
   - Pros
     - Data is mirrored on other disks in realtime, when a disk fails, the data is easily recoverable. 
