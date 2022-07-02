@@ -10,7 +10,7 @@ At this point you might want to take break and read the Folder Structure Recomme
 - Note if you went for Option 2 (MergerFS with cache) you also need to create `/mnt/pool-nocache`, this will be your MergerFS pool, excluding your SSD cache, so that you have a path to offload the SSD to. 
 
 
-## Step 6: Create subvolumes
+## Step 2: Create subvolumes
 - Each filesystem should have at least 1 subvolume. Subvolumes are the special folders of BTRFS that can be snapshotted and securily copied/transmitted to other drives or locations (for backup purposes). This guide assumes 2 types of data:  \
 
 - _users_
@@ -25,7 +25,7 @@ At this point you might want to take break and read the Folder Structure Recomme
 3. If you use MergerFS, make sure to create subvolumes on each drive! Because MergerFS will not create subvolumes for you, only regular folders. 
 
 &nbsp;
-## Step 7: Add pools to FSTAB
+## Step 3: Add pools to FSTAB
 Now that you have subvolumes, you can mount the subvolumes to the different pools by editing `/etc/fstab` again: 
 ```
 sudo nano /etc/fstab
