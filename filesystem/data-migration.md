@@ -1,8 +1,6 @@
 
 # Data migration 
 To migrate data to your pool `/mnt/pool/` it is best and fastest to use `btrfs send | btrfs receive` if both source and destination use btrfs filesystem. Otherwise, always securily copy data using `rsync` or it's GUI version `grsync`.
-> Use MergerFS cache? Copy files to the nocache pool, `/mnt/pool-nocache` otherwise you end up filling your cache! You will still see all data in `/mnt/pool`.
-
 ***
 
 ### From any drive or folder, regardless of filesystem 
@@ -16,6 +14,7 @@ The `mv` command is used to move or rename folders. But it doesn't include hidde
 ```
 sudo find /source/folder -mindepth 1 -prune -exec mv '{}' /destination/folder \;   
 ```
+Use MergerFS cache? Copy files to the nocache pool `/mnt/pool-nocache` otherwise you end up filling your cache! You will still see all data in `/mnt/pool`.
 
 ***
 
