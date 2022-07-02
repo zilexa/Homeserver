@@ -1,5 +1,5 @@
 
-## Preparation: Decide your folder structure
+## Create datapools with subvolumes
 At this point you might want to take break and read the Folder Structure Recommendations first. 
 
 ## Step 1: Create the basics of your storage folder structure
