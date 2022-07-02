@@ -86,7 +86,7 @@ If a drive stops working, you turn off your system and remove that drive. How wi
 
 Congratulations! Your filestems/drives are now individually accessible. 
 
-Next: Step 3. [Create Datapool(s)](https://github.com/zilexa/Homeserver/blob/master/filesystem/datapool-guide.md) or have a look at the [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md) first. 
+Next: [Step 2b. Create Datapool(s)](https://github.com/zilexa/Homeserver/blob/master/filesystem/datapool-guide.md) or have a look at the [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md) first. 
 Also notice there are tips to carefully, securily copy your data to your pool and verify your data: [Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md)
 
 ***
