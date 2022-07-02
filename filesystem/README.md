@@ -42,43 +42,24 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
     - `parity1, parity2` etc: drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
     - `cache`: only when using MergerFS Tiered Caching. 
 2. depending on the filesystem option you have chosen (see Filesystem Synopsis), create the filesystem as follows and replace LABEL for one of the purposes above.
-- BTRFS single: 
-    ```mkfs.btrfs -L LABEL -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd```
-- BTRFS RAID1: 
-    ```mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd```
-- Create individual filesystems per drive: 
+- For (Option 1 and 2)[https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk]: Create individual filesystems per drive: 
     ```mkfs.btrfs -m dup -L data0 /dev/sda```
+- (Option 3)[https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication]: BTRFS RAID1: 
+    ```mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd```
+
 - Create filesystem for your SnapRAID drive (should be EXT4 with these options): 
     ```sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda```
 
 &nbsp;
 ## Step 3: Create mountpoints for each drive
-Now that each drive has a filesystem (or in case of BTRFS RAID1 is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
+Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
 1. Open the folder /mnt in your file manager, right click and open it with root rights.This will give you a nice view of the structure.
 2. Go back to Terminal: with the following command, you create multiple folders.   
 ```
 sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
 ```
-  - Adjust the command to reflect the drives you have/want to assign. For example, remove `cache` if you are not going to use MergerFS with Tiered Caching (read the Filesystem Synopsis). Also if you only have 2 drives for data and 1 for backup, remove the folders you are not going to use.  
-3. Now create the datapool folders. These folders will be the actual path to your drive pool.
-    ```
-    sudo mkdir -p /mnt/pool/Users
-    ```
-    ```
-    sudo mkdir -p /mnt/pool/Media
-    ```
-4. If you do use a cache drive, also create a folder `sudo mkdir -p /mnt/pool-nocache`. This path will only be used during nightly maintenance to offload the cache drive.
-5. Now have a look in your filemanager and delete/create if you missed something.
-
-6. By temporarily mounting the drives to the mountpoints, you can test if the drive is accessible via that mountpoint. For example: 
-`sudo mount /dev/sda /mnt/disks/data0`Make sure you eventually unmount everything you mounted manually. Also make sure you unmount everything in /media: `sudo umount /media/*`
-
 &nbsp;
-## Step 4: Physically label your drives!
-If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint. 
-
-&nbsp;
-## Step 5: Configure drive mountpoints through FSTAB
+## Step 4: Configure drive mountpoints through FSTAB
 This step is prone to errors. Prepare first. 
 
 ### _Preparation_
@@ -96,82 +77,5 @@ This step is prone to errors. Prepare first.
 4. If it says things couldn't be mounted, edit the file again, fix the errors, repeat step 3.  
 5. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
-&nbsp;
-## Step 6: Create subvolumes
-Each filesystem should have at least 1 subvolume. Subvolumes are the special folders of BTRFS that can be snapshotted and securily copied/transmitted to other drives or locations (for backup purposes). This guide assumes 2 types of data:  \
+Congratulations! Your filestems/drives are now individually accessible. In the next steps you decide the folder structure, create subvolumes that will actually hold the data and can easily be snapshotted/backupped and mount those subvolumes in fstab. 
 
-- _Users_
-  contains per-user folders, each user folder will contain all data of that user (documents, photos etc). Note that if you have family content such as your photo collection, this can be stored in a family-user account (for example user "Shared"). This way, each user still has their own data but also access to a Shared folder. 
-- _Media_
-  not user-specific and often generally available such as Downloads; Movies, TV Shows, Music Albums. 
-
-1. decide which of your `data` drives (`data0`, `data1` etc) will contain USER or MEDIA data. 
-2. It is highly recommended to not combine them on the same drive. If you have 3 drives and don't believe 1 drive for Users and 1 for Media is enough, use the 3rd drive for both as a sort of overflow. Create 2 subvolumes on that drive.  
-3. If you use BTRFS RAID1, you don't create subvolumes per drive, only per filesystem. 
-4.  Create a subvolume (needs to be done per filesystem). In this example I use 4 drives, 1 for downloads/media and 3 for user data: 
-```sudo btrfs subvolume create /mnt/disks/data0/Media``` 
-```sudo btrfs subvolume create /mnt/disks/data1/Users``` 
-```sudo btrfs subvolume create /mnt/disks/data2/Users``` 
-
-&nbsp;
-## Step 7: Add pools to FSTAB
-Now that you have subvolumes, you can mount the subvolumes to the different pools by editing `/etc/fstab` again: 
-```
-sudo nano /etc/fstab
-```
-The goal is to have all your data accessible for users and applications or cloud services via `/mnt/pool/Media` and `mnt/pool/Users`, regardless of underlying drives. Also, snapshot/backup folders will not be visible here as you want to isolate those instead of exposing them to users/applications. 
-
-### _Option 1: single drive per datatype or BTRFS1_
-If you only have 1 Media drive and 1 Users drive OR if you use a BTRFS1 array, you can mount the drives directly without MergerFS to the respective `/mnt/pool/Media` and `mnt/pool/Users` folders that we created in step 3. 
-```
-UUID=8e9f178a-e531-40ce-87a9-801aa11aa4ea /mnt/pool/Media btrfs defaults,noatime,compress-force=zstd:2,subvol=Media 0 0
-UUID=0187bc8c-4188-4b25-b4d6-46dcd655c3ce /mnt/pool/Users btrfs defaults,noatime,compress-force=zstd:2,subvol=Users 0 0
-```
-- The `subvol=` option is important here!
-- Note`UUID=` is the UUID of the drive, easy to find as it should already be listed in your fstab (see Step 5).
-- In case of BTRFS RAID1, just use the UUID of the first drive. 
-
-
-### _Option 2: multiple drives pooled via MergerFS_
-If you have multiple drives that need to be pooled, you merge them via MergerFS. for example:  \
-`/mnt/disks/data1/Users` and `/mnt/disks/data2/Users`  \
-`/mnt/disks/data0/Media` and `/mnt/disks/data3/Media`  \
-To merge/pool the Users drives and the Media drives, you simply add a line in FSTAB for each desired pool, using MergerFS as filesystem: 
-```
-/mnt/disks/data1/Users:/mnt/disks/data2/Users /mnt/pool/Users fuse.mergerfs ...
-/mnt/disks/data0/Media:/mnt/disks/data3/Media /mnt/pool/Media fuse.mergerfs ... 
-``` 
-1. This is an incomplete example, go to [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) and copy the first MergerFS example line into your fstab.
-2. Change the paths of your drive to reflect your situation.
-3. You can optionally change a few arguments to your desire: 
-  - FSNAME: a name to identify your pool for the OS. Not important.
-  - MINFREESPACE: when this threshold has been reached, the disk is considered full and depending on the MergerFS policy it will write to the next drive.
-  - POLICY: MergerFS will follow a _Least Free Space (LFS)_ policy; filling up disk by disk starting with the first disk. This way, you always know where your data is stored. You can also choose a different policy for example to fill each drive equally by always selecting the drive with the _most free space (MFS)_ and there are lots of other policies. [The policies are documented here](https://github.com/trapexit/mergerfs#policy-descriptions). No need to change unless you know what you are doing.
-  - The rest of the long list of arguments have carefully been chosen for high performance while maintaining stability. 
-
-
-### _Option 3: MergerFS with Tiered Cache_
-If you do use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching) do the following: 
-1. Same as Option 2 but add `/mnt/disks/cache/Users` and/or `/mnt/disks/cache/Media` as first drive in each MergerFS line. 
-2. Add additional MergerFS lines: each MergerFS pool should also have a corresponding "no-cache" pool containing only the harddisks and mounted to `/mnt/pool-nocache/Users` or `/mnt/pool-nocache/Media`. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the subfolders of `mnt/pool-nocache`. 
-3. Realize that all data in `/mnt/pool/no-cache` is also in `/mnt/pool/` since one is a subset of the other. 
-
-#### Why do we mount subvolumes instead of the root of the drive?
---> In `/mnt/pool/` you only want to see Users and Media. The Backup Guide will require additional folders in the root of each drive (for snapshots and/or parity). As a best practice, you should only expose folders to users and applications that must be exposed. Exposing your backup/snapshots folder serves no purpose. 
-
-&nbsp;
-## Step 8: Fix the personal folder links in $HOME
-If you used the Manjaro Gnome Post Install script, your common personal folders (Desktop, Documents, Pictures, Music, Media) are actually links that link to a subvolume `userdata` on your OS drive, visible in `/mnt/disks/system`. Since you are configuring a server, you probably want to link those $HOME folders to your own user folder within your datapool (for example`/mnt/pool/Users/local/MYNAME/` or `/mnt/pool/Users/local/Shared/` or whatever folderstructure you use).
-```
-ln -sfn /mnt/pool/Users/local/Shared/Documents $HOME/Documents
-ln -sfn /mnt/pool/Users/local/Shared/Pictures $HOME/Pictures
-ln -sfn /mnt/pool/Users/local/Shared/Desktop $HOME/Desktop
-ln -sfn /mnt/pool/Media $HOME/Media
-ln -sfn /mnt/pool/Media/Music $HOME/Music
-```
-- Do not forget to delete the `/mnt/disks/systemdrive/userdata` subvolume, simply by deleting it like a folder.
-- Note the `/home/username/Downloads` folder is not in `userdata`, following the BTRFS principles used by Manjaro, OpenSUSE and Fedora, the `post-install.sh` moved it to its own subvolume as [explained here](https://github.com/zilexa/manjaro-gnome-post-install#simplify-folder-structure---easy-for-cloud-backupsyncing-or-local-backups) (post-install guide). 
-
-&nbsp;
-Have a look at [Folder Structure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure), follow the tips in the _Data Migration_ to 100% securily copy your data and verify each read & write is correct (using Rsync or BTRFS send/receive). 
-If you are going to download stuff, follow the 2 HIGHLY RECOMMENDED actions under Step 3 for your incoming downloads folder. 
