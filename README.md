@@ -51,6 +51,8 @@ Regardless of your hardware (x86-64 or ARM, see [Hardware Recommendations](Recom
 <sub>This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
 A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server! This is reflected in my scripts, they are a lot smaller)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. </sub>
 
+Step 0: get [the right hardware](Recommendations.md), most motherboards and CPUs are not designed for 24/7365 continuous running, instead, they are designed for performance. 
+
 ***
 
 ### Step 1 - Install Operating System & Essential Tools
@@ -80,13 +82,24 @@ _Note_
 > - Installs several other essential tools, essential for example for data migration, backups, maintenance.
 > - Optional config files for a few services (will ask y/n before downloading).For example if you are going to use torrents, consider using the QBittorrent config file. The Organizr config might be nice and will save you lots of time building your own "Start" page.
 
-### Step 2 - Filesystem configuration
-[Prepare the drives](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices for your drives and create a datapool. 
+***
 
-### Step 3 - Network configuration
+### Step 2a and 2b - Filesystem configuration and datapools creation
+This is the most time-consuming and complex part of creating your homeserver as there are many choices to be made, not just for your filesystem but also folderstructure. To help you, learn about the options first in (Modern Filesystem Explained)[https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md] then:
+1. continue to [Step 2a. Create Filesystems](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices. 
+2. Continue to [Step 2b. Create Datapool(s)](https://github.com/zilexa/Homeserver/blob/master/filesystem/datapool-guide.md) or have a look at the [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md) first. 
+
+### Step 3. Data Migration
+[Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) - Move files to your server data pool. Make sure you have at least scanned the Folderstructure Recommendations](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure-recommendations). Note my folder structure might not fit your needs. It's up to you to decide how to structure your data. 
+
+***
+
+### Step 4 - Network configuration
 Before you can access your services outside of your home, [prepare your network](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md) and get your own domain. 
 
-### Step 4 - Docker Compose Guide - customisation and personalisation
+***
+
+### Step 5 - Docker Compose Guide - customisation and personalisation
 [Docker Compose Guide](https://github.com/zilexa/Homeserver/tree/master/docker)
 There are a lot of guides and docker-compose.yml files. Most of them are not complete or do not adhere to Docker best practices. A lot of hours have been spent on the yml file in this repository to ensure it follows best practices, does not contain unneccessary complexities and is as generic as possible, so that it can be published without security concerns. The .env file allows you to personalize your compose file through variables. 
 
@@ -95,13 +108,12 @@ _Note:_
 > - You cannot finalise your docker-compose without having a single path to your data and your media, covered in step 2.
 > - The services you want to access via your own domain won't work until you have completed step 3.
 
-### Step 5. Data Migration & Folder Structure
-Move files to your server data pool and [create your folder structure](https://github.com/zilexa/Homeserver/tree/master/filesystem/folderstructure). Note my folder structure might not fit your needs. It's up to you to decide how to structure your data. 
-
 ### Step 6 - Configure your apps & services
 The Docker guide (step 3) explains how to access your services. Configuring & using your services is not covered by this guide. 
 The overview of Docker applications below will contain some foldable sections with hints. 
 [Overview of Docker Apps](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md) contains direct links to the documentation or homepage of each Docker app. 
+
+***
 
 ### Step 7 - Configure & run Backups
 Decide what will be your [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/backup-strategy/backupstrategy.md) and use the [Server Backup Guide](https://github.com/zilexa/Homeserver/tree/master/backup-strategy) to leverage the BTRFS filesystem to backup your @, @home, @docker subvolumes and your data subvolumes easily, while also having a timeline/timemachine snapshots of your data. 
