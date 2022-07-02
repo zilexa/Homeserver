@@ -15,11 +15,11 @@ Necessary tools have been installed by prep-server.sh in [Step 1B:Install Essent
 - btrbk for scheduled snapshots and backups.
 - snapraid/snapraid-btrfs/snapraid-btrf-runner for parity based protection of 1 subvolume per drive.
 - Ready to use config files for btrbk and snapraid.
-- A folder `/mnt/disks/systemdrive/timeline` is created to store snapshots of the system drive. 
+- A folder `/mnt/drives/system/snapshots` is created to store snapshots of the system drive. 
 
 _All you have to do following the below steps:
-- Create a folder `timeline` in the root of each datadrive (for example `/mnt/disks/data1/timeline`); at least the drives containing a `Users` subvolume. 
-- Tailor the `.conf` files of [snapraid](https://www.snapraid.it/), [snapraid-btrfs-runner](https://github.com/fmoledina/snapraid-btrfs-runner) and [btrbk](https://digint.ch/btrbk/) to your needs, read their documentation.   
+- Create a folder `snapshots` in the root of each datadrive that contains `users` data (for example `/mnt/drives/data1/snapshots`).
+- Tailor the `.conf` file of [btrbk](https://digint.ch/btrbk/) and optionally [snapraid](https://www.snapraid.it/), [snapraid-btrfs-runner](https://github.com/fmoledina/snapraid-btrfs-runner) to your needs, read their documentation.   
 - Run snapraid-btrfs-runner for the first time manually to create the parity file (on `mnt/disks/parity1)`. 
 - Run btrbk for the first time manually to create the first snapshots and back those up to your backup drives (`mnt/disks/backup1`, `mnt/disks/backup2` etc). 
 
@@ -56,14 +56,14 @@ Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` 
 
 ## II. Configure subvolume backups _via btrbk_
 The btrbk config file has been carefully created and tested to:
-- Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `timeline` folder of each disk :)
+- Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `snapshots` folder of each disk :)
 - Incremental backups will be sent to your internal backup disk, multiple disks can be added.
 - Allows you to run a backup actions automatically and manually for multiple subvolumes by using groups. 
 - Allows you to archive (copy) backups to BTRFS USB disks easily. 
 _No other tool allows you to do all that automatically. The config file is also easy to understand and to adjust to your needs._  
 
 ### Step 1: Create the snapshot location and backup target location folders
-- Create a `timeline` (note the dot) folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/timeline`
+- Create a `snapshots` folder in the root of each cache/data disk, for example `sudo mkdir /mnt/disks/data1/snapshots`
 - In `/mnt/disks/backup1/`, create all destination folders for system and each data disk, for example via: `sudo mkdir /mnt/disks/backup1/{system,data1,data2,cache}`
 
 ### Step 2: Get the configuration & adjust settings, retention policy to your needs
