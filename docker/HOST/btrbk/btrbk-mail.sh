@@ -19,7 +19,7 @@ mail_detail=yes
 
 # List of mountpoints to be mounted/unmounted (whitespace-separated)
 # mount_targets="/mnt/btr_pool /mnt/backup"
-mount_targets="/mnt/system /mnt/disks/backup1"
+mount_targets="/mnt/drives/system /mnt/drives/data1 /mnt/drives/backup1"
 
 # rsync declarations (repeat complete block for more declarations):
 #rsync_src[example_data]="user@example.com:/data/"
@@ -44,7 +44,7 @@ mount_targets="/mnt/system /mnt/disks/backup1"
 #sync_fs=("/mnt/btr_data" "/mnt/btr_pool")
 
 # btrbk command / options:
-btrbk_command="run -n"
+btrbk_command="run -v"
 btrbk_opts="-c /etc/btrbk/btrbk.conf"
 
 
@@ -94,7 +94,7 @@ send_mail()
     [[ -z "$body" ]] && exit 0
 
     # send mail
-    echo -e "$body" | s-nail -s "$subject" $mailto
+    echo -e "$body" | mail -s "$subject" $mailto
     if [[ $? -ne 0 ]]; then
         echo -e "$0: Failed to send btrbk mail to \"$mailto\", dumping mail:\n" 1>&2
         echo -e "<mail_subject>$subject</mail_subject>\n<mail_body>\n$body</mail_body>" 1>&2
