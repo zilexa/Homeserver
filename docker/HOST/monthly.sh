@@ -46,29 +46,26 @@ pullio  |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 echo -e "\n FILESTEM housekeeping.." >> ${SCRIPTDIR}/logs/monthly.txt
 echo -e "\nScrub btrfs filesystems..\n" >> ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs scrub start -Bd -c 2 -n 4 /dev/nvme0n1p2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sdc |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sdd |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sda |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sdb |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
 # Run btrfs balance monthly, first 10% data, then try 20%
 # -------------------------
 echo -e "\nBalance btrfs filesystems in 2 runs each.. \n" >> ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs balance start -dusage=10 -musage=5 / |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo btrfs balance start -v -dusage=20 -musage=10 / |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-##sudo btrfs balance start -dusage=10 -musage=5 /mnt/disks/data2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-##sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/disks/data2 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 -musage=5 /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 -musage=5 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
 
 # Send email
 # ---------------------------------
-s-nail -s "Obelix Server - monthly housekeeping" < ${SCRIPTDIR}/logs/monthly.txt default
+mail -s "Obelix Server - monthly housekeeping" default < /home/asterix/docker/HOST/logs/monthly.txt
 
 
 # Append email to monthly logfile and delete email
 # ------------------------------------------------
-touch ${SCRIPTDIR}/logs/monthly.log
 sudo cat ${SCRIPTDIR}/logs/monthly.txt >> ${SCRIPTDIR}/logs/monthly.log
 rm ${SCRIPTDIR}/logs/monthly.txt
