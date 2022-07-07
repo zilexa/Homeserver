@@ -54,7 +54,11 @@ Highly recommended for precious data to double-check all data is really identica
 When you created subvolumes (usually with `sudo`) and mountpoints (also with `sudo`) and played with moving snapshots around, you noticed you can only create, copy or move data in there with sudo?
 This is normal, but you do need to fix the ownership and permissions before you can use your data normally, without sudo. To do so: 
 - ownership, notice you need to add (D) to also apply this change to hidden files/folders: 
-  ```sudo chown -R ${USER}:${USER} /mnt/pool/users/usernameX(D)```
+  ```
+  sudo chown -R ${USER}:${USER} /mnt/pool/users/usernameX(D)
+  ```
 - permissions: 
-  ```sudo chmod -R 755 /mnt/pool/users/usernameX(D)```
+  ```
+  sudo chmod -R 755 /mnt/pool/users/usernameX(D)
+  ```
 And do the same for your Media path: `/mnt/pool/media(D)`.   
