@@ -1,5 +1,5 @@
 <h1 align="center"><strong>The Modern HomeServer</strong></h1>
-<h3 align="center"><strong>A Guide that makes your own, fully flexible, simple selfhosted homserver as easy to setup, configure and maintain as alternatives such as Synology, Xpenelogy, Unraid, TrueNAS (and with much less energy consumption!).</strong></h3>
+<h3 align="center"><strong>A <italic>complete</italic> Guide that makes your own, fully flexible, simple selfhosted homserver as easy to setup, configure and maintain as alternatives such as Synology, Xpenelogy, Unraid, TrueNAS (and with much less energy consumption!).</strong></h3>
 <h3 align="center">Perhaps even simpler, as you will know exactly what happens behind the scenes and can use any default docker images.</strong></h3>
 <p align="center"><a href="README.md">Tip: a wider desktop view of this page.</a></p>
 <p align="center">
