@@ -63,7 +63,7 @@ How to prep a USB stick: see [Manjaro First Steps > Using a Live System](https:/
 _Note_
 * Requirement: select _BTRFS_ during setup with _no swap_, this allows you to later enable swapfile with hibernate support or zRAM.
 * Requirement: Do not select "automatically login..", if you do, you will be faced with key-ring issues when using docker. Solveable but not covered by this guide.
-* Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). For example, it will automatically configure RDP, which is very handy for your server (you will be required to set credentials during script execution). I use this script for all my laptops/PCs also for family and friends, regardless if it is a media/NAS server or just home PC. 
+* Consider using my [Manjaro Gnome Post-Install script](https://github.com/zilexa/manjaro-gnome-post-install). It is meant for both clients of your servers (laptops, PCs for you or your family) but also gives you a little headstart in this guide. You can always easily remove applications you do not need later, as the "App Store" of Manjaro is one of the best and fastest available in Linux world.
 
 #### Step 1B. How to properly install Docker and essential tools?
 _Turn your system into a modern server with 1 click with [prep_server.sh](https://github.com/zilexa/Homeserver/blob/master/prep-server.sh) to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services._
