@@ -51,8 +51,8 @@ Highly recommended for precious data to double-check all data is really identica
 ***
 
 ### Fix ownership and permissions
-When you created subvolumes (usually with `sudo`) and mountpoints (also with `sudo`), you noticed you can only create, copy or move data in there with sudo?
-This is normal, but you do need to fix the ownership and permissions.. To do so: 
+When you created subvolumes (usually with `sudo`) and mountpoints (also with `sudo`) and played with moving snapshots around, you noticed you can only create, copy or move data in there with sudo?
+This is normal, but you do need to fix the ownership and permissions before you can use your data normally, without sudo. To do so: 
 - ownership, notice you need to add (D) to also apply this change to hidden files/folders: 
     ```sudo chown -R ${USER}:${USER} /mnt/pool/users/usernameX(D)```
 - permissions: 
