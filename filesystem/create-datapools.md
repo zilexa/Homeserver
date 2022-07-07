@@ -73,5 +73,5 @@ If you use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/m
 
 ***
 If you haven't done so already, [learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md).  \
-Otherwise continue to [Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md).  \
-Or go back to the main guide and continue with [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
+Otherwise continue to [Step 3. Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md).  \
+Or go back to the main guide and continue with [Step 4. Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
