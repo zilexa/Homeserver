@@ -44,7 +44,7 @@ mount_targets="/mnt/drives/system /mnt/drives/data1 /mnt/drives/backup1"
 #sync_fs=("/mnt/btr_data" "/mnt/btr_pool")
 
 # btrbk command / options:
-btrbk_command="run -v"
+btrbk_command="run"
 btrbk_opts="-c /etc/btrbk/btrbk.conf"
 
 
