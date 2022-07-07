@@ -63,15 +63,15 @@ To merge/pool the Users drives and the Media drives, you simply add a line in FS
     - If you want your drives to fill up equally instead of one-by-one, go for MFS: _Most Free Space_ or go for EPMFS: it will choose the drive with most free space, of all the drives that contain the path. 
   - The rest of the long list of arguments have carefully been chosen for high performance while maintaining stability. 
 
-#### Optional MergerFS with Tiered Cache_
+#### Optional: _MergerFS with Tiered Cache_
 If you use MergerFS [Tiered Caching](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#mergerfs-bonus-ssd-tiered-caching) do the following: 
 1. Follow the examples for MergerFS in the [example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) 
 2. Make sure to add `/mnt/disks/cache/usernameX` for each user and/or `/mnt/disks/cache/media` as _first drive_ in each MergerFS line. 
 3. Each MergerFS pool should also have a corresponding "no-cache" pool containing only the harddisks and mounted to `/mnt/pool-nocache/users` or `/mnt/pool-nocache/media`. Through Scheduling (see Maintenance guide) you can configure offloading your cache drive by copying its contents (of the drive, not the pool) to the subfolders of `mnt/pool-nocache`. 
 4. Realize that all data in `/mnt/pool/no-cache` is also in `/mnt/pool/` since one is a subset of the other. 
 
-#### Why do we mount subvolumes instead of the root of the drive?
---> In `/mnt/pool/` you only want to see Users and Media. The Backup Guide will require additional folders in the root of each drive (for snapshots and/or parity). As a best practice, you should only expose folders to users and applications that must be exposed. Exposing your backup/snapshots folder serves no purpose. 
 
 ***
-If you haven't done already, [learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md) otherwise continue to [Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) or go back to the main guide and continue with [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
+If you haven't done so already, [learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md).  \
+Otherwise continue to [Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md).  \
+Or go back to the main guide and continue with [Network Configuration](https://github.com/zilexa/Homeserver/blob/master/network-configuration.md).
