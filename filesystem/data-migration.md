@@ -48,7 +48,8 @@ Highly recommended for precious data to double-check all data is really identica
   ``` 
   <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
   
-  
+***
+
 ### Fix ownership and permissions
 When you created subvolumes (usually with `sudo`) and mountpoints (also with `sudo`), you noticed you can only create, copy or move data in there with sudo?
 This is normal, but you do need to fix the ownership and permissions.. To do so: 
