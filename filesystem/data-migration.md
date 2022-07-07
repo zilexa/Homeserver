@@ -47,4 +47,13 @@ Highly recommended for precious data to double-check all data is really identica
   rsync --dry-run -crv --delete /source/otherfolder/snapshot/ /destination/folder/snapshot/
   ``` 
   <sub>nothing will be deleted or modified. See info: [rsync manpage](https://linux.die.net/man/1/rsync)</sub>
- 
+  
+  
+### Fix ownership and permissions
+When you created subvolumes (usually with `sudo`) and mountpoints (also with `sudo`), you noticed you can only create, copy or move data in there with sudo?
+This is normal, but you do need to fix the ownership and permissions.. To do so: 
+- ownership, notice you need to add (D) to also apply this change to hidden files/folders: 
+    ```sudo chown -R ${USER}:${USER} /mnt/pool/users/usernameX(D)```
+- permissions: 
+    ```sudo chmod -R 755 /mnt/pool/users/usernameX(D)```
+And do the same for your Media path: `/mnt/pool/media(D)`.   
