@@ -12,26 +12,30 @@ UUID=                                     /var/cache               btrfs  subvol
 UUID=                                     /var/log                 btrfs  subvol=/@log,defaults  0 0
 UUID=                                     /home/asterix/.cache     btrfs  subvol=/@usercache,defaults  0 0
 UUID=                                     /home/asterix/Downloads  btrfs  subvol=/@downloads,defaults  0 0
-# Docker - Mount @docker subvolume
+
+# Docker subvolume ~ automount
 UUID=                                     /home/asterix/docker     btrfs  subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
 
-# OS drive root - mount OS drive root (not automatically, only for snapshots and backups)
+# System drive root ~ mount on-demand only
 UUID=                                     /mnt/drives/system       btrfs  subvolid=5,defaults,noatime,noauto  0  0
-# Backups - Mount backup drives (not automatically, only for snapshots and backups)
+# Backup drive root ~ mount on-demand only
 UUID=                                     /mnt/drives/backup1      btrfs  defaults,noatime,noauto,compress-force=zstd:5  0 0
-# Data - Mount data drives (not automatically, only for snapshots and backups)
+# Data drive root ~ mount on-demand only
 UUID=                                     /mnt/drives/data0        btrfs  defaults,noatime,noauto,compress-force=zstd:3  0 0
 UUID=                                     /mnt/drives/data1        btrfs  defaults,noatime,noauto,compress-force=zstd:3  0 0
 
-# Pool - single drive or one drive per datatype
+# Datapool ~ automount
+
+# OPTION 1 or 3: single drive, btrfs raid1 or one drive per datatype
 UUID=                                     /mnt/pool/Media          btrfs  subvol=Media,defaults,noatime  0 0
 UUID=                                     /mnt/pool/Users          btrfs  subvol=Users,defaults,noatime,compress-force=zstd:3  0 0
 
-# Pool - multiple drives using MergerFS with tiered cache (create policy needs to be `lfs` to ensure data goes to smallest drive, the cache drive)
+# OPTION 2: MergerFS without tiered cache. Also required (with mountpoint pool-nocache) if you do use tiered cache, to be able to offload the cache to the rest of the pool.
+/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=eplfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool  0 0
+
+# OPTION 2+cache: multiple drives using MergerFS with tiered cache (create policy needs to be `lfs` to ensure data goes to smallest drive, the cache drive)
 /mnt/disks/cache:/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=lfs,moveonenospc=true,minfreespace=200G,fsname=mergerfsPool  0 0
 
-# Pool - MergerFS without tiered cache. Also required (with mountpoint pool-nocache) if you do use tiered cache, to be able to offload the cache to the rest of the pool.
-/mnt/disks/data1:/mnt/disks/data2:/mnt/disks/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=eplfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool  0 0
 
 # Parity - parity drives for Snapraid. 1 parity drive can protect up to 4 datadrives (but only a single subvolume per drive). 
 UUID=                                     /mnt/disks/parity1       ext4   defaults,noatime,noauto 0 0
