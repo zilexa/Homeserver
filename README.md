@@ -1,5 +1,5 @@
 <h1 align="center"><strong>The Modern HomeServer</strong></h1>
-<h3 align="center"><strong>A complete Guide that it just as simple and easy to setup and maintain your own, fully flexible, simple selfhosted homserver as more limited, power-hungry but ready-to-go solutions such as Synology, Xpenelogy, Unraid, TrueNAS.</strong></h3>
+<h3 align="center"><strong>A complete Guide, making it just as simple and easy to setup and maintain your own, fully flexible, simple selfhosted homeserver as more limited, power-hungry but ready-to-go solutions such as Synology, Xpenelogy, Unraid or TrueNAS.</strong></h3>
 <p align="center"><a href="README.md">Tip: a wider desktop view of this page.</a></p>
 <p align="center">
   <a href="Justification.md">Why A Selfhosted Homeserver?</a> |
