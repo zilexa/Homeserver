@@ -10,18 +10,17 @@ UUID=                                     /                        btrfs  subvol
 UUID=                                     /home                    btrfs  subvol=/@home,defaults  0 0
 UUID=                                     /var/cache               btrfs  subvol=/@cache,defaults  0 0
 UUID=                                     /var/log                 btrfs  subvol=/@log,defaults  0 0
-UUID=                                     /home/asterix/.cache     btrfs  subvol=/@usercache,defaults  0 0
-UUID=                                     /home/asterix/Downloads  btrfs  subvol=/@downloads,defaults  0 0
-
+UUID=                                     /home/asterix/.cache     btrfs   subvol=/@usercache,defaults,noatime,compress-force=zstd:1  0 0
+UUID=                                     /home/asterix/Downloads  btrfs   subvol=/@downloads,x-gvfs-hide,defaults,noatime,compress-force=zstd:1  0 0
 # Docker subvolume ~ automount
-UUID=                                     /home/asterix/docker     btrfs  subvol=@docker,defaults,noatime,x-gvfs-hide,compress-force=zstd:1  0  0
+UUID=                                     /home/asterix/docker     btrfs   subvol=@docker,x-gvfs-hide,defaults,noatime,compress-force=zstd:1  0  0
 
 # System drive root ~ mount on-demand only
 UUID=                                     /mnt/drives/system       btrfs  subvolid=5,defaults,noatime,noauto  0  0
 # Backup drive root ~ mount on-demand only
 UUID=                                     /mnt/drives/backup1      btrfs  defaults,noatime,noauto,compress-force=zstd:5  0 0
 # Data drive root ~ mount on-demand only
-UUID=                                     /mnt/drives/data0        btrfs  defaults,noatime,noauto,compress-force=zstd:3  0 0
+UUID=                                     /mnt/drives/data0        btrfs  defaults,noatime,noauto  0 0
 UUID=                                     /mnt/drives/data1        btrfs  defaults,noatime,noauto,compress-force=zstd:3  0 0
 
 # Datapool ~ automount
