@@ -10,10 +10,10 @@ The research can be found in [this Dutch forum](https://gathering.tweakers.net/f
 
 ## Barebones
 If you your storage needs are limited and you do not want to build your own system (which can be both expensive and time consuming and if you never build a PC before, it might not be for you), these barebones (complete systems, just add memory and storage) have been tested to have very low power consumption: 
-- ASRock DeskMini 310 (looks big but is small, 2x SATA + 1 M.2 drive)
-- Intel NUC NUC8i3BEH (1 SATA drive + 1 M.2 drive) can do <3.5W idle
+- ASRock DeskMini 310 (looks big but is small, 2x SATA + 1 M.2 drive).
+- Intel NUC NUC8i3BEH (1 SATA drive + 1 M.2 drive) can do <3.5W idle.
 - Intel NUC Kit NUC8i5BEH (1 SATA drive + 1 M.2 drive can do <3.5W idle. The i5 processor is overkill, but if you can't find the i3 version its a good alternative.
-- [NUC10i7FNH](https://www.anandtech.com/show/15571/intel-nuc10i7fnh-frost-canyon-review) (1 SATA drive + 1 M.2 drive). Anandtech measured 4.64W
+- [NUC10i7FNH](https://www.anandtech.com/show/15571/intel-nuc10i7fnh-frost-canyon-review) (1 SATA drive + 1 M.2 drive). Anandtech measured 4.64W.
 - [Minisforum UM820](https://arstechnica.com/gadgets/2021/02/looking-for-a-tiny-but-powerful-pc-check-out-the-minisforum-u820-u850/) (2x SATA + 1 M.2 drive) same size as a NUC, similar to the NUC8i3BEH but with updated GPU.  
 
 If you do consider building your own server, read on: 
