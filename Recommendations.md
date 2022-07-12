@@ -8,6 +8,15 @@ The system will be running 24/7, so power consumption matters! With the recommen
 
 The research can be found in [this Dutch forum](https://gathering.tweakers.net/forum/list_messages/2096876) (or see [translation](https://gathering-tweakers-net.translate.goog/forum/list_messages/2096876?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=nl&_x_tr_pto=wapp)), the first post is long and contains the most important information. Below the concluding recommendations: 
 
+## Barebones
+If you your storage needs are limited and you do not want to build your own system (which can be both expensive and time consuming and if you never build a PC before, it might not be for you), these barebones (complete systems, just add memory and storage) have been tested to have very low power consumption: 
+- ASRock DeskMini 310 (looks big but is small, 2x SATA + 1 M.2 drive)
+- Intel NUC NUC8i3BEH (1 SATA drive + 1 M.2 drive) can do <3.5W idle
+- Intel NUC Kit NUC8i5BEH (1 SATA drive + 1 M.2 drive can do <3.5W idle. The i5 processor is overkill, but if you can't find the i3 version its a good alternative.
+- (NUC10i7FNH)[https://www.anandtech.com/show/15571/intel-nuc10i7fnh-frost-canyon-review] (1 SATA drive + 1 M.2 drive). Anandtech measured 4.64W
+- (Minisforum UM820)[https://arstechnica.com/gadgets/2021/02/looking-for-a-tiny-but-powerful-pc-check-out-the-minisforum-u820-u850/] (2x SATA + 1 M.2 drive, same size as a NUC, similar to the NUC8i3BEH but with updated GPU). 
+
+If you do consider building your own server, read on: 
 ## Motherboard 
 _*non-gaming, with parts focused on power consumption/efficiency, with ECC memory support*_  \
 The most essential part: A motherboard designed specifically for 24/7/365 stable operation with low power consumption, instead of a motherboard designed for gaming.
@@ -40,7 +49,7 @@ _Notes_
 
 ## Memory (RAM)
 _*(unbuffered/non-registered ECC)*_  \
-2x8GB is preferred, but highly depends on what you plan to do with your server. I am running 26 docker containers and still use only 6GB to 12GB max. Yet it can be preferred to have lots of free RAM for specific tasks. If budget allows, consider 2x16GB.
+2x8GB is plenty for most needs, but highly depends on what you plan to do with your server. I am running 26 docker containers and still use only 6GB to 12GB max. Yet it can be preferred to have lots of free RAM for specific tasks. If budget allows, consider 2x16GB. 
 Unbuffered ECC RAM is highly recommended for a homeserver/storage solution has it helps prevent data corruption, not just in-memory, but also prevent such corruption to be written to your storage drives, which usually leads to common read errors (and may lead you to the conclusion the storage drive is faulty). 
 
 _Notes_
