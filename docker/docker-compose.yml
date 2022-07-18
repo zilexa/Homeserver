@@ -1,4 +1,4 @@
-## UPDATED: 02-7-2022, requires the NEW .env file since 03-06-2022!!
+## UPDATED: 18-7-2022, requires the NEW .env file since 03-06-2022!!
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -71,8 +71,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     #  - $DOCKERDIR/dashboard/config.json:/config.json
-    ports:
-      - 8000:3000
+    #ports:
+    #  - 8000:3000
+    extra_hosts:
+      - g.o:host-gateway  
     labels:
       caddy: http://g.o
       caddy.reverse_proxy: "{{upstreams 3000}}"
@@ -94,16 +96,16 @@ services:
 ##____________________ Unbound [PRIVACY/dns]
   unbound:
     container_name: unbound
-    image: mvance/unbound:latest
+    image: klutchell/unbound
     restart: always
     healthcheck:
-      interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
-      timeout: 3s
-      start_period: 5s
+      test: ["CMD", "dig -p 5335 sigok.verteiltesysteme.net @127.0.0.1"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     networks: 
       - unbound
-    volumes:
-      - $DOCKERDIR/unbound/forward-records.conf:/opt/unbound/etc/unbound/forward-records.conf
     ports:
       - 5335:53/tcp
       - 5335:53/udp
@@ -149,6 +151,7 @@ services:
       WGUI_SERVER_POST_UP_SCRIPT: $WGPOSTUP
       WGUI_SERVER_POST_DOWN_SCRIPT: $WGPOSTDOWN
       WGUI_DEFAULT_CLIENT_ALLOWED_IPS: $WGIP/24
+      WGUI_DEFAULT_CLIENT_EXTRA_ALLOWED_IPS: $LAN_ADDRESS_RANGE
       SMTP_HOSTNAME: $SMTP
       SMTP_PORT: $SMTPPORT
       SMTP_USERNAME: $SMTPUSER
@@ -166,6 +169,26 @@ services:
     labels:
       plugsy.name: VPN portal
       plugsy.link: http://vpn.o/
+      plugsy.category: Access
+##
+##____________________ Guacamole [ACCESS/remote-desktop]
+  guacamole:
+    container_name: guacamole
+    image: maxwaldorf/guacamole
+    restart: always
+    networks: 
+      - web-proxy
+    environment:
+      EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
+    volumes:
+      - $DOCKERDIR/guacamole:/config
+    ports:
+     - 6000:8080
+    labels:
+      caddy: http://desktop.o
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      plugsy.name: Remote Desktop
+      plugsy.link: http://desktop.o/
       plugsy.category: Access
 ##
 ##________CLOUD______
@@ -338,7 +361,7 @@ services:
       start_period: 10s
       retries: 3
     environment:
-      LOCAL_NETWORK: 192.168.88.0/24,10.6.0.1/24
+      LOCAL_NETWORK: $LAN_ADDRESS_RANGE,$WGIP/24
       LOC: de-frankfurt
       USER: $VPN_USER_PIA
       PASS: $VPN_PW_PIA
@@ -377,7 +400,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/qbittorrent:/config
-      - $DATAPOOL/media/incoming:/media/incoming
+      - $DATAPOOL/media/incoming:/Media/incoming
     labels: 
       org.hotio.pullio.update: true
       plugsy.name: Downloads
@@ -401,7 +424,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/prowlarr/config:/config
-      - $DATAPOOL/media/incoming:/media/incoming
+      - $DATAPOOL/media/incoming:/Media/incoming
     ports:
       - 9696:9696
     labels:
@@ -429,7 +452,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/sonarr/config:/config
-      - $DATAPOOL/media:/media
+      - $DATAPOOL/media:/Media
     ports:
       - 8989:8989
     labels:
@@ -457,7 +480,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/radarr/config:/config
-      - $DATAPOOL/media:/media
+      - $DATAPOOL/media:/Media
     ports:
       - 7878:7878
     labels:
@@ -485,7 +508,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/bazarr/config:/config
-      - $DATAPOOL/media:/media
+      - $DATAPOOL/media:/Media
     ports:
       - 6767:6767
     labels:
@@ -513,7 +536,7 @@ services:
       TZ: $TZ
     volumes:
       - $DOCKERDIR/lidarr/config:/config
-      - $DATAPOOL/media:/media
+      - $DATAPOOL/media:/Media
     ports:
       - 8686:8686
     labels:
@@ -528,8 +551,6 @@ services:
 networks:
   web-proxy:
     external: true
-  analytics:
-    driver: bridge
   filerun:
     driver: bridge
   unbound:
