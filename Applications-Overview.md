@@ -139,9 +139,9 @@ _Client configuration_
   - by default, new accounts cannot register to your server. You can control this in your docker-compose file via `FF_SYNCSERVER_ALLOW_NEW_USERS:` make sure to set it to false after all users have registered, to prevent strangers from using your sync server. 
 
 ### _Remote Desktop Web Client [Guacamole](https://github.com/MaxWaldorf/guacamole)_
->Access any desktop (your server or your parents laptop) through RDP via your browser (mobile browsers supported as well) after connecting to VPN. 
->Instead of using an app, you can simply go to https://remote.yourdomain.com and use the web application to login to the desktop of any server/desktop/laptop that has RDP configured.
->You still need to be connected to your server VPN. 
+>Access any desktop (your server or your parents laptop) through RDP via your browser (mobile browsers supported as well) after connecting to VPN.  \
+>Instead of using an app, you can simply go to https://remote.yourdomain.com and use the web application to login to the desktop of any server/desktop/laptop that has RDP configured.  \
+>You still need to be connected to your server VPN.  \
 >You can connect all computers that you want to support (like, parents) to your server VPN. Then, when they need help, you simply open a browser, login to Guacamole to see and use their desktop.  
 
 ## _Media Server_
