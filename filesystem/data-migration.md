@@ -4,7 +4,7 @@ To migrate data to your pool `/mnt/pool/` it is best and fastest to use `btrfs s
 ***
 
 ### From any drive or folder, regardless of filesystem 
-- _Moving files and folders from one drive to the other_  \
+- _Copying files and folders from one drive to the other_  \
   You want to make sure files are correctly read and written, without read or write errors. For that, we have rsync. If you are copying lots of data while doing other activities, make sure to append `nocache`: 
   ```
   nocache rsync -axHAXWES --info=progress2 --preallocate --inplace --numeric-ids /mnt/drives/cache/users/ /mnt/pool-nocache/users/
