@@ -132,7 +132,7 @@ _Client configuration_
 > - Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
 \
-_Your own browser sync engine via Firefox Sync - [documentation](https://github.com/mozilla-services/syncserver)_
+### _Your own browser sync engine via Firefox Sync - [documentation](https://github.com/mozilla-services/syncserver)_
 >By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla.\
 >Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
 - Required Configuration: 
@@ -140,7 +140,7 @@ _Your own browser sync engine via Firefox Sync - [documentation](https://github.
   - by default, new accounts cannot register to your server. You can control this in your docker-compose file via `FF_SYNCSERVER_ALLOW_NEW_USERS:` make sure to set it to false after all users have registered, to prevent strangers from using your sync server. 
 
 \
-_Remote Desktop Web Client [Guacamole](https://github.com/MaxWaldorf/guacamole)_
+### _Remote Desktop Web Client [Guacamole](https://github.com/MaxWaldorf/guacamole)_
 >Access any desktop (your server or your parents laptop) through RDP via your browser (mobile browsers supported as well) after connecting to VPN. 
 >Instead of using an app, you can simply go to https://remote.yourdomain.com and use the web application to login to the desktop of any server/desktop/laptop that has RDP configured.
 >You still need to be connected to your server VPN. 
