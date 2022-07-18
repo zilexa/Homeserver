@@ -179,16 +179,14 @@ services:
     networks: 
       - web-proxy
     environment:
-      EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
+      EXTENSIONS: auth-quickconnect,auth-totp # add ,auth-totp if exposed to the internet, for 2FA
     volumes:
       - $DOCKERDIR/guacamole:/config
-    ports:
-     - 6000:8080
     labels:
-      caddy: http://desktop.o
+      caddy: desktop.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 8080}}"
       plugsy.name: Remote Desktop
-      plugsy.link: http://desktop.o/
+      plugsy.link: desktop.$DOMAIN
       plugsy.category: Access
 ##
 ##________CLOUD______
