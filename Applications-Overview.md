@@ -131,7 +131,6 @@ _Client configuration_
 > - The Nextcloud mobile app works with FileRun but CX File Explorer (4.8 stars) is so much better and easier to use. It is a swift and friendly Android file manager that allows you to add your FileRun instance via WebDAV. Compared to the Nextcloud app, it allows you to easily switch between your local storage and your cloud, copying files betweeen them.
 > - Alternatively, [Setup NFS](https://github.com/zilexa/Homeserver/tree/master/network%20share%20(NFSv4.2)) a zero-overhead solution used in datacenters, the fastest way to share files/folders with other devices (laptops/PCs) via your local home network.
 
-\
 ### _Your own browser sync engine via Firefox Sync - [documentation](https://github.com/mozilla-services/syncserver)_
 >By running your own Firefox Sync server, all your history, bookmarks, cookies, logins of Firefox on all your devices (phones, tablets, laptops) can be synced with your own server instead of Mozilla.\
 >Compare this to Google Chrome syncing to your Google Account or Safari syncing to iCloud. It also means you have a backup of your browser profile. This tool has been provided by Mozilla. This is the only browser that allows you to use your own server to sync your browser account!
@@ -139,7 +138,6 @@ _Client configuration_
   - Test your sync server is running properly by visiting the subdomain `firefox.yourdomain.tld`. 
   - by default, new accounts cannot register to your server. You can control this in your docker-compose file via `FF_SYNCSERVER_ALLOW_NEW_USERS:` make sure to set it to false after all users have registered, to prevent strangers from using your sync server. 
 
-\
 ### _Remote Desktop Web Client [Guacamole](https://github.com/MaxWaldorf/guacamole)_
 >Access any desktop (your server or your parents laptop) through RDP via your browser (mobile browsers supported as well) after connecting to VPN. 
 >Instead of using an app, you can simply go to https://remote.yourdomain.com and use the web application to login to the desktop of any server/desktop/laptop that has RDP configured.
