@@ -140,9 +140,21 @@ _Client configuration_
 
 ### _Remote Desktop Web Client [Guacamole](https://github.com/MaxWaldorf/guacamole)_
 >Access any desktop (your server or your parents laptop) through RDP via your browser (mobile browsers supported as well) after connecting to VPN.  \
->Instead of using an app, you can simply go to https://remote.yourdomain.com and use the web application to login to the desktop of any server/desktop/laptop that has RDP configured.  \
+>Instead of using an app, you can simply go to https://desktop.yourdomain.com and use the web application to login to the desktop of any server/desktop/laptop that has RDP configured.  \
 >You still need to be connected to your server VPN.  \
 >You can connect all computers that you want to support (like, parents) to your server VPN. Then, when they need help, you simply open a browser, login to Guacamole to see and use their desktop.  
+
+- Decide whether you need the web client, since you can just as well use desktop applications (Remmina on Linux, Mac and Android, Windows RDP in Windows 10/11). 
+- If you do need it, decide whether or not you want to expose the client to the internet or only access the client through LAN and VPN. Remember, to actually connect to your server you will need to connect to VPN anyway. 
+  - Since 18/07/2022 the docker-compose.yml example exposes it by default + enables 2FA for this web app. 
+  - If you do not want to expose it, remove the 2 caddy labels (or replace them for local proxy, to access via http://desktop.o/ within your LAN/VPN) and remove the `TOTP` in the Extensions section. 
+
+How to Configure Guacamole?
+- login with guacadmin/guacadmin. 
+- Find Settings in the top-right menu, _Settings > Users > New User_ and create a user for yourself.
+- Logout, login with your own user, go back to _Settings > Users_ and delete user guacadmin.
+- _Settings > Connections > New Connection:_ Name = your server name, protocol = RDP, Concurrency limits = 1, 
+- Section _Parameters > Network_ fill in hostname (= a LAN hostname that you created in AdGuard or LAN IP or VPN IP), Port = 3389. Under _Authentication_ your server RDP username/password. Hit Save. 
 
 ## _Media Server_
 ### _[Qbittorrent](https://hotio.dev/containers/qbittorrent/)_ through VPN-proxy via PIA Wireguard VPN - [documentation](https://hub.docker.com/r/thrnz/docker-wireguard-pia)_ 
