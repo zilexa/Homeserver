@@ -186,7 +186,7 @@ services:
       caddy: desktop.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 8080}}"
       plugsy.name: Remote Desktop
-      plugsy.link: desktop.$DOMAIN
+      plugsy.link: https://desktop.$DOMAIN
       plugsy.category: Access
 ##
 ##________CLOUD______
