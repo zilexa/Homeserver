@@ -275,9 +275,9 @@ sudo chmod -R 755 $HOME/docker
 
 echo "Create the minimum folder structure for drives and datapool"
 echo "--------------------------------------------"
-sudo mkdir /mnt/drives/data0
+sudo mkdir /mnt/drives/{data0,data1}
 sudo mkdir /mnt/drives/backup1
-sudo mkdir -p /mnt/pool/{users,media}
+sudo mkdir -p /mnt/pool/
 
 
 echo "______________________________________________________________________"
