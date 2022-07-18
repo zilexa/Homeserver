@@ -92,7 +92,7 @@ services:
     labels:
       plugsy.name: AdGuard
       plugsy.link: http://adguard.o/
-      plugsy.category: Privacy
+      plugsy.category: Network
 ##____________________ Unbound [PRIVACY/dns]
   unbound:
     container_name: unbound
@@ -169,7 +169,7 @@ services:
     labels:
       plugsy.name: VPN portal
       plugsy.link: http://vpn.o/
-      plugsy.category: Access
+      plugsy.category: Network
 ##
 ##____________________ Guacamole [ACCESS/remote-desktop]
   guacamole:
