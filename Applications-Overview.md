@@ -87,7 +87,7 @@ _Server configuration_
 _Client configuration_ 
 - You can easily ensure Android devices are always using your server DNS (and have access to all local non-exposed services!) by installing [the Wireguard app](https://play.google.com/store/apps/details?id=com.wireguard.android), adding the configuration through QR code or file, which you can share via the `VPN-Portal` via email to your devices Portal. 
 - To automatically connect to your VPN when you leave your home WiFi and disconnect when you are back home, install the [Automate](https://play.google.com/store/apps/details?id=com.llamalab.automate) app, go to Community and find and install this [flow](https://llamalab.com/automate/community/flows/39377). Follow the instructions in the description. This is tested to work flawlessly on Android 12 devices!  
-- Wireguard apps are available for all systems. For Linux, install `wireguard-tools` and use the command `wg-quik up wg0` after you have put the client conf file (accessible via the VPN-Portal) in `/etc/wireguard/`. 
+- Wireguard apps are available for all systems. For Linux, install `wireguard-tools` and use the command `wg-quick up wg0` after you have put the client conf file (accessible via the VPN-Portal) in `/etc/wireguard/`. 
 
 ### _Remote Admin Access_ via RDP and SSH
 > You can manage your server remotely, within LAN or, when not at home via VPN. This can be done through the terminal or simply by accessing the desktop, by sharing the desktop through RDP. 
