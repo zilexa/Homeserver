@@ -1,5 +1,6 @@
 # CHANGELOG 2022-07-18
-# ADDED: Guacamole, by request of many. Will also add a little guide here: https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md#remote-desktop-web-client-guacamole
+# ADDED: Guacamole is added again, by request of many.
+# ADDED: Instructions for Guacamole https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md#remote-desktop-web-client-guacamole
 # REMOVED: unused networks
 # FIXED: Plugsy is now finally reachable through a domain, without port: http://g.o solved by adding `extra_hosts` thanks to @airtonix see https://github.com/plugsy/core/issues/31#issuecomment-1186396720
 # CHANGED: replaced Unbound image of Matthew Vance for the image of Klutchell. Used to have Klutchell, was misinformed about it and switched to Matthew Vance. I will do more research as one seems to be optimised for security, the other for privacy. Not entirely clear. For now Klutchell seems the best choice. 
