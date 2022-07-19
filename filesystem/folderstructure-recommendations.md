@@ -13,9 +13,9 @@ You might not realise the importance of a well-thought through folder structure.
 ### 1. Overview of system folders:
 By default, the BTRFS filesystem contains subvolumes in the root of the filesystem. The OS creates them with "@" in front of the name, to easily recognise it is a subvolume in the root of the filesystem, to be mounted to a path. The prep-server.sh script added a line to your `/etc/fstab` to manually mount the root filesystem easily: 
 ```
-sudo mount /mnt/drives/systemdrive
+sudo mount /mnt/drives/system
 ```
-Run this command and look at the `systemdrive` folder. You should see: 
+Run this command and look at the `system` folder. You should see: 
 - Created during OS setup:
   - `@` mapped to path `/` = root folder. will be snapshotted and backupped. 
   - `@cache`, mapped to path `/` = to exclude it from snapshots of the system (= snapshot of `@`)
@@ -27,14 +27,14 @@ Run this command and look at the `systemdrive` folder. You should see:
 - Subvolumes created by prep-server script: 
   - `@docker` mapped to path `$HOME/docker` = docker persistent data per container, will be snapshotted and backupped. 
 - Folders created by prep-server script: 
-  - `/mnt/drives/systemdrive` = the mountpoint to access the root filesystem when needed. Not mounted by default/not mounted at boot. 
-  - `/mnt/drives/systemdrive/timeline` = a folder in the root filesystem to store the daily/weekly/monthly snapshots of `@`, `@home` and `@docker`. 
+  - `/mnt/drives/system` = the mountpoint to access the root filesystem when needed. Not mounted by default/not mounted at boot. 
+  - `/mnt/drives/system/snapshots` = a folder in the root filesystem to store the daily/weekly/monthly snapshots of `@`, `@home` and `@docker`. 
 
 _Notes_
 > If your whole system breaks down due to hardware failure or software corruption, you can easily replace hardware and do a clean install, then: 
 >  1. run the post-install.sh and prep-server.sh scripts.
 >  2. restore your `/etc/fstab` using the fstab file from the last `@` snapshot from `/mnt/drives/backup`. 
->  3. btrfs send/receive the last `@docker` snapshot from `/mnt/drives/backup1` to `/mnt/drives/systemdrive/`. See Backup Guide, step xx. 
+>  3. btrfs send/receive the last `@docker` snapshot from `/mnt/drives/backup1` to `/mnt/drives/system/`. See Backup Guide, step xx. 
 >  4. run docker-compose. 
 >  5. Schedule maintenance by adding the nightly and monthly commands to your crontab. See Maintenance Guide. 
 
@@ -48,7 +48,7 @@ _Notes_
   - `/mnt/drives/{data1,data2,data3,data4}` (unless you use BTRFS RAID1 filesystem). 
   - `/mnt/drives/parity1` not automounted, will be mounted during backup run.  
   - `/mnt/drives/{backup1,backup2}` not automounted, will be mounted during backup run.  
-- `/mnt/pool/Users` and `/mnt/pool/Media` --> the union of all files/folders on cache/data drives. the single access point to your data. Could be 1 drive, a MergerFS mountpoint or the mountpoint of your BTRFS RAID1 filesystem). When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadrives will appear unionised inside `/mnt/pool/Media` and `/mnt/pool/Users`.
+- `/mnt/pool/users` and `/mnt/pool/media` --> the union of all files/folders on cache/data drives. the single access point to your data. Could be 1 drive, a MergerFS mountpoint or the mountpoint of your BTRFS RAID1 filesystem). When mounting the MergerFS pool, the folders (subvolumes behave just like folders) on the cache/datadrives will appear unionised inside `/mnt/pool/media` and `/mnt/pool/users`.
 
 _Helper folders:_
 - If you use MergerFS Tiered Cache: `/mnt/pool-nocache` --> the union but excluding the cache, required to offload the cache on a scheduled basis. 
