@@ -61,4 +61,6 @@ This is normal, but you do need to fix the ownership and permissions before you 
   ```
   sudo chmod -R 755 /mnt/pool/users/usernameX(D)
   ```
-And do the same for your Media path: `/mnt/pool/media(D)`.   
+And do the same for your Media path: `/mnt/pool/media(D)`.
+
+I highly recommend reading [this intro into Linux permissions](https://wise.wtf/posts/beginner-bits-linux-permissions/). this will fill the knowlegde gap that will otherwise come back and bite you. 
