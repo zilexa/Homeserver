@@ -18,7 +18,7 @@ python3 ${SCRIPTDIR}/mediacleaner/media_cleaner.py |& tee -a ${SCRIPTDIR}/logs/m
 # CLEANUP CACHE
 # -------------
 # User files >30d moved to data drives on pool-archive
-#/usr/bin/bash ${SCRIPTDIR}/archiver.sh /mnt/disks/cache/Users /mnt/pool-nocache/Users 30
+#/usr/bin/bash ${SCRIPTDIR}/archiver.sh /mnt/drives/cache/users /mnt/pool-nocache/users 30
 
 
 # FileRun 
