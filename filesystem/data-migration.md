@@ -52,15 +52,19 @@ Highly recommended for precious data to double-check all data is really identica
 
 ### Fix ownership and permissions
 When you created subvolumes (usually with `sudo`) and mountpoints (also with `sudo`) and played with moving snapshots around, you noticed you can only create, copy or move data in there with sudo?
-This is normal, but you do need to fix the ownership and permissions before you can use your data normally, without sudo. To do so: 
+This is normal, but you do need to fix the ownership and permissions before you can use your data normally, without sudo. 
+--> I highly recommend to leave the top folders (`users` and `media`) owned by root so you or an application cannot delete those. Instead, apply the following to each folder inside those folders seperately. To do so: 
 - ownership, notice you need to add (D) to also apply this change to hidden files/folders: 
   ```
-  sudo chown -R ${USER}:${USER} /mnt/pool/users/usernameX(D)
-  ```
+  sudo chown -R ${USER}:${USER} /mnt/pool/users/name(D)
+  ``` 
+  Change `name` and apply to command to each folder inside `users`. 
 - permissions: 
   ```
-  sudo chmod -R 755 /mnt/pool/users/usernameX(D)
+  sudo chmod -R 755 /mnt/pool/users/name(D)
   ```
+  Change `name` and apply to command to each folder inside `users`. 
+
 And do the same for your Media path: `/mnt/pool/media(D)`.
 
 I highly recommend reading [this intro into Linux permissions](https://wise.wtf/posts/beginner-bits-linux-permissions/). this will fill the knowlegde gap that will otherwise come back and bite you. 
