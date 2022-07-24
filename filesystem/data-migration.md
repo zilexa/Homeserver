@@ -58,12 +58,12 @@ This is normal, but you do need to fix the ownership and permissions before you 
   ```
   sudo chown -R ${USER}:${USER} /mnt/pool/users/name(D)
   ``` 
-  Change `name` and apply to command to each folder inside `users`. 
+  Only change `name` and apply to command to each folder inside `users`. 
 - permissions: 
   ```
   sudo chmod -R 755 /mnt/pool/users/name(D)
   ```
-  Change `name` and apply to command to each folder inside `users`. 
+  Only change `name` and apply to command to each folder inside `users`. 
 
 And do the same for your Media path: `/mnt/pool/media(D)`.
 
