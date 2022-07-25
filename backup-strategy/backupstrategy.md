@@ -20,10 +20,10 @@ To protect against disk failure, SnapRAID is used to protect essential data & la
 The most flexible tool for backups that requires zero integration into the system is btrbk. Alternatives: 
 1. Snapper, does not do backups, only snapshots and creates them against logic within the snapshotted subvolume. 
 2. Timeshift, very user friendly and already takes care of automatic snapshots before system updates and regular snapshots configured in its interface. Also, it adds them to the boot menu, allowing you to easily "go back in time" when there is a system failure. But Timeshift cannot send those snapshots to other locations. 
-With [btrbk](https://digint.ch/btrbk): 
-- Your `Users` snapshot on all `dataX` drives can be snapshotted with a chosen retention policy on their respective disks in a root folder (for example `/mnt/disks/data1/.timeline`). 
+With [btrbk](https://digint.ch/btrbk), for a short, quick btrbk guide [read this](https://wiki.gentoo.org/wiki/Btrbk):  
+- Your `Users` snapshot on all `dataX` drives can be snapshotted with a chosen retention policy on their respective disks in a root folder (for example `/mnt/disks/data1/snapshots`). 
 - In addition, using BTRFS native send/receive mechanism the snapshots are efficiently and securely copied to a seperate backup disk (`mnt/disks/backup1`).
-- For all snapshots/backups, you have a nice timeline-like overview of snapshots (folders) on the backup disk and in the `.timeline` folder of each disk. 
+- For all snapshots/backups, you have a nice timeline-like overview of snapshots (folders) on the backup disk and in the `snapshots` folder of each disk. 
 - btrbk will manage the retention policy and cleanup of both snapshots and backups. 
 - Periodically, connect a USB disk (`backup2`, `backup3`), btrbk will notice and immediately send all backups from the backup disk to the connected disk. This is called archiving. Note the UUID of the connected USB disk needs to be configured in the system first.
 - Leveraging Timeshift by sending its system snapshots to backup targets is under investigation, see [Timeshift feature request](https://github.com/linuxmint/timeshift/issues/16) and [btrbk discussion](https://github.com/digint/btrbk/issues/480). 
