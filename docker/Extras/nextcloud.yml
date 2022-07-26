@@ -1,4 +1,5 @@
-# ARCHIVED!
+# ARCHIVED! DO NOT USE, NOT EVEN AS STARTING POINT, IT IS TOO OUTDATED!
+# 
 version: "2.0"
 services:
 # THIS FILE CONTAINS SERVICES THAT I NO LONGER USE: NextCloud, because FileRun is much faster and has direct filesystem/folder-per-user access. 
