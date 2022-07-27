@@ -1,3 +1,6 @@
+# CHANGELOG 2022-07-27
+# CHANGED: Guacamole subdomain from "desktop." to "remote." as it makes more sense, you can use it for SSH and other protocols, besides desktop sharing.
+#
 # CHANGELOG 2022-07-18
 # ADDED: Guacamole is added again, by request of many.
 # ADDED: Instructions for Guacamole https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md#remote-desktop-web-client-guacamole
