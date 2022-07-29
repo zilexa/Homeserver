@@ -1,3 +1,6 @@
+# CHANGELOG 2022-07-29
+# CHANGED: VPN-proxy (docker-wireguard-pia); uncommented VPNDNS variable, VPNDNS: $VPNDNS and added $VPNDNS to .env file. Reason: since we are running our own DNS server, no need to use public or PIA dns servers. Also, the image seems to have an issue with PIA own DNS resolver: https://github.com/thrnz/docker-wireguard-pia/issues/55
+#
 # CHANGELOG 2022-07-27
 # CHANGED: Guacamole subdomain from "desktop." to "remote." as it makes more sense, you can use it for SSH and other protocols, besides desktop sharing.
 #
