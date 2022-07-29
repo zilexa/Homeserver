@@ -364,7 +364,7 @@ services:
       USER: $VPN_USER_PIA
       PASS: $VPN_PW_PIA
       #KEEPALIVE: 25
-      #VPNDNS: 8.8.8.8,8.8.4.4
+      VPNDNS: $VPNDNS
       PORT_FORWARDING: 1
       PORT_PERSIST: 0
       PORT_SCRIPT: /pia-shared/updateport-qb.sh
