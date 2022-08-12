@@ -81,7 +81,7 @@ The Leicke is a great, affordable option for <10 W and >10W, there are just a fe
 
 ## Storage
 - For the OS and applications, use an NVME drive, for example M.2 PCI Express 3.0 x4 are common. PCI 4.0 uses more power and the extra speed is useless for our purpose. Choose the M.2 NVME SSD with low idle power consumption. There are big differences, look for Anandtech, Tomshardware reviews. Most other reviewers do not test idle power consumption at all! Even though on a 24x7 system, this will be THE power consumption 90% of the time. The following have very low idle power consumption:
-  - Samsung PM981a
+  - Samsung PM981a or newer (PM9A1)
   - WesternDigital SN730
   - Kioxia G6 
 - For data storage, backups etc use SATA instead of NVME: SATA SSDs offer plenty of speed (up to 550MB/s) and use less power. They are also cheaper. There are very little usecases for NVME/PCI Express as storage drives in a NAS/Homeserver.
@@ -89,6 +89,7 @@ The Leicke is a great, affordable option for <10 W and >10W, there are just a fe
   - Samsung EVO 860
   - Samsung QVO 870 (<-- cheapest 4TB SSD, performs better than lots of (more expensive) TLC drives, highly recommended) 
 - When using harddisks, go for 2.5" instead of 3.5" because they use up to 5 times less power, even when idle. Instead of buying the SATA harddisks, buy the Seagate Portable Drive or Seagate Backup Plus 4TB or 5TB: they cost half the price and contain a normal SATA controller. Just remove them from the usb case first. 
+- *_Some users (including me) have very bad experiences with the 2.5" Seagate 4TB and 5TB models. Every 2.5" HDD with >2TB capacity is a so called SMR drive. Google and understand what this means. You might want to opt for non-SMR drives, which automatically means 3.5" HDDs or SATA SSDs._*
 
 _Notes_
 1. If you do have an addiction to the highest storage speed and have your mind set on using NVME, go for a Motherboard with PCI-Express bifurcation support (D-3644 and most other Fujitsus support this). PCI-Express bifurcation allows you to use a single PCI-Express port as multiple ports natively, without expensive, energy-slurping bridge chips. PCI Bifurcation splitter cost only 20 bucks and allows you to connect up to 4 NVME SSDS (PCI-E3.0 x4 speed) in a single x16 slot. 
