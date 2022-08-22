@@ -1,3 +1,8 @@
+# CHANGELOG 2022-08-22
+# FIXED: Removed typo in Adguard Home volume mapping (accidental double slash instead of single in the path).
+# FIXED: Removed unnecessary Adguard Home volume mapping for "work" config. 
+# CHANGED: Removed healthcheck in Unbound, it doesn't work because the Unbound image is distroless. No interest in figuring this out anyway. Unbound is a pretty static system that just works as is. 
+#
 # CHANGELOG 2022-07-29
 # CHANGED: VPN-proxy (docker-wireguard-pia); uncommented VPNDNS variable, VPNDNS: $VPNDNS and added $VPNDNS to .env file. Reason: since we are running our own DNS server, no need to use public or PIA dns servers. Also, the image seems to have an issue with PIA own DNS resolver: https://github.com/thrnz/docker-wireguard-pia/issues/55
 #
