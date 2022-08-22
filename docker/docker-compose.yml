@@ -87,8 +87,7 @@ services:
     restart: always
     network_mode: host
     volumes:
-       - $DOCKERDIR/adguardhome/work:/opt/adguardhome/work
-       - $DOCKERDIR/adguardhome//conf:/opt/adguardhome/conf
+       - $DOCKERDIR/adguardhome/conf:/opt/adguardhome/conf
     labels:
       plugsy.name: AdGuard
       plugsy.link: http://adguard.o/
