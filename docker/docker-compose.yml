@@ -97,12 +97,6 @@ services:
     container_name: unbound
     image: klutchell/unbound
     restart: always
-    healthcheck:
-      test: ["CMD", "dig -p 5335 sigok.verteiltesysteme.net @127.0.0.1"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     networks: 
       - unbound
     ports:
