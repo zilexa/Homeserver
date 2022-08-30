@@ -1,0 +1,20 @@
+##
+##____________________ Resilio [CLOUD/Sync]
+  resilio:
+    image: ghcr.io/linuxserver/resilio-sync
+    container_name: resilio
+    restart: always
+    networks: 
+      - web-proxy
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/resilio/config:/config
+      - $DATAPOOL/Users:/sync
+    ports:
+      - 55555:55555
+    labels:
+      caddy: sync.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 8888}}"

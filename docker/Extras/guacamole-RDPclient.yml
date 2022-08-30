@@ -1,0 +1,19 @@
+##____________________ Guacamole [ACCESS/remote-desktop]
+  guacamole:
+    container_name: guacamole
+    image: maxwaldorf/guacamole
+    restart: always
+    networks: 
+      - web-proxy
+    environment:
+      EXTENSIONS: auth-quickconnect # add ,auth-totp if exposed to the internet, for 2FA
+    volumes:
+      - $DOCKERDIR/guacamole:/config
+    ports:
+     - 6000:8080
+    labels:
+      caddy: http://desktop.o
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      plugsy.name: Remote Desktop
+      plugsy.link: http://desktop.o/
+      plugsy.category: Access

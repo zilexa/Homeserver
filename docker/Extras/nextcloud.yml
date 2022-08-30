@@ -1,4 +1,5 @@
-# ARCHIVED!
+# ARCHIVED! DO NOT USE, NOT EVEN AS STARTING POINT, IT IS TOO OUTDATED!
+# 
 version: "2.0"
 services:
 # THIS FILE CONTAINS SERVICES THAT I NO LONGER USE: NextCloud, because FileRun is much faster and has direct filesystem/folder-per-user access. 
@@ -14,6 +15,12 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./caddy/caddy_data:/data
+      - $DOCKERDIR/caddy/caddy_data:/data
+      - $DOCKERDIR/caddy/config:/config
+    volumes_from: # test with this first, then if everything works, see if you can replace it by only mounting the necessary volumes. 
+      - nextcloud 
+      #- $DOCKERDIR/nextcloud/var/www/html:/nextcloud/var/www/html
+      #- $DOCKERDIR/nextcloud/var/data:/nextcloud/var/nextdata
     ports:
       - 80:80
       - 443:443
@@ -59,7 +66,7 @@ services:
       - ./nextcloud/config:/var/www/html/config
         # Custom settings for php fpm to make nextcloud work. The default settings resulted in the error:
         # WARNING: [pool www] server reached pm.max_children setting (5), consider raising it
-      - $DOCKERDIR/nextcloud/etc/www-custom.ini:/usr/local/etc/php-fpm.d/zz-custom.conf
+      #- $DOCKERDIR/nextcloud/etc/www-custom.ini:/usr/local/etc/php-fpm.d/zz-custom.conf
     labels:
       caddy: next.$DOMAIN
       caddy.tls: $EMAIL

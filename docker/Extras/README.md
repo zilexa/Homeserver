@@ -1,12 +1,12 @@
 This section contains applications I do not use, but did spend lots of time figuring out how to run them properly and make them run as fast/efficient as possible, with minimal containers. 
 
 **NextCloud**\
-Nextcloud has 2 versions: Apache/Nginx (default) and Nextcloud-FPM. FPM is the fastest version of Nextcloud. Benefits: 
+Nextcloud has 2 versions: Apache/Nginx (default) and Nextcloud-FPM. FPM is the fastest version of Nextcloud. Benefits of my Compose: 
 - Isolated network
-- PHP-FPM
-- Coupled with Redis (caching)
-- PostgreSQL (fastest database, faster then MariaDB
-- Caddy fully automated https reverse-proxy
+- Nextcloud PHP-FPM
+- Coupled with Redis (caching) for faster/more responsive web UI
+- PostgreSQL (fastest database, faster then MariaDB)
+- Caddy fully automated https reverse-proxy: much easier to understand and zero other config required
 - No Nginx necessary: Caddy is also used as webserver! (Unique!!)
 
 **Grafana with Prometheus**\
