@@ -1,3 +1,6 @@
+# CHANGELOG 2022-08-29
+# FIXED: In the Vaultwarden environment variables section, added the protocol (https) as this is a requirement. It doesn't seem to affect existing users but new users without existing Vaultwarden persistent volumes were affected. Thanks to P3nkiln in https://github.com/zilexa/Homeserver/pull/13. 
+
 # CHANGELOG 2022-08-22
 # FIXED: Removed typo in Adguard Home volume mapping (accidental double slash instead of single in the path).
 # FIXED: Removed unnecessary Adguard Home volume mapping for "work" config. 
