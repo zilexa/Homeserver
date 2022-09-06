@@ -41,7 +41,7 @@ Consider if you really need direct access to SSH, RDP but also download tools an
 
 ### Access services in your local network
 Instead of typing 192.168.0.2:9000 for each service you want to access, configure an easy to remember, local domain address.
-This address will only work within your home network. Some routers support configuring this. Alternatively: 
+This address will work within your home network AND when connected to VPN while outside of your home network: 
 1. Go to _AdGuard Home (serverip:3000 or https://localhost:3000) > Settings > DNS rewrite_ 
 2. Add a new rule, fill in a domain name for example `myserver.o` and the local IP of your server. 
 3. go to http://myserver.o:9000, Portainer should open. Also, AdGuard Home is now accessible via http://myserver.o:3000. 
