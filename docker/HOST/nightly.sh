@@ -54,7 +54,7 @@ sudo run-if-today L zo && sleep 10
 sudo run-if-today L zo && btrfs scrub start -Bd -c 2 -n 4 /dev/sdc |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo run-if-today L zo && btrfs balance start -dusage=10 -musage=5 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 sudo run-if-today L zo && btrfs balance start -v -dusage=20 -musage=10 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-
+sudo run-if-today L zo && umount /mnt/drives/backup1
 
 # Only if you still use Scrutiny
 # S.M.A.R.T. disk health scan on ALL disks (now that Backup1 is still spinning)
