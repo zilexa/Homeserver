@@ -52,12 +52,12 @@ sudo btrfs scrub start -Bd -c 2 -n 4 /dev/sdb |& tee -a ${SCRIPTDIR}/logs/monthl
 # Run btrfs balance monthly, first 10% data, then try 20%
 # -------------------------
 echo -e "\nBalance btrfs filesystems in 2 runs each.. \n" >> ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -dusage=10 -musage=5 / |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -v -dusage=20 -musage=10 / |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -dusage=10 -musage=5 /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -dusage=10 -musage=5 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo btrfs balance start -v -dusage=20 -musage=10 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 / |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 / |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -dusage=10 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+sudo btrfs balance start -v -dusage=20 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
 
 
 # Send email
