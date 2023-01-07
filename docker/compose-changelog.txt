@@ -1,3 +1,7 @@
+# CHANGELOG 2023-01-07
+# CHANGED: docker-compose.yml now uses a named volume (see the end of the file) for Filerun. Make sure you also update the volume for user-files within the filerun service.
+# FIXED: This change for Filerun is required, to prevent a new device ID being generated after rebooting your server. This caused NextCloud/Owncloud clients to believe the synced folder was completely deleted, causing the client to re-download all data from the server. More information here: https://feedback.filerun.com/communities/1/topics/1649-after-server-reboot-owncloud-always-re-downloads-everything
+
 # CHANGELOG 2022-08-29
 # FIXED: In the Vaultwarden environment variables section, added the protocol (https) as this is a requirement. It doesn't seem to affect existing users but new users without existing Vaultwarden persistent volumes were affected. Thanks to P3nkiln in https://github.com/zilexa/Homeserver/pull/13. 
 
