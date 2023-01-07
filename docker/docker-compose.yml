@@ -537,15 +537,15 @@ services:
       plugsy.link: http://lidarr.o/
       plugsy.category: Media
       org.hotio.pullio.update: true
-#
+
 #
 volumes:
   userdata:
     driver_opts:
-      type: btrfs #the filesystem engine used by docker, if filesystem is btrfs, use btrfs otherwise local
-      device: /dev/sdb #drive containing "users"
-      o: "defaults,noatime,compress-force=zstd:3" #the options you use copied from /etc/fstab
-
+      type: local
+      device: /mnt/pool/users
+      o: bind
+#
 networks:
   web-proxy:
     external: true
