@@ -9,7 +9,7 @@ Basic phone tools
 Purpose | App name | Ad-free | price | Notes
 | --- | --- | --- | --- | --- |
 |Home screen launcher | Microsoft Launcher | yes | free | Ensure you do not give any permissions! Without any permissions, this Launcher works fantastic. Extremely easy to use, allowing you to have folders in your app drawer, neatly organize your homescreen. If you miss the Google Feed, just add a shortcut for it on your screen (also helps you to scroll less). Other launchers have hard limits or are less easy to use.|
-| --- | --- | --- | --- | --- |
+| --- |
 Dialer | Phone by Google | yes | free | clean and neat, clear overview of Favourite contacts, call screening, caller ID using Google Search data, view only contacts with numbers etc. 
 | --- | --- | --- | --- | --- |
 Contacts | Contacts by Google | yes | free | clean and neat. Easy to use, with or without contact categories ("labels" in Gmail/Contacts) that also integrate with Gmail.
