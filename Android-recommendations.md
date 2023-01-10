@@ -36,6 +36,7 @@ Document viewer | Office Reader | yes | free |Supports both Office (DOCX, XLSX, 
 Document editor | Collabora Office | yes | free | all-in-1 app to edit any kind of office document. Microsoft Office individual apps are better for power users. But if you don't edit docs everyday on your phone this should do it.
 Singing PDFs | Adobe Reader | yes | free | the only app that makes it easy to sign and always works. 
 Scanning documents/books | vFlat | Free up to 100 OCR/day | Very easy to use, using latest code libraries thus very performant. Especially handy for scanning multiple sheets or books. Includes a good OCR solution with a very high limit of 100/day.
+Notes | Google Keep | yes | free | While there are good open-source free Keep alternatives these days that store data only on your own server through webDAV, they often lack the intuitivity/usability, the very nice screen widget or collaboration features for example to have a shared grocery list with your family. This makes Keep unbeatable. 
 
 Playback and media
 | Purpose | App name | Ad-free | price | Notes |
@@ -47,6 +48,9 @@ Youtube | Youtube Vanced | yes | free | although no longer developed due to Goog
 File management
 | Purpose | App name | Ad-free | price | Notes |
 | --- | --- | --- | --- | --- |
+syncing photos and app backups | FolderSync | no | free | FolderSync supports several cloud services but also allows you to add a WebDAV account (like your FileRun account) and add folderpairs (a folder on your phone paired with a folder in your FileRun/cloud account). Next you can configure whether you like to have one-way sync, backing up files, or 2-way sync to always have a mirror of your files on your account. Deleting a file on your phone would also delete the file on your server (= 2-way sync). If you follow this homeserver guide, your user data is backupped nightly, allowing for a real backup solution. 
+File browser | CX File Explorer | yes | free | Very clean and easy to use filemanager with support for webDAV allowing you to share files from any other application to your selfhosted filecloud or the other way around, accessing and browsing your files in your cloud. 
+Cleanup files | Google Files | yes | free | no-brainer easy to use tool to cleanup temporary, cache files or get insight in large files or folders. 
 
 Other tools
 | Purpose | App name | Ad-free | price | Notes |
