@@ -5,7 +5,7 @@ Although open-source is preferred, such projects managed by 1 user tend to have 
 Usability/intuitivity/practical use is more important. Goal is to have a list that works well for anyone, including non-techies. 
 
 | Basic phone tools |
-| --- |
+| --- | --- | --- | --- | --- |
 | Purpose | App name | Ad-free | price | Notes |
 | --- | --- | --- | --- | --- |
 |Home screen launcher | Microsoft Launcher | yes | free | Ensure you do not give any permissions! Without any permissions, this Launcher works fantastic. Extremely easy to use, allowing you to have folders in your app drawer, neatly organize your homescreen. If you miss the Google Feed, just add a shortcut for it on your screen (also helps you to scroll less). Other launchers have hard limits or are less easy to use.|
