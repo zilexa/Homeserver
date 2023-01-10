@@ -1,7 +1,7 @@
 ## Recommended applications for everyday use on Android. 
 Focus on practical use and intuitivity, without ads is preferred but not essential since ads will be blocked on all devices with your homeserver setup, even when not at home. 
 Free is preferred but not essential, as long as the essential features are free/unlimited. 
-Although open-source is preferred, such projects managed by 1 user tend to have a short lifespan or slow development cycle, which can be annoying when the app is not finished yet/missing basic features. Also the influence from the community (usually other developers or tech-savy users) might lead to it becoming less intuitive. 
+Although open-source is preferred, such projects could be managed by 1 user and could have a short lifespan or slow development cycle, which can be annoying when the app is not finished yet/missing basic features. Also the influence from the community (usually other developers or tech-savy users) might lead to it becoming less intuitive. 
 Usability/intuitivity/practical use is more important. Goal is to have a list that works well for anyone, including non-techies. 
 
 Basic phone tools
@@ -43,6 +43,10 @@ Playback and media
 Play local music files | | yes | free | easy to use when you want to play music organised in folders on your phone. 
 Manage downloading of TV shows and movies | NZB360 | yes | one-time purchase | Absolutely worth the price, very intuitive app providing all the features you need, you will no longer open your * arr apps or download client. Highly recommended for anyone with a NAS/server downloading media, also for your partner or kids to manage what they want to see. Also provides discovery of new or popular movies and shows. 
 Youtube | Youtube Vanced | yes | free | although no longer developed due to Google taking action, you can still download and use Youtube Vanced without issues. Highly recommended as it blocks all kinds of advertising and sponsored videos. 
+
+File management
+| Purpose | App name | Ad-free | price | Notes |
+| --- | --- | --- | --- | --- |
 
 Other tools
 | Purpose | App name | Ad-free | price | Notes |
