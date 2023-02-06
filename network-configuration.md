@@ -16,7 +16,7 @@ For most people, exposing only the following services via a domain is enough:
 Understand that you should only expose services online via a domain if it is absolutely necessary. 
 
 _Requirements_
-1. Enable dynamic DNS (dyndns) in your router and make a note of the URL. This URL points to your home IP address, even when your ISP changes it. 
+1. Enable dynamic DNS (dyndns) in your router and make a note of the URL. This URL points to your home IP address, even when your ISP changes it.
   * If your router does not have this functionality, use [a free dyndns](https://freedns.afraid.org/) service. 
 2. Purchase your own domain via a domain provider. I recommend Porkbun (no affiliation).  
 3. Create subdomains via your domain provider portal for each service/application you want to expose, make sure they reflect the subdomains in your docker-compose.yml file!
