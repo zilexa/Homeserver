@@ -11,7 +11,7 @@
 For most people, exposing only the following services via a domain is enough: 
 - FileRun (file cloud)
 - VaultWarden (password manager and secure vault)
-- Firefox Sync (bookmarks, web history, logins and syncing all of that between devices)  \
+- Firefox Sync (bookmarks, web history, logins and syncing all of that between devices)  
 
 Understand that you should only expose services online via a domain if it is absolutely necessary. 
 
