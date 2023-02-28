@@ -52,7 +52,7 @@ Regardless of your hardware (x86-64 or ARM, see [Hardware Recommendations](Recom
 <sub>This guide used to be Ubuntu-based. All my laptops/PCs and my parents systems ran Ubuntu Budgie. After 2 years I switched to Manjaro (Gnome edition) and it is a delight!
 A much better **out-of-the-box experience**, more **user-friendly** (also for setting up a server! This is reflected in my scripts, they are a lot smaller)  **lightweight**, **small footprint**, much better and up to date single source of **high quality documentation (Arch Wiki)** and **MUCH easier to install applications + keep up to date** than any Ubuntu system. Also, better out-of-the-box BTRFS support. For small, flexible homeservers and personal laptops I strongly believe BTRFS is the best filesystem. If you have more needs, look at XFS/ZFS. This guide will use BTRFS. </sub>
 
-Step 0: get [the right hardware](Recommendations.md), most motherboards and CPUs are not designed for 24/7365 continuous running, instead, they are designed for performance. 
+Step 0: get [the right hardware](Recommendations.md), most motherboards and CPUs are not designed for 24/7/365 continuous running, instead, they are designed for performance. 
 
 ***
 
