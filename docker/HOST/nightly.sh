@@ -12,7 +12,7 @@ touch ${SCRIPTDIR}/running-tasks
 # CLEANUP WATCHED TVSHOWS & MOVIES
 # --------------------------------
 # delete if watched x days ago
-python3 ${SCRIPTDIR}/mediacleaner/media_cleaner.py |& tee -a ${SCRIPTDIR}/logs/media_cleaner.log
+python3 ${SCRIPTDIR}/mediacleaner/mediacleaner.py |& tee -a ${SCRIPTDIR}/logs/mediacleaner.log
 
 
 # CLEANUP CACHE
