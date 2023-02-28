@@ -88,6 +88,14 @@ sudo sed -i -e "s^GRUB_DISABLE_OS_PROBER=false^GRUB_DISABLE_OS_PROBER=true^g" /e
 # apply change
 sudo grub-mkconfig
 
+echo " add user env var for cron    "  
+echo "------------------------------"
+# Cronjobs are used to schedule maintenance tasks for backups, system cleanup and drive maintenance. These tasks require root. Root cronjob is used.
+# FileRun also has maintenance tasks and scheduled notifications. Filerun or any other service should never be run as root, otherwise no FileRun user can delete folders (because items like thumbnails can be created and owned by root)
+# Linux wants you to run each cronjob in different crontabs per user. However for a homeserver a single overview of cronjobs would be preferred.
+# To run the FileRun commands as the regular user, we add an env variable for that user to the only env that is accessible by root cronjobs: 
+sudo sh -c "echo LOGUSER=${USER} >> /etc/environment" 
+
 echo "  Add filemanager bookmarks   "
 echo "------------------------------"
 # Add CLI to Panel Favourites
