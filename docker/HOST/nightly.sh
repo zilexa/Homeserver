@@ -24,7 +24,8 @@ python3 ${SCRIPTDIR}/mediacleaner/media_cleaner.py |& tee -a ${SCRIPTDIR}/logs/m
 # FileRun - maintenance
 # ---------------------
 # Cleanup non-existing paths, cleanup >30 day old trash, index files created outside FileRun, read metadata  and generate thumbs of such files
-su ${USER} -c ${SCRIPTDIR}/filerun.sh
+# Do not run filerun as root. 
+su -l ${LOGUSER} -c '/usr/bin/bash ${SCRIPTDIR}/filerun.sh'
 
 
 # SUBVOLUMES BACKUP  
