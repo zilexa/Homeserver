@@ -115,7 +115,7 @@ _Note:_
 ### Step 6 - Configure your apps & services
 The Docker guide (step 3) explains how to access your services. Configuring & using your services is not covered by this guide. 
 The overview of Docker applications below will contain some foldable sections with hints. 
-[Overview of Docker Apps](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md) contains direct links to the documentation or homepage of each Docker app. 
+[Configure Apps & Services](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md) contains direct links to the documentation or homepage of each Docker app. 
 
 ***
 
