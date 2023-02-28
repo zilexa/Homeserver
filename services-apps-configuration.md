@@ -123,6 +123,7 @@ _Client configuration_
 - Required configuration: walk through the Control Panel and personalize at will. 
 - In `Thumbs and Previews` enable all options except LibreOffice and hit "Check version", output should be green. 
 - In `Plugins`, enable what you need, disable overlapping stuff that you do not need. In `defaults` it is recommended to use `Office web viewer` for Office documents instead of alternatives.
+- In `E-mail` disable "instant notifications" to prevent users from being flooded with hundreds of emails when shared files are being downloaded. See [Maintenance & Scheduling](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks#step-6-schedule-nightly-and-monthly) how notifications will be handled through cronjob scheduling. 
 - OnlyOffice DocumentServer unfortunately does not work properly, otherwise you could configure OnlyOffice as default to edit office documents (having your own google docs/office online alternative!). 
 
 **How to sync devices, external users laptops**
