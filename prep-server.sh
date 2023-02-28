@@ -301,10 +301,10 @@ wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa
 echo "               mediacleaner                 "
 echo "--------------------------------------------"
 mkdir -p $HOME/docker/HOST/mediacleaner
-wget -O $HOME/docker/HOST/mediacleaner/media_cleaner.py https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner.py
-wget -O $HOME/docker/HOST/mediacleaner/media_cleaner_config_defaults.py https://raw.githubusercontent.com/terrelsa13/media_cleaner/master/media_cleaner_config_defaults.py
+wget -O $HOME/docker/HOST/mediacleaner/mediacleaner.py https://raw.githubusercontent.com/terrelsa13/MUMC/MUMC_v4-BETA/mumc.py
+wget -O $HOME/docker/HOST/mediacleaner/mumc_config_defaults.py https://raw.githubusercontent.com/terrelsa13/MUMC/MUMC_v4-BETA/mumc_config_defaults.py
 # make it executable
-chmod +x $HOME/docker/HOST/mediacleaner/media_cleaner.py
+chmod +x $HOME/docker/HOST/mediacleaner/mediacleaner.py
 # install required dependency
 sudo pamac install --no-confirm python-dateutil
 
