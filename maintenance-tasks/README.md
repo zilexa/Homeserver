@@ -67,16 +67,17 @@ python3 media_cleaner.py
 ### STEP 6. Schedule Nightly and Monthly
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive unneccesary emails, use `""` instead. 
 ```
-MAILTO=""
-30 5 * * * /usr/bin/bash /home/YOURUSERNAME/docker/HOST/nightly.sh
-50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/YOURUSERNAME/docker/HOST/monthly.sh
+MAILTO="youremail" #optional, will only be used if crontab itself has an error
+30 5 * * * /usr/bin/bash /home/asterix/docker/HOST/nightly.sh
+50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/asterix/docker/HOST/monthly.sh
+*/5 * * * * su -l ${LOGUSER} -c 'docker exec -w /var/www/html/cron filerun php email_notifications.php files.obelix.cloud'
 ```
 Note this means:
-- Nightly runs at 5.30 AM every day.
-- Monthly runs every first Sunday of the month at 5.50AM. 
-- Feel free to change the schedule. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today). 
-- If Nightly happens to still be running while Monthly is executed, Monthly pauses until Nightly is done (see how the scripts start and end).  
+- Nightly runs at 5.30 AM every day. Monthly runs every first Sunday of the month at 5.50AM. 
+  - Feel free to change the schedule. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today). 
+  - If Nightly happens to still be running while Monthly is executed, Monthly pauses until Nightly is done (see how the scripts start and end).  
 <sub>The Nightly script creates a file "tasks-running" and deletes the file when the script is finished. The Monthly script checks if such a file exists, waits for it to disappear, then starts running its tasks :). </sub>
+- See FileRun in [Configure Apps & Services](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md), the recommendation is to disable notifications to prevent users from being overfloaded with notifications for each file download/upload. For example, if someone downloads a folder with 1500 files, hundreds of emails could be sent out. With this task, notifications will only be sent out every 5 minutes. FileRun (and any other docker service) should never be run as root. <sub>This is why [the prep-server.sh file creates ${LOGUSER} env variable](https://github.com/zilexa/Homeserver/blob/8d422616bda84ef976ef60693f49335c527bd7f8/prep-server.sh#L91), because root cronjobs operate in a limited environment without variables that point to the regular user.</sub>
 
 #### Optional: change frequency of snapshots/backups
 - If you want to create snapshots and backups more frequently: move the single `SUBVOLUMES SNAPSHOTS & BACKUPS` command from the `nightly.sh` script to crontab and set a schedule like the above but more frequently, like every 6 hours. 
