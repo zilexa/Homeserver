@@ -77,10 +77,6 @@ echo "______________________________________________________"
 echo "                     SYSTEM CONFIG                    "
 echo "______________________________________________________"
 
-echo " Add useful items to App Menu "
-echo "------------------------------"
-gsettings set org.gnome.shell.extensions.arcmenu pinned-app-list "['ONLYOFFICE Desktop Editors', '', 'org.onlyoffice.desktopeditors.desktop', 'LibreOffice Writer', '', 'libreoffice-writer.desktop', 'LibreOffice Calc', '', 'libreoffice-calc.desktop', 'LibreOffice Impress', '', 'libreoffice-impress.desktop', 'Document Scanner', '', 'simple-scan.desktop', 'Text Editor', '', 'pluma.desktop', 'Calculator', '', 'org.gnome.Calculator.desktop', 'digiKam', '', 'org.kde.digikam.desktop', 'Pinta Image Editor', '', 'pinta.desktop', 'GNU Image Manipulation Program', '', 'gimp.desktop', 'Strawberry', '', 'org.strawberrymusicplayer.strawberry.desktop', 'Audacity', '', 'audacity.desktop', 'LosslessCut', '', 'losslesscut-bin.desktop', 'HandBrake', '', 'fr.handbrake.ghb.desktop', 'BleachBit', '', 'org.bleachbit.BleachBit.desktop', 'Tweaks', '', 'org.gnome.tweaks.desktop', 'Extension Manager', '', 'com.mattjakeman.ExtensionManager.desktop', 'Add/Remove Software', '', 'org.manjaro.pamac.manager.desktop', 'System Monitor', '', 'gnome-system-monitor.desktop', 'Disks', '', 'org.gnome.DiskUtility.desktop']"
-
 echo "      disable os-prober       "  
 echo "------------------------------"
 # this prevents docker container volumes to be falsely recognized as host system OS and added to boot menu. See https://wiki.archlinux.org/title/GRUB#Detecting_other_operating_systems
@@ -95,6 +91,16 @@ echo "------------------------------"
 # Linux wants you to run each cronjob in different crontabs per user. However for a homeserver a single overview of cronjobs would be preferred.
 # To run the FileRun commands as the regular user, we add an env variable for that user to the only env that is accessible by root cronjobs: 
 sudo sh -c "echo LOGUSER=${USER} >> /etc/environment" 
+
+echo " allow Bleachbit to run as admin from commandline    "  
+echo "------------------------------"
+# Bleachbit CLI is nice but has an issue, it launches (hidden) the UI, which fails on Wayland. See here: 
+# To allow it to work, we need to enable X11 Forwarding:
+sudo sed -i -e "s^#X11Forwarding no^X11Forwarding no^g" /etc/ssh/sshd_config
+
+echo " Add useful items to App Menu "
+echo "------------------------------"
+gsettings set org.gnome.shell.extensions.arcmenu pinned-app-list "['ONLYOFFICE Desktop Editors', '', 'org.onlyoffice.desktopeditors.desktop', 'LibreOffice Writer', '', 'libreoffice-writer.desktop', 'LibreOffice Calc', '', 'libreoffice-calc.desktop', 'LibreOffice Impress', '', 'libreoffice-impress.desktop', 'Document Scanner', '', 'simple-scan.desktop', 'Text Editor', '', 'pluma.desktop', 'Calculator', '', 'org.gnome.Calculator.desktop', 'digiKam', '', 'org.kde.digikam.desktop', 'Pinta Image Editor', '', 'pinta.desktop', 'GNU Image Manipulation Program', '', 'gimp.desktop', 'Strawberry', '', 'org.strawberrymusicplayer.strawberry.desktop', 'Audacity', '', 'audacity.desktop', 'LosslessCut', '', 'losslesscut-bin.desktop', 'HandBrake', '', 'fr.handbrake.ghb.desktop', 'BleachBit', '', 'org.bleachbit.BleachBit.desktop', 'Tweaks', '', 'org.gnome.tweaks.desktop', 'Extension Manager', '', 'com.mattjakeman.ExtensionManager.desktop', 'Add/Remove Software', '', 'org.manjaro.pamac.manager.desktop', 'System Monitor', '', 'gnome-system-monitor.desktop', 'Disks', '', 'org.gnome.DiskUtility.desktop']"
 
 echo "  Add filemanager bookmarks   "
 echo "------------------------------"
