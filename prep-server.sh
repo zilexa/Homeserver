@@ -94,7 +94,7 @@ sudo sh -c "echo LOGUSER=${USER} >> /etc/environment"
 
 echo " allow Bleachbit to run as admin from commandline    "  
 echo "------------------------------"
-# Bleachbit CLI is nice but has an issue, it launches (hidden) the UI, which fails on Wayland. See here: 
+# Bleachbit CLI is nice but has an issue, it launches (hidden) the UI, which fails on Wayland. See here: https://github.com/bleachbit/bleachbit/issues/919
 # To allow it to work, we need to enable X11 Forwarding:
 sudo sed -i -e "s^#X11Forwarding no^X11Forwarding no^g" /etc/ssh/sshd_config
 
