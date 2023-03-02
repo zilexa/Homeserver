@@ -17,6 +17,7 @@ printf "\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 
 # CLEANUP - OS, local apps, user profile 
 # --------------------------------------
+echo -e "\n____________SYSTEM CLEANUP____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\nBLEACHBIT - Cleanup of OS, local apps and user profile..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 touch ${SCRIPTDIR}/logs/bleachbit.tmp
 # Run bleachbit for root user to clean OS temp files
@@ -27,25 +28,24 @@ su -l ${LOGUSER} -c 'bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/blea
 tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.tmp
 rm ${SCRIPTDIR}/logs/bleachbit.tmp
 
-# CLEANUP - unused docker images and volumes 
+# DOCKER - updates
+# --------------------------------------------------------------
+docker-compose pull && docker-compose up -d --remove-orphans # not adding to email body as it would be a lot
+echo -e "\n____________DOCKER IMAGES____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\nUPDATED images, recreated all containers, cleaned up orphaned containers \n" >> ${SCRIPTDIR}/logs/monthly.tmp
+
+# DOCKER - cleanup
 # ----------------------------------------
-echo -e "\nCLEANUP of unused docker images..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\n CLEANUP unused docker images..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 docker image prune -a -f |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
-echo -e "\nCLEANUP of unused docker volumes..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\nCLEANUP unused docker volumes..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 docker volume prune -f |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\nFor a full cleanup, remember to regularly run this command after verifying all your containers are running: docker system prune --all --volumes -f\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 
 
-# Pull new images + add notifications to email body (via Pullio) then update containers with new images and remove orphaned containers
-# --------------------------------------------------------------
-echo -e "\nDOCKER UPDATES\n" >> ${SCRIPTDIR}/logs/monthly.tmp
-${SCRIPTDIR}/updater/pullio |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
-echo -e "\nPull new images, recreate all containers, clean up orphans \n" >> ${SCRIPTDIR}/logs/monthly.tmp
-docker-compose pull && docker-compose up -d --remove-orphans
-
-
 # Run btrfs scrub monthly
 # -----------------------
+echo -e "\n____________FILESTYSTEMS____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\n FILESTEM housekeeping.." >> ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\nScrub btrfs filesystems..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 btrfs scrub start -Bd -c 2 -n 4 /dev/nvme0n1p2 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
@@ -62,6 +62,7 @@ btrfs balance start -dusage=85 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/mon
 
 # Update system
 # -----------------------
+echo -e "\n____________SYSTEM UPDATE____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 # Query mirrors servers (on this continent only) to ensure updates are downloaded via the fastest HTTPS server
 pacman-mirrors --continent --api -P https >> ${SCRIPTDIR}/logs/monthly.tmp
 # Perform update, force refresh of update database files
