@@ -64,13 +64,13 @@ btrfs balance start -dusage=85 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/mon
 # -----------------------
 echo -e "\n____________SYSTEM UPDATE____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 # Query mirrors servers (on this continent only) to ensure updates are downloaded via the fastest HTTPS server
-pacman-mirrors --continent --api -P https >> ${SCRIPTDIR}/logs/monthly.tmp
+pacman-mirrors --continent --api -P https
 # Perform update, force refresh of update database files
-pamac update --force-refresh >> ${SCRIPTDIR}/logs/monthly.tmp
+pamac update --force-refresh --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 # Remove orphaned packages
-pamac remove -o >> ${SCRIPTDIR}/logs/monthly.tmp
+pamac remove -o --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 # Clean packages cache
-pamac clean --keep 3 >> ${SCRIPTDIR}/logs/monthly.tmp
+pamac clean --keep 3 --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 
 
 # Send email
