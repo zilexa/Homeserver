@@ -68,8 +68,8 @@ python3 mediacleaner.py
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive unneccesary emails, use `""` instead. 
 ```
 MAILTO="youremail" #optional, will only be used if crontab itself has an error
-30 5 * * * /usr/bin/bash /home/asterix/docker/HOST/nightly.sh
-50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/asterix/docker/HOST/monthly.sh
+30 5 * * * /usr/bin/bash /home/$LOGUSER/docker/HOST/nightly.sh
+50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/$LOGUSER/docker/HOST/monthly.sh
 */5 * * * * su -l ${LOGUSER} -c 'docker exec -w /var/www/html/cron filerun php email_notifications.php files.obelix.cloud'
 ```
 Note this means:
