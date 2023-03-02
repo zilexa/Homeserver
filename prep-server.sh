@@ -328,37 +328,12 @@ mkdir -p $HOME/docker/HOST/archiver
 wget -O $HOME/docker/HOST/archiver/archiver.sh https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/archiver/archiver.sh
 wget -O $HOME/docker/HOST/archiver/archiver_exclude.txt https://github.com/zilexa/Homeserver/blob/master/docker/HOST/archiver/archiver_exclude.txt
 
-echo "Tools to auto-notify or auto-update docker images & containers"
+echo "Tool to notify when new docker images are available"
 echo "--------------------------------------------------------------"
 # PULLIO - to auto-update
 mkdir -p $HOME/docker/HOST/updater
 sudo curl -fsSL "https://raw.githubusercontent.com/hotio/pullio/master/pullio.sh" -o $HOME/docker/HOST/updater/pullio
 sudo chmod +x $HOME/docker/HOST/updater/pullio
-sudo ln -s $HOME/docker/HOST/updater/pullio /usr/local/bin/pullio
-# DIUN - to auto-notify
-
-# Get config file
-sudo mkdir -p $HOME/docker/HOST/updater/diun
-sudo tee -a $HOME/docker/HOST/updater/diun/diun.yml &>/dev/null << EOF
-notif:
-  mail:
-    host: 
-    port: 587
-    ssl: false
-    insecureSkipVerify: true
-    username: 
-    password: 
-    from: 
-    to: 
-
-providers:
-  docker:
-    endpoint: "unix:///var/run/docker.sock"
-    watchByDefault: true
-    watchStopped: true
-EOF
-sudo ln -s /etc/diun/diun.yml
-sudo chmod 644 /etc/diun/diun.yml
 
 
 echo "______________________________________________________"
