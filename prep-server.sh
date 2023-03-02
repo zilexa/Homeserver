@@ -77,6 +77,11 @@ echo "______________________________________________________"
 echo "                     SYSTEM CONFIG                    "
 echo "______________________________________________________"
 
+echo "      limit log filesize      "  
+echo "------------------------------"
+# this prevents docker container volumes to be falsely recognized as host system OS and added to boot menu. See https://wiki.archlinux.org/title/GRUB#Detecting_other_operating_systems
+sudo sed -i -e "s^#SystemMaxUse=^SystemMaxUse=50M^g" /etc/systemd/journald.conf
+
 echo "      disable os-prober       "  
 echo "------------------------------"
 # this prevents docker container volumes to be falsely recognized as host system OS and added to boot menu. See https://wiki.archlinux.org/title/GRUB#Detecting_other_operating_systems
