@@ -259,7 +259,7 @@ services:
       - filerun-db
     volumes:
       - $DOCKERDIR/filerun/html:/var/www/html
-      - userdata/users:/user-files
+      - userdata:/user-files
     labels:
       caddy: files.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
