@@ -143,14 +143,14 @@ _Client configuration_
 
 ### _Remote Desktop Web Client [Guacamole](https://github.com/MaxWaldorf/guacamole)_
 >Access any desktop (your server or your parents laptop) through RDP via your browser (mobile browsers supported as well) after connecting to VPN.  \
->Instead of using an app, you can simply go to https://desktop.yourdomain.com and use the web application to login to the desktop of any server/desktop/laptop that has RDP configured.  \
+>Instead of using an app, you can simply go to https://remote.yourdomain.com and use the web application to login to the desktop of any server/desktop/laptop that has RDP configured.  \
 >You still need to be connected to your server VPN.  \
 >You can connect all computers that you want to support (like, parents) to your server VPN. Then, when they need help, you simply open a browser, login to Guacamole to see and use their desktop.  
 
 - Decide whether you need the web client, since you can just as well use desktop applications (Remmina on Linux, Mac and Android, Windows RDP in Windows 10/11). 
 - If you do need it, decide whether or not you want to expose the client to the internet or only access the client through LAN and VPN. Remember, to actually connect to your server you will need to connect to VPN anyway. 
   - Since 18/07/2022 the docker-compose.yml example exposes it by default + enables 2FA for this web app. 
-  - If you do not want to expose it, remove the 2 caddy labels (or replace them for local proxy, to access via http://desktop.o/ within your LAN/VPN) and remove the `TOTP` in the Extensions section. 
+  - If you do not want to expose it, remove the 2 caddy labels (or replace them for local proxy, to access via http://remote.o/ within your LAN/VPN) and remove the `TOTP` in the Extensions section. 
 
 How to Configure Guacamole?
 - login with guacadmin/guacadmin. 
@@ -170,7 +170,7 @@ How to Configure Guacamole?
 _Series/Movies/Subtitles/Music via Sonarr/Radarr/Bazarr/Lidarr and torrentsites proxy Prowlarr - [Documentation](https://wiki.servarr.com/Docker_Guide)_
 >A visual, user-friendly tool allowing you to search & add your favourite TV shows (Sonarr) or Movies (Radarr) and subtitles (Bazarr), see a schedule of when the next episodes will air and completely take care of obtaining the requires files (by searching magnets/torrents via Jackett, a proxy for all torrentsites) and organising them, all in order to get a full-blown Nextflix experience served by JellyFin.| For years I have messed with FlexGet, but it can't beat Sonarr.   
 - [BLACK app for Android](https://play.google.com/store/apps/details?id=com.advice.drone): all-in-1 app allows you to perform most popular actions in your "\*arr" apps.
-- [NZB360 app for Android](https://play.google.com/store/apps/details?id=com.advice.drone): all-in-1 app allows you to discover new content, find/add/remove content, view status and manage all your "\*arr" services and downloads in 1 single app. User friendly and completely replaces the need to access your web apps. 
+- [NZB360 app for Android](https://play.google.com/store/apps/details?id=com.kevinforeman.nzb360): all-in-1 app allows you to discover new content, find/add/remove content, view status and manage all your "\*arr" services and downloads in 1 single app. User friendly and completely replaces the need to access your web apps. 
 
 \
 _Media server via Jellyfin - [documentation](https://jellyfin.org/)_
