@@ -4,7 +4,7 @@
 # Empty trash >30 days old files
 docker exec -w /var/www/html/cron filerun php empty_trash.php -days 30
 # Clear db of files/folders that no longer exist
-docker exec -w /var/www/html/cron filerun php paths_cleanup.php --deep
+docker exec -w /var/www/html/cron filerun php paths_cleanup.php --deep --agressive -remove-hidden
 # Index filenames for files created outside FileRun
 docker exec -w /var/www/html/cron filerun php index_filenames.php /user-files true
 # Read metadata of files created outside FileRun, the UI adjusts to photos (GPS), videos etc and has specific options per filetype
