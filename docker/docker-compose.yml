@@ -1,4 +1,4 @@
-## UPDATED: 2023-01-07 (January 7th)
+## UPDATED: 2023-03-20
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -45,8 +45,8 @@ services:
       - CADDY_INGRESS_NETWORKS=web-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $DOCKERDIR/caddy/caddy_data:/data
-      - $DOCKERDIR/caddy/config:/config
+      - $DOCKERDIR/web-proxy/caddy_data:/data
+      - $DOCKERDIR/web-proxy/config:/config
     extra_hosts:
       - host.docker.internal:host-gateway
     ports:
@@ -121,6 +121,20 @@ services:
     labels:
       plugsy.name: CastBlock
       plugsy.parents: AdGuard
+##____________________ Unifi controller [NETWORK/Unifi-controller]
+  unifi-controller:
+    image: jacobalberty/unifi
+    container_name: unifi-controller
+    restart: "no" # " " is required otherwise this is interpreted as boolean instead of string
+    volumes:
+      - $DOCKERDIR/unifi/data:/unifi/data # required to not loose your configuration
+    environment:
+      TZ: $TZ
+    ports:
+      - 3478:3478/udp # STUN - Required
+      - 8080:8080/tcp # Device/ controller comm. - Required
+      - 8443:8443/tcp # Controller GUI/API as seen in a web browser - Required
+      - 10001:10001/udp # Access Point discovery - Recommended
 ##
 ##_________ACCESS_______
 ##________________________ VPN-portal [ACCESS/vpn]
@@ -220,7 +234,7 @@ services:
       - $DOCKERDIR/vaultwarden:/data
     environment:
       WEBSOCKET_ENABLED: true
-      DOMAIN: https://vault.$DOMAIN
+      DOMAIN: vault.$DOMAIN
       SIGNUPS_ALLOWED: false
       ADMIN_TOKEN: $VAULTWARDENTOKEN
     labels:
@@ -248,7 +262,7 @@ services:
     environment:
       FR_DB_HOST: filerun-db
       FR_DB_PORT: 3306
-      FR_DB_NAME: filerundb
+      FR_DB_NAME: filerun-db
       FR_DB_USER: $USER
       FR_DB_PASS: $PW_DB
       APACHE_RUN_USER: $USER
@@ -259,11 +273,12 @@ services:
       - filerun-db
     volumes:
       - $DOCKERDIR/filerun/html:/var/www/html
-      - userdata:/user-files
+      - $DATAPOOL/users:/user-files
+      - /user-files/snapshots/         # This excludes the $DATAPOOL/users/snapshots folder on your host. Otherwise Filerun will index all those snapshots.
     labels:
-      caddy: files.$DOMAIN
+      caddy: drive.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
-      caddy.reverse_proxy.header_up: "Host files.$DOMAIN"
+      caddy.reverse_proxy.header_up: "Host drive.$DOMAIN"
       # Required extra headers
       caddy.file_server: ""                                         # required for fileservers
       caddy.encode: gzip                                            # required for fileservers
@@ -272,7 +287,7 @@ services:
       caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
       caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
       plugsy.name: FileRun
-      plugsy.link: https://files.$DOMAIN
+      plugsy.link: https://drive.$DOMAIN
       plugsy.category: Cloud
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
@@ -285,14 +300,12 @@ services:
       MYSQL_ROOT_PASSWORD: $PW_DB
       MYSQL_USER: $USER
       MYSQL_PASSWORD: $PW_DB
-      MYSQL_DATABASE: filerundb
+      MYSQL_DATABASE: filerun-db
     volumes:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
     labels:
       plugsy.name: FileRun Database
       plugsy.parents: FileRun
-##
-##
 ##________MEDIA________
 ##_____________________ Jellyfin [MEDIA/Library] 
   jellyfin:
@@ -357,7 +370,7 @@ services:
       USER: $VPN_USER_PIA
       PASS: $VPN_PW_PIA
       #KEEPALIVE: 25
-      VPNDNS: $VPNDNS
+      VPNDNS: 192.168.88.1
       PORT_FORWARDING: 1
       PORT_PERSIST: 0
       PORT_SCRIPT: /pia-shared/updateport-qb.sh
@@ -537,14 +550,6 @@ services:
       plugsy.link: http://lidarr.o/
       plugsy.category: Media
       org.hotio.pullio.update: true
-
-#
-volumes:
-  userdata:
-    driver_opts:
-      type: local
-      device: /mnt/pool/users
-      o: bind
 #
 networks:
   web-proxy:
