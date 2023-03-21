@@ -304,7 +304,48 @@ services:
     volumes:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
     labels:
-      plugsy.name: FileRun Database
+      plugsy.name: FileRun database
+      plugsy.parents: FileRun
+##____________________ OnlyOffice for Filerun [CLOUD/FileRun/office]
+  office:
+    container_name: office
+    image: onlyoffice/documentserver
+    networks: 
+      - web-proxy
+      - filerun
+    restart: always
+    environment:
+      JWT_ENABLED: true
+      JWT_SECRET: $ONLYOFFICEJWT
+      DB_HOST: office-db
+      DB_PORT: 5432
+      DB_NAME: office-db
+      DB_USER: $USER
+      DB_PWD:  $PW_DB
+    volumes:
+      - $DOCKERDIR/onlyoffice/data:/var/www/onlyoffice/Data
+      - $DOCKERDIR/onlyoffice/log:/var/log/onlyoffice
+      - /usr/share/fonts
+    labels:
+      caddy: office.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.encode: gzip
+      plugsy.name: OnlyOffice
+      plugsy.parents: FileRun
+  office-db:
+    container_name: office-db
+    image: postgres
+    networks:
+      - filerun
+    restart: always
+    environment:
+      POSTGRES_DB: office-db
+      POSTGRES_USER: $USER
+      POSTGRES_PASSWORD: $PW_DB
+    volumes:
+      - $DOCKERDIR/onlyoffice/db:/var/lib/postgresql
+    labels:
+      plugsy.name: OnlyOffice database
       plugsy.parents: FileRun
 ##________MEDIA________
 ##_____________________ Jellyfin [MEDIA/Library] 
