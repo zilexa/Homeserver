@@ -64,7 +64,7 @@ btrfs balance start -dusage=85 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/m
 
 # Report free space 
 # -----------------------------------------------------
-echo "____________STORAGE REPORT____________" 
+echo "_________STORAGE STATUS REPORT________" 
 echo "___________MEDIA filesystem___________"
 touch ${SCRIPTDIR}/logs/storagereport.tmp
 sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/storagereport.tmp
