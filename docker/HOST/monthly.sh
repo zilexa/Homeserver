@@ -7,12 +7,26 @@ while [[ -f ${SCRIPTDIR}/running-tasks ]] ; do
    sleep 10 ;
 done
 
+
 # Create monthly email body, add title and current date
 # -----------------------------------------------------
 touch ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\nMONTHLY HOUSEKEEPING TASKS\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 date >> ${SCRIPTDIR}/logs/monthly.tmp
 printf "\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+
+
+# Report free space 
+# -----------------------------------------------------
+echo "____________STORAGE REPORT____________" 
+echo "________________media_________________"
+sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/monthly.tmp
+sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/monthly.tmp
+echo "________________users_________________"
+sudo df -h /dev/sdb >> ${SCRIPTDIR}/logs/monthly.tmp
+sudo btrfs fi usage /mnt/pool/users | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/monthly.tmp
+echo "____________usage per user_____________"
+sudo btrfs filesystem usage /mnt/pool/users/* >> ${SCRIPTDIR}/logs/monthly.tmp
 
 
 # CLEANUP - OS, local apps, user profile 
