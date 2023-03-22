@@ -28,17 +28,17 @@ python3 ${SCRIPTDIR}/mediacleaner/mediacleaner.py |& tee -a ${SCRIPTDIR}/logs/me
 su -l ${LOGUSER} -c '/usr/bin/bash ${SCRIPTDIR}/filerun.sh'
 
 
-# SUBVOLUMES BACKUP  
+# SUBVOLUMES BACKUP  - use this section if your backup drives are HDDs to reduce number of spinups (by performing monthly maintenance immediately after creating backups)
 # -----------------
 /usr/bin/bash ${SCRIPTDIR}/btrbk/btrbk-mail.sh
-# Perform monthtly maintenance on backup disk
-sudo run-if-today L zo && mount /mnt/drives/backup1
-sudo run-if-today L zo && sleep 10
-# set the correct dev/sdX path for your backup1 drive
-sudo run-if-today L zo && btrfs scrub start -Bd -c 2 -n 4 /dev/sdc |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo run-if-today L zo && btrfs balance start -dusage=10 -musage=5 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo run-if-today L zo && btrfs balance start -v -dusage=20 -musage=10 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
-sudo run-if-today L zo && umount /mnt/drives/backup1
+## Perform monthtly maintenance on backup disk
+#sudo run-if-today L zo && mount /mnt/drives/backup1
+#sudo run-if-today L zo && sleep 10
+## set the correct dev/sdX path for your backup1 drive
+#sudo run-if-today L zo && btrfs scrub start -Bd -c 2 -n 4 /dev/sdc |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+#sudo run-if-today L zo && btrfs balance start -dusage=85 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+#sudo run-if-today L zo && btrfs balance start -v -dusage=85 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.txt
+#sudo run-if-today L zo && umount /mnt/drives/backup1
 
 # Only if you still use Scrutiny
 # S.M.A.R.T. disk health scan on ALL disks (now that Backup1 is still spinning)
