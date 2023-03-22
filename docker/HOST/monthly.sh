@@ -7,12 +7,9 @@ while [[ -f ${SCRIPTDIR}/running-tasks ]] ; do
    sleep 10 ;
 done
 
-
 # Create monthly email body, add title and current date
 # -----------------------------------------------------
-echo -e "\nMONTHLY HOUSEKEEPING TASKS\n" > ${SCRIPTDIR}/logs/monthly.tmp
-date >> ${SCRIPTDIR}/logs/monthly.tmp
-printf "\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\n_____MONTHLY HOUSEKEEPING TASKS_____" > ${SCRIPTDIR}/logs/monthly.tmp
 
 
 # CLEANUP - OS, local apps, user profile 
@@ -63,21 +60,24 @@ btrfs balance start -dusage=85 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/mon
 btrfs balance start -dusage=85 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 
 
-# Report free space 
+# Storage Status Report
 # -----------------------------------------------------
-echo "_________STORAGE STATUS REPORT________" > ${SCRIPTDIR}/logs/storagereport.tmp
-echo "___________MEDIA filesystem___________" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-echo "___________USERS filesystem____________" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo df -h /dev/sdb >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\n\n_________STORAGE STATUS REPORT________" > ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n               ~~~ STORAGE PER USER ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo btrfs filesystem du -s /mnt/pool/users/* >> ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n                ~~~ USERS filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
 sudo btrfs fi usage /mnt/pool/users | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-echo "__________backup filesystem____________" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/monthly.tmp
+sudo df -h /dev/sdb >> ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n                ~~~ MEDIA filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
 sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-umount /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
-echo "___________STORAGE PER USER_____________" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo btrfs filesystem usage /mnt/pool/users/* >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n               ~~~ BACKUPS filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/storagereport.tmp
+umount /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n                   ~~~ OS filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo btrfs fi usage / | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo df -h /dev/nvme0n1p2 >> ${SCRIPTDIR}/logs/storagereport.tmp
 
 
 # Update system
@@ -92,19 +92,21 @@ pamac remove -o --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 # Clean packages cache
 pamac clean --keep 3 --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 # Check if a restart is needed, add this notification to the top of the email
-echo -e "\nOBELIX MOHTHLY STATUS REPORT\n" > ${SCRIPTDIR}/logs/monthlymail.tmp
+echo -n "OBELIX MOHTHLY STATUS REPORT - " > ${SCRIPTDIR}/logs/monthlymail.tmp
 date >> ${SCRIPTDIR}/logs/monthlymail.tmp
 needrestart >> ${SCRIPTDIR}/logs/monthlymail.tmp
+
 
 # Send email
 # ---------------------------------
 cat ${SCRIPTDIR}/logs/storagereport.tmp >> ${SCRIPTDIR}/logs/monthlymail.tmp
 cat ${SCRIPTDIR}/logs/monthly.tmp >> ${SCRIPTDIR}/logs/monthlymail.tmp
-mail -s "Obelix server - monthly status and maintenance" default < ${SCRIPTDIR}/logs/monthlymail.tmp
+mail -s "Obelix server - monthly report" default < ${SCRIPTDIR}/logs/monthlymail.tmp
 rm ${SCRIPTDIR}/logs/storagereport.tmp
 rm ${SCRIPTDIR}/logs/monthly.tmp
 
-# Append email to monthly logfile and delete email
+
+# Append email to monthly logfile and delete email body
 # ------------------------------------------------
 touch ${SCRIPTDIR}/logs/monthly.log # first time only
 sudo cat ${SCRIPTDIR}/logs/monthlymail.tmp >> ${SCRIPTDIR}/logs/monthly.log
