@@ -62,6 +62,7 @@ btrfs balance start -dusage=85 /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/mon
 btrfs balance start -dusage=85 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 btrfs balance start -dusage=85 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 
+
 # Report free space 
 # -----------------------------------------------------
 echo "_________STORAGE STATUS REPORT________" 
@@ -72,12 +73,12 @@ sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/lo
 echo "___________USERS filesystem____________"
 sudo df -h /dev/sdb >> ${SCRIPTDIR}/logs/monthly.tmp
 sudo btrfs fi usage /mnt/pool/users | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-echo "___________STORAGE PER USER_____________"
-sudo btrfs filesystem usage /mnt/pool/users/* >> ${SCRIPTDIR}/logs/storagereport.tmp
 echo "__________backup filesystem____________"
 sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/monthly.tmp
 sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-umount /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/storagereport.tmp
+umount /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
+echo "___________STORAGE PER USER_____________"
+sudo btrfs filesystem usage /mnt/pool/users/* >> ${SCRIPTDIR}/logs/storagereport.tmp
 
 
 # Update system
