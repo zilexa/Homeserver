@@ -251,44 +251,6 @@ services:
       plugsy.link: https://vault.$DOMAIN
       plugsy.category: Cloud
 ##
-##____________________ FileRun [CLOUD/FileRun]
-  filerun:
-    container_name: filerun
-    image: filerun/filerun
-    restart: always
-    networks: 
-      - web-proxy
-      - filerun
-    environment:
-      FR_DB_HOST: filerun-db
-      FR_DB_PORT: 3306
-      FR_DB_NAME: filerun-db
-      FR_DB_USER: $USER
-      FR_DB_PASS: $PW_DB
-      APACHE_RUN_USER: $USER
-      APACHE_RUN_USER_ID: $PUID
-      APACHE_RUN_GROUP: $USER
-      APACHE_RUN_GROUP_ID: $PGID
-    depends_on:
-      - filerun-db
-    volumes:
-      - $DOCKERDIR/filerun/html:/var/www/html
-      - $DATAPOOL/users:/user-files
-      - /user-files/snapshots/         # This excludes the $DATAPOOL/users/snapshots folder on your host. Otherwise Filerun will index all those snapshots.
-    labels:
-      caddy: drive.$DOMAIN
-      caddy.reverse_proxy: "{{upstreams 80}}"
-      caddy.reverse_proxy.header_up: "Host drive.$DOMAIN"
-      # Required extra headers
-      caddy.file_server: ""                                         # required for fileservers
-      caddy.encode: gzip                                            # required for fileservers
-      caddy.header.Strict-Transport-Security: '"max-age=15768000;"' # Recommended security hardening for fileservers
-      caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
-      caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
-      caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
-      plugsy.name: FileRun
-      plugsy.link: https://drive.$DOMAIN
-      plugsy.category: Cloud
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
     container_name: filerun-db
@@ -317,14 +279,16 @@ services:
     environment:
       JWT_ENABLED: true
       JWT_SECRET: $ONLYOFFICEJWT
+      AMQP_URI: amqp://office-rabbitmq:5672
       DB_HOST: office-db
-      DB_PORT: 5432
+      DB_PORT: 3306
+      DB_TYPE: mariadb
       DB_NAME: office-db
       DB_USER: $USER
       DB_PWD:  $PW_DB
     volumes:
-      - $DOCKERDIR/onlyoffice/data:/var/www/onlyoffice/Data
-      - $DOCKERDIR/onlyoffice/log:/var/log/onlyoffice
+      - $DOCKERDIR/filerun/office/data:/var/www/onlyoffice/Data
+      - $DOCKERDIR/filerun/office/log:/var/log/onlyoffice
       - /usr/share/fonts
     labels:
       caddy: office.$DOMAIN
@@ -332,18 +296,30 @@ services:
       caddy.encode: gzip
       plugsy.name: OnlyOffice
       plugsy.parents: FileRun
+  office-rabbitmq:
+    container_name: office-rabbitmq
+    image: rabbitmq
+    restart: always
+    networks:
+    - filerun
+    volumes:
+      - $DOCKERDIR/filerun/office/rabbitmq:/var/lib/rabbitmq
+    labels:
+      plugsy.name: OnlyOffice rabbitmq
+      plugsy.parents: FileRun
   office-db:
     container_name: office-db
-    image: postgres
+    image: mariadb:latest
     networks:
       - filerun
     restart: always
     environment:
-      POSTGRES_DB: office-db
-      POSTGRES_USER: $USER
-      POSTGRES_PASSWORD: $PW_DB
+      MYSQL_ROOT_PASSWORD: $PW_DB
+      MYSQL_USER: $USER
+      MYSQL_PASSWORD: $PW_DB
+      MYSQL_DATABASE: office-db
     volumes:
-      - $DOCKERDIR/onlyoffice/db:/var/lib/postgresql
+      - $DOCKERDIR/filerun/office/db:/var/lib/mysql
     labels:
       plugsy.name: OnlyOffice database
       plugsy.parents: FileRun
