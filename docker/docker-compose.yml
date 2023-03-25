@@ -194,7 +194,7 @@ services:
       caddy.reverse_proxy: "{{upstreams 8080}}"
       plugsy.name: Remote Desktop
       plugsy.link: https://remote.$DOMAIN
-      plugsy.category: Access
+      plugsy.category: Cloud
 ##
 ##________CLOUD______
 ##_____________________ Firefox Sync [CLOUD/Browser] 
@@ -252,6 +252,44 @@ services:
       plugsy.category: Cloud
 ##
 ##____________________ Filerun database [CLOUD/FileRun/db]
+##____________________ FileRun [CLOUD/FileRun]
+  filerun:
+    container_name: filerun
+    image: filerun/filerun
+    restart: always
+    networks: 
+      - web-proxy
+      - filerun
+    environment:
+      FR_DB_HOST: filerun-db
+      FR_DB_PORT: 3306
+      FR_DB_NAME: filerun-db
+      FR_DB_USER: $USER
+      FR_DB_PASS: $PW_DB
+      APACHE_RUN_USER: $USER
+      APACHE_RUN_USER_ID: $PUID
+      APACHE_RUN_GROUP: $USER
+      APACHE_RUN_GROUP_ID: $PGID
+    depends_on:
+      - filerun-db
+    volumes:
+      - $DOCKERDIR/filerun/html:/var/www/html
+      - $DATAPOOL/users:/user-files
+      - /user-files/snapshots/                # This excludes the $DATAPOOL/users/snapshots folder on your host. Otherwise Filerun will index all those snapshots.
+    labels:
+      caddy: drive.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 80}}"
+      caddy.reverse_proxy.header_up: "Host drive.$DOMAIN"
+      # Required extra headers
+      caddy.file_server: ""                                         # required for fileservers
+      caddy.encode: gzip                                            # required for fileservers
+      caddy.header.Strict-Transport-Security: '"max-age=15768000;"' # Recommended security hardening for fileservers
+      caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
+      caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
+      caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
+      plugsy.name: FileRun
+      plugsy.link: https://drive.$DOMAIN
+      plugsy.category: Cloud
   filerun-db:
     container_name: filerun-db
     image: mariadb:10.1
