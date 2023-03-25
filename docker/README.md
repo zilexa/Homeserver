@@ -63,8 +63,7 @@ You need to register these domains in AdGuard Home to get them working:. \
 - Go to http://SERVERIP:3000 and walkthrough the initial wizard. See here for tips. Then go to Filters > DNS Rewrites and add your local domains one by one, each pointing to your SERVERIP without portnumbers.
 - In your home router, replace all DNS addresses (usually under "DHCP"), only your SERVERIP should be listed (there is no such thing as a backup DNS, secondary DNS can be used anytime so remove it).
 - Now disable/enable your server network connection, check if you can access websites and refresh AdGuard page. Stats should show some activity.
-- Go to `http://go.o/`, this is your server start page! Go to Settings > Docker > Enable API, leave settings and notice all your apps are there, configure your Bookmarks at will.  
-
+- Go to `http://go.o/`, this is your server start page! It's simple, shows status of your services and allows you to access them. There are no configuration options, just the labels in your docker-compose.yml file. For a dashboard with lots of features and configuration options, consider [Dashy by Lizzy](https://github.com/Lissy93/dashy). 
 ***
 
 ## Common Docker management tasks
