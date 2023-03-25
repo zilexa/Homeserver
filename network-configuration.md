@@ -16,20 +16,21 @@ For most people, exposing only the following services via a domain is enough:
 Understand that you should only expose services online via a domain if it is absolutely necessary. 
 
 _Requirements_
+
 1. Enable dynamic DNS (dyndns) in your router and make a note of the URL. This URL points to your home IP address, even when your ISP changes it.
-    * If your router does not have this functionality, use [a free dyndns](https://freedns.afraid.org/) service. 
-3. Purchase your own domain via a domain provider. I recommend Porkbun (no affiliation).  
-4. Create subdomains via your domain provider portal for each service/application you want to expose, make sure they reflect the subdomains in your docker-compose.yml file!
-5. Configure the DNS settings with your domain provider: 
-  * an **ALIAS** dns record to your dyndns (`ALIAS - mydomain.com - mydyndnsurl`). 
-  * an **ALIAS** dns record from www to your domain (`ALIAS - www.mydomain.com - mydomain.com`).
-  * a **CNAME** dns record for _each_ subdomain, to your domain, the subdomains should reflect the ones you have in your docker-compose.yml (`CNAME - subdomain.domain.com - mydomain.com`).
-5 Configure port forwarding in your router: TCP ports 443 and 80. After you are up and running, you only need port 443 (with Porkbun). 
-6 If your router supports it, configure a pretty domain that will forward to your local IP, so that you can easily access local services in your LAN without typing IP address. 
-  * This can also be configured in Adguard Home, even if you do not use its DHCP feature!
- 
+    * If your router does not have this functionality, use [a free dyndns](https://freedns.afraid.org/) service.
+2. Purchase your own domain via a domain provider. I recommend Porkbun (no affiliation).
+3. Create subdomains via your domain provider portal for each service/application you want to expose, make sure they reflect the subdomains in your docker-compose.yml file!
+4. Configure the DNS settings with your domain provider:
+    * an **ALIAS** dns record to your dyndns (`ALIAS - mydomain.com - mydyndnsurl`).
+    * an **ALIAS** dns record from www to your domain (`ALIAS - www.mydomain.com - mydomain.com`).
+    * a **CNAME** dns record for _each_ subdomain, to your domain, the subdomains should reflect the ones you have in your docker-compose.yml (`CNAME - subdomain.domain.com - mydomain.com`).
+5. Configure port forwarding in your router: TCP ports 443 and 80. After you are up and running, you only need port 443 (with Porkbun).
+6. If your router supports it, configure a pretty domain that will forward to your local IP, so that you can easily access local services in your LAN without typing IP address.
+    * This can also be configured in Adguard Home, even if you do not use its DHCP feature!
+
  ***
- 
+
 ### Access all other services via Wireguard VPN
 Consider if you really need direct access to SSH, RDP but also download tools and Jellyfin. You can access all of them safely via VPN when you are not at home and you really need access. To be able to use Wireguard VPN: 
 
