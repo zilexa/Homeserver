@@ -1,7 +1,7 @@
 ## Maintenance Tasks & Scheduling
 
 To keep your server spinning and purring everyday like its very first day, several tasks should be executed automatically on a regular basis.  
-Below the tasks are explained. Note the order of execution has been chosen carefully. If you remove/add tasks, keep that in mind. 
+Below the tasks are explained. Note the order of execution has been chosen carefully. If you remove/add tasks, keep that in mind. Also note, depending on your setup and hardware, tasks are optional. 
 
 The prep-server.sh script has downloaded the tools and scripts to `$HOME/docker/HOST/`. Most importantly: 
 - [/docker/HOST/nightly.sh](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh)
@@ -15,7 +15,6 @@ The other folders contain the tools used and their config files.
 ## Overview of Tasks and Tools
 
 ### Tasks and Tools for NIGHTLY MAINTENANCE
-- [_Media-cleaner_](https://github.com/terrelsa13/MUMC): delete watched shows episodes/seasons and movies X days after they have been _watched_(!) highly recommended, requires much less data if you automatically delete watched content after 5-10 days! For example, a single 2TB SSD is enough for my `/mnt/pool/Media`.
 - [_Archiver_](https://github.com/trapexit/mergerfs#time-based-expiring): If you use MergerFS SSD cache: Unload SSD cache: move _Users_ files unmodified for >30 days to harddisk array (from /mnt/disks/ssd to /mnt/pool-nocache). Since `/mnt/pool-nocache` = `/mnt/pool` without the SSD, the path to the moved files stays is the same, they are still in `/mnt/pool`, they are only moved to a different underlying disk. 
     - Exceptions to this task: Keep thumbnails created by FileRun and DigiKam (photo management software) on the SSD, for performance and power consumption purposes (the HDDs won't turn on when you scroll through your photos via FileRun). 
     - Also do not move files moved to trash.
@@ -47,24 +46,15 @@ The other folders contain the tools used and their config files.
 - Verify the paths are correct in the 2 files in `HOST/archiver/`.
 - Notice the exclude list, it excludes filerun hidden folders, this way your photo thumbnails/previews stay on your fast SSD. 
 
-
-### STEP 3: Configure Media Cleaner
-- Open a Terminal window from `$HOME/docker/HOST/mediacleaner` (right click in that folder > Open Terminal), run the script for initial one-time config:
-```
-python3 mediacleaner.py
-```
-- Follow the steps.
-- A file `HOST/media-cleaner/mumc_config.py` will be created. Done! Run the file again with the above command for a dry run to test it. Afterwards, edit the config file and set `REMOVE_FILES` to `True`. 
-
-### STEP 4: Add FileRun users
+### STEP 3: Add FileRun users
 - The Nightly file contains maintenance tasks that run globally for all users and tasks that can only be run per user. Replace `filerunuserX` for the correct usernames and copy these lines to run this task for all users. This task is necessary to create thumbnails and previews for files created outside of FileRun web environment or webDAV clients. 
 
-### STEP 5: Test the Nightly and the Monthly. 
+### STEP 4: Test the Nightly and the Monthly. 
 - Make sure you finished [Backup Guide](https://github.com/zilexa/Homeserver/tree/master/backup-strategy).
 - Run the Nightly and the Monthly to check for errors/mistakes `sudo bash $HOME/docker/HOST/nightly.sh` and `sudo bash $HOME/docker/HOST/monthly.sh`. 
 <sub>Note we only use sudo because it is required to create snapshots/backups. This is also why we use `sudo crontab` instead of `crontab` even though all other tasks do not need sudo. Using 2 different crontabs might cause running tasks to overlap. </sub>
 
-### STEP 6. Schedule Nightly and Monthly
+### STEP 5. Schedule Nightly and Monthly
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive unneccesary emails, use `""` instead. 
 ```
 MAILTO="youremail" #optional, will only be used if crontab itself has an error
