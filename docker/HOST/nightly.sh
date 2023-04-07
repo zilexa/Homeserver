@@ -9,12 +9,6 @@ USERACCOUNT=$(who | head -n1 | cut -d " " -f1)
 touch ${SCRIPTDIR}/running-tasks
 
 
-# CLEANUP WATCHED TVSHOWS & MOVIES
-# --------------------------------
-# delete if watched x days ago
-python3 ${SCRIPTDIR}/mediacleaner/mediacleaner.py |& tee -a ${SCRIPTDIR}/logs/mediacleaner.log
-
-
 # CLEANUP CACHE
 # -------------
 # User files >30d moved to data drives on pool-archive
@@ -22,10 +16,11 @@ python3 ${SCRIPTDIR}/mediacleaner/mediacleaner.py |& tee -a ${SCRIPTDIR}/logs/me
 
 
 # FileRun - maintenance
+# NOTE THIS IS ONLY REQUIRED IF YOU MODIFY/DELETE/CREATE FILES LOCALLY ON THE SERVER, OUTSIDE OF FILERUN OR WEBDAV!
 # ---------------------
 # Cleanup non-existing paths, cleanup >30 day old trash, index files created outside FileRun, read metadata  and generate thumbs of such files
 # Do not run filerun as root. 
-su -l ${LOGUSER} -c '/usr/bin/bash ${SCRIPTDIR}/filerun.sh'
+# su -l ${LOGUSER} -c '/usr/bin/bash ${SCRIPTDIR}/filerun.sh'
 
 
 # SUBVOLUMES BACKUP  - use this section if your backup drives are HDDs to reduce number of spinups (by performing monthly maintenance immediately after creating backups)
