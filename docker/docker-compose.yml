@@ -1,4 +1,4 @@
-## UPDATED: 2023-03-21
+## UPDATED: 2023-04-12
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -58,8 +58,10 @@ services:
       caddy_0.reverse_proxy: host.docker.internal:3000
       caddy_1: http://vpn.o
       caddy_1.reverse_proxy: host.docker.internal:5000
-      plugsy.name: Caddy web-proxy
-      plugsy.category: System
+      caddy_2: unifi.o
+      caddy_2.reverse_proxy: host.docker.internal:8080
+      plugsy.name: web-proxy [Caddy]
+      plugsy.category: Cloud
 ##
 ##____________________ Plugsy [SYSTEM/Homepage]
   plugsy:
@@ -89,7 +91,7 @@ services:
     volumes:
        - $DOCKERDIR/adguardhome/conf:/opt/adguardhome/conf
     labels:
-      plugsy.name: AdGuard
+      plugsy.name: DNS Server [Adguard Home]
       plugsy.link: http://adguard.o/
       plugsy.category: Network
 ##____________________ Unbound [PRIVACY/dns]
@@ -103,8 +105,8 @@ services:
       - 5335:53/tcp
       - 5335:53/udp
     labels:
-      plugsy.name: Unbound DNS
-      plugsy.parents: AdGuard
+      plugsy.name: DNS Resolver [Unbound]
+      plugsy.parents: DNS Server [Adguard Home]
 ##____________________ Castblock [PRIVACY/Chromecastblocker]
   castblock:
     container_name: castblock
@@ -119,22 +121,31 @@ services:
       CATEGORIES: sponsor,interaction
       MUTE_ADS: true
     labels:
-      plugsy.name: CastBlock
-      plugsy.parents: AdGuard
+      plugsy.name: YT Casting [CastBlock]
+      plugsy.category: Network
 ##____________________ Unifi controller [NETWORK/Unifi-controller]
   unifi-controller:
     image: jacobalberty/unifi
     container_name: unifi-controller
     restart: "no" # " " is required otherwise this is interpreted as boolean instead of string
+    network_mode: host
     volumes:
       - $DOCKERDIR/unifi/data:/unifi/data # required to not loose your configuration
     environment:
       TZ: $TZ
-    ports:
-      - 3478:3478/udp # STUN - Required
-      - 8080:8080/tcp # Device/ controller comm. - Required
-      - 8443:8443/tcp # Controller GUI/API as seen in a web browser - Required
-      - 10001:10001/udp # Access Point discovery - Recommended
+      LOTSOFDEVICES: true
+      JVM_EXTRA_OPTS: true
+      JVM_INIT_HEAP_SIZE: 256
+      JVM_MAX_HEAP_SIZE: 800
+    #ports:
+      #- 3478:3478/udp # STUN - Required
+      #- 8080:8080/tcp # Device/ controller comm. #- Required
+      #- 8443:8443/tcp # Controller GUI/API as seen in a web browser - Required
+      #- 10001:10001/udp # Access Point discovery - Recommended
+    labels:
+      plugsy.name: WiFi AP [UniFi Controller]
+      plugsy.category: Network
+      plugsy.link: http://unifi.o/
 ##
 ##_________ACCESS_______
 ##________________________ VPN-portal [ACCESS/vpn]
@@ -174,11 +185,11 @@ services:
       - $DOCKERDIR/vpn-portal/db:/app/db
       - /etc/wireguard:/etc/wireguard  
     labels:
-      plugsy.name: VPN portal
+      plugsy.name: VPN Portal [Wireguard UI]
       plugsy.link: http://vpn.o/
-      plugsy.category: Network
+      plugsy.category: System
 ##
-##____________________ Guacamole [ACCESS/remote-desktop]
+##____________________ Guacamole [CLOUD/remote-desktop]
   guacamole:
     container_name: guacamole
     image: maxwaldorf/guacamole
@@ -192,7 +203,7 @@ services:
     labels:
       caddy: remote.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 8080}}"
-      plugsy.name: Remote Desktop
+      plugsy.name: Remote Desktop [Guacamole]
       plugsy.link: https://remote.$DOMAIN
       plugsy.category: Cloud
 ##
@@ -218,7 +229,7 @@ services:
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
-      plugsy.name: Firefox Sync
+      plugsy.name: Browser [Firefox Sync]
       plugsy.category: Cloud
 ##
 ##_____________________ Bitwarden [CLOUD/Password-manager] 
@@ -247,11 +258,10 @@ services:
       caddy.header.X-Content-Type-Options: "none"
       caddy.reverse_proxy_1: "/notifications/hub/negotiate {{upstreams 80}}"
       caddy.reverse_proxy_2: "/notifications/hub {{upstreams 3012}}"
-      plugsy.name: Vaultwarden
+      plugsy.name: Password Manager [Vaultwarden]
       plugsy.link: https://vault.$DOMAIN
       plugsy.category: Cloud
 ##
-##____________________ Filerun database [CLOUD/FileRun/db]
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
     container_name: filerun
@@ -287,9 +297,10 @@ services:
       caddy.header.X-XSS-Protection: '"1; mode=block;"'             # Recommended security hardening for fileservers
       caddy.header.X-Content-Type-Options: "nosniff"                # Seems required to open files in OnlyOffice
       caddy.header.X-Frame-Options: "SAMEORIGIN"                    # Seems required to open files in OnlyOffice
-      plugsy.name: FileRun
+      plugsy.name: Drive [FileRun]
       plugsy.link: https://drive.$DOMAIN
       plugsy.category: Cloud
+##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
     container_name: filerun-db
     image: mariadb:10.1
@@ -305,7 +316,7 @@ services:
       - $DOCKERDIR/filerun/db:/var/lib/mysql
     labels:
       plugsy.name: FileRun database
-      plugsy.parents: FileRun
+      plugsy.parents: Drive [FileRun]
 ##____________________ OnlyOffice for Filerun [CLOUD/FileRun/office]
   office:
     container_name: office
@@ -333,7 +344,7 @@ services:
       caddy.reverse_proxy: "{{upstreams 80}}"
       caddy.encode: gzip
       plugsy.name: OnlyOffice
-      plugsy.parents: FileRun
+      plugsy.parents: Drive [FileRun]
   office-rabbitmq:
     container_name: office-rabbitmq
     image: rabbitmq
@@ -344,7 +355,7 @@ services:
       - $DOCKERDIR/filerun/office/rabbitmq:/var/lib/rabbitmq
     labels:
       plugsy.name: OnlyOffice rabbitmq
-      plugsy.parents: FileRun
+      plugsy.parents: Drive [FileRun]
   office-db:
     container_name: office-db
     image: mariadb:latest
@@ -360,7 +371,7 @@ services:
       - $DOCKERDIR/filerun/office/db:/var/lib/mysql
     labels:
       plugsy.name: OnlyOffice database
-      plugsy.parents: FileRun
+      plugsy.parents: Drive [FileRun]
 ##________MEDIA________
 ##_____________________ Jellyfin [MEDIA/Library] 
   jellyfin:
@@ -386,11 +397,9 @@ services:
     labels:
       caddy: http://jellyfin.o
       caddy.reverse_proxy: "{{upstreams 8096}}"
-      plugsy.name: Jellyfin
+      plugsy.name: Mediaserver [Jellyfin]
       plugsy.link: http://jellyfin.o/
-      plugsy.category: Media 
-      org.hotio.pullio.update: true
-
+      plugsy.category: Media
 ##____________________ VPN-proxy [MEDIA/vpn-client-for-media]
   VPN-proxy:
     container_name: VPN-proxy
@@ -439,11 +448,10 @@ services:
     ports:
       - 9090:8080 #Qbittorrent webUI
     labels:
-      org.hotio.pullio.update: true
       caddy: http://downloads.o
       caddy.reverse_proxy: "{{upstreams 8080}}"
-      plugsy.name: VPN-Proxy
-      plugsy.parents: Downloads
+      plugsy.name: VPN-Proxy [PIA]
+      plugsy.parents: Downloads [QBittorrent]
 ##
 ##____________________ Transmission [MEDIA/download-client]
   qbittorrent:
@@ -460,12 +468,10 @@ services:
     volumes:
       - $DOCKERDIR/qbittorrent:/config
       - $DATAPOOL/media/incoming:/Media/incoming
-    labels: 
-      org.hotio.pullio.update: true
-      plugsy.name: Downloads
+    labels:
+      plugsy.name: Downloads [QBittorrent]
       plugsy.link: http://downloads.o/
       plugsy.category: Media
-
 ##
 ##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
   prowlarr:
@@ -489,10 +495,9 @@ services:
     labels:
       caddy: http://torrents.o
       caddy.reverse_proxy: "{{upstreams 9696}}"
-      plugsy.name: Search Torrents
+      plugsy.name: Search [Prowlarr]
       plugsy.link: http://torrents.o/
       plugsy.category: Media
-      org.hotio.pullio.update: true
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
   sonarr:
@@ -515,12 +520,11 @@ services:
     ports:
       - 8989:8989
     labels:
-      caddy: http://sonarr.o
+      caddy: sonarr.o
       caddy.reverse_proxy: "{{upstreams 8989}}"
-      plugsy.name: Sonarr (series)
+      plugsy.name: Series [Sonarr]
       plugsy.link: http://sonarr.o/
       plugsy.category: Media
-      org.hotio.pullio.update: true
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
   radarr:
@@ -543,12 +547,11 @@ services:
     ports:
       - 7878:7878
     labels:
-      caddy: http://radarr.o
+      caddy: radarr.o
       caddy.reverse_proxy: "{{upstreams 7878}}"
-      plugsy.name: Radarr (movies)
+      plugsy.name: Movies [Radarr]
       plugsy.link: http://radarr.o/
-      plugsy.category: Media 
-      org.hotio.pullio.update: true
+      plugsy.category: Media
 ##
 ##____________________ Bazarr [MEDIA/subtitles]
   bazarr:
@@ -573,10 +576,9 @@ services:
     labels:
       caddy: http://bazarr.o
       caddy.reverse_proxy: "{{upstreams 6767}}"
-      plugsy.name: Bazarr (subtitles)
+      plugsy.name: Subs [Bazarr]
       plugsy.link: http://bazarr.o/
       plugsy.category: Media
-      org.hotio.pullio.update: true
 ##
 ##____________________ Lidarr [MEDIA/PVR-Music]
   lidarr:
@@ -601,10 +603,9 @@ services:
     labels:
       caddy: http://lidarr.o
       caddy.reverse_proxy: "{{upstreams 8686}}"
-      plugsy.name: Lidarr (music)
+      plugsy.name: Music [Lidarr]
       plugsy.link: http://lidarr.o/
       plugsy.category: Media
-      org.hotio.pullio.update: true
 #
 networks:
   web-proxy:
