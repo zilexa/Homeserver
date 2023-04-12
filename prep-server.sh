@@ -309,15 +309,6 @@ echo "--------------------------------------------"
 wget -O $HOME/docker/.env https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/.env
 wget -O $HOME/docker/docker-compose.yml https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/docker-compose.yml
 
-echo "               mediacleaner                 "
-echo "--------------------------------------------"
-mkdir -p $HOME/docker/HOST/mediacleaner
-wget -O $HOME/docker/HOST/mediacleaner/mediacleaner.py https://raw.githubusercontent.com/terrelsa13/MUMC/MUMC_v4-BETA/mumc.py
-wget -O $HOME/docker/HOST/mediacleaner/mumc_config_defaults.py https://raw.githubusercontent.com/terrelsa13/MUMC/MUMC_v4-BETA/mumc_config_defaults.py
-# make it executable
-chmod +x $HOME/docker/HOST/mediacleaner/mediacleaner.py
-# install required dependency
-sudo pamac install --no-confirm python-dateutil
 
 echo "      BTRBK config and mail script          "
 echo "--------------------------------------------"
