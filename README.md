@@ -32,7 +32,7 @@
 * Your own media center server _**JellyFin**_ - Watch your series and movies on any smart TV or device. Also when you leave the home via VPN.
 * Automatically follow and retrieve your favourite tv shows and movies _**Sonarr Radarr Bazarr QBittorrent**_ Because nobody can pay for every streaming service just to watch the few shows or movies they like. 
 * Pretty dashboards to monitor your server _**Grafana, Prometheus**_ - Not necessary, but handy and with notifications. 
-* Your own homepage to quickly access each service in a single webpage _**Organzir**_ See preview here. 
+* Your own homepage to quickly access each service in a single webpage _**Plugsy**_ [See preview here](https://github.com/plugsy/core). 
 
 For more details per service, [see here](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md). 
 
