@@ -1,4 +1,6 @@
 #!/bin/bash
+# create tempfile to indicate backup tasks are running, preventing Monthly from kicking off its tasks simultanuously
+touch /tmp/running-backups
 
 ## Wrapper script running "btrbk" and sending email with results
 
@@ -269,3 +271,6 @@ eend $exitcode "$status"
 
 umount_mounted
 send_mail
+
+# Delete temp file, follow up tasks like Monthly can continue
+rm /tmp/running-backups
