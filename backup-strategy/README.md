@@ -72,7 +72,15 @@ sudo nano /etc/aliases
 To run btrbk in the background and receive an email when done, run: `bash $HOME/docker/HOST/btrbk/btrbk-mail.sh`. Test if this works. \
 Since it will be the second run, it should finish within a minute. If you ever want to initiate a backup run manually, use the command from the previous step instead of this one to show progress. 
 
-To schedule backups to run at least nightly, continue to the [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks). 
+Step 5: Schedule nightly backups
+Run `sudo crontab-e` and copy the following: 
+```
+MAILTO="your email address"
+30 5 * * * /usr/bin/bash /home/$LOGUSER/docker/HOST/btrbk/btrbk-mail.sh
+```
+This way, backups will run every day at 5.30. Feel free to change the schedule. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today). 
+The MAILTO section is not required. 
+
 
 &nbsp;
 
@@ -104,6 +112,14 @@ A script exists that takes care of running the sync command, scrub data (verifie
 - Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snapraid-btrfs sync just like in step 3 and send you an email when done. 
 
 Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` command for `s-nail` otherwise you need to do a whole lot more configuration (Postfix) to support `mail` on your system. 
+
+
+#### Optional: change frequency of SnapRAID
+If you want to run SnapRAID more frequently move the single SnapRAID command from the `nightly.sh` script to your crontab and set a schedule like the above but more often. 
+
+For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications. Note Snapper has been configured to only store the latest snapshot. Keeping older snapshots has no usecase for SnapRAID. 
+
+Note the snapshots created specifically for SnapRAID are seperate from the snapshots created by btrbk, which maintains a timeline (X days, X weeks, X months) and copies snapshots to backup drives. 
 
 &nbsp;
 
