@@ -4,10 +4,10 @@ _(read the synopsis first)_
 
 Contents:
   - [Prerequisities](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/README.md#prequisities)
-  - [I. Configure parity-based backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#i-configure-parity-based-backups-via-snapraid-btrfs)
-  - [II. Configure subvolume backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk)
-  - [III. Configure auto-archiving to USB disk](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#iii-configure-auto-archiving-to-usb-disk-via-btrbk)
-  - [IV. Configure encrypted backups to a trusted online location](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#iv-configure-encrypted-backups-to-a-trusted-online-location-via-rclone)
+  - [I. BTRFS subvolume backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk)
+  - [II. Parity-based backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#i-configure-parity-based-backups-via-snapraid-btrfs)
+  - [III. Auto-archiving to USB disk](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#iii-configure-auto-archiving-to-usb-disk-via-btrbk)
+  - [IV. Ecrypted backups to a trusted online location](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#iv-configure-encrypted-backups-to-a-trusted-online-location-via-rclone)
 
 
 ### Prequisities
@@ -24,36 +24,6 @@ _All you have to do following the below steps:
 - Run snapraid-btrfs-runner for the first time manually to create the parity file (on `mnt/disks/parity1)`. 
 - Run btrbk for the first time manually to create the first snapshots and back those up to your backup drives (`mnt/disks/backup1`, `mnt/disks/backup2` etc). 
 
-## I. Configure parity-based backups _via snapraid-btrfs_
-#### Step 1: Create snapper config files
-- Create a backup of the default template: `sudo mv /etc/snapper/config-templates/default /etc/snapper/config-templates/defaultbak`
-- Get a template specific for Snapraid, disabling all other Snapper features: `sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default`
-- Now create snapper config files for the root filesystem: 
-`sudo snapper create-config /`
-- Create a snapper config for 1 subvolume per drive you want to protect with snapraid:  
-`sudo snapper -c data1 create-config /mnt/disks/data1/Users`
-- verify "timeline_create" is set to "no" in each file! 
-
-### Step 2: Adjust snapraid config file
-Open `/etc/snapraid.conf` in an editor and adjust the lines that say "ADJUST THIS.." to your situation. Note for each data disk, a snapper-config from the prev step must exist.
-
-### Step 3: Test the above 2 steps.
-Run `snapraid-btrfs ls` (no sudo!). Notice & verify 3 things: 
-- A confirmation it found snapper configs for each(!) data disk in your snapraid.conf file. 
-- A (correct) warning about non-existing snapraid.content files for each content-file location you defined in snapraid.conf, they will be automatically created during first sync. 
-- A warning about UUIDs that cannot be used. Correct, because Snapraid will sync snapshots, not the actual subvolumes. Note you won't get this errror if you sync the live filesystem with `snapraid sync`, but the whole idea is to not do that, so that you can always recover files, even when the live filesystem has changed in the last 24 hrs.
-
-### Step 4: Run the first sync!
-Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
-
-### Step 5: Configure mail notifications
-A script exists that takes care of running the sync command, scrub data (verifies parity file), clean up all but the latest snapshots, log everything to file and send email notifications when done. 
-- Modify `$HOME/docker/HOST/snapraid-btrfs-runner` section `[email]` to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and add the smtp provider server details:
-- Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snapraid-btrfs sync just like in step 3 and send you an email when done. 
-
-Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` command for `s-nail` otherwise you need to do a whole lot more configuration (Postfix) to support `mail` on your system. 
-
-&nbsp;
 
 ## II. Configure subvolume backups _via btrbk_
 The btrbk config file has been carefully created and tested to:
@@ -104,6 +74,36 @@ Since it will be the second run, it should finish within a minute. If you ever w
 
 To schedule backups to run at least nightly, continue to the [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks). 
 
+&nbsp;
+
+## II. Parity-based backups _via snapraid-btrfs_
+#### Step 1: Create snapper config files
+- Create a backup of the default template: `sudo mv /etc/snapper/config-templates/default /etc/snapper/config-templates/defaultbak`
+- Get a template specific for Snapraid, disabling all other Snapper features: `sudo wget -O /etc/snapper/config-templates/default https://raw.githubusercontent.com/zilexa/Homeserver/master/docker/HOST/snapraid/snapper/default`
+- Now create snapper config files for the root filesystem: 
+`sudo snapper create-config /`
+- Create a snapper config for 1 subvolume per drive you want to protect with snapraid:  
+`sudo snapper -c data1 create-config /mnt/disks/data1/Users`
+- verify "timeline_create" is set to "no" in each file! 
+
+### Step 2: Adjust snapraid config file
+Open `/etc/snapraid.conf` in an editor and adjust the lines that say "ADJUST THIS.." to your situation. Note for each data disk, a snapper-config from the prev step must exist.
+
+### Step 3: Test the above 2 steps.
+Run `snapraid-btrfs ls` (no sudo!). Notice & verify 3 things: 
+- A confirmation it found snapper configs for each(!) data disk in your snapraid.conf file. 
+- A (correct) warning about non-existing snapraid.content files for each content-file location you defined in snapraid.conf, they will be automatically created during first sync. 
+- A warning about UUIDs that cannot be used. Correct, because Snapraid will sync snapshots, not the actual subvolumes. Note you won't get this errror if you sync the live filesystem with `snapraid sync`, but the whole idea is to not do that, so that you can always recover files, even when the live filesystem has changed in the last 24 hrs.
+
+### Step 4: Run the first sync!
+Now run `snapraid-btrfs sync`. That is it! It can take a long while depending on the amount of data you have. Next runs only process incremental changes and go very fast. 
+
+### Step 5: Configure mail notifications
+A script exists that takes care of running the sync command, scrub data (verifies parity file), clean up all but the latest snapshots, log everything to file and send email notifications when done. 
+- Modify `$HOME/docker/HOST/snapraid-btrfs-runner` section `[email]` to add your emailaddress, the "from" emailaddress corresponding with your smtp provider account and add the smtp provider server details:
+- Run it to test it works: `python3 snapraid-btrfs-runner.py` This should run snapraid-btrfs sync just like in step 3 and send you an email when done. 
+
+Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` command for `s-nail` otherwise you need to do a whole lot more configuration (Postfix) to support `mail` on your system. 
 
 &nbsp;
 
