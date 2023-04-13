@@ -25,7 +25,7 @@ _All you have to do following the below steps:
 - Run btrbk for the first time manually to create the first snapshots and back those up to your backup drives (`mnt/disks/backup1`, `mnt/disks/backup2` etc). 
 
 
-## II. Configure subvolume backups _via btrbk_
+## I. Configure subvolume backups _via btrbk_
 The btrbk config file has been carefully created and tested to:
 - Create timestamped snapshots in the root of the disks, giving you a timeline view of your subvolumes in the `snapshots` folder of each disk :)
 - Incremental backups will be sent to your internal backup disk, multiple disks can be added.
