@@ -114,10 +114,9 @@ A script exists that takes care of running the sync command, scrub data (verifie
 Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` command for `s-nail` otherwise you need to do a whole lot more configuration (Postfix) to support `mail` on your system. 
 
 
-#### Optional: change frequency of SnapRAID
-If you want to run SnapRAID more frequently move the single SnapRAID command from the `nightly.sh` script to your crontab and set a schedule like the above but more often. 
-
-For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications. Note Snapper has been configured to only store the latest snapshot. Keeping older snapshots has no usecase for SnapRAID. 
+### Step 6: Schedule SnapRAID to run Nightly
+See the [Maintenance Guide](https://github.com/zilexa/Homeserver/blob/master/maintenance-tasks/README.md). SnapRAID is run via the [Nightly](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh) script. 
+If you want to run SnapRAID more frequently move the single SnapRAID command from the `nightly.sh` script to your crontab and set a schedule like the above but more often.  For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications. Note Snapper has been configured to only store the latest snapshot. Keeping older snapshots has no usecase for SnapRAID. 
 
 Note the snapshots created specifically for SnapRAID are seperate from the snapshots created by btrbk, which maintains a timeline (X days, X weeks, X months) and copies snapshots to backup drives. 
 
