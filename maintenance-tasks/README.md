@@ -58,7 +58,7 @@ The other folders contain the tools used and their config files.
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive unneccesary emails, use `""` instead. 
 ```
 MAILTO="youremail" #will only be used if crontab itself has an error
-30 5 * * * /usr/bin/bash /home/$LOGUSER/docker/HOST/btrbk/brtbk-mail.sh          
+30 5 * * * /usr/bin/bash /home/$LOGUSER/docker/HOST/btrbk/btrbk-mail.sh          
 50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/$LOGUSER/docker/HOST/monthly.sh
 */5 * * * * su -l ${LOGUSER} -c 'docker exec -w /var/www/html/cron filerun php email_notifications.php files.obelix.cloud'
 
