@@ -56,17 +56,17 @@ Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a fi
 1. Open the folder /mnt in your file manager, right click and open it with root rights.This will give you a nice view of the structure.
 2. Go back to Terminal: with the following command, you create multiple folders.   
 ```
-sudo mkdir -p /mnt/disks/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
+sudo mkdir -p /mnt/drives/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
 ```
 &nbsp;
 ## Step 4: Configure drive mountpoints through FSTAB
 This step is prone to errors. Prepare first. 
 
 ### _Preparation_
-1. Make sure all disks are unmounted first: `umount /mnt/disks/data1` for all mount points, also old ones you might have in /media. You cannot mount to non-empty folder.
+1. Make sure all drives are unmounted first: `umount /mnt/drives/data1` for all mount points, also old ones you might have in /media. You cannot mount to non-empty folder.
 2. Make sure each mount point (created in Step 3) is an empty folder after unmounting.
 3. Open 2 command windows:
-  - In the first one, list each UUID per disk: `sudo lsblk -f`
+  - In the first one, list each UUID per drive: `sudo lsblk -f`
   - In the second one, make a backup of your fstab first via `sudo cp /etc/fstab /etc/fstabbackup`
   - Stay in the second one, open fstab: `sudo nano /etc/fstab`. Whatever you do next, do not mess up the existing lines!
 
