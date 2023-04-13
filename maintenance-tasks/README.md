@@ -47,7 +47,7 @@ If you need it, uncomment the sections that you need. Regarding Archiver:
 - Run the Nightly and the Monthly to check for errors/mistakes `sudo bash $HOME/docker/HOST/nightly.sh` and `sudo bash $HOME/docker/HOST/monthly.sh`. 
 <sub>Note we only use sudo because it is required to create snapshots/backups. This is also why we use `sudo crontab` instead of `crontab` even though all other tasks do not need sudo. Using 2 different crontabs might cause running tasks to overlap. </sub>
 
-### STEP 5. Schedule Nightly and Monthly
+### STEP 4. Schedule Nightly and Monthly
 - In terminal (CTRL+ALT+T) open Linux scheduler`sudo crontab -e` and copy-paste the below into it. Make sure you replace the existing MAILTO and _do not_ fill in your emailaddress otherwise you will receive unneccesary emails, use `""` instead. Notice you should already have 1 line, for your backups. 
 - If you use Nightly, change the btrbk-mail.sh to the Nightly script and paste this btrbk-mail line in your Nightly. 
 ```
