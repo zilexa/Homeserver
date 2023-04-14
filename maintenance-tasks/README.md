@@ -59,7 +59,8 @@ Only required if:
 - The Monthly Email shows you are hitting your storage limit --> tell users to cleanup or replace/add drives.
 - The Monthly Email shows scrub errors for a certain filesystem --> follow steps here: TBA
 - Besides the Monthly Email, your server will also email you if your drives are starting to get old. For this purpose, *smartd* is enabled, regularly performing S.M.A.R.T. tests for your storage drives and monitoring drive temperature. An email will be sent if drive S.M.A.R.T. values change or if a drive temperature is rising above 60 C. While this email might contain errors for certain drives, best is to Google those errors and see if it can be ignored. 
-- You want to update to a newer Linux Kernel: Apps Menu > Manjaro Settings > Kernel > select the latest LTS version, install and reboot. <sub>Every LTS Kernel ("Long Term Support) receive updates for years, so you do not need to do this regularly. Very new chipsets (think new laptops) will benefit from latest kernels. BTRFS filesystem improvements also come with some kernel versions.</sub>
+- You want to update to a newer Linux Kernel: Apps Menu > Manjaro Settings > Kernel > select the latest LTS version, install and reboot.  \
+<sub>Every LTS Kernel ("Long Term Support) receives (security) updates for years, so you do not need to do this regularly. Very new hardware (think: new laptops) will benefit from better drivers/hardware support using latest recommended kernels. BTRFS filesystem improvements also come with some kernel versions. For a server, always choose LTS version, not necessarily the latest version.</sub>
 
 ***
 
