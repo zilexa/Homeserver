@@ -110,7 +110,7 @@ Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` 
 
 
 ### Step 6: Schedule SnapRAID to run Nightly
-See the [Maintenance Guide](https://github.com/zilexa/Homeserver/blob/master/maintenance-tasks/README.md). SnapRAID is run once a day via the [Nightly](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh) script. But you can choose to run it more often, by adding it directly to cron.  \
+See the [Maintenance Guide](https://github.com/zilexa/Homeserver/blob/master/maintenance-tasks/README.md). SnapRAID is run once a day via the [Nightly](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh) script. But you can choose to run it more often, by adding it directly to cron.
 
 Note the snapshots created specifically for SnapRAID are seperate from the snapshots created by [I. BTRFS subvolume backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk), which maintains a timeline (X days, X weeks, X months) and copies snapshots to backup drives. 
 
