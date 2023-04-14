@@ -91,6 +91,14 @@ sudo sed -i -e "s^GRUB_DISABLE_OS_PROBER=false^GRUB_DISABLE_OS_PROBER=true^g" /e
 # apply change
 sudo grub-mkconfig
 
+echo "      enable sysRq key        "  
+echo "------------------------------"
+# If the OS ever freezes completely, Linux allows you to use your keyboard to perform a graceful reboot or power-off, through combination of keys.
+# This prevents any kind of filesystem damage or drive hardware damage, especially on HDDs.
+# The following enables the key combination.
+echo kernel.sysrq=1 | sudo tee --append /etc/sysctl.d/99-sysctl.conf
+# How to actually perform the key combination will be explained in the guide. For now see here: https://forum.manjaro.org/t/howto-reboot-turn-off-your-frozen-computer-reisub-reisuo/3855
+
 echo " add user env var for cron    "  
 echo "------------------------------"
 # Cronjobs are used to schedule maintenance tasks for backups, system cleanup and drive maintenance. These tasks require root. Root cronjob is used.
