@@ -52,7 +52,8 @@ This is a full overview of your final cron, including the line for [backups](htt
 This cron means:
 - Backups run 5.30 AM every day. Monthly runs every first Sunday of the month at 5.50AM. FileRun notifications are sent every 5min.
 - The Monthly will check if `btrbk` or `Nightly` are still running. if so, it will pause until they are finished.
-- Feel free to change the schedules. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today).
+- You might need to change `zo` to your language 2-letter short for Sunday. Run this command to see what your system uses for today: `date +%a` 
+- Feel free to change the schedules. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday).
 
 
 &nbsp;
