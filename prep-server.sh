@@ -60,6 +60,8 @@ echo "          S.M.A.R.T. monitoring             "
 echo "--------------------------------------------"
 echo "to be able to read SMART values of drives" 
 sudo pamac install --no-confirm smartmontools
+sudo sed -i -e "s^#DEVICESCAN -a^DEVICESCAN -a -o on -S on -n standby,q -s (S/../.././02|L/../../6/03) -W 1,35,60 -m default^g" /etc/smartd.conf
+sudo systemctl enable smartd
 
 echo "                 HD PARM                    "
 echo "--------------------------------------------"
