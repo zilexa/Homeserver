@@ -21,16 +21,6 @@ Perhaps the cherry on the pie of this guide: The Monthly tasks are executed unat
 This means absolute minimum amount of manual maintenance required! 
 ***
 
-### Manual Maintenance
-Only required if:
-- The Monthly Email asks you to reboot --> go and reboot. If you do this via SSH, remember you still need to login.
-- The Monthly Email shows you are hitting your storage limit --> tell users to cleanup or replace/add drives.
-- The Monthly Email shows scrub errors for a certain filesystem --> follow steps here:
-- Besides the Monthly Email, your server will also email you if your drives are starting to get old. For this purpose, *smartd* is enabled, regularly performing S.M.A.R.T. tests for your storage drives and monitoring drive temperature. An email will be sent if drive S.M.A.R.T. values change or if a drive temperature is rising above 60 C. While this email might contain errors for certain drives, best is to Google those errors and see if it can be ignored. 
-- you want to update to a newer Linux Kernel: Apps Menu > Manjaro Settings > Kernel > select the latest LTS version, install and reboot. 
-
-***
-
 ### STEP 1: CONFIGURE & TEST Monthly
 1. Ensure all your drives are listed under BTRFS filesystem maintenance. The correct paths to subvolumes and device names. 
 2. Assuming you have entered your SMTP details during [Step 1B prep-server.sh](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools) otherwise do so first in `/etc/msmtprc` and replace `$DEFAULTEMAIL` with your email in `/etc/aliases`:  \
@@ -51,7 +41,7 @@ MAILTO="youremail" #will only be used if crontab itself has an error
 ```
 Hit CTRL+S to save and CTRL+X to exit.
 
-This is a full overview of your final cron, including the line for [backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk) and for FileRun notifications see [(FileRun "Required Configuration")](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#files-cloud-via-filerun---documentation-and-support_).  \
+This is your full and final cron, including the line for [backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk) and for FileRun notifications see [(FileRun "Required Configuration")](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#files-cloud-via-filerun---documentation-and-support_).  \
 This cron means:
 - Backups run 5.30 AM every day. Monthly runs every first Sunday of the month at 5.50AM. FileRun notifications are sent every 5min.
 - The Monthly will check if `btrbk` or `Nightly` are still running. if so, it will pause until they are finished.
@@ -60,7 +50,19 @@ This cron means:
 
 &nbsp;
 
+Congratulations, you finished this Guide ! 
+
 ***
+### Manual Maintenance
+Only required if:
+- The Monthly Email asks you to reboot --> go and reboot. If you do this via SSH, remember you still need to login.
+- The Monthly Email shows you are hitting your storage limit --> tell users to cleanup or replace/add drives.
+- The Monthly Email shows scrub errors for a certain filesystem --> follow steps here: TBA
+- Besides the Monthly Email, your server will also email you if your drives are starting to get old. For this purpose, *smartd* is enabled, regularly performing S.M.A.R.T. tests for your storage drives and monitoring drive temperature. An email will be sent if drive S.M.A.R.T. values change or if a drive temperature is rising above 60 C. While this email might contain errors for certain drives, best is to Google those errors and see if it can be ignored. 
+- you want to update to a newer Linux Kernel: Apps Menu > Manjaro Settings > Kernel > select the latest LTS version, install and reboot. 
+
+***
+
 
 ### OPTIONAL TASKS: Nightly maintenance
 The Nightly script contains tasks only relevant if you need to perform several tasks every night. For example  1) use MerferFS with caching, 2) use parity based backups 3) modify user files outside of FileRun realm: 
