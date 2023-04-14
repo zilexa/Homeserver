@@ -31,12 +31,12 @@ Only required if:
 
 ***
 
-### STEP 1: CONFIGURE & TEST MONTHLY
+### STEP 1: CONFIGURE & TEST Monthly
 1. Ensure all your drives are listed under BTRFS filesystem maintenance. The correct paths to subvolumes and device names. 
 2. Assuming you have entered your SMTP details during [Step 1B prep-server.sh](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools) otherwise do so first in `/etc/msmtprc` and replace `$DEFAULTEMAIL` with your email in `/etc/aliases`:  \
 Run `sudo bash $HOME/docker/HOST/monthly.sh`. All tasks should be performed and you should receive an email.
 
-### STEP 2: SCHEDULE MONTHLY
+### STEP 2: SCHEDULE Monthly
 You already scheduled the backups in [BTRFS subvolume Backups Guide](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk). Now all you have to do is add a line for monthly, using `run-if-today` to only run the Last Sunday of the month: 
 ```
 sudo crontab -e
@@ -66,7 +66,7 @@ The Nightly script contains tasks only relevant if you need to perform several t
     - do not attempt to move btrfs read-only snapshots.  
 - _Filerun tasks_: Apart from cleanup, these tasks are only necessary when adding/deleting/modifying files/folders _outside_ of the filerun WebUI or connected WebDAV apps. Without running these tasks, you will _still_ see the files in FileRun and webDAV apps just fine, since FileRun simply shows you a realtime view of your filesystem. Such files just won't appear in search results and their thumbnails & quick previews will be empty. Note these commands will be run from within the container. 
 
-#### Configure & test NIGHTLY
+#### Step 1. CONFIGURE & TEST Nightly
 If you need the Nightly, uncomment the sections you need. The backup section is always required because it will run via Nightly instead of directly in cron (see below).  \
 Regarding Archiver:
 - Verify the paths are correct in the 2 files in `HOST/archiver/`.
@@ -74,7 +74,7 @@ Regarding Archiver:
 - The Filerun.sh file contains maintenance tasks that run globally for all users and tasks that can only be run per user. Replace `filerunuserX` for the correct usernames and copy these lines to run this task for all users. This task is necessary to create thumbnails and previews for files created outside of FileRun web environment or webDAV clients. 
 - Run the Nightly manually at least once: `sudo bash $HOME/docker/HOST/nightly.sh` 
 
-#### Schedule Nightly
+#### Step 2. SCHEDULE Nightly
 - Open crontab: `sudo crontab -e`
 - See the example above, replace `/btrbk/btrbk-mail.sh` for `/nightly.sh`. 
 
