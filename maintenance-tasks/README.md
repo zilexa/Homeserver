@@ -31,7 +31,7 @@ You already scheduled the backups in [BTRFS subvolume Backups Guide](https://git
 ```
 sudo crontab -e
 ```
-Copy & paste the below, For run-if-today to know what weekday you want to run it, You might need to change `su` (English short for Sunday) to your language 2-letter short for Sunday. Run this command to see what your system uses for today: `date +%a` and adjust accordingly:  \
+Copy & paste the below, For run-if-today to know what weekday you want to run it, You might need to change `su` (English short for Sunday) to your language 2-letter short for Sunday. Run this command to see what your system uses for today: `date +%a` and adjust accordingly:
 
 ```
 MAILTO="youremail" #will only be used if crontab itself has an error
