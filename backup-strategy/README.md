@@ -58,14 +58,10 @@ Use this command if you ever want to initiate a backup run manually. Alternative
 ### Step 4: Configure automatic backups
 The `btrbk-mail.sh` script is from the official [btrbk repository](https://github.com/digint/btrbk) and will automatically mount backup drives, unmount when done and sent an email when an error has occured. You can easily edit that script to always sent an email. This script is included in the Nightly script that runs maintenance tasks, to be configured in the next guide: [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks). 
 
-1. If you haven't done this already, fill in your email address (the administrator of your server) in this systemfile:  
-```
-sudo nano /etc/aliases
-```
+1. Assuming you have entered your SMTP details during [Step 1B prep-server.sh](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools) otherwise do so first in `/etc/msmtprc` and replace `$DEFAULTEMAIL` with your email in `/etc/aliases`:  \
 2. Edit the file `$HOME/docker/HOST/btrbk/btrbk-mail.sh` and: 
   - Change the email-subject to your server name or something you like. 
-  - Keep `mailto=default` to use what is set in the system (/etc/aliases) or change at will. 
-  - Most importantly make sure all required drives for running backups are listed in `mount_targets=`; 
+  - Make sure all required drives for running backups are listed in `mount_targets=`; 
       - Your system drive (`/mnt/drives/system`), at least 1 backup drive (`/mnt/drives/backup1`) and if not using MergerFS, your data drives (if you use MergerFS, you probably auto-mount these drives already). 
       - You should have added your backup drives in `etc/fstab` already during steps 3 and 5 of the [Filesystem guide](https://github.com/zilexa/Homeserver/tree/master/filesystem)
 
@@ -78,8 +74,7 @@ Run `sudo crontab-e` and copy the following:
 MAILTO="your email address"
 30 5 * * * /usr/bin/bash /home/$LOGUSER/docker/HOST/btrbk/btrbk-mail.sh
 ```
-This way, backups will run every day at 5.30. Feel free to change the schedule. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today). 
-The MAILTO section is not required. 
+More info about cron in the [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks). 
 
 
 &nbsp;
@@ -115,10 +110,9 @@ Note: compared to the default snapraid-btrfs-runner, I have replaced the `mail` 
 
 
 ### Step 6: Schedule SnapRAID to run Nightly
-See the [Maintenance Guide](https://github.com/zilexa/Homeserver/blob/master/maintenance-tasks/README.md). SnapRAID is run via the [Nightly](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh) script. \
-If you want to run SnapRAID more frequently move the single SnapRAID command from the `nightly.sh` script to your crontab and set a schedule like the above but more often.  For example, you could run Snapraid every hour. The Snapraid command will create hourly snapshots and you will be able to restore files or entire subvolumes, loosing no more than 1 hour of data. This is similar to the level of disaster recovery protection seen in datacenters for corporate, mission critical applications. Note Snapper has been configured to only store the latest snapshot. Keeping older snapshots has no usecase for SnapRAID. 
+See the [Maintenance Guide](https://github.com/zilexa/Homeserver/blob/master/maintenance-tasks/README.md). SnapRAID is run once a day via the [Nightly](https://github.com/zilexa/Homeserver/blob/master/docker/HOST/nightly.sh) script. But you can choose to run it more often, by adding it directly to cron.\
 
-Note the snapshots created specifically for SnapRAID are seperate from the snapshots created by btrbk, which maintains a timeline (X days, X weeks, X months) and copies snapshots to backup drives. 
+Note the snapshots created specifically for SnapRAID are seperate from the snapshots created by [I. BTRFS subvolume backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk), which maintains a timeline (X days, X weeks, X months) and copies snapshots to backup drives. 
 
 &nbsp;
 
