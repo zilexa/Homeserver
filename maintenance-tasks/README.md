@@ -51,8 +51,9 @@ MAILTO="youremail" #will only be used if crontab itself has an error
 This is a full overview of your final cron, including the line for [backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk) and for FileRun notifications see [(FileRun "Required Configuration")](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#files-cloud-via-filerun---documentation-and-support_).  \
 This cron means:
 - Backups run 5.30 AM every day. Monthly runs every first Sunday of the month at 5.50AM. FileRun notifications are sent every 5min.
-- Feel free to change the schedule. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today). 
-- The Monthly will check if `btrbk` or Nightly are still running. if so, it will pause until they are finished.
+- The Monthly will check if `btrbk` or `Nightly` are still running. if so, it will pause until they are finished.
+- Feel free to change the schedules. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today).
+
 
 &nbsp;
 
