@@ -120,10 +120,10 @@ _Client configuration_
 > - FileRun is a very fast, lightweight and feature-rich selfhosted alternative to Dropbox/GoogleDrive/OneDrive. Nextcloud, being much slower and overloaded with additional apps, can't compete on speed and user-friendliness. Also, with FileRun each user has a dedicated folder on your server and unlike Nextcloud, FileRun does not need to periodically scan your filesystem for changes.
 > - FileRun support WebDAV, ElasticSeach for in-file search, extremely fast scrolling through large photo albums, encryption, guest users, shortened sharing links etc.
 >Limits compared to Nextcloud: It is not open-source and the free version allows 10 users only. I use it for myself and direct family/friends only. It has no calendar/contacts/calls etc features like Nextcloud.
-- Required configuration: walk through the Control Panel and personalize at will. 
-- In `Thumbs and Previews` enable all options except LibreOffice and hit "Check version", output should be green. 
+- Required configuration: 
+- walk through the Control Panel and personalize at will. 
 - In `Plugins`, enable what you need, disable overlapping stuff that you do not need. In `defaults` it is recommended to use `Office web viewer` for Office documents instead of alternatives.
-- In `E-mail` disable "instant notifications" to prevent users from being flooded with hundreds of emails when shared files are being downloaded. See [Maintenance & Scheduling](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks#step-6-schedule-nightly-and-monthly) how notifications will be handled through cronjob scheduling. 
+- In `E-mail` disable "instant notifications" to prevent users from being flooded with hundreds of emails when shared files are being downloaded. See [Maintenance & Scheduling](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks#step-6-schedule-nightly-and-monthly), cron will be used to sent notifications every 5min. 
 - OnlyOffice DocumentServer unfortunately does not work properly, otherwise you could configure OnlyOffice as default to edit office documents (having your own google docs/office online alternative!). 
 
 **How to sync devices, external users laptops**
