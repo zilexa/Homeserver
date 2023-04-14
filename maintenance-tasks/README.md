@@ -41,14 +41,15 @@ You already scheduled the backups in [BTRFS subvolume Backups Guide](https://git
 ```
 sudo crontab -e
 ```
-Below a full overview of your cron, including the line for backup and for Filerun notifications (because you should disable FileRun instant notifications, [see FileRUn "Required Configuration" here](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#files-cloud-via-filerun---documentation-and-support_).
+Copy & paste the below, hit CTRL+S to save and CTRL+X to exit. 
 ```
 MAILTO="youremail" #will only be used if crontab itself has an error
 30 5 * * * /usr/bin/bash /home/$LOGUSER/docker/HOST/btrbk/btrbk-mail.sh          
 50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/$LOGUSER/docker/HOST/monthly.sh
 */5 * * * * su -l ${LOGUSER} -c 'docker exec -w /var/www/html/cron filerun php email_notifications.php drive.mydomain.com'
 ```
-This means:
+This is a full overview of your final cron, including the line for backups and for FileRun notifications (because you should disable FileRun instant notifications, [see FileRUn "Required Configuration" here](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#files-cloud-via-filerun---documentation-and-support_).  \
+This cron means:
 - Backups run 5.30 AM every day. Monthly runs every first Sunday of the month at 5.50AM. FileRun notifications every 5min.
 - Feel free to change the schedule. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday/blob/master/run-if-today). 
 - The Monthly will check if `btrbk` or Nightly are still running. if so, it will pause until they are finished.
