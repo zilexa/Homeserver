@@ -24,8 +24,8 @@ This means absolute minimum amount of manual maintenance required!
 ### Manual Maintenance
 Only required if:
 - The Monthly Email asks you to reboot --> go and reboot. If you do this via SSH, remember you still need to login.
-- The Monhtly Email shows you are hitting your storage limit --> tell users to cleanup or replace/add drives.
-- The Mohthly Email shows scrub errors for a certain filesystem --> follow steps here:
+- The Monthly Email shows you are hitting your storage limit --> tell users to cleanup or replace/add drives.
+- The Monthly Email shows scrub errors for a certain filesystem --> follow steps here:
 - Besides the Monthly Email, your server will also email you if your drives are starting to get old. For this purpose, *smartd* is enabled, regularly performing S.M.A.R.T. tests for your storage drives and monitoring drive temperature. An email will be sent if drive S.M.A.R.T. values change or if a drive temperature is rising above 60 C. While this email might contain errors for certain drives, best is to Google those errors and see if it can be ignored. 
 - you want to update to a newer Linux Kernel: Apps Menu > Manjaro Settings > Kernel > select the latest LTS version, install and reboot. 
 
@@ -41,18 +41,18 @@ You already scheduled the backups in [BTRFS subvolume Backups Guide](https://git
 ```
 sudo crontab -e
 ```
-Copy & paste the below, hit CTRL+S to save and CTRL+X to exit. 
+Copy & paste the below, For run-if-today to know what weekday you want to run it, You might need to change `su` (English short for Sunday) to your language 2-letter short for Sunday. Run this command to see what your system uses for today: `date +%a` and adjust accordingly.  \
+Hit CTRL+S to save and CTRL+X to exit. 
 ```
 MAILTO="youremail" #will only be used if crontab itself has an error
 30 5 * * * /usr/bin/bash /home/$LOGUSER/docker/HOST/btrbk/btrbk-mail.sh          
-50 5 * * 7 run-if-today L zo && /usr/bin/bash /home/$LOGUSER/docker/HOST/monthly.sh
+50 5 * * 7 run-if-today L su && /usr/bin/bash /home/$LOGUSER/docker/HOST/monthly.sh
 */5 * * * * su -l ${LOGUSER} -c 'docker exec -w /var/www/html/cron filerun php email_notifications.php drive.mydomain.com'
 ```
 This is a full overview of your final cron, including the line for [backups](https://github.com/zilexa/Homeserver/tree/master/backup-strategy#ii-configure-subvolume-backups-via-btrbk) and for FileRun notifications see [(FileRun "Required Configuration")](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#files-cloud-via-filerun---documentation-and-support_).  \
 This cron means:
 - Backups run 5.30 AM every day. Monthly runs every first Sunday of the month at 5.50AM. FileRun notifications are sent every 5min.
 - The Monthly will check if `btrbk` or `Nightly` are still running. if so, it will pause until they are finished.
-- You might need to change `zo` to your language 2-letter short for Sunday. Run this command to see what your system uses for today: `date +%a` 
 - Feel free to change the schedules. [This calculator](https://crontab.guru/) will help you, additionally check how to use [run-if-today](https://github.com/xr09/cron-last-sunday).
 
 
