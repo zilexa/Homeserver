@@ -30,6 +30,7 @@ echo "--------------------------------------------"
 echo "Swiss handknife-like tool to automate snapshots & backups of personal data" 
 # available in the Arch User Repository (AUR) thus installed via Pamac. Will be automatically updated just like official repository packages. 
 sudo pamac install --no-confirm btrbk
+sudo pamac install --no-confirm mbuffer
 
 echo "        RUN-IF-TODAY & ENABLE CRON          "
 echo "--------------------------------------------"
