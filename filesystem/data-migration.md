@@ -7,7 +7,7 @@ To migrate data to your pool `/mnt/pool/` it is best and fastest to use `btrfs s
 - _Copying files and folders from one drive to the other_  \
   You want to make sure files are correctly read and written, without read or write errors. For that, we have rsync. If you are copying lots of data while doing other activities, make sure to append `nocache`: 
   ```
-  nocache rsync -axHAXWES --info=progress2 --preallocate --inplace --numeric-ids /mnt/drives/cache/users/ /mnt/pool-nocache/users/
+  nocache rsync -atxHAXES --info=progress2 --preallocate --inplace --numeric-ids /mnt/drives/cache/users/ /mnt/pool-nocache/users/
   ```
 - _Moving files and folders to another folder on the same drive_ \
   The `mv` command is used to move or rename folders. But it doesn't include hidden files. This way it does:
