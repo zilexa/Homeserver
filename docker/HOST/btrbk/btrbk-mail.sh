@@ -1,8 +1,9 @@
 #!/bin/bash
-# create tempfile to indicate backup tasks are running, preventing Monthly from kicking off its tasks simultanuously
-touch /tmp/running-backups
 
 ## Wrapper script running "btrbk" and sending email with results
+
+# create tempfile to indicate backup tasks are running, preventing Monthly from kicking off its tasks simultanuously
+touch /tmp/running-backups
 
 now=$(date +%Y%m%d)
 
@@ -46,7 +47,7 @@ mount_targets="/mnt/drives/system /mnt/drives/data1 /mnt/drives/backup1"
 #sync_fs=("/mnt/btr_data" "/mnt/btr_pool")
 
 # btrbk command / options:
-btrbk_command="run"
+btrbk_command="run -t --pretty"
 btrbk_opts="-c /etc/btrbk/btrbk.conf"
 
 
@@ -159,7 +160,7 @@ mount_all()
         ebegin "Mounting $mountpoint"
         run_cmd findmnt -n $mountpoint
         if [[ $? -eq 0 ]]; then
-            eend -1 "already mounted"
+            mounted+=" $mountpoint"
         else
             detail+="\n"
             run_cmd mount --target $mountpoint
