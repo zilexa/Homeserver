@@ -39,9 +39,9 @@ After you have verified the data, you can then delete the read-only snapshot usi
 ### Verify your copied data
 This is overkill and paranoia: btrfs has checksums build in. Rsync will verify checksums twice: a 2nd time after data is written (btrfs send/receive won't do that).  
 But for very precious data to double-check all data is really identical to the source. 
-- Fast method:
+- Fast method (only shows output if a difference is found):
   ```
-  diff -qrs /source/otherfolder/snapshot/ /destination/folder/snapshot/
+  diff -qr /source/otherfolder/snapshot/ /destination/folder/snapshot/
   ```
 - Checksum based (slower):
   ```
