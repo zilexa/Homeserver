@@ -1,4 +1,4 @@
-## UPDATED: 2023-04-12
+## UPDATED: 2023-04-20
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -58,7 +58,7 @@ services:
       caddy_0.reverse_proxy: host.docker.internal:3000
       caddy_1: http://vpn.o
       caddy_1.reverse_proxy: host.docker.internal:5000
-      caddy_2: unifi.o
+      caddy_2: https://unifi.o
       caddy_2.reverse_proxy: host.docker.internal:8080
       plugsy.name: web-proxy [Caddy]
       plugsy.category: Cloud
@@ -374,7 +374,7 @@ services:
       plugsy.parents: Drive [FileRun]
 ##________MEDIA________
 ##_____________________ Jellyfin [MEDIA/Library] 
-  jellyfin:
+  tv-jellyfin:
     container_name: jellyfin
     image: cr.hotio.dev/hotio/jellyfin
     restart: always
@@ -401,8 +401,8 @@ services:
       plugsy.link: http://jellyfin.o/
       plugsy.category: Media
 ##____________________ VPN-proxy [MEDIA/vpn-client-for-media]
-  VPN-proxy:
-    container_name: VPN-proxy
+  tv-VPN-proxy:
+    container_name: tv-VPN-proxy
     image: thrnz/docker-wireguard-pia
     restart: always
     networks: 
@@ -454,12 +454,12 @@ services:
       plugsy.parents: Downloads [QBittorrent]
 ##
 ##____________________ Transmission [MEDIA/download-client]
-  qbittorrent:
-    container_name: qbittorrent
+  tv-qbittorrent:
+    container_name: tv-qbittorrent
     image: cr.hotio.dev/hotio/qbittorrent
     depends_on:
-      - VPN-proxy
-    network_mode: service:VPN-proxy
+      - tv-VPN-proxy
+    network_mode: service:tv-VPN-proxy
     restart: always
     environment:
       PUID: $PUID
@@ -474,13 +474,13 @@ services:
       plugsy.category: Media
 ##
 ##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
-  prowlarr:
-    container_name: prowlarr
+  tv-prowlarr:
+    container_name: tv-prowlarr
     image: cr.hotio.dev/hotio/prowlarr:testing
     networks: 
       - web-proxy
     depends_on:
-      - qbittorrent
+      - tv-qbittorrent
     restart: always
     environment:
       PUID: $PUID
@@ -500,14 +500,14 @@ services:
       plugsy.category: Media
 ##
 ##____________________ Sonarr [MEDIA/PVR-TVshows]
-  sonarr:
-    container_name: sonarr
+  tv-sonarr:
+    container_name: tv-sonarr
     image: cr.hotio.dev/hotio/sonarr
     networks: 
       - web-proxy
     depends_on:
-      - prowlarr
-      - qbittorrent
+      - tv-prowlarr
+      - tv-qbittorrent
     restart: always
     environment:
       PUID: $PUID
@@ -520,21 +520,21 @@ services:
     ports:
       - 8989:8989
     labels:
-      caddy: sonarr.o
+      caddy: http://sonarr.o
       caddy.reverse_proxy: "{{upstreams 8989}}"
       plugsy.name: Series [Sonarr]
       plugsy.link: http://sonarr.o/
       plugsy.category: Media
 ##
 ##____________________ Radarr [MEDIA/PVR-Movies]
-  radarr:
-    container_name: radarr
+  tv-radarr:
+    container_name: tv-radarr
     image: cr.hotio.dev/hotio/radarr
     networks: 
       - web-proxy
     depends_on:
-      - prowlarr
-      - qbittorrent
+      - tv-prowlarr
+      - tv-qbittorrent
     restart: always
     environment:
       PUID: $PUID
@@ -547,21 +547,21 @@ services:
     ports:
       - 7878:7878
     labels:
-      caddy: radarr.o
+      caddy: http://radarr.o
       caddy.reverse_proxy: "{{upstreams 7878}}"
       plugsy.name: Movies [Radarr]
       plugsy.link: http://radarr.o/
       plugsy.category: Media
 ##
 ##____________________ Bazarr [MEDIA/subtitles]
-  bazarr:
-    container_name: bazarr
+  tv-bazarr:
+    container_name: tv-bazarr
     image: cr.hotio.dev/hotio/bazarr
     networks: 
       - web-proxy
     depends_on:
-       - sonarr
-       - radarr
+       - tv-sonarr
+       - tv-radarr
     restart: always
     environment:
       PUID: $PUID
@@ -581,14 +581,14 @@ services:
       plugsy.category: Media
 ##
 ##____________________ Lidarr [MEDIA/PVR-Music]
-  lidarr:
-    container_name: lidarr
+  tv-lidarr:
+    container_name: tv-lidarr
     image: cr.hotio.dev/hotio/lidarr
     networks: 
       - web-proxy
     depends_on:
-      - prowlarr
-      - qbittorrent
+      - tv-prowlarr
+      - tv-qbittorrent
     restart: always
     environment:
       PUID: $PUID
