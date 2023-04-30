@@ -87,8 +87,6 @@ echo -e "\n____________SYSTEM UPDATE____________\n" >> ${SCRIPTDIR}/logs/monthly
 pacman-mirrors --continent --api -P https
 # Perform update, force refresh of update database files
 pamac update --force-refresh --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
-# Remove orphaned packages
-pamac remove -o --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 # Clean packages cache
 pamac clean --keep 3 --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 # Check if a restart is needed, add this notification to the top of the email
