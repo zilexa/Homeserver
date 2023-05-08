@@ -20,9 +20,9 @@ sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 
 # Add default location of compose file (/home/username/docker/compose.yml) for bash and zsh
-echo export COMPOSE_FILE="/home/${LOGUSER}/docker/compose.yml" >> /home/${USER}/.bash_profile
+echo export COMPOSE_FILE="/home/${USER}/docker/compose.yml" >> /home/${USER}/.bash_profile
 sudo touch /etc/zsh/zshenv
-sudo sh -c "echo export COMPOSE_FILE="/home/${LOGUSER}/docker/compose.yml" >> /etc/zsh/zshenv"
+sudo sh -c "echo export COMPOSE_FILE="/home/${USER}/docker/compose.yml" >> /etc/zsh/zshenv"
 
 echo "            Wireguard VPN Tools             "
 echo "--------------------------------------------"
