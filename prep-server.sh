@@ -19,6 +19,9 @@ sudo usermod -aG docker $USER
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 
+# Add default location of compose file (/home/username/docker/compose.yml)
+sudo sh -c "echo COMPOSE_FILE=/home/${LOGUSER}/docker/compose.yml >> /etc/environment"
+
 
 echo "            Wireguard VPN Tools             "
 echo "--------------------------------------------"
@@ -107,7 +110,6 @@ echo "------------------------------"
 # Linux wants you to run each cronjob in different crontabs per user. However for a homeserver a single overview of cronjobs would be preferred.
 # To run the FileRun commands as the regular user, we add an env variable for that user to the only env that is accessible by root cronjobs: 
 sudo sh -c "echo LOGUSER=${USER} >> /etc/environment"
-sudo sh -c "echo COMPOSE_FILE=/home/${LOGUSER}/docker/compose.yml >> /etc/environment"
 
 echo " allow Bleachbit to run as admin from commandline    "  
 echo "------------------------------"
