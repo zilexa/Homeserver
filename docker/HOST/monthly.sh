@@ -22,24 +22,28 @@ echo -e "\n_____MONTHLY HOUSEKEEPING TASKS_____" > ${SCRIPTDIR}/logs/monthly.tmp
 # CLEANUP - OS, local apps, user profile 
 # --------------------------------------
 echo -e "\n____________SYSTEM CLEANUP____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
-echo -e "\nBLEACHBIT - Cleanup of OS, local apps and user profile..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+
 # Run bleachbit for root user to clean OS temp files
 touch ${SCRIPTDIR}/logs/bleachbit.tmp
 bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp
 # Add the summary of Bleachbit output to our monthly mail
+echo -e "\nBLEACHBIT - system wide cleanup of OS and local applications..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.tmp
 rm ${SCRIPTDIR}/logs/bleachbit.tmp
+
 # Run Bleachbit for regular user to clean files in $HOME
 touch ${SCRIPTDIR}/logs/bleachbit.tmp
 su -l ${LOGUSER} -c 'bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp'
 # Add the summary of Bleachbit output to our monthly mail
+echo -e "\nBLEACHBIT - user level cleanup (/home folder).. \n" >> ${SCRIPTDIR}/logs/monthly.tmp
 tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.tmp
 rm ${SCRIPTDIR}/logs/bleachbit.tmp
+
 
 # DOCKER - cleanup
 # ----------------------------------------
 echo -e "\n____________DOCKER CLEANUP____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
-echo -e "\n CLEANUP Remove all unused containers, networks, images (both dangling and unreferenced), and volumes: \n" >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\n CLEANUP Remove all unused containers, networks and dangling or unreferenced images and volumes: \n" >> ${SCRIPTDIR}/logs/monthly.tmp
 docker system prune --all --volumes -f |& tee >(tail -n 1 >> ${SCRIPTDIR}/logs/monthly.tmp)
 
 # DOCKER - updates
@@ -65,40 +69,39 @@ echo -e "\nDocker updates finished. \n" >> ${SCRIPTDIR}/logs/monthly.tmp
 # -----------------------
 echo -e "\n____________FILESTYSTEMS____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\n FILESTEM housekeeping.." >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\nMount drives that are by default unmounted..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+mount /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
+mount /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\nScrub btrfs filesystems..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 btrfs scrub start -Bd -c 2 -n 4 /dev/nvme0n1p2 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 btrfs scrub start -Bd -c 2 -n 4 /dev/sda |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 btrfs scrub start -Bd -c 2 -n 4 /dev/sdb |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
-mount /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
-btrfs scrub start -Bd -c 2 -n 4 /dev/sdc |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 
 # Run btrfs balance monthly, first 10% data, then try 20%
 # -------------------------
 echo -e "\nRun BTRFS Balance using btrfs mail list recommendation\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 btrfs balance start -dusage=85 / |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 btrfs balance start -dusage=85 /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
-btrfs balance start -dusage=85 /mnt/drives/data1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 btrfs balance start -dusage=85 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
 
 
 # Storage Status Report
 # -----------------------------------------------------
-echo -e "\n\n_________STORAGE STATUS REPORT________" > /tmp/storagereport.tmp
-echo -e "\n               ~~~ STORAGE PER USER ~~~" >> /tmp/storagereport.tmp
-sudo btrfs filesystem du -s /mnt/pool/users/* >> /tmp/storagereport.tmp
-echo -e "\n                ~~~ USERS filesystem ~~~" >> /tmp/storagereport.tmp
-sudo btrfs fi usage /mnt/pool/users | grep 'Free (estimated)' >> /tmp/storagereport.tmp
-sudo df -h /dev/sdb >> /tmp/storagereport.tmp
-echo -e "\n                ~~~ MEDIA filesystem ~~~" >> /tmp/storagereport.tmp
-sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> /tmp/storagereport.tmp
-sudo df -h /dev/sda >> /tmp/storagereport.tmp
-echo -e "\n               ~~~ BACKUPS filesystem ~~~" >> /tmp/storagereport.tmp
-sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> /tmp/storagereport.tmp
-sudo df -h /dev/sda >> /tmp/storagereport.tmp
-umount /mnt/drives/backup1 |& tee -a /tmp/storagereport.tmp
-echo -e "\n                   ~~~ OS filesystem ~~~" >> /tmp/storagereport.tmp
-sudo btrfs fi usage / | grep 'Free (estimated)' >> /tmp/storagereport.tmp
-sudo df -h /dev/nvme0n1p2 >> /tmp/storagereport.tmp
+echo -e "\n\n_________STORAGE STATUS REPORT________" > ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n               ~~~ STORAGE PER USER ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo btrfs filesystem du -s /mnt/pool/users/* >> ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n                ~~~ USERS & OS filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo btrfs fi usage / | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo df -h /dev/nvme0n1p2 >> ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n                ~~~ MEDIA filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo df -h /dev/sdb >> ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n               ~~~ BACKUPS filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo btrfs fi usage /mnt/pool/backup1 | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
+sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\nUnmount drives..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+umount /mnt/drives/data0 |& tee -a ${SCRIPTDIR}/logs/storagereport.tmp
+umount /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/storagereport.tmp
 
 
 # Update system
