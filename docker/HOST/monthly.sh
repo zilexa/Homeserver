@@ -27,8 +27,8 @@ rm ${SCRIPTDIR}/logs/bleachbit.tmp
 
 # DOCKER - updates
 # --------------------------------------------------------------
-su -l ${LOGUSER} -c docker-compose pull
-su -l ${LOGUSER} -c docker-compose up -d --remove-orphans # not adding to email body as it would be a lot
+su -l ${LOGUSER} -c 'docker-compose pull'
+su -l ${LOGUSER} -c 'docker-compose up -d --remove-orphans' # not adding to email body as it would be a lot
 echo -e "\n____________DOCKER IMAGES____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\nUPDATED images, recreated all containers, cleaned up orphaned containers \n" >> ${SCRIPTDIR}/logs/monthly.tmp
 
