@@ -2,10 +2,17 @@
 # Get this script folder path
 SCRIPTDIR="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 
-# Wait for other tasks to finish
+# Wait for backup task to finish
+#while [[ -f /var/lock/btrbk.lock ]] ; do
+#   sleep 10 ;
+#done
+# Wait for Nightly task to finish - btrbk doesn't delete its lockfile due to a bug so we need this. btrbk-mail.sh wil create this file:
 while [[ -f ${SCRIPTDIR}/running-tasks ]] ; do
    sleep 10 ;
 done
+
+# Delete old monthly file. 
+rm ${SCRIPTDIR}/logs/monthly.tmp
 
 # Create monthly email body, add title and current date
 # -----------------------------------------------------
@@ -16,29 +23,42 @@ echo -e "\n_____MONTHLY HOUSEKEEPING TASKS_____" > ${SCRIPTDIR}/logs/monthly.tmp
 # --------------------------------------
 echo -e "\n____________SYSTEM CLEANUP____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\nBLEACHBIT - Cleanup of OS, local apps and user profile..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
-touch ${SCRIPTDIR}/logs/bleachbit.tmp
 # Run bleachbit for root user to clean OS temp files
+touch ${SCRIPTDIR}/logs/bleachbit.tmp
 bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp
-# Run Bleachbit for logged in user to clean files in $HOME
+# Add the summary of Bleachbit output to our monthly mail
+tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.tmp
+rm ${SCRIPTDIR}/logs/bleachbit.tmp
+# Run Bleachbit for regular user to clean files in $HOME
+touch ${SCRIPTDIR}/logs/bleachbit.tmp
 su -l ${LOGUSER} -c 'bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp'
 # Add the summary of Bleachbit output to our monthly mail
 tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.tmp
 rm ${SCRIPTDIR}/logs/bleachbit.tmp
 
-# DOCKER - updates
-# --------------------------------------------------------------
-su -l ${LOGUSER} -c 'docker-compose pull'
-su -l ${LOGUSER} -c 'docker-compose up -d --remove-orphans' # not adding to email body as it would be a lot
-echo -e "\n____________DOCKER IMAGES____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
-echo -e "\nUPDATED images, recreated all containers, cleaned up orphaned containers \n" >> ${SCRIPTDIR}/logs/monthly.tmp
-
 # DOCKER - cleanup
 # ----------------------------------------
-echo -e "\n CLEANUP unused docker images..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
-docker image prune -a -f |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
-echo -e "\nCLEANUP unused docker volumes..\n" >> ${SCRIPTDIR}/logs/monthly.tmp
-docker volume prune -f |& tee -a ${SCRIPTDIR}/logs/monthly.tmp
-echo -e "\nFor a full cleanup, remember to regularly run this command after verifying all your containers are running: docker system prune --all --volumes -f\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\n____________DOCKER CLEANUP____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+echo -e "\n CLEANUP Remove all unused containers, networks, images (both dangling and unreferenced), and volumes: \n" >> ${SCRIPTDIR}/logs/monthly.tmp
+docker system prune --all --volumes -f |& tee >(tail -n 1 >> ${SCRIPTDIR}/logs/monthly.tmp)
+
+# DOCKER - updates
+echo -e "\n____________DOCKER UPDATES____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
+# --------------------------------------------------------------
+# Save old image creation date
+docker images --format "table {{.Repository}}\t{{.CreatedAt}}" > /tmp/img1.txt 
+# Get latest images
+su -l ${LOGUSER} -c 'docker-compose pull'
+# Save image creation date
+docker images --format "table {{.Repository}}\t{{.CreatedAt}}" > /tmp/img2.txt 
+# Now create nice list of updated images
+comm -13 <(sort /tmp/img1.txt) <(sort /tmp/img2.txt) > /tmp/img3.txt
+echo -e "\nUPDATED the following docker images: \n" >> ${SCRIPTDIR}/logs/monthly.tmp
+cut -d ' ' -f 1 < /tmp/img3.txt > result.txt >> ${SCRIPTDIR}/logs/monthly.tmp
+rm /tmp/img*.txt 
+# Now recreate containers with new images, remove orphans
+su -l ${LOGUSER} -c 'docker-compose up -d --remove-orphans' >> ${SCRIPTDIR}/logs/monthly.tmp # not adding to email body as it would be a lot
+echo -e "\nDocker updates finished. \n" >> ${SCRIPTDIR}/logs/monthly.tmp
 
 
 # Run btrfs scrub monthly
@@ -63,22 +83,22 @@ btrfs balance start -dusage=85 /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/m
 
 # Storage Status Report
 # -----------------------------------------------------
-echo -e "\n\n_________STORAGE STATUS REPORT________" > ${SCRIPTDIR}/logs/storagereport.tmp
-echo -e "\n               ~~~ STORAGE PER USER ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo btrfs filesystem du -s /mnt/pool/users/* >> ${SCRIPTDIR}/logs/storagereport.tmp
-echo -e "\n                ~~~ USERS filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo btrfs fi usage /mnt/pool/users | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo df -h /dev/sdb >> ${SCRIPTDIR}/logs/storagereport.tmp
-echo -e "\n                ~~~ MEDIA filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/storagereport.tmp
-echo -e "\n               ~~~ BACKUPS filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo df -h /dev/sda >> ${SCRIPTDIR}/logs/storagereport.tmp
-umount /mnt/drives/backup1 |& tee -a ${SCRIPTDIR}/logs/storagereport.tmp
-echo -e "\n                   ~~~ OS filesystem ~~~" >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo btrfs fi usage / | grep 'Free (estimated)' >> ${SCRIPTDIR}/logs/storagereport.tmp
-sudo df -h /dev/nvme0n1p2 >> ${SCRIPTDIR}/logs/storagereport.tmp
+echo -e "\n\n_________STORAGE STATUS REPORT________" > /tmp/storagereport.tmp
+echo -e "\n               ~~~ STORAGE PER USER ~~~" >> /tmp/storagereport.tmp
+sudo btrfs filesystem du -s /mnt/pool/users/* >> /tmp/storagereport.tmp
+echo -e "\n                ~~~ USERS filesystem ~~~" >> /tmp/storagereport.tmp
+sudo btrfs fi usage /mnt/pool/users | grep 'Free (estimated)' >> /tmp/storagereport.tmp
+sudo df -h /dev/sdb >> /tmp/storagereport.tmp
+echo -e "\n                ~~~ MEDIA filesystem ~~~" >> /tmp/storagereport.tmp
+sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> /tmp/storagereport.tmp
+sudo df -h /dev/sda >> /tmp/storagereport.tmp
+echo -e "\n               ~~~ BACKUPS filesystem ~~~" >> /tmp/storagereport.tmp
+sudo btrfs fi usage /mnt/pool/media | grep 'Free (estimated)' >> /tmp/storagereport.tmp
+sudo df -h /dev/sda >> /tmp/storagereport.tmp
+umount /mnt/drives/backup1 |& tee -a /tmp/storagereport.tmp
+echo -e "\n                   ~~~ OS filesystem ~~~" >> /tmp/storagereport.tmp
+sudo btrfs fi usage / | grep 'Free (estimated)' >> /tmp/storagereport.tmp
+sudo df -h /dev/nvme0n1p2 >> /tmp/storagereport.tmp
 
 
 # Update system
@@ -91,22 +111,15 @@ pamac update --force-refresh --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 # Clean packages cache
 pamac clean --keep 3 --no-confirm >> ${SCRIPTDIR}/logs/monthly.tmp
 # Check if a restart is needed, add this notification to the top of the email
-echo -n "OBELIX MOHTHLY STATUS REPORT - " > ${SCRIPTDIR}/logs/monthlymail.tmp
-date >> ${SCRIPTDIR}/logs/monthlymail.tmp
-needrestart >> ${SCRIPTDIR}/logs/monthlymail.tmp
+echo -n "OBELIX MOHTHLY STATUS REPORT - " > /tmp/monthlymail.tmp
+date >> /tmp/monthlymail.tmp
+needrestart >> /tmp/monthlymail.tmp
 
 
-# Send email
+# Send email - to all users in the household (alias: asterix instead of default)
 # ---------------------------------
-cat ${SCRIPTDIR}/logs/storagereport.tmp >> ${SCRIPTDIR}/logs/monthlymail.tmp
-cat ${SCRIPTDIR}/logs/monthly.tmp >> ${SCRIPTDIR}/logs/monthlymail.tmp
-mail -s "Obelix server - monthly report" default < ${SCRIPTDIR}/logs/monthlymail.tmp
-rm ${SCRIPTDIR}/logs/storagereport.tmp
-rm ${SCRIPTDIR}/logs/monthly.tmp
-
-
-# Append email to monthly logfile and delete email body
-# ------------------------------------------------
-touch ${SCRIPTDIR}/logs/monthly.log # first time only
-sudo cat ${SCRIPTDIR}/logs/monthlymail.tmp >> ${SCRIPTDIR}/logs/monthly.log
-rm ${SCRIPTDIR}/logs/monthlymail.tmp
+cat /tmp/storagereport.tmp >> /tmp/monthlymail.tmp
+rm /tmp/storagereport.tmp
+cat ${SCRIPTDIR}/logs/monthly.tmp >> /tmp/monthlymail.tmp
+mail -s "Obelix server - monthly report" asterix < /tmp/monthlymail.tmp
+rm /tmp/monthlymail.tmp
