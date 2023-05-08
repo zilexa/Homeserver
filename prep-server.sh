@@ -13,15 +13,16 @@ sudo pamac install --no-confirm docker docker-compose
 
 # Create non-root user for docker, with privileges (not docker rootless)
 sudo groupadd docker
-sudo usermod -aG docker $USER
+sudo usermod -aG docker ${USER}
 
 # Enable docker at boot
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 
-# Add default location of compose file (/home/username/docker/compose.yml)
-sudo sh -c "echo COMPOSE_FILE=/home/${LOGUSER}/docker/compose.yml >> /etc/environment"
-
+# Add default location of compose file (/home/username/docker/compose.yml) for bash and zsh
+echo export COMPOSE_FILE="/home/${LOGUSER}/docker/compose.yml" >> /home/${USER}/.bash_profile
+sudo touch /etc/zsh/zshenv
+sudo sh -c "echo export COMPOSE_FILE="/home/${LOGUSER}/docker/compose.yml" >> /etc/zsh/zshenv"
 
 echo "            Wireguard VPN Tools             "
 echo "--------------------------------------------"
