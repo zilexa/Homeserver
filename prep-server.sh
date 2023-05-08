@@ -106,7 +106,8 @@ echo "------------------------------"
 # FileRun also has maintenance tasks and scheduled notifications. Filerun or any other service should never be run as root, otherwise no FileRun user can delete folders (because items like thumbnails can be created and owned by root)
 # Linux wants you to run each cronjob in different crontabs per user. However for a homeserver a single overview of cronjobs would be preferred.
 # To run the FileRun commands as the regular user, we add an env variable for that user to the only env that is accessible by root cronjobs: 
-sudo sh -c "echo LOGUSER=${USER} >> /etc/environment" 
+sudo sh -c "echo LOGUSER=${USER} >> /etc/environment"
+sudo sh -c "echo COMPOSE_FILE=/home/${LOGUSER}/docker/compose.yml >> /etc/environment"
 
 echo " allow Bleachbit to run as admin from commandline    "  
 echo "------------------------------"
