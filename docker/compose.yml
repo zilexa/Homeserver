@@ -1,4 +1,4 @@
-## UPDATED: 2023-04-20
+## UPDATED: 2023-05-09
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -15,17 +15,18 @@
 #
 version: "2.4"
 services:
-##_______SYSTEM_____
-##____________________ Portainer [SYSTEM/Docker]
+##_______DASHBOARD & MONITORING SERVICES______
+##
+##_____________________________ Portainer [SYSTEM/Docker]
   portainer:
-    container_name: portainer
+    container_name: dash-portainer
     image: portainer/portainer-ce
     restart: always
     networks: 
-      - web-proxy
+      - caddy-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $DOCKERDIR/portainer/data:/data
+      - $DOCKERDIR/dashboards/portainer/data:/data
     ports:
       - 9000:9000
     labels:
@@ -33,20 +34,94 @@ services:
       caddy.reverse_proxy: "{{upstreams 9000}}"
       plugsy.name: Docker
       plugsy.link: http://docker.o/
-      plugsy.category: System
+      plugsy.category: System Monitoring
+##
+##_____________________________ Plugsy [SYSTEM/Homepage]
+  plugsy:
+    container_name: dash-plugsy
+    image: plugsy/core
+    restart: always
+    networks: 
+      - caddy-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    #  - $DOCKERDIR/dashboard/config.json:/config.json
+    #ports:
+    #  - 8000:3000
+    extra_hosts:
+      - g.o:host-gateway  
+    labels:
+      caddy: http://g.o
+      caddy.reverse_proxy: "{{upstreams 3000}}"
+## 
+##_____________________ InfluxDB [SYSTEM/Monitoring]
+  influxdb:
+    container_name: dash-influxdb
+    restart: unless-stopped
+    image: influxdb
+    networks:
+      - caddy-proxy
+      - influxdb
+    environment:
+      - INFLUXDB_ADMIN_USER=$USER
+      - INFLUXDB_ADMIN_PASSWORD=$PW_DB
+      - INFLUX_GRAPHITE_ENABLED='true'
+      - PRE_CREATE_DB='metrics'
+      - INFLUXDB_DB='metrics'
+      - INFLUX_HTTP_AUTH_ENABLED='true'
+    volumes:
+      - $DOCKERDIR/dashboards/influxdb/data:/var/lib/influxdb2
+      - $DOCKERDIR/dashboards/influxdb/config:/etc/influxdb2
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 8086:8086
+    labels:
+      caddy: http://influxb.o
+      caddy.reverse_proxy: "{{upstreams 8086}}"
+      plugsy.name: InfluxDB
+      plugsy.link: http://influxdb.o/
+      plugsy.category: System Monitoring
+##_____________________ Telegraf [Monitoring/Metrics]
+  telegraf:
+    container_name: dash-telegraf  # Required to run the following command before starting this container.. sudo chmod -R a+rx /sys/devices/virtual/powercap/intel-rapl/
+    image: telegraf
+    depends_on:
+      - influxdb
+    networks:
+      - influxdb
+    cap_add:            
+      - SYS_RAWIO 
+    privileged: true
+    user: "1000:0"
+    environment:
+      - INFLUXDB_ADMIN_USER=$USER
+      - INFLUXDB_ADMIN_PASSWORD=$PW_DB
+      - INFLUX_GRAPHITE_ENABLED='true'
+      - PRE_CREATE_DB='metrics'
+      - INFLUXDB_DB='metrics'
+      - INFLUX_HTTP_AUTH_ENABLED='true'
+   # volumes:
+   #   - $DOCKERDIR/dashboards/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    labels:
+      plugsy.name: Telegraf metrics [Unbound]
+      plugsy.parents: InfluxDB [Adguard Home]
+##
+##_______NETWORKING SERVICES________
+##
 ##_____________________ Caddy [SYSTEM/web-proxy]
-  caddy:
-    container_name: web-proxy
+  caddy-proxy:
+    container_name: net-caddy-proxy
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
     restart: always
     networks: 
-      - web-proxy
+      - caddy-proxy
     environment:
-      - CADDY_INGRESS_NETWORKS=web-proxy
+      - CADDY_INGRESS_NETWORKS=caddy-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - $DOCKERDIR/web-proxy/caddy_data:/data
-      - $DOCKERDIR/web-proxy/config:/config
+      - $DOCKERDIR/networking/caddy-proxy/caddy_data:/data
+      - $DOCKERDIR/networking/caddy-proxy/config:/config
     extra_hosts:
       - host.docker.internal:host-gateway
     ports:
@@ -60,56 +135,45 @@ services:
       caddy_1.reverse_proxy: host.docker.internal:5000
       caddy_2: https://unifi.o
       caddy_2.reverse_proxy: host.docker.internal:8080
-      plugsy.name: web-proxy [Caddy]
-      plugsy.category: Cloud
+      plugsy.name: net-caddy-proxy [Caddy]
+      plugsy.category: Network
 ##
-##____________________ Plugsy [SYSTEM/Homepage]
-  plugsy:
-    container_name: plugsy
-    image: plugsy/core
-    restart: always
-    networks: 
-      - web-proxy
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    #  - $DOCKERDIR/dashboard/config.json:/config.json
-    #ports:
-    #  - 8000:3000
-    extra_hosts:
-      - g.o:host-gateway  
-    labels:
-      caddy: http://g.o
-      caddy.reverse_proxy: "{{upstreams 3000}}"
-##
-##______PRIVACY_______
 ##______________________ AdGuard Home [PRIVACY/Blocker]
-  adguard:
-    container_name: adguard
+  dns-adguard:
+    container_name: dns-adguard
     image: adguard/adguardhome
     restart: always
     network_mode: host
     volumes:
-       - $DOCKERDIR/adguardhome/conf:/opt/adguardhome/conf
+       - $DOCKERDIR/networking/adguardhome/conf:/opt/adguardhome/conf
     labels:
       plugsy.name: DNS Server [Adguard Home]
       plugsy.link: http://adguard.o/
       plugsy.category: Network
 ##____________________ Unbound [PRIVACY/dns]
-  unbound:
-    container_name: unbound
-    image: klutchell/unbound
+  dns-unbound:
+    container_name: dns-unbound
+    image: madnuttah/unbound:latest
+    hostname: unbound
     restart: always
-    networks: 
-      - unbound
-    ports:
-      - 5335:53/tcp
-      - 5335:53/udp
+    network_mode: host
+      #dns-unbound:
+       # ipv4_address: 172.20.0.2
+    #ports:
+    #  - 5335/tcp
+    #  - 5335/udp
+    volumes: 
+      - $DOCKERDIR/networking/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
+      - $DOCKERDIR/networking/unbound/root.hints:/usr/local/unbound/root.hints:rw
+      #- $DOCKERDIR/networking/unbound/iana.d/:/usr/local/unbound/iana.d/:rw
+      - $DOCKERDIR/networking/unbound/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
     labels:
       plugsy.name: DNS Resolver [Unbound]
       plugsy.parents: DNS Server [Adguard Home]
+##
 ##____________________ Castblock [PRIVACY/Chromecastblocker]
-  castblock:
-    container_name: castblock
+  dns-castblock:
+    container_name: net-dns-castblock
     image: erdnaxeli/castblock:latest
     restart: always
     network_mode: host
@@ -123,14 +187,15 @@ services:
     labels:
       plugsy.name: YT Casting [CastBlock]
       plugsy.category: Network
+##
 ##____________________ Unifi controller [NETWORK/Unifi-controller]
-  unifi-controller:
+  unificontroller:
     image: jacobalberty/unifi
-    container_name: unifi-controller
+    container_name: net-unificontroller
     restart: "no" # " " is required otherwise this is interpreted as boolean instead of string
     network_mode: host
     volumes:
-      - $DOCKERDIR/unifi/data:/unifi/data # required to not loose your configuration
+      - $DOCKERDIR/networking/unifi/data:/unifi/data # required to not loose your configuration
     environment:
       TZ: $TZ
       LOTSOFDEVICES: true
@@ -147,10 +212,9 @@ services:
       plugsy.category: Network
       plugsy.link: http://unifi.o/
 ##
-##_________ACCESS_______
-##________________________ VPN-portal [ACCESS/vpn]
+##________________________ VPN-portal [NETWORK/vpn]
   VPN-portal:
-    container_name: vpn-portal
+    container_name: net-vpn-portal
     image: ngoduykhanh/wireguard-ui:latest
     restart: always
     cap_add:
@@ -182,50 +246,32 @@ services:
       options:
         max-size: 15m
     volumes:
-      - $DOCKERDIR/vpn-portal/db:/app/db
+      - $DOCKERDIR/networking/vpn-portal/db:/app/db
       - /etc/wireguard:/etc/wireguard  
     labels:
       plugsy.name: VPN Portal [Wireguard UI]
       plugsy.link: http://vpn.o/
-      plugsy.category: System
+      plugsy.category: Network
 ##
-##____________________ Guacamole [CLOUD/remote-desktop]
-  guacamole:
-    container_name: guacamole
-    image: maxwaldorf/guacamole
-    restart: always
-    networks: 
-      - web-proxy
-    environment:
-      EXTENSIONS: auth-quickconnect,auth-totp # add ,auth-totp if exposed to the internet, for 2FA
-    volumes:
-      - $DOCKERDIR/guacamole:/config
-    labels:
-      caddy: remote.$DOMAIN
-      caddy.reverse_proxy: "{{upstreams 8080}}"
-      plugsy.name: Remote Desktop [Guacamole]
-      plugsy.link: https://remote.$DOMAIN
-      plugsy.category: Cloud
+##________CLOUD SERVICES______
 ##
-##________CLOUD______
 ##_____________________ Firefox Sync [CLOUD/Browser] 
-# generate secret.txt first see docker-config.sh
   firefox-sync:
-    container_name: firefox-sync
+    container_name: cloud-firefox-sync
     image: crazymax/firefox-syncserver:latest
     restart: always
     networks: 
-      - web-proxy
+      - caddy-proxy
     environment: 
       FF_SYNCSERVER_PUBLIC_URL: https://firefox.$DOMAIN
-      FF_SYNCSERVER_SECRET: $FFSYNCSECRET
+      FF_SYNCSERVER_SECRET: $FFSYNCSECRET                # generate secret.txt first see docker-config.sh
       FF_SYNCSERVER_FORWARDED_ALLOW_IPS: '*'
       FF_SYNCSERVER_FORCE_WSGI_ENVIRON: true
       FF_SYNCSERVER_ALLOW_NEW_USERS: false
       FF_SYNCSERVER_LOGLEVEL: debug
       FF_SYNCSERVER_ACCESSLOG: true
     volumes:
-      - $DOCKERDIR/firefox-sync:/data
+      - $DOCKERDIR/cloud/firefox-sync:/data
     labels:
       caddy: firefox.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 5000}}"
@@ -234,20 +280,20 @@ services:
 ##
 ##_____________________ Bitwarden [CLOUD/Password-manager] 
   vaultwarden:
-    container_name: vaultwarden
+    container_name: cloud-vaultwarden
     image: vaultwarden/server
     restart: always
     healthcheck:
       interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
     networks: 
-      - web-proxy
-    volumes:
-      - $DOCKERDIR/vaultwarden:/data
+      - caddy-proxy
     environment:
       WEBSOCKET_ENABLED: true
       DOMAIN: vault.$DOMAIN
       SIGNUPS_ALLOWED: false
       ADMIN_TOKEN: $VAULTWARDENTOKEN
+    volumes:
+      - $DOCKERDIR/cloud/vaultwarden:/data
     labels:
       caddy: vault.$DOMAIN
       caddy.reverse_proxy_0: "{{upstreams 80}}"
@@ -264,11 +310,11 @@ services:
 ##
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
-    container_name: filerun
+    container_name: cloud-filerun
     image: filerun/filerun
     restart: always
     networks: 
-      - web-proxy
+      - caddy-proxy
       - filerun
     environment:
       FR_DB_HOST: filerun-db
@@ -283,9 +329,9 @@ services:
     depends_on:
       - filerun-db
     volumes:
-      - $DOCKERDIR/filerun/html:/var/www/html
+      - $DOCKERDIR/cloud/filerun/html:/var/www/html
       - $DATAPOOL/users:/user-files
-      - /user-files/snapshots/                # This excludes the $DATAPOOL/users/snapshots folder on your host. Otherwise Filerun will index all those snapshots.
+      - /user-files/snapshots/ # This excludes the $DATAPOOL/users/snapshots folder on your host. Otherwise Filerun will index all those snapshots.
     labels:
       caddy: drive.$DOMAIN
       caddy.reverse_proxy: "{{upstreams 80}}"
@@ -302,7 +348,7 @@ services:
       plugsy.category: Cloud
 ##____________________ Filerun database [CLOUD/FileRun/db]
   filerun-db:
-    container_name: filerun-db
+    container_name: cloud-filerun-db
     image: mariadb:10.1
     restart: always
     networks:
@@ -313,18 +359,21 @@ services:
       MYSQL_PASSWORD: $PW_DB
       MYSQL_DATABASE: filerun-db
     volumes:
-      - $DOCKERDIR/filerun/db:/var/lib/mysql
+      - $DOCKERDIR/cloud/filerun/db:/var/lib/mysql
     labels:
       plugsy.name: FileRun database
       plugsy.parents: Drive [FileRun]
 ##____________________ OnlyOffice for Filerun [CLOUD/FileRun/office]
-  office:
-    container_name: office
+  onlyoffice:
+    container_name: cloud-office
     image: onlyoffice/documentserver
     networks: 
-      - web-proxy
+      - caddy-proxy
       - filerun
     restart: always
+    depends_on:
+      - onlyoffice-db
+      - onlyoffice-rabbitmq
     environment:
       JWT_ENABLED: true
       JWT_SECRET: $ONLYOFFICEJWT
@@ -336,8 +385,8 @@ services:
       DB_USER: $USER
       DB_PWD:  $PW_DB
     volumes:
-      - $DOCKERDIR/filerun/office/data:/var/www/onlyoffice/Data
-      - $DOCKERDIR/filerun/office/log:/var/log/onlyoffice
+      - $DOCKERDIR/cloud/filerun/office/data:/var/www/onlyoffice/Data
+      - $DOCKERDIR/cloud/filerun/office/log:/var/log/onlyoffice
       - /usr/share/fonts
     labels:
       caddy: office.$DOMAIN
@@ -345,19 +394,19 @@ services:
       caddy.encode: gzip
       plugsy.name: OnlyOffice
       plugsy.parents: Drive [FileRun]
-  office-rabbitmq:
-    container_name: office-rabbitmq
+  onlyoffice-rabbitmq:
+    container_name: cloud-office-rabbitmq
     image: rabbitmq
     restart: always
     networks:
     - filerun
     volumes:
-      - $DOCKERDIR/filerun/office/rabbitmq:/var/lib/rabbitmq
+      - $DOCKERDIR/cloud/filerun/office/rabbitmq:/var/lib/rabbitmq
     labels:
       plugsy.name: OnlyOffice rabbitmq
       plugsy.parents: Drive [FileRun]
-  office-db:
-    container_name: office-db
+  onlyoffice-db:
+    container_name: cloud-office-db
     image: mariadb:latest
     networks:
       - filerun
@@ -368,18 +417,37 @@ services:
       MYSQL_PASSWORD: $PW_DB
       MYSQL_DATABASE: office-db
     volumes:
-      - $DOCKERDIR/filerun/office/db:/var/lib/mysql
+      - $DOCKERDIR/cloud/filerun/office/db:/var/lib/mysql
     labels:
       plugsy.name: OnlyOffice database
-      plugsy.parents: Drive [FileRun]
-##________MEDIA________
+      plugsy.parents: Drive [FileRun]      
+##
+##____________________ Guacamole [CLOUD/remote-desktop]
+  guacamole:
+    container_name: cloud-guacamole
+    image: maxwaldorf/guacamole
+    restart: always
+    networks: 
+      - caddy-proxy
+    environment:
+      EXTENSIONS: auth-quickconnect,auth-totp # add ,auth-totp if exposed to the internet, for 2FA
+    volumes:
+      - $DOCKERDIR/cloud/guacamole:/config
+    labels:
+      caddy: remote.$DOMAIN
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+      plugsy.name: Remote Desktop [Guacamole]
+      plugsy.link: https://remote.$DOMAIN
+      plugsy.category: Cloud
+## 
+##________DOWNLOADS & TV MEDIA SERVICES________
 ##_____________________ Jellyfin [MEDIA/Library] 
-  tv-jellyfin:
-    container_name: jellyfin
+  jellyfin:
+    container_name: tv-jellyfin
     image: cr.hotio.dev/hotio/jellyfin
     restart: always
     networks: 
-      - web-proxy
+      - caddy-proxy
     # Required for Intel QuickSync/VAAPI hardware accelerated video encoding/transcoding
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
@@ -390,7 +458,7 @@ services:
       TZ: $TZ
       UMASK_SET: 002 #optional
     volumes:
-      - $DOCKERDIR/jellyfin/config:/config
+      - $DOCKERDIR/tv/jellyfin/config:/config
       - $DATAPOOL/media:/data
     ports:
       - 8096:8096
@@ -399,14 +467,168 @@ services:
       caddy.reverse_proxy: "{{upstreams 8096}}"
       plugsy.name: Mediaserver [Jellyfin]
       plugsy.link: http://jellyfin.o/
-      plugsy.category: Media
+      plugsy.category: TV
+##
+##____________________ Sonarr [MEDIA/PVR-TVshows]
+  sonarr:
+    container_name: tv-sonarr
+    image: cr.hotio.dev/hotio/sonarr
+    networks: 
+      - caddy-proxy
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/tv/sonarr/config:/config
+      - $DATAPOOL/media:/Media
+    ports:
+      - 8989:8989
+    labels:
+      caddy: http://sonarr.o
+      caddy.reverse_proxy: "{{upstreams 8989}}"
+      plugsy.name: Series [Sonarr]
+      plugsy.link: http://sonarr.o/
+      plugsy.category: TV
+##
+##____________________ Radarr [MEDIA/PVR-Movies]
+  radarr:
+    container_name: tv-radarr
+    image: cr.hotio.dev/hotio/radarr
+    networks: 
+      - caddy-proxy
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/tv/radarr/config:/config
+      - $DATAPOOL/media:/Media
+    ports:
+      - 7878:7878
+    labels:
+      caddy: http://radarr.o
+      caddy.reverse_proxy: "{{upstreams 7878}}"
+      plugsy.name: Movies [Radarr]
+      plugsy.link: http://radarr.o/
+      plugsy.category: TV
+##
+##____________________ Bazarr [MEDIA/subtitles]
+  bazarr:
+    container_name: tv-bazarr
+    image: cr.hotio.dev/hotio/bazarr
+    networks: 
+      - caddy-proxy
+    depends_on:
+       - sonarr
+       - radarr
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/tv/bazarr/config:/config
+      - $DATAPOOL/media:/Media
+    ports:
+      - 6767:6767
+    labels:
+      caddy: http://bazarr.o
+      caddy.reverse_proxy: "{{upstreams 6767}}"
+      plugsy.name: Subs [Bazarr]
+      plugsy.link: http://bazarr.o/
+      plugsy.category: TV
+##
+##____________________ Lidarr [MEDIA/PVR-Music]
+  lidarr:
+    container_name: tv-lidarr
+    image: cr.hotio.dev/hotio/lidarr
+    networks: 
+      - caddy-proxy
+    depends_on:
+      - prowlarr
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/tv/lidarr/config:/config
+      - $DATAPOOL/media:/Media
+    ports:
+      - 8686:8686
+    labels:
+      caddy: http://lidarr.o
+      caddy.reverse_proxy: "{{upstreams 8686}}"
+      plugsy.name: Music [Lidarr]
+      plugsy.link: http://lidarr.o/
+      plugsy.category: TV    
+##
+##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
+  prowlarr:
+    container_name: tv-prowlarr
+    image: cr.hotio.dev/hotio/prowlarr:testing
+    networks: 
+      - caddy-proxy
+    depends_on:
+      - qbittorrent
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/tv/prowlarr/config:/config
+      - $DATAPOOL/media/incoming:/Media/incoming
+    ports:
+      - 9696:9696
+    labels:
+      caddy: http://torrents.o
+      caddy.reverse_proxy: "{{upstreams 9696}}"
+      plugsy.name: Search [Prowlarr]
+      plugsy.link: http://torrents.o/
+      plugsy.category: TV
+##
+##____________________ Transmission [MEDIA/download-client]
+  qbittorrent:
+    container_name: tv-qbittorrent
+    image: cr.hotio.dev/hotio/qbittorrent
+    depends_on:
+      - VPN-proxy
+    network_mode: service:VPN-proxy
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/tv/qbittorrent:/config
+      - $DATAPOOL/media/incoming:/Media/incoming
+    labels:
+      plugsy.name: Downloads [QBittorrent]
+      plugsy.link: http://downloads.o/
+      plugsy.category: TV
 ##____________________ VPN-proxy [MEDIA/vpn-client-for-media]
-  tv-VPN-proxy:
+  VPN-proxy:
     container_name: tv-VPN-proxy
     image: thrnz/docker-wireguard-pia
     restart: always
     networks: 
-      - web-proxy
+      - caddy-proxy
     cap_add:
       - NET_ADMIN
       #- SYS_MODULE might not be needed with a 5.6+ kernel?
@@ -441,9 +663,9 @@ services:
       #WG_USERSPACE: 1
     volumes:
       # Auth token is stored here
-      - $DOCKERDIR/vpn-proxy/pia:/pia
+      - $DOCKERDIR/tv/vpn-proxy/pia:/pia
       # If enabled, the forwarded port is dumped to /pia-shared/port.dat for potential use in other containers
-      - $DOCKERDIR/vpn-proxy/pia-shared:/pia-shared
+      - $DOCKERDIR/tv/vpn-proxy/pia-shared:/pia-shared
     # The container has no recovery logic. Use a healthcheck to catch disconnects.
     ports:
       - 9090:8080 #Qbittorrent webUI
@@ -452,165 +674,17 @@ services:
       caddy.reverse_proxy: "{{upstreams 8080}}"
       plugsy.name: VPN-Proxy [PIA]
       plugsy.parents: Downloads [QBittorrent]
-##
-##____________________ Transmission [MEDIA/download-client]
-  tv-qbittorrent:
-    container_name: tv-qbittorrent
-    image: cr.hotio.dev/hotio/qbittorrent
-    depends_on:
-      - tv-VPN-proxy
-    network_mode: service:tv-VPN-proxy
-    restart: always
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/qbittorrent:/config
-      - $DATAPOOL/media/incoming:/Media/incoming
-    labels:
-      plugsy.name: Downloads [QBittorrent]
-      plugsy.link: http://downloads.o/
-      plugsy.category: Media
-##
-##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
-  tv-prowlarr:
-    container_name: tv-prowlarr
-    image: cr.hotio.dev/hotio/prowlarr:testing
-    networks: 
-      - web-proxy
-    depends_on:
-      - tv-qbittorrent
-    restart: always
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      UMASK: 002
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/prowlarr/config:/config
-      - $DATAPOOL/media/incoming:/Media/incoming
-    ports:
-      - 9696:9696
-    labels:
-      caddy: http://torrents.o
-      caddy.reverse_proxy: "{{upstreams 9696}}"
-      plugsy.name: Search [Prowlarr]
-      plugsy.link: http://torrents.o/
-      plugsy.category: Media
-##
-##____________________ Sonarr [MEDIA/PVR-TVshows]
-  tv-sonarr:
-    container_name: tv-sonarr
-    image: cr.hotio.dev/hotio/sonarr
-    networks: 
-      - web-proxy
-    depends_on:
-      - tv-prowlarr
-      - tv-qbittorrent
-    restart: always
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      UMASK: 002
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/sonarr/config:/config
-      - $DATAPOOL/media:/Media
-    ports:
-      - 8989:8989
-    labels:
-      caddy: http://sonarr.o
-      caddy.reverse_proxy: "{{upstreams 8989}}"
-      plugsy.name: Series [Sonarr]
-      plugsy.link: http://sonarr.o/
-      plugsy.category: Media
-##
-##____________________ Radarr [MEDIA/PVR-Movies]
-  tv-radarr:
-    container_name: tv-radarr
-    image: cr.hotio.dev/hotio/radarr
-    networks: 
-      - web-proxy
-    depends_on:
-      - tv-prowlarr
-      - tv-qbittorrent
-    restart: always
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      UMASK: 002
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/radarr/config:/config
-      - $DATAPOOL/media:/Media
-    ports:
-      - 7878:7878
-    labels:
-      caddy: http://radarr.o
-      caddy.reverse_proxy: "{{upstreams 7878}}"
-      plugsy.name: Movies [Radarr]
-      plugsy.link: http://radarr.o/
-      plugsy.category: Media
-##
-##____________________ Bazarr [MEDIA/subtitles]
-  tv-bazarr:
-    container_name: tv-bazarr
-    image: cr.hotio.dev/hotio/bazarr
-    networks: 
-      - web-proxy
-    depends_on:
-       - tv-sonarr
-       - tv-radarr
-    restart: always
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      UMASK: 002
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/bazarr/config:/config
-      - $DATAPOOL/media:/Media
-    ports:
-      - 6767:6767
-    labels:
-      caddy: http://bazarr.o
-      caddy.reverse_proxy: "{{upstreams 6767}}"
-      plugsy.name: Subs [Bazarr]
-      plugsy.link: http://bazarr.o/
-      plugsy.category: Media
-##
-##____________________ Lidarr [MEDIA/PVR-Music]
-  tv-lidarr:
-    container_name: tv-lidarr
-    image: cr.hotio.dev/hotio/lidarr
-    networks: 
-      - web-proxy
-    depends_on:
-      - tv-prowlarr
-      - tv-qbittorrent
-    restart: always
-    environment:
-      PUID: $PUID
-      PGID: $PGID
-      UMASK: 002
-      TZ: $TZ
-    volumes:
-      - $DOCKERDIR/lidarr/config:/config
-      - $DATAPOOL/media:/Media
-    ports:
-      - 8686:8686
-    labels:
-      caddy: http://lidarr.o
-      caddy.reverse_proxy: "{{upstreams 8686}}"
-      plugsy.name: Music [Lidarr]
-      plugsy.link: http://lidarr.o/
-      plugsy.category: Media
 #
 networks:
-  web-proxy:
+  caddy-proxy:
     external: true
+  influxdb:
+    driver: bridge
   filerun:
     driver: bridge
   unbound:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
