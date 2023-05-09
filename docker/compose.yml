@@ -165,7 +165,6 @@ services:
     volumes: 
       - $DOCKERDIR/networking/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
       - $DOCKERDIR/networking/unbound/root.hints:/usr/local/unbound/root.hints:rw
-      #- $DOCKERDIR/networking/unbound/iana.d/:/usr/local/unbound/iana.d/:rw
       - $DOCKERDIR/networking/unbound/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
     labels:
       plugsy.name: DNS Resolver [Unbound]
