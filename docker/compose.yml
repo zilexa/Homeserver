@@ -17,7 +17,7 @@ version: "2.4"
 services:
 ##_______DASHBOARD & MONITORING SERVICES______
 ##
-##_____________________________ Portainer [SYSTEM/Docker]
+##_____________________________ Portainer [Dashboards/Docker]
   portainer:
     container_name: dash-portainer
     image: portainer/portainer-ce
@@ -36,7 +36,7 @@ services:
       plugsy.link: http://docker.o/
       plugsy.category: System Monitoring
 ##
-##_____________________________ Plugsy [SYSTEM/Homepage]
+##_____________________________ Plugsy [Dashboards/Startpage]
   plugsy:
     container_name: dash-plugsy
     image: plugsy/core
@@ -54,7 +54,7 @@ services:
       caddy: http://g.o
       caddy.reverse_proxy: "{{upstreams 3000}}"
 ## 
-##_____________________ InfluxDB [SYSTEM/Monitoring]
+##_____________________ InfluxDB [Dashboards/Monitoring]
   influxdb:
     container_name: dash-influxdb
     restart: unless-stopped
@@ -82,7 +82,7 @@ services:
       plugsy.name: InfluxDB
       plugsy.link: http://influxdb.o/
       plugsy.category: System Monitoring
-##_____________________ Telegraf [Monitoring/Metrics]
+##_____________________ Telegraf [Dashboards/Monitoring/Metrics]
   telegraf:
     container_name: dash-telegraf  # Required to run the following command before starting this container.. sudo chmod -R a+rx /sys/devices/virtual/powercap/intel-rapl/
     image: telegraf
@@ -109,7 +109,7 @@ services:
 ##
 ##_______NETWORKING SERVICES________
 ##
-##_____________________ Caddy [SYSTEM/web-proxy]
+##_____________________ Caddy [NETWORKING/web-proxy]
   caddy-proxy:
     container_name: net-caddy-proxy
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
@@ -138,7 +138,7 @@ services:
       plugsy.name: net-caddy-proxy [Caddy]
       plugsy.category: Network
 ##
-##______________________ AdGuard Home [PRIVACY/Blocker]
+##______________________ AdGuard Home [NETWORKING/dns-service]
   dns-adguard:
     container_name: dns-adguard
     image: adguard/adguardhome
@@ -150,7 +150,7 @@ services:
       plugsy.name: DNS Server [Adguard Home]
       plugsy.link: http://adguard.o/
       plugsy.category: Network
-##____________________ Unbound [PRIVACY/dns]
+##____________________ Unbound [NETWORK/dns-resolver]
   dns-unbound:
     container_name: dns-unbound
     image: madnuttah/unbound:latest
@@ -170,7 +170,7 @@ services:
       plugsy.name: DNS Resolver [Unbound]
       plugsy.parents: DNS Server [Adguard Home]
 ##
-##____________________ Castblock [PRIVACY/Chromecastblocker]
+##____________________ Castblock [NETWORKING/Youtube-cast-adblocker]
   dns-castblock:
     container_name: net-dns-castblock
     image: erdnaxeli/castblock:latest
@@ -187,7 +187,7 @@ services:
       plugsy.name: YT Casting [CastBlock]
       plugsy.category: Network
 ##
-##____________________ Unifi controller [NETWORK/Unifi-controller]
+##____________________ Unifi controller [NETWORKING/Unifi-controller]
   unificontroller:
     image: jacobalberty/unifi
     container_name: net-unificontroller
@@ -211,7 +211,7 @@ services:
       plugsy.category: Network
       plugsy.link: http://unifi.o/
 ##
-##________________________ VPN-portal [NETWORK/vpn]
+##________________________ VPN-portal [NETWORKING/vpn]
   VPN-portal:
     container_name: net-vpn-portal
     image: ngoduykhanh/wireguard-ui:latest
@@ -440,7 +440,7 @@ services:
       plugsy.category: Cloud
 ## 
 ##________DOWNLOADS & TV MEDIA SERVICES________
-##_____________________ Jellyfin [MEDIA/Library] 
+##_____________________ Jellyfin [TV/Mediaserver] 
   jellyfin:
     container_name: tv-jellyfin
     image: cr.hotio.dev/hotio/jellyfin
@@ -468,7 +468,7 @@ services:
       plugsy.link: http://jellyfin.o/
       plugsy.category: TV
 ##
-##____________________ Sonarr [MEDIA/PVR-TVshows]
+##____________________ Sonarr [TV/Series-downloadmanagement]
   sonarr:
     container_name: tv-sonarr
     image: cr.hotio.dev/hotio/sonarr
@@ -495,7 +495,7 @@ services:
       plugsy.link: http://sonarr.o/
       plugsy.category: TV
 ##
-##____________________ Radarr [MEDIA/PVR-Movies]
+##____________________ Radarr [TV/Movies-downloadmanagement]
   radarr:
     container_name: tv-radarr
     image: cr.hotio.dev/hotio/radarr
@@ -522,7 +522,7 @@ services:
       plugsy.link: http://radarr.o/
       plugsy.category: TV
 ##
-##____________________ Bazarr [MEDIA/subtitles]
+##____________________ Bazarr [[TV/subtitles]]
   bazarr:
     container_name: tv-bazarr
     image: cr.hotio.dev/hotio/bazarr
@@ -549,7 +549,7 @@ services:
       plugsy.link: http://bazarr.o/
       plugsy.category: TV
 ##
-##____________________ Lidarr [MEDIA/PVR-Music]
+##____________________ Lidarr [TV/Music-downloadmanagement]
   lidarr:
     container_name: tv-lidarr
     image: cr.hotio.dev/hotio/lidarr
@@ -576,7 +576,7 @@ services:
       plugsy.link: http://lidarr.o/
       plugsy.category: TV    
 ##
-##____________________ Prowlarr [MEDIA/torrent-proxy for Sonarr&Radarr]
+##____________________ Prowlarr [TV/torrentsites-proxy]
   prowlarr:
     container_name: tv-prowlarr
     image: cr.hotio.dev/hotio/prowlarr:testing
@@ -602,7 +602,7 @@ services:
       plugsy.link: http://torrents.o/
       plugsy.category: TV
 ##
-##____________________ Transmission [MEDIA/download-client]
+##____________________ Transmission [TV/torrent-download-client]
   qbittorrent:
     container_name: tv-qbittorrent
     image: cr.hotio.dev/hotio/qbittorrent
@@ -621,7 +621,7 @@ services:
       plugsy.name: Downloads [QBittorrent]
       plugsy.link: http://downloads.o/
       plugsy.category: TV
-##____________________ VPN-proxy [MEDIA/vpn-client-for-media]
+##____________________ VPN-proxy [TV/VPN-service]
   VPN-proxy:
     container_name: tv-VPN-proxy
     image: thrnz/docker-wireguard-pia
