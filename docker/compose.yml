@@ -147,7 +147,7 @@ services:
     volumes:
        - $DOCKERDIR/networking/adguardhome/conf:/opt/adguardhome/conf
     labels:
-      plugsy.name: adfiltering DNS service [Adguard Home]
+      plugsy.name: DNS service [Adguard Home]
       plugsy.link: http://adguard.o/
       plugsy.category: Network
 ##____________________ Unbound [NETWORK/dns-resolver]
@@ -167,7 +167,7 @@ services:
     #  - $DOCKERDIR/networking/unbound/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
     labels:
       plugsy.name: Recursive DNS resolver [Unbound]
-      plugsy.parents: Ad-aware DNS service [Adguard Home]
+      plugsy.parents: DNS service [Adguard Home]
 ##
 ##____________________ Castblock [NETWORKING/Youtube-cast-adblocker]
   dns-castblock:
