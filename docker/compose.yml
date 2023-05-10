@@ -160,7 +160,7 @@ services:
     environment:
       TZ: $TZ
     volumes: 
-      - $DOCKERDIR/networking/unbound:/etc/unbound/custom.conf.d
+      - $DOCKERDIR/networking/dns-unbound:/etc/unbound/custom.conf.d
     #volumes: 
     #  - $DOCKERDIR/networking/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
     #  - $DOCKERDIR/networking/unbound/root.hints:/usr/local/unbound/root.hints:rw
@@ -183,7 +183,7 @@ services:
       CATEGORIES: sponsor,interaction
       MUTE_ADS: true
     labels:
-      plugsy.name: Youtube casting adblocker
+      plugsy.name: Youtube adblocker [castblock]
       plugsy.category: Network
 ##
 ##____________________ Unifi controller [NETWORKING/Unifi-controller]
@@ -201,7 +201,7 @@ services:
       MEM_LIMIT: 1024
       MEM_STARTUP: 256
     labels:
-      plugsy.name: UniFi [WiFi AP]
+      plugsy.name: WiFi AP [UniFi]
       plugsy.category: Network
       plugsy.link: http://unifi.o/
 ##
