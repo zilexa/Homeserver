@@ -167,6 +167,22 @@ sudo systemctl start powertop.service
 gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
 
 
+echo "Disable Arch/Manjaro own DNS resolve settings"
+echo "------------------------------" 
+# Required to run a DNS server like Adguard Home and Unbound
+sudo rm /etc/resolv.conf
+sudo tee -a /etc/resolv.conf << EOF
+nameserver ::1
+nameserver 127.0.0.1
+options trust-ad
+EOF
+sudo tee -a /etc/NetworkManager/conf.d/90-dns-none.conf << EOF
+[main]
+dns=none
+EOF
+systemctl reload NetworkManager
+
+
 echo "    Auto-restart VPN server   "
 echo "------------------------------" 
 # Automatically restart Wireguard VPN server when the wireguard config file is modified (by VPN-Portal webUI)
