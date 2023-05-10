@@ -1,4 +1,4 @@
-## UPDATED: 2023-05-09
+## UPDATED: 2023-05-10
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -135,7 +135,7 @@ services:
       caddy_1.reverse_proxy: host.docker.internal:5000
       caddy_2: https://unifi.o
       caddy_2.reverse_proxy: host.docker.internal:8080
-      plugsy.name: net-caddy-proxy [Caddy]
+      plugsy.name: Secure Web Proxy [Caddy]
       plugsy.category: Network
 ##
 ##______________________ AdGuard Home [NETWORKING/dns-service]
@@ -147,28 +147,27 @@ services:
     volumes:
        - $DOCKERDIR/networking/adguardhome/conf:/opt/adguardhome/conf
     labels:
-      plugsy.name: DNS Server [Adguard Home]
+      plugsy.name: adfiltering DNS service [Adguard Home]
       plugsy.link: http://adguard.o/
       plugsy.category: Network
 ##____________________ Unbound [NETWORK/dns-resolver]
   dns-unbound:
     container_name: dns-unbound
-    image: madnuttah/unbound:latest
+    image: klutchell/unbound:latest
     hostname: unbound
     restart: always
     network_mode: host
-      #dns-unbound:
-       # ipv4_address: 172.20.0.2
-    #ports:
-    #  - 5335/tcp
-    #  - 5335/udp
+    environment:
+      TZ: $TZ
     volumes: 
-      - $DOCKERDIR/networking/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
-      - $DOCKERDIR/networking/unbound/root.hints:/usr/local/unbound/root.hints:rw
-      - $DOCKERDIR/networking/unbound/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
+      - $DOCKERDIR/networking/unbound:/etc/unbound/custom.conf.d
+    #volumes: 
+    #  - $DOCKERDIR/networking/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
+    #  - $DOCKERDIR/networking/unbound/root.hints:/usr/local/unbound/root.hints:rw
+    #  - $DOCKERDIR/networking/unbound/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
     labels:
-      plugsy.name: DNS Resolver [Unbound]
-      plugsy.parents: DNS Server [Adguard Home]
+      plugsy.name: Recursive DNS resolver [Unbound]
+      plugsy.parents: Ad-aware DNS service [Adguard Home]
 ##
 ##____________________ Castblock [NETWORKING/Youtube-cast-adblocker]
   dns-castblock:
@@ -184,30 +183,25 @@ services:
       CATEGORIES: sponsor,interaction
       MUTE_ADS: true
     labels:
-      plugsy.name: YT Casting [CastBlock]
+      plugsy.name: Youtube casting adblocker
       plugsy.category: Network
 ##
 ##____________________ Unifi controller [NETWORKING/Unifi-controller]
-  unificontroller:
-    image: jacobalberty/unifi
-    container_name: net-unificontroller
-    restart: "no" # " " is required otherwise this is interpreted as boolean instead of string
+  unifi-wifi:
+    image: lscr.io/linuxserver/unifi-controller
+    container_name: net-unifi-wifi
+    restart: "no"
     network_mode: host
     volumes:
-      - $DOCKERDIR/networking/unifi/data:/unifi/data # required to not loose your configuration
+      - $DOCKERDIR/networking/unifi-wifi:/config
     environment:
       TZ: $TZ
-      LOTSOFDEVICES: true
-      JVM_EXTRA_OPTS: true
-      JVM_INIT_HEAP_SIZE: 256
-      JVM_MAX_HEAP_SIZE: 800
-    #ports:
-      #- 3478:3478/udp # STUN - Required
-      #- 8080:8080/tcp # Device/ controller comm. #- Required
-      #- 8443:8443/tcp # Controller GUI/API as seen in a web browser - Required
-      #- 10001:10001/udp # Access Point discovery - Recommended
+      PUID: 1000
+      PGID: 1000
+      MEM_LIMIT: 1024
+      MEM_STARTUP: 256
     labels:
-      plugsy.name: WiFi AP [UniFi Controller]
+      plugsy.name: UniFi [WiFi AP]
       plugsy.category: Network
       plugsy.link: http://unifi.o/
 ##
