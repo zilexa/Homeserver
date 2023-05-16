@@ -68,8 +68,8 @@ _Note_
 #### Step 1B. How to properly install Docker and essential tools?
 _Turn your system into a modern server with 1 click with [prep_server.sh](https://github.com/zilexa/Homeserver/blob/master/prep-server.sh) to automatically or manually install essential tools, apply basic configuration + required stuff for optional docker services._
 
-Read through the [prep_server.sh](https://github.com/zilexa/Homeserver/blob/master/prep-server.sh) and see what it does (everything has comments). 
-The PREP_DOCKER.SH script is carefully created to install the tools required to run all aspects of your server (from docker to mainentance tasks). \
+It is recommended to read through the [prep_server.sh](https://github.com/zilexa/Homeserver/blob/master/prep-server.sh) to get an idea what it does and why. 
+It has been carefully created to install the tools required to run all aspects of your server (from docker to mainentance tasks). \
 Official documentation is used to install tools correctly and all tools will be installed using the offical Manjaro package manager, a single package manager that keeps applications, OS and drivers up to date. 
 
 Download and install it via: 
