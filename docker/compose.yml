@@ -161,10 +161,6 @@ services:
       TZ: $TZ
     volumes: 
       - $DOCKERDIR/networking/dns-unbound:/etc/unbound/custom.conf.d
-    #volumes: 
-    #  - $DOCKERDIR/networking/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
-    #  - $DOCKERDIR/networking/unbound/root.hints:/usr/local/unbound/root.hints:rw
-    #  - $DOCKERDIR/networking/unbound/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
     labels:
       plugsy.name: Recursive DNS resolver [Unbound]
       plugsy.parents: DNS service [Adguard Home]
