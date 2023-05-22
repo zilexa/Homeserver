@@ -2,8 +2,13 @@
 
 ## Wrapper script running "btrbk" and sending email with results
 
+
 # create tempfile to indicate backup tasks are running, preventing Monthly from kicking off its tasks simultanuously
 touch /tmp/running-backups
+
+# Stop docker containers to prevent data corruption in snapshots
+docker compose stop
+
 
 now=$(date +%Y%m%d)
 
@@ -272,6 +277,9 @@ eend $exitcode "$status"
 
 umount_mounted
 send_mail
+
+# Restart docker containers 
+docker compose start
 
 # Delete temp file, follow up tasks like Monthly can continue
 rm /tmp/running-backups
