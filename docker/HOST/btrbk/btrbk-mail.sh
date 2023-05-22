@@ -7,7 +7,7 @@
 touch /tmp/running-backups
 
 # Stop docker containers to prevent data corruption in snapshots
-docker compose stop
+docker-compose stop
 
 
 now=$(date +%Y%m%d)
@@ -279,7 +279,7 @@ umount_mounted
 send_mail
 
 # Restart docker containers 
-docker compose start
+su -l ${LOGUSER} -c 'docker-compose start'
 
 # Delete temp file, follow up tasks like Monthly can continue
 rm /tmp/running-backups
