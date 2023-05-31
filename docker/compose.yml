@@ -1,4 +1,4 @@
-## UPDATED: 2023-05-10
+## UPDATED: 2023-05-31
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -23,7 +23,7 @@ services:
     image: portainer/portainer-ce
     restart: always
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/dashboards/portainer/data:/data
@@ -42,7 +42,7 @@ services:
     image: plugsy/core
     restart: always
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     #  - $DOCKERDIR/dashboard/config.json:/config.json
@@ -60,8 +60,8 @@ services:
     restart: unless-stopped
     image: influxdb
     networks:
-      - caddy-proxy
-      - influxdb
+      - net-caddy-proxy
+      - net-influxdb
     environment:
       - INFLUXDB_ADMIN_USER=$USER
       - INFLUXDB_ADMIN_PASSWORD=$PW_DB
@@ -89,7 +89,7 @@ services:
     depends_on:
       - influxdb
     networks:
-      - influxdb
+      - net-influxdb
     cap_add:            
       - SYS_RAWIO 
     privileged: true
@@ -115,9 +115,9 @@ services:
     image: lucaslorentz/caddy-docker-proxy:ci-alpine
     restart: always
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     environment:
-      - CADDY_INGRESS_NETWORKS=caddy-proxy
+      - CADDY_INGRESS_NETWORKS=net-caddy-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - $DOCKERDIR/networking/caddy-proxy/caddy_data:/data
@@ -140,7 +140,7 @@ services:
 ##
 ##______________________ AdGuard Home [NETWORKING/dns-service]
   dns-adguard:
-    container_name: dns-adguard
+    container_name: net-dns-adguard
     image: adguard/adguardhome
     restart: always
     network_mode: host
@@ -152,7 +152,7 @@ services:
       plugsy.category: Network
 ##____________________ Unbound [NETWORK/dns-resolver]
   dns-unbound:
-    container_name: dns-unbound
+    container_name: net-dns-unbound
     image: klutchell/unbound:latest
     hostname: unbound
     restart: always
@@ -161,13 +161,17 @@ services:
       TZ: $TZ
     volumes: 
       - $DOCKERDIR/networking/dns-unbound:/etc/unbound/custom.conf.d
+    #volumes: 
+    #  - $DOCKERDIR/networking/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
+    #  - $DOCKERDIR/networking/unbound/root.hints:/usr/local/unbound/root.hints:rw
+    #  - $DOCKERDIR/networking/unbound/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
     labels:
       plugsy.name: Recursive DNS resolver [Unbound]
       plugsy.parents: DNS service [Adguard Home]
 ##
 ##____________________ Castblock [NETWORKING/Youtube-cast-adblocker]
   dns-castblock:
-    container_name: net-dns-castblock
+    container_name: net-castblock
     image: erdnaxeli/castblock:latest
     restart: always
     network_mode: host
@@ -250,7 +254,7 @@ services:
     image: crazymax/firefox-syncserver:latest
     restart: always
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     environment: 
       FF_SYNCSERVER_PUBLIC_URL: https://firefox.$DOMAIN
       FF_SYNCSERVER_SECRET: $FFSYNCSECRET                # generate secret.txt first see docker-config.sh
@@ -275,8 +279,9 @@ services:
     healthcheck:
       interval: 5m # to test the container, change to 10s. To prevent constant logfile activity, change to a few minutes
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     environment:
+      TZ: $TZ
       WEBSOCKET_ENABLED: true
       DOMAIN: vault.$DOMAIN
       SIGNUPS_ALLOWED: false
@@ -300,12 +305,13 @@ services:
 ##____________________ FileRun [CLOUD/FileRun]
   filerun:
     container_name: cloud-filerun
-    image: filerun/filerun
+    image: filerun/filerun:8.1
     restart: always
     networks: 
-      - caddy-proxy
-      - filerun
+      - net-caddy-proxy
+      - net-filerun
     environment:
+      TZ: $TZ
       FR_DB_HOST: filerun-db
       FR_DB_PORT: 3306
       FR_DB_NAME: filerun-db
@@ -341,8 +347,9 @@ services:
     image: mariadb:10.1
     restart: always
     networks:
-      - filerun
+      - net-filerun
     environment:
+      TZ: $TZ
       MYSQL_ROOT_PASSWORD: $PW_DB
       MYSQL_USER: $USER
       MYSQL_PASSWORD: $PW_DB
@@ -357,8 +364,8 @@ services:
     container_name: cloud-office
     image: onlyoffice/documentserver
     networks: 
-      - caddy-proxy
-      - filerun
+      - net-caddy-proxy
+      - net-filerun
     restart: always
     depends_on:
       - onlyoffice-db
@@ -366,8 +373,8 @@ services:
     environment:
       JWT_ENABLED: true
       JWT_SECRET: $ONLYOFFICEJWT
-      AMQP_URI: amqp://office-rabbitmq:5672
-      DB_HOST: office-db
+      AMQP_URI: amqp://onlyoffice-rabbitmq:5672
+      DB_HOST: onlyoffice-db
       DB_PORT: 3306
       DB_TYPE: mariadb
       DB_NAME: office-db
@@ -388,7 +395,7 @@ services:
     image: rabbitmq
     restart: always
     networks:
-    - filerun
+    - net-filerun
     volumes:
       - $DOCKERDIR/cloud/filerun/office/rabbitmq:/var/lib/rabbitmq
     labels:
@@ -398,7 +405,7 @@ services:
     container_name: cloud-office-db
     image: mariadb:latest
     networks:
-      - filerun
+      - net-filerun
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: $PW_DB
@@ -417,8 +424,9 @@ services:
     image: maxwaldorf/guacamole
     restart: always
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     environment:
+      TZ: $TZ
       EXTENSIONS: auth-quickconnect,auth-totp # add ,auth-totp if exposed to the internet, for 2FA
     volumes:
       - $DOCKERDIR/cloud/guacamole:/config
@@ -436,7 +444,7 @@ services:
     image: cr.hotio.dev/hotio/jellyfin
     restart: always
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     # Required for Intel QuickSync/VAAPI hardware accelerated video encoding/transcoding
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
@@ -463,7 +471,7 @@ services:
     container_name: tv-sonarr
     image: cr.hotio.dev/hotio/sonarr
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     depends_on:
       - prowlarr
       - qbittorrent
@@ -490,7 +498,7 @@ services:
     container_name: tv-radarr
     image: cr.hotio.dev/hotio/radarr
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     depends_on:
       - prowlarr
       - qbittorrent
@@ -517,7 +525,7 @@ services:
     container_name: tv-bazarr
     image: cr.hotio.dev/hotio/bazarr
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     depends_on:
        - sonarr
        - radarr
@@ -544,7 +552,7 @@ services:
     container_name: tv-lidarr
     image: cr.hotio.dev/hotio/lidarr
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     depends_on:
       - prowlarr
       - qbittorrent
@@ -571,7 +579,7 @@ services:
     container_name: tv-prowlarr
     image: cr.hotio.dev/hotio/prowlarr:testing
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     depends_on:
       - qbittorrent
     restart: always
@@ -617,7 +625,7 @@ services:
     image: thrnz/docker-wireguard-pia
     restart: always
     networks: 
-      - caddy-proxy
+      - net-caddy-proxy
     cap_add:
       - NET_ADMIN
       #- SYS_MODULE might not be needed with a 5.6+ kernel?
@@ -665,13 +673,13 @@ services:
       plugsy.parents: Downloads [QBittorrent]
 #
 networks:
-  caddy-proxy:
+  net-caddy-proxy:
     external: true
-  influxdb:
+  net-influxdb:
     driver: bridge
-  filerun:
+  net-filerun:
     driver: bridge
-  unbound:
+  net-unbound:
     driver: bridge
     ipam:
       config:
