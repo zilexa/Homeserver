@@ -30,13 +30,13 @@ echo -e "\nBLEACHBIT - system wide cleanup of OS and local applications..\n" >> 
 tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.tmp
 rm ${SCRIPTDIR}/logs/bleachbit.tmp
 
-# Run Bleachbit for regular user to clean files in $HOME
-su -l ${LOGUSER} -c 'touch ${SCRIPTDIR}/logs/bleachbit.tmp'
-su -l ${LOGUSER} -c 'bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp'
+# Run Bleachbit for regular user to clean files in $HOME. # REMOVED, WILL BE REPLACED WITH RECOMMENDATIONS FROM ARCH WIKI.
+#su -l ${LOGUSER} -c 'touch ${SCRIPTDIR}/logs/bleachbit.tmp'
+#su -l ${LOGUSER} -c 'bleachbit --preset --clean |& tee -a ${SCRIPTDIR}/logs/bleachbit.tmp'
 # Add the summary of Bleachbit output to our monthly mail
-echo -e "\nBLEACHBIT - user level cleanup (/home folder).. \n" >> ${SCRIPTDIR}/logs/monthly.tmp
-tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.tmp
-rm ${SCRIPTDIR}/logs/bleachbit.tmp
+#echo -e "\nBLEACHBIT - user level cleanup (/home folder).. \n" >> ${SCRIPTDIR}/logs/monthly.tmp
+#tail -n 4 ${SCRIPTDIR}/logs/bleachbit.tmp >> ${SCRIPTDIR}/logs/monthly.tmp
+#rm ${SCRIPTDIR}/logs/bleachbit.tmp
 
 
 # DOCKER - cleanup
