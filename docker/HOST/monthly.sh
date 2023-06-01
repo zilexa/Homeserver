@@ -57,8 +57,8 @@ docker images --format "table {{.Repository}}\t{{.CreatedAt}}" > /tmp/img2.txt
 # Now create nice list of updated images
 comm -13 <(sort /tmp/img1.txt) <(sort /tmp/img2.txt) > /tmp/img3.txt
 echo -e "\nUPDATED the following docker images: \n" >> ${SCRIPTDIR}/logs/monthly.tmp
-cut -d ' ' -f 1 < /tmp/img3.txt > result.txt >> ${SCRIPTDIR}/logs/monthly.tmp
-rm /tmp/img*.txt 
+cut -d ' ' -f 1 < /tmp/img3.txt > /tmp/result.txt >> ${SCRIPTDIR}/logs/monthly.tmp
+rm /tmp/img*.txt /tmp/result.txt
 # Now recreate containers with new images, remove orphans
 su -l ${LOGUSER} -c 'docker-compose up -d --remove-orphans' >> ${SCRIPTDIR}/logs/monthly.tmp # not adding to email body as it would be a lot
 echo -e "\nDocker updates finished. \n" >> ${SCRIPTDIR}/logs/monthly.tmp
