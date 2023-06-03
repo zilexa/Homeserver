@@ -12,10 +12,13 @@ UUID=      (system partition uuid)        /                        btrfs   subvo
 UUID=      (system partition uuid)        /home                    btrfs   subvol=/@home,defaults 0 0
 UUID=      (system partition uuid)        /var/cache               btrfs   subvol=/@cache,defaults 0 0
 UUID=      (system partition uuid)        /var/log                 btrfs   subvol=/@log,defaults 0 0
+# User cache folder excluded from automated system snapshots
 UUID=      (system partition uuid)        /home/asterix/.cache     btrfs   subvol=/@usercache,defaults,noatime,compress-force=zstd:1  0 0
+# User downloads folder excluded automated from system snapshots
 UUID=      (system partition uuid)        /home/asterix/Downloads  btrfs   subvol=/@downloads,x-gvfs-hide,defaults,noatime,compress-force=zstd:1  0 0
 # Docker subvolume ~ automount
 UUID=      (system partition uuid)        /home/asterix/docker     btrfs   subvol=@docker,x-gvfs-hide,defaults,noatime,compress-force=zstd:1  0  0
+
 
 # Data pool ~ automount
 UUID=        (media drive uuid)           /mnt/pool/media          btrfs   defaults,noatime,compress=zstd:1 0 0
@@ -26,17 +29,12 @@ UUID=        (users drive uuid)           /mnt/pool/users          btrfs   defau
 # System drive root ~ mount on-demand only                        
 UUID=      (system partition uuid)        /mnt/drives/system       btrfs   subvolid=5,defaults,noatime,noauto  0  0
 
-
-
-
-
-# Backup drive root ~ mount on-demand only
+# Online backup drives ~ mount on-demand only
 UUID=      (backup drive 1 uuid)          /mnt/drives/backup1      btrfs   defaults,noatime,noauto,compress-force=zstd:8 0 0
 
-# USB backup drives ~ mount on-demand only
+# Offline backup drives (USB) ~ mount on-demand only
 UUID=      (backup drive 2 uuid)          /mnt/drives/backup2      btrfs  defaults,noatime,noauto,compress-force=zstd:8 0 0
 UUID=      (backup drive 3 uuid)          /mnt/drives/backup3      btrfs  defaults,noatime,noauto,compress-force=zstd:8 0 0
-
 
 
 #   *** EXAMPLES FOR MERGERFS, SNAPRAID, NFS NETWORK SHARE ***
