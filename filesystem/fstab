@@ -3,7 +3,9 @@
 # Use 'blkid' to print the universally unique identifier for a device; this may
 # be used with UUID= as a more robust way to name devices that works even if
 # disks are added and removed. See fstab(5).
-#
+
+
+#               *** AUTO-MOUNTED AT BOOT ***
 # <file system>                           <mount point>            <type>  <options>  <dump> <pass>
 UUID=       (boot partition uuid)         /boot/efi                vfat    umask=0077 0 2
 UUID=      (system partition uuid)        /                        btrfs   subvol=/@,defaults 0 0
@@ -20,6 +22,7 @@ UUID=        (media drive uuid)           /mnt/pool/media          btrfs   defau
 UUID=        (users drive uuid)           /mnt/pool/users          btrfs   defaults,noatime,compress-force=zstd:3 0 0
 
 
+#              *** NOT AUTOMATICALLY MOUNTED *** (only for backups, drive maintenance etc)
 # System drive root ~ mount on-demand only                        
 UUID=      (system partition uuid)        /mnt/drives/system       btrfs   subvolid=5,defaults,noatime,noauto  0  0
 
@@ -36,7 +39,7 @@ UUID=      (backup drive 3 uuid)          /mnt/drives/backup3      btrfs  defaul
 
 
 
-# Optional examples below if you need MergerFS, MergerFS with a cache drive and parity via Snapraid. 
+#   *** EXAMPLES FOR MERGERFS, SNAPRAID, NFS NETWORK SHARE ***
 
 # MERGERFS, pool multiple drives, mount on /mnt/pool, fill up the first disk, then the second, then the 3rd etc ("category.create =eplfs", always choosing the drive with the LEAST FREE SPACE, unless its folder already existed on another drive). 
 # Note if you want to use a fast cache drive, use this mountpoint as your "no-cache" mountpoint (call it /mnt/nocache-pool), to be able to offload the cache drive to the rest of your pool!
