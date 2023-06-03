@@ -26,9 +26,9 @@ UUID=        (users drive uuid)           /mnt/pool/users          btrfs   defau
 # System drive root ~ mount on-demand only                        
 UUID=      (system partition uuid)        /mnt/drives/system       btrfs   subvolid=5,defaults,noatime,noauto  0  0
 
-# Data drive root ~ mount on-demand only
-UUID=        (media drive uuid)           /mnt/drives/data0        btrfs   defaults,noatime,noauto,compress=zstd:1 0 0
-UUID=        (users drive uuid)           /mnt/drives/data1        btrfs   defaults,noatime,noauto,compress-force=zstd:3 0 0
+
+
+
 
 # Backup drive root ~ mount on-demand only
 UUID=      (backup drive 1 uuid)          /mnt/drives/backup1      btrfs   defaults,noatime,noauto,compress-force=zstd:8 0 0
