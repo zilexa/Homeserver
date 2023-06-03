@@ -4,38 +4,48 @@
 # be used with UUID= as a more robust way to name devices that works even if
 # disks are added and removed. See fstab(5).
 #
-# <file system>                           <mount point>           <type>  <options>  <dump> <pass>
-UUID=                                     /boot/efi                vfat   umask=0077  0 2
-UUID=                                     /                        btrfs  subvol=/@,defaults  0 0
-UUID=                                     /home                    btrfs  subvol=/@home,defaults  0 0
-UUID=                                     /var/cache               btrfs  subvol=/@cache,defaults  0 0
-UUID=                                     /var/log                 btrfs  subvol=/@log,defaults  0 0
-UUID=                                     /home/asterix/.cache     btrfs   subvol=/@usercache,defaults,noatime,compress-force=zstd:1  0 0
-UUID=                                     /home/asterix/Downloads  btrfs   subvol=/@downloads,x-gvfs-hide,defaults,noatime,compress-force=zstd:1  0 0
+# <file system>                           <mount point>            <type>  <options>  <dump> <pass>
+UUID=       (boot partition uuid)         /boot/efi                vfat    umask=0077 0 2
+UUID=      (system partition uuid)        /                        btrfs   subvol=/@,defaults 0 0
+UUID=      (system partition uuid)        /home                    btrfs   subvol=/@home,defaults 0 0
+UUID=      (system partition uuid)        /var/cache               btrfs   subvol=/@cache,defaults 0 0
+UUID=      (system partition uuid)        /var/log                 btrfs   subvol=/@log,defaults 0 0
+UUID=      (system partition uuid)        /home/asterix/.cache     btrfs   subvol=/@usercache,defaults,noatime,compress-force=zstd:1  0 0
+UUID=      (system partition uuid)        /home/asterix/Downloads  btrfs   subvol=/@downloads,x-gvfs-hide,defaults,noatime,compress-force=zstd:1  0 0
 # Docker subvolume ~ automount
-UUID=                                     /home/asterix/docker     btrfs   subvol=@docker,x-gvfs-hide,defaults,noatime,compress-force=zstd:1  0  0
+UUID=      (system partition uuid)        /home/asterix/docker     btrfs   subvol=@docker,x-gvfs-hide,defaults,noatime,compress-force=zstd:1  0  0
 
-# System drive root ~ mount on-demand only
-UUID=                                     /mnt/drives/system       btrfs  subvolid=5,defaults,noatime,noauto  0  0
-# Backup drive root ~ mount on-demand only
-UUID=                                     /mnt/drives/backup1      btrfs  defaults,noatime,noauto,compress-force=zstd:5  0 0
+# Data pool ~ automount
+UUID=        (media drive uuid)           /mnt/pool/media          btrfs   defaults,noatime,compress=zstd:1 0 0
+UUID=        (users drive uuid)           /mnt/pool/users          btrfs   defaults,noatime,compress-force=zstd:3 0 0
+
+
+# System drive root ~ mount on-demand only                        
+UUID=      (system partition uuid)        /mnt/drives/system       btrfs   subvolid=5,defaults,noatime,noauto  0  0
+
 # Data drive root ~ mount on-demand only
-UUID=                                     /mnt/drives/data0        btrfs  defaults,noatime,noauto  0 0
-UUID=                                     /mnt/drives/data1        btrfs  defaults,noatime,noauto,compress-force=zstd:3  0 0
+UUID=        (media drive uuid)           /mnt/drives/data0        btrfs   defaults,noatime,noauto,compress=zstd:1 0 0
+UUID=        (users drive uuid)           /mnt/drives/data1        btrfs   defaults,noatime,noauto,compress-force=zstd:3 0 0
 
-# Datapool ~ automount
+# Backup drive root ~ mount on-demand only
+UUID=      (backup drive 1 uuid)          /mnt/drives/backup1      btrfs   defaults,noatime,noauto,compress-force=zstd:8 0 0
 
-# OPTION 1 or 3: single drive, btrfs raid1 or one drive per datatype
-UUID=                                     /mnt/pool/Media          btrfs  subvol=Media,defaults,noatime  0 0
-UUID=                                     /mnt/pool/Users          btrfs  subvol=Users,defaults,noatime,compress-force=zstd:3  0 0
+# USB backup drives ~ mount on-demand only
+UUID=      (backup drive 2 uuid)          /mnt/drives/backup2      btrfs  defaults,noatime,noauto,compress-force=zstd:8 0 0
+UUID=      (backup drive 3 uuid)          /mnt/drives/backup3      btrfs  defaults,noatime,noauto,compress-force=zstd:8 0 0
 
-# OPTION 2: MergerFS without tiered cache. Also required (with mountpoint pool-nocache) if you do use tiered cache, to be able to offload the cache to the rest of the pool.
+
+
+# Optional examples below if you need MergerFS, MergerFS with a cache drive and parity via Snapraid. 
+
+# MERGERFS, pool multiple drives, mount on /mnt/pool, fill up the first disk, then the second, then the 3rd etc ("category.create =eplfs", always choosing the drive with the LEAST FREE SPACE, unless its folder already existed on another drive). 
+# Note if you want to use a fast cache drive, use this mountpoint as your "no-cache" mountpoint (call it /mnt/nocache-pool), to be able to offload the cache drive to the rest of your pool!
 /mnt/drives/data1:/mnt/drives/data2:/mnt/drives/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=eplfs,moveonenospc=true,minfreespace=100G,fsname=mergerfsPool  0 0
 
-# OPTION 2+cache: multiple drives using MergerFS with tiered cache (create policy needs to be `lfs` to ensure data goes to smallest drive, the cache drive)
+# MERGERFS, use a fast cache drive in your pool, to write to first. Cachedrive needs to be the smallest drive in the pool. (create policy needs to be `lfs` to ensure data goes to smallest drive, the cache drive)
 /mnt/drives/cache:/mnt/drives/data1:/mnt/drives/data2:/mnt/drives/data3 /mnt/pool fuse.mergerfs allow_other,cache.files=auto-full,dropcacheonclose=true,cache.readdir=true,cache.statfs=true,cache.symlinks=true,cache.entry=3,cache.attr=3,cache.negative_entry=2,use_ino,category.create=lfs,moveonenospc=true,minfreespace=200G,fsname=mergerfsPool  0 0
 
-# Parity - parity drives for Snapraid. 1 parity drive can protect up to 4 datadrives (but only a single subvolume per drive). 
+# PARITY ~ parity drives for Snapraid. 1 parity drive can protect up to 4 datadrives (but only a single subvolume per drive). 
 UUID=                                     /mnt/drives/parity1       ext4   defaults,noatime,noauto 0 0
 
 
