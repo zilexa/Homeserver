@@ -35,7 +35,7 @@ Before you create filesystems and folder (subvolume!) structures, you need to pr
 sudo blkdiscard /dev/sda -v
 sudo blkdiscard /dev/nvme0n1 -v
 ```
-- For HDDs: `sudo wipefs --all /dev/sda`, if the drive contains partitions (/dev/sda1, /dev/sda2 etc) you may need to do this for each partition before doing it for the whole drive.  \
+- For HDDs: `sudo wipefs --all /dev/sda`, if the drive contains partitions (/dev/sda1, /dev/sda2 etc) you may need to do this for each partition before doing it for the whole drive.
 
 *Note from now on, all example commands are shown with SATA device paths. You can simply change it to your situation, whether NVME or SATA*
 ### 2. Create Partition Tables
