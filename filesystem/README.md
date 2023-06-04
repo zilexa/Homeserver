@@ -40,7 +40,7 @@ sudo blkdiscard /dev/nvme0n4 -v
 Highly recommended to do this via `parted` to ensure it is done correctly. See example below, ***do this for each drive.***
 Run the command `parted /dev/sda`, then `mklabel gpt`, then `mkpart primary btrfs 4MiB 100%`, then `print`, then `quit`. See example below: 
 ```
-# parted /dev/nvme0n4
+# parted /dev/sda
 
 GNU Parted 3.4
 Using /dev/sda
