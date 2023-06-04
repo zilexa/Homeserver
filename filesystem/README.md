@@ -37,8 +37,6 @@ sudo blkdiscard /dev/nvme0n1 -v
 ```
 - For HDDs: `sudo wipefs --all /dev/sda`, if the drive contains partitions (/dev/sda1, /dev/sda2 etc) you may need to do this for each partition before doing it for the whole drive.  \
 
-&nbsp;
-&nbsp;
 *Note from now on, all example commands are shown with SATA device paths. You can simply change it to your situation, whether NVME or SATA*
 ### 2. Create Partition Tables
 It is highly recommended to do this via `parted`, instead of a graphical utility, to ensure it is done correctly. See example below, ***do this for each drive.***
