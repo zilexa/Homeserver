@@ -103,19 +103,22 @@ Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a fi
 This step is prone to errors. Prepare first. 
 
 ### _Preparation_
-1. Make sure all drives are unmounted first: `umount /mnt/drives/data1` for all mount points, also old ones you might have in /media. You cannot mount to non-empty folder.
-2. Make sure each mount point (created in Step 3) is an empty folder after unmounting.
-3. Open 2 command windows:
-  - In the first one, list each UUID per drive: `sudo lsblk -f`
-  - In the second one, make a backup of your fstab first via `sudo cp /etc/fstab /etc/fstabbackup`
-  - Stay in the second one, open fstab: `sudo nano /etc/fstab`. Whatever you do next, do not mess up the existing lines!
+1. Make sure all drives you are going to modify in fstab, are unmounted first: `umount /mnt/drives/data1` for example.
+2. Make sure each mount point (created in Step 3) is an *empty folder* after unmounting. No apps or services using these paths should be running!
+3. Create a backup of fstab: `sudo cp /etc/fstab /etc/fstabbackup`
+4. Run `sudo lsblk -f` for an overview, also have Disk Utility open next to it. 
+5. Run `sudo pluma /etc/fstab`
+6. Open [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab), *note all UUIDs are missing in this example. Use the partition UUIDs you see in terminal/disk utility*. 
 
 ### _Steps to add drives_ 
-1. You now want to add "DRIVE MOUNT POINTS". Use that specific section of the [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab) as reference, copy only the lines you need!
-2. After copying the lines make sure you fill in the right UUID, use the first command window to copy/paste the UUID.
-3. Save the file via CTRL+O and exit via CTRL+X. Now test if your fstab works without errors: `sudo mount -a`. This will mount everything listed in fstab. If there is no output: Congrats!! Almost done!
-4. If it says things couldn't be mounted, edit the file again, fix the errors, repeat step 3.  
-5. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
+1. Go through the example, add the lines you are missing under "AUTO-MOUNTED AT BOOT". Note the post-install has created subvolumes, mountpoints for `Downloads` and `.cache` because they should always be excluded from backup snapshots created by the OS. 
+2. Make sure you also add the lines under "NOT AUTOMATICALLY MOUNTED" for the system drive and the backup drives you might have.
+3. If you use BTRFS-RAID1, you simply use the UUID of the first drive in that pool. So you only need 1 line here, for each BTRFS-RAID pool. 
+
+Ensure you did not make any mistakes. Double check!
+4. Save file. Now run `sudo systemctl daemon-reload` to load the changes. 
+5. To test, run `sudo mount -a`. If there are errors, unmount the drives before editing the file again. 
+6. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 &nbsp;
 
