@@ -62,7 +62,7 @@ Number  Start   End     Size    File system  Name     Flags
 (parted) quit
 Information: You may need to update /etc/fstab.
 ```
-Note each drive now has a partition (sda has sda1, etc): `sudo lsblk -f`
+Note each drive now has a partition (sda has sda1, etc): `sudo lsblk -f` and see the Disk Utility. 
 
 &nbsp;
 ## STEP 2: Create filesystems 
