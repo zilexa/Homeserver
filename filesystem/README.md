@@ -117,9 +117,9 @@ This step is prone to errors. Prepare first.
 3. Make sure you add the lines under "NOT AUTOMATICALLY MOUNTED" for the system drive and the backup drives you might have.
 4. If you use BTRFS-RAID1, you simply use the UUID of the first drive in that pool. So you only need 1 line here, for each BTRFS-RAID pool. 
   - *Ensure you did not make any mistakes. Double check!*
-5. Make your file look nice and readible, like the example, use as much comments/descriptions as you need! Then save file. Now run `sudo systemctl daemon-reload` to load the changes. 
-6. To test, run `sudo mount -a`. If there are errors, unmount the drives before editing the file again. 
-7. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
+5. Make your file look nice and readible, like the example, use as much comments/descriptions as you need! 
+6. Save the file. Run `sudo systemctl daemon-reload` to load the changes. Run `sudo mount -a` to mount all auto-mounted filesystems. 
+7. If there are errors, unmount the drives before editing the file again. If not, verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 &nbsp;
 
