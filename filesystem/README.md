@@ -13,7 +13,6 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 
 ## General need-to-knows
 - In Linux, every piece of hardware has its own path starting with `/dev/...` For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. Partitions on the next drive will be `dev/sdb1` etc. For NVME drives it will be `/dev/nvme0n1`, `/dev/nvme0n2` etc, and a partition can be `/dev/nvme0n1p1`.
-
 - To actually use drives, they need to be mounted to a folder you have created, *you cannot use the device path `/dev/`*. 
 - USB connected drives are automatically mounted to `/media/...`, especially USB drives. To permanently mount your drives, we will use `/mnt/` instead. 
 - The system file `/etc/fstab` is a register of all your mounts, this file is used at boot to determine which partitions to mount, and where to mount them.
