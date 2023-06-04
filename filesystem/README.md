@@ -107,7 +107,7 @@ This step is prone to errors. Prepare first.
 2. Make sure each mount point (created in Step 3) is an *empty folder* after unmounting. No apps or services using these paths should be running!
 3. Create a backup of fstab: `sudo cp /etc/fstab /etc/fstabbackup`
 4. Run `sudo lsblk -f` for an overview, also have Disk Utility open next to it. 
-5. Run `sudo -b pluma /etc/fstab`
+5. Run `sudo dbus-launch pluma /etc/fstab`
 6. Open [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab), *note all UUIDs are missing in this example. Use the partition UUIDs you see in terminal/disk utility*. 
 
 ### _Steps to add drives_ 
