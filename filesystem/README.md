@@ -14,11 +14,12 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 ## General need-to-knows
 - In Linux, every piece of hardware has its own path starting with `/dev/...` For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. Partitions on the next drive will be `dev/sdb1` etc. For NVME drives it will be `/dev/nvme0n1`, `/dev/nvme0n2` etc, and a partition can be `/dev/nvme0n1p1`.
 
-- To actually use drives, they need to be mounted to a folder you have created, you cannot use the device path `/dev/`. 
-- The system file `/etc/fstab` is a register of all your mounts. You can edit this file easily, [example here](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab). Follow it!
-- `/etc/stab` should not contain `/dev/` paths, instead the disk ID is used. This ID is persistent unless you remove its filesystem.
+- To actually use drives, they need to be mounted to a folder you have created, *you cannot use the device path `/dev/`*. 
 - USB connected drives are automatically mounted to `/media/...`, especially USB drives. To permanently mount your drives, we will use `/mnt/` instead. 
-- If the drive name, the path to mount to etc are incorrect in /etc/fstab, you will boot into command line and will need to fix it (or comment out) using `sudo nano /etc/fstab`. Alternatively, you can simply restore since this guide requires you to make a backup. Restoring: `sudo mv /etc/fstabbackup /etc/fstab` and reboot again. 
+- The system file `/etc/fstab` is a register of all your mounts, this file is used at boot to determine which partitions to mount, and where to mount them.
+  - You can edit this file easily, [example here](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab). Follow it!
+  - `/etc/stab` should not contain `/dev/` paths, instead the partition/filesystem UUID is used. This ID is persistent unless you remove its filesystem.
+  - If you make typos or mistakes in `/etc/fstab`, you mess up your systems ability to boot. The system will boot to terminal and you can then easily edit fstab and reboot, using `sudo nano /etc/fstab`. Alternatively, you can simply restore fstab from the backup (created during step 4): `sudo mv /etc/fstabbackup /etc/fstab` and reboot again.
 
 ### How to get an overview of your drives?
 - For an overview of your drives, open the Gnome Disks Utitlity (part of the App Menu top left if you used [post-install](https://github.com/zilexa/manjaro-gnome-post-install)).
