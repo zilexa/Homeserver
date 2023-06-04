@@ -81,7 +81,7 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
 
 - For [Option 2](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): the same as above but use labels like "data0", "data1", "data2" etc instead of "users" or "media", because the drives will be pooled via MergerFS.
 
-- [Option 3](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication): BTRFS RAID1, for example 2 RAID1 pools, each with 2 drives:  \
+- [Option 3](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication): BTRFS RAID1, for example a RAID1 array for Users and one for Media, each with 2 drives:  \
     ```sudo mkfs.btrfs -L users -d raid1 /dev/sda1 /dev/sdb1```  \
     ```sudo mkfs.btrfs -L media -d raid1 /dev/sdc1 /dev/sdd1```
 
