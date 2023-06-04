@@ -111,13 +111,15 @@ This step is prone to errors. Prepare first.
 6. Open [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab), *note all UUIDs are missing in this example. Use the partition UUIDs you see in terminal/disk utility*. 
 
 ### _Steps to add drives_ 
-1. Go through the example, add the lines you are missing under "AUTO-MOUNTED AT BOOT". Note the post-install has created subvolumes, mountpoints for `Downloads` and `.cache` because they should always be excluded from backup snapshots created by the OS. 
-2. Make sure you also add the lines under "NOT AUTOMATICALLY MOUNTED" for the system drive and the backup drives you might have.
-3. If you use BTRFS-RAID1, you simply use the UUID of the first drive in that pool. So you only need 1 line here, for each BTRFS-RAID pool. 
+1. Go through the example, add the lines you are missing under "AUTO-MOUNTED AT BOOT". 
+  - Note if you used [Post-Install](https://github.com/zilexa/manjaro-gnome-post-install) it has created subvolumes, mountpoints for `Downloads` and `.cache` because they should always be excluded from backup snapshots created by the OS. 
+  - Note prep-server.sh has created a not-automatically-mounted line to mount the entire system drive. Required for backups and when you want to create/modify subvolumes on the systemdrive.
+3. Make sure you add the lines under "NOT AUTOMATICALLY MOUNTED" for the system drive and the backup drives you might have.
+4. If you use BTRFS-RAID1, you simply use the UUID of the first drive in that pool. So you only need 1 line here, for each BTRFS-RAID pool. 
   - *Ensure you did not make any mistakes. Double check!*
-4. Save file. Now run `sudo systemctl daemon-reload` to load the changes. 
-5. To test, run `sudo mount -a`. If there are errors, unmount the drives before editing the file again. 
-6. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
+5. Make your file look nice and readible, like the example, use as much comments/descriptions as you need! Then save file. Now run `sudo systemctl daemon-reload` to load the changes. 
+6. To test, run `sudo mount -a`. If there are errors, unmount the drives before editing the file again. 
+7. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
 
 &nbsp;
 
