@@ -114,8 +114,7 @@ This step is prone to errors. Prepare first.
 1. Go through the example, add the lines you are missing under "AUTO-MOUNTED AT BOOT". Note the post-install has created subvolumes, mountpoints for `Downloads` and `.cache` because they should always be excluded from backup snapshots created by the OS. 
 2. Make sure you also add the lines under "NOT AUTOMATICALLY MOUNTED" for the system drive and the backup drives you might have.
 3. If you use BTRFS-RAID1, you simply use the UUID of the first drive in that pool. So you only need 1 line here, for each BTRFS-RAID pool. 
-
-Ensure you did not make any mistakes. Double check!
+  - *Ensure you did not make any mistakes. Double check!*
 4. Save file. Now run `sudo systemctl daemon-reload` to load the changes. 
 5. To test, run `sudo mount -a`. If there are errors, unmount the drives before editing the file again. 
 6. Verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
