@@ -70,7 +70,7 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
 2. The following drive labels make sense:
   - `users` for the filesystem containing users personal data.
   - `media` for the filesystem containing media downloads.
-  - `data0, data1, data2` when you are going to pool multiple *numbered* drives via MergerFS, 1 pool for Users and 1 pool for Media.
+  - `data0, data1, data2` etc. when you are going to pool multiple *numbered* drives via MergerFS, 1 pool for Users and 1 pool for Media.
   - `backup1, backup2`: backup drives for the above. 
   - Optional: `parity1, parity2`drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
   - Optional: `cache`: only when using MergerFS Tiered Caching. 
