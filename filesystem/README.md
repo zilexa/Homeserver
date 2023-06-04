@@ -1,6 +1,6 @@
 # Guide: A Modern Homeserver _filesystem_ 
 
-# SYNOPSIS: [Filesystem explained](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md)
+# SYNOPSIS: [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md)
 _Read the Synopsis before continuing with this guide, to understand what you are about to do._
 
 ## Requirements: 
@@ -12,52 +12,83 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 
 
 ## General need-to-knows
-- In Linux, every piece of hardware has its own path starting with `/dev/...` For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. Partitions on the next drive will be `dev/sdb1` etc. 
-- No partitions are needed, when you have finished this part of the guide, there should not be a `sda1`. That just overcomplicate things. BTRFS uses subvolumes instead.
+- In Linux, every piece of hardware has its own path starting with `/dev/...` For example, SATA drives are listed as `/dev/sda/` the next drive `/dev/sdb/` and so on. Partitions will be `/dev/sda1/`, `/dev/sda2/` and so on. Partitions on the next drive will be `dev/sdb1` etc. For NVME drives it will be `/dev/nvme0n1`, `/dev/nvme0n2` etc, a partition can be `/dev/nvme0n1p1.
+
 - To actually use drives, they need to be mounted to a folder you have created, you cannot use the device path `/dev/`. 
 - The system file `/etc/fstab` is a register of all your mounts. You can edit this file easily, [example here](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab). Follow it!
 - `/etc/stab` should not contain `/dev/` paths, instead the disk ID is used. This ID is persistent unless you remove its filesystem.
-- The system usually mounts drives by default inside `/media/`, especially USB drives. To permanently mount your drives, we will use `/mnt/` instead. 
+- USB connected drives are automatically mounted to `/media/...`, especially USB drives. To permanently mount your drives, we will use `/mnt/` instead. 
 - If the drive name, the path to mount to etc are incorrect in /etc/fstab, you will boot into command line and will need to fix it (or comment out) using `sudo nano /etc/fstab`. Alternatively, you can simply restore since this guide requires you to make a backup. Restoring: `sudo mv /etc/fstabbackup /etc/fstab` and reboot again. 
 
-## How to properly list your drives
-Visual: App menu > Disks. Alternatively the following commands can be used.  \
-- `sudo fdisk -l` - lists physical drives and their partitions. Recommended especially for drives without filesystems. 
-- `sudo lsblk -f` - Shows drives, partitions and filesystems in a nice tree-view. Recommended. 
-- `blkid` shows all UUIDs note usually you are only interested in the first UUID of each.
+### How to get an overview of your drives?
+- For an overview of your drives, open the Gnome Disks Utitlity (part of the App Menu top left if you used [post-install](https://github.com/zilexa/manjaro-gnome-post-install)).
+- Run `sudo lsblk -f` - Shows drives, partitions and filesystems in a nice tree-view. Recommended. 
+- Run `sudo fdisk -l` - lists physical drives and their partitions. Recommended especially for drives without filesystems. 
+- Run `blkid` shows all UUIDs note usually you are only interested in the first UUID of each.
 
 &nbsp;
-## Step 1: Erase existing filesystems, partitions, create GPT new partition table
-To start clean, remove all filesystems and partition tables. You will have an empty disk without filesystems, partitions, partition table.
+## STEP 1. Prepare drives
+### 1. Clear the drives
+Before you create filesystems and folder (subvolume!) structures, you need to prepare the drives. This is different for SSDs and HDDs. 
+- For SSDs: run `blkdiscard` for each drive. It is good practice to empty SSDs using blkdiscard. Discard tells the drive's firmware that the disk is empty and it improves it's performance and wear. Do this before you create any partition tables as it will erase everything of the disk. For example:
 ```
-sudo wipefs --all /dev/sda
+sudo blkdiscard /dev/sda -v
+sudo blkdiscard /dev/nvme0n4 -v
 ```
+- For HDDs: `sudo wipefs --all /dev/sda`, if the drive contains partitions (/dev/sda1, /dev/sda2 etc) you may need to do this for each partition before doing it for the whole drive.
+### 2. Create Partition Tables
+Highly recommended to do this via `parted` to ensure it is done correctly. See example below, ***do this for each drive.***
+Run the command `parted /dev/sda`, then `mklabel gpt`, then `mkpart primary btrfs 4MiB 100%`, then `print`, then `quit`. See example below: 
+```
+# parted /dev/nvme0n4
 
-## Step 2: Create filesystems 
-Make sure you have the correct device path for each drive when you use this command. 
-Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. If you followed the hardware recommendation, you only use SATA drives (HDD or SSD) that means the paths will always be like `/dev/sdX`. 
+GNU Parted 3.4
+Using /dev/sda
+Welcome to GNU Parted! Type 'help' to view a list of commands.
+(parted) mklabel gpt
+(parted) mkpart primary btrfs 4MiB 100%
+(parted) print
+Model: SAMSUNG EVO 860 (sata)
+Disk /dev/sda`: 4.01GB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags:
+
+Number  Start   End     Size    File system  Name     Flags
+ 1      4194kB  4.01GB  4.01GB  btrfs        primary
+
+(parted) quit
+Information: You may need to update /etc/fstab.
+```
+Note each drive now has a partition (sda has sda1, etc): `sudo lsblk -f`
+
+&nbsp;
+## STEP 2: Create filesystems 
+Make sure you have the correct device path for each drive when you use this command!
+Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. 
 1. Decide the purpose of each of your drives. The following purposes make sense for most users: 
-    - `data0, data1, data2` etc: drive containing your user and media data. 
-    - `backup1, backup2` etc: drive containing backups. 
-    - `parity1, parity2` etc: drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
-    - `cache`: only when using MergerFS Tiered Caching. 
+    - `data0, data1, data2` for drives containing data (user data, media downloads). 
+    - `backup1, backup2`: backup drives for data drives. You want at least 1 internal backup drive and 1 external (USB) drive for offline/cold backup.
+    - Optional: `parity1, parity2`drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
+    - Optional: `cache`: only when using MergerFS Tiered Caching. 
 2. depending on the filesystem option you have chosen (see Filesystem Synopsis), create the filesystem as follows and replace LABEL for one of the purposes above.
 - For [Option 1 and 2](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): Create individual filesystems per drive: 
-    ```mkfs.btrfs -m dup -L data0 /dev/sda```
+    ```sudo mkfs.btrfs -m dup -L data0 /dev/sda```
 - [Option 3](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication): BTRFS RAID1: 
-    ```mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd```
+    ```sudo mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd```
 
 - Create filesystem for your SnapRAID drive (should be EXT4 with these options): 
     ```sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda```
 
 &nbsp;
-## Step 3: Create mountpoints for each drive
+## STEP 3: Create mountpoints for each drive
 Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
-1. Open the folder /mnt in your file manager, right click and open it with root rights.This will give you a nice view of the structure.
-2. Go back to Terminal: with the following command, you create multiple folders.   
-```
-sudo mkdir -p /mnt/drives/{cache,data0,data1,data2,data3,parity1,backup1,backup2}
-```
+1. Open the folder `/mnt` in your file manager, right click and open it with root rights.
+2. Create the mountpoints for your drives, at least 3 mountpoints: 
+  - /mnt/drives/backup1, for your backupdrive
+  - /mnt/pool/Users, for your ***filesystem*** used for storing users personal data (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
+  - /mnt/pool/Media, for your ***filesystem*** used for storing downloaded media (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
+
 &nbsp;
 ## Step 4: Configure drive mountpoints through FSTAB
 This step is prone to errors. Prepare first. 
