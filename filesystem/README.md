@@ -21,7 +21,7 @@ _Read the Synopsis before continuing with this guide, to understand what you are
   - If you make typos or mistakes in `/etc/fstab`, you mess up your systems ability to boot. The system will boot to terminal and you can then easily edit fstab and reboot, using `sudo nano /etc/fstab`. Alternatively, you can simply restore fstab from the backup (created during step 4): `sudo mv /etc/fstabbackup /etc/fstab` and reboot again.
 
 ### How to get an overview of your drives?
-- For an overview of your drives, open the Gnome Disks Utitlity (part of the App Menu top left if you used [post-install](https://github.com/zilexa/manjaro-gnome-post-install)).
+- For an overview of your drives, open the Gnome Disks Utility (part of the App Menu top left if you used [post-install](https://github.com/zilexa/manjaro-gnome-post-install)).
 - Run `sudo lsblk -f` - Shows drives, partitions and filesystems in a nice tree-view. Recommended. 
 - Run `sudo fdisk -l` - lists physical drives and their partitions. Recommended especially for drives without filesystems. 
 - Run `blkid` shows all UUIDs note usually you are only interested in the first UUID of each.
