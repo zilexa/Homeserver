@@ -76,13 +76,13 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
   - Optional: `cache`: only when using MergerFS Tiered Caching. 
 3. Create the filesystems:
 - For [Option 1](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): Create individual filesystems per drive: 
-    ```sudo mkfs.btrfs -m dup -L users /dev/sda1```
+    ```sudo mkfs.btrfs -m dup -L users /dev/sda1```  \
     ```sudo mkfs.btrfs -m dup -L media /dev/sdb1```
 
 - For [Option 2](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): the same as above but use labels like "data0", "data1", "data2" etc instead of "users" or "media", because the drives will be pooled via MergerFS.
 
 - [Option 3](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication): BTRFS RAID1, for example with 2 drives:  
-    ```sudo mkfs.btrfs -L users -d raid1 /dev/sda1 /dev/sdb1```
+    ```sudo mkfs.btrfs -L users -d raid1 /dev/sda1 /dev/sdb1```  \
     ```sudo mkfs.btrfs -L media -d raid1 /dev/sdc1 /dev/sdd1```
 
 Optional: create filesystem for your SnapRAID drive (should be EXT4 with these options):     ```sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda```
