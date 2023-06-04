@@ -66,28 +66,35 @@ Note each drive now has a partition (sda has sda1, etc): `sudo lsblk -f`
 ## STEP 2: Create filesystems 
 Make sure you have the correct device path for each drive when you use this command!
 Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. 
-1. Decide the purpose of each of your drives. The following purposes make sense for most users: 
-    - `data0, data1, data2` for drives containing data (user data, media downloads). 
-    - `backup1, backup2`: backup drives for data drives. You want at least 1 internal backup drive and 1 external (USB) drive for offline/cold backup.
-    - Optional: `parity1, parity2`drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
-    - Optional: `cache`: only when using MergerFS Tiered Caching. 
-2. depending on the filesystem option you have chosen (see Filesystem Synopsis), create the filesystem as follows and replace LABEL for one of the purposes above.
-- For [Option 1 and 2](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): Create individual filesystems per drive: 
-    ```sudo mkfs.btrfs -m dup -L data0 /dev/sda```
-- [Option 3](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication): BTRFS RAID1: 
-    ```sudo mkfs.btrfs -L LABEL -d raid1 /dev/sda /dev/sdb /dev/sdc /dev/sdd```
+1. Decide the purpose of each of your drives! You want at least a filesystem for *Media* and one for *Users*. That could be a single drive for each ([Filesystem Option 1](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md)) or a filesystem spanning across multiple drives [(Filesystem Option 2: BTRFS-RAID1)](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md) or multiple single drives with individual filesystems, pooled with MergerFS. 
+2. The following drive labels make sense:
+  - `users` for the filesystem containing users personal data.
+  - `media` for the filesystem containing media downloads.
+  - `data0, data1, data2` when you are going to pool multiple drives via MergerFS, 1 pool for Users and 1 pool for Media.
+  - `backup1, backup2`: backup drives for the above. 
+  - Optional: `parity1, parity2`drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
+  - Optional: `cache`: only when using MergerFS Tiered Caching. 
+3. Create the filesystems:
+- For [Option 1](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): Create individual filesystems per drive: 
+    ```sudo mkfs.btrfs -m dup -L users /dev/sda1```
+    ```sudo mkfs.btrfs -m dup -L media /dev/sdb1```
 
-- Create filesystem for your SnapRAID drive (should be EXT4 with these options): 
-    ```sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda```
+- For [Option 2](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): the same as above but use labels like "data0", "data1", "data2" etc instead of "users" or "media", because the drives will be pooled via MergerFS.
+
+- [Option 3](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication): BTRFS RAID1, for example with 2 drives:  
+    ```sudo mkfs.btrfs -L users -d raid1 /dev/sda1 /dev/sdb1```
+    ```sudo mkfs.btrfs -L media -d raid1 /dev/sdc1 /dev/sdd1```
+
+Optional: create filesystem for your SnapRAID drive (should be EXT4 with these options):     ```sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda```
 
 &nbsp;
 ## STEP 3: Create mountpoints for each drive
 Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
 1. Open the folder `/mnt` in your file manager, right click and open it with root rights.
 2. Create the mountpoints for your drives, at least 3 mountpoints: 
-  - /mnt/drives/backup1, for your backupdrive
-  - /mnt/pool/Users, for your ***filesystem*** used for storing users personal data (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
-  - /mnt/pool/Media, for your ***filesystem*** used for storing downloaded media (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
+  - `/mnt/drives/backup1`, for your backupdrive
+  - `/mnt/pool/Users,` for your ***filesystem*** used for storing users personal data (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
+  - `/mnt/pool/Media`, for your ***filesystem*** used for storing downloaded media (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
 
 &nbsp;
 ## Step 4: Configure drive mountpoints through FSTAB
