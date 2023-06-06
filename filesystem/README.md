@@ -1,4 +1,4 @@
-# Step 2: A Modern Homeserver _filesystem_ 
+# Step 2: Filesystems & Folderstructure_ 
 
 # Recommended read: [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md)
 _3 options for filesystems are explained, choose which one is best for you before continuing with step 2.2 below._
