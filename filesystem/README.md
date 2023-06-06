@@ -1,7 +1,7 @@
-# Guide: A Modern Homeserver _filesystem_ 
+# Step 2: A Modern Homeserver _filesystem_ 
 
-# SYNOPSIS: [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md)
-_Read the Synopsis before continuing with this guide, to understand what you are about to do._
+# Recommended read: [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md)
+_3 options for filesystems are explained, choose which one is best for you before continuing with step 2.2 below_
 
 ## Requirements: 
 1. The OS disk should be BtrFS, this should be chosen during [OS Installation](https://github.com/zilexa/manjaro-gnome-post-install). 
@@ -27,7 +27,7 @@ _Read the Synopsis before continuing with this guide, to understand what you are
 - Run `blkid` shows all UUIDs note usually you are only interested in the first UUID of each.
 
 &nbsp;
-## STEP 1. Prepare drives
+## STEP 2.1. Prepare drives
 ### 1. Clear the drives
 Before you create filesystems and folder (subvolume!) structures, you need to prepare the drives. This is different for SSDs and HDDs. 
 - For SSDs: run `blkdiscard` for each drive. It is good practice to empty SSDs using blkdiscard. Discard tells the drive's firmware that the disk is empty and it improves it's performance and wear. Do this before you create any partition tables as it will erase everything of the disk. For example:
@@ -65,7 +65,7 @@ Information: You may need to update /etc/fstab.
 Note each drive now has a partition (sda has sda1, etc): `sudo lsblk -f` and see the Disk Utility. 
 
 &nbsp;
-## STEP 2: Create filesystems 
+## STEP 2.2: Create filesystems 
 Make sure you have the correct device path for each drive when you use this command!
 Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. 
 1. Decide the purpose of each of your drives! You want at least a filesystem for *Media* and one for *Users*. That could be a single drive for each ([Filesystem Option 1](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md)) or a filesystem spanning across multiple drives [(Filesystem Option 2: BTRFS-RAID1)](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md) or multiple single drives with individual filesystems, pooled with MergerFS. 
@@ -90,7 +90,7 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
 Optional: create filesystem for your SnapRAID drive (should be EXT4 with these options):     ```sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda```
 
 &nbsp;
-## STEP 3: Create mountpoints for each drive
+## STEP 2.3: Create mountpoints for each drive
 Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
 1. Open the folder `/mnt` in your file manager, right click and open it with root rights.
 2. Create the mountpoints for your drives, at least 3 mountpoints: 
@@ -99,7 +99,7 @@ Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a fi
   - `/mnt/pool/Media`, for your ***filesystem*** used for storing downloaded media (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
 
 &nbsp;
-## Step 4: Configure drive mountpoints through FSTAB
+## Step 2.4: Configure drive mountpoints through FSTAB
 This step is prone to errors. Prepare first. 
 
 ### _Preparation_
