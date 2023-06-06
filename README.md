@@ -88,10 +88,9 @@ _Note_
 
 ### Step 2 - Filesystems and Folderstructure
 This is the most time-consuming and complex part of creating your homeserver as there are many choices to be made, not just for your filesystem but also folderstructure. 
-1. [Learn about the easiest filesystem options for a homeserver](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md) then:
-2. [Step 2a. Create Filesystems](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices. 
+1. First learn about [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md) and decide what is best for your situation, then:
+2. [Step 2 Filesystems & Folderstructure](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices. 
 3. [Learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md) then:
-4. [Step 2b. Create Datapool(s)](https://github.com/zilexa/Homeserver/blob/master/filesystem/create-datapools.md) 
 
 ### Step 3. Data Migration
 [Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) - Move files to your server data pool.
