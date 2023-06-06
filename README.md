@@ -86,7 +86,7 @@ _Note_
 
 ***
 
-### Step 2a and 2b - Filesystem configuration and datapools creation
+### Step 2 - Filesystems and Folderstructure
 This is the most time-consuming and complex part of creating your homeserver as there are many choices to be made, not just for your filesystem but also folderstructure. 
 1. [Learn about the easiest filesystem options for a homeserver](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md) then:
 2. [Step 2a. Create Filesystems](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices. 
