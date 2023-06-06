@@ -72,7 +72,7 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
 2. The following drive labels make sense:
   - `users` for the filesystem containing users personal data.
   - `media` for the filesystem containing media downloads.
-  - `data0, data1, data2` etc. when you are going to pool multiple *numbered* drives via MergerFS, 1 pool for Users and 1 pool for Media.
+  - `cache, data0, data1, data2` etc. when you are going to pool multiple *numbered* drives via MergerFS, 1 pool for Users and 1 pool for Media.
   - `backup1, backup2`: backup drives for the above. 
   - Optional: `parity1, parity2`drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
   - Optional: `cache`: only when using MergerFS Tiered Caching. 
@@ -94,9 +94,12 @@ Optional: create filesystem for your SnapRAID drive (should be EXT4 with these o
 Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
 1. Open the folder `/mnt` in your file manager, right click and open it with root rights.
 2. Create the mountpoints for your drives, at least 3 mountpoints: 
-  - `/mnt/drives/backup1`, for your backupdrive
-  - `/mnt/pool/Users,` for your ***filesystem*** used for storing users personal data (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
-  - `/mnt/pool/Media`, for your ***filesystem*** used for storing downloaded media (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
+  - 1 for each backup drive: `/mnt/drives/backup1`
+  - 1 for the Users datapool: `/mnt/pool/Users` for your ***filesystem*** used for storing users personal data (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
+  - 1 for the Media datapool: `/mnt/pool/Media`, for your ***filesystem*** used for storing downloaded media (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
+  - Only if you use MergerFS: 
+    - `mnt/drives/data0`, `/mnt/drives/data1`, `/mnt/drives/data2` etc.
+      - Only if you will use MergerFS with a cache drive: `/mnt/drives/cache` and `/mnt/pool-nocache` this way you can easily offload the cache (`/mnt/drives/cache`) to this mountpoint, which will be a MergerFS mount without the cache drive.  
 
 &nbsp;
 ## Step 2.4: Configure drive mountpoints through FSTAB
