@@ -112,11 +112,11 @@ This step is prone to errors. Prepare first.
 
 ### _Steps to add drives_ 
 1. Go through the example, add the lines you are missing under "AUTO-MOUNTED AT BOOT". 
-  - Note if you used [Post-Install](https://github.com/zilexa/manjaro-gnome-post-install) it has created subvolumes, mountpoints for `Downloads` and `.cache` because they should always be excluded from backup snapshots created by the OS. 
-  - Note prep-server.sh has created a not-automatically-mounted line to mount the entire system drive. Required for backups and when you want to create/modify subvolumes on the systemdrive.
+    - Note if you used [Post-Install](https://github.com/zilexa/manjaro-gnome-post-install) it has created subvolumes, mountpoints for `Downloads` and `.cache` because they should always be excluded from backup snapshots created by the OS. 
+    - Note prep-server.sh has created a not-automatically-mounted line to mount the entire system drive. Required for backups and when you want to create/modify subvolumes on the systemdrive.
 3. Make sure you add the lines under "NOT AUTOMATICALLY MOUNTED" for the system drive and the backup drives you might have.
 4. If you use BTRFS-RAID1, you simply use the UUID of the first drive in that pool. So you only need 1 line here, for each BTRFS-RAID pool. 
-  - *Ensure you did not make any mistakes. Double check!*
+    - *Ensure you did not make any mistakes. Double check!*
 5. Make your file look nice and readible, like the example, use as much comments/descriptions as you need! 
 6. Save the file. Run `sudo systemctl daemon-reload` to load the changes. Run `sudo mount -a` to mount all auto-mounted filesystems. 
 7. If there are errors, unmount the drives before editing the file again. If not, verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
