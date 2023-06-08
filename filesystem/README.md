@@ -95,7 +95,7 @@ Optional: create filesystem for your SnapRAID drive (should be EXT4 with these o
 &nbsp;
 ## STEP 2.3: Create mountpoints for each drive
 Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a filesytem), we need to create mountpoints (= paths to assign each drive or filesystem to). 
-1. Open the folder `/mnt` in your file manager, right click and open it with root rights.
+1. Open the folder `/mnt` in your file manager, right click and *open with root*.
 2. Create the mountpoints for your drives, at least 3 mountpoints: 
   - 1 for each backup drive: `/mnt/drives/backup1`
   - 1 for the Users datapool: `/mnt/pool/Users` for your ***filesystem*** used for storing users personal data (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
