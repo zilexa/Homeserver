@@ -1,4 +1,4 @@
-## UPDATED: 2023-05-31
+## UPDATED: 2023-06-08
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -55,57 +55,57 @@ services:
       caddy.reverse_proxy: "{{upstreams 3000}}"
 ## 
 ##_____________________ InfluxDB [Dashboards/Monitoring]
-  influxdb:
-    container_name: dash-influxdb
-    restart: unless-stopped
-    image: influxdb
-    networks:
-      - net-caddy-proxy
-      - net-influxdb
-    environment:
-      - INFLUXDB_ADMIN_USER=$USER
-      - INFLUXDB_ADMIN_PASSWORD=$PW_DB
-      - INFLUX_GRAPHITE_ENABLED='true'
-      - PRE_CREATE_DB='metrics'
-      - INFLUXDB_DB='metrics'
-      - INFLUX_HTTP_AUTH_ENABLED='true'
-    volumes:
-      - $DOCKERDIR/dashboards/influxdb/data:/var/lib/influxdb2
-      - $DOCKERDIR/dashboards/influxdb/config:/etc/influxdb2
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    ports:
-      - 8086:8086
-    labels:
-      caddy: http://influxb.o
-      caddy.reverse_proxy: "{{upstreams 8086}}"
-      plugsy.name: InfluxDB
-      plugsy.link: http://influxdb.o/
-      plugsy.category: System Monitoring
+#  influxdb:
+#    container_name: dash-influxdb
+#    restart: unless-stopped
+#    image: influxdb
+#    networks:
+#      - net-caddy-proxy
+#      - net-influxdb
+#    environment:
+#      - INFLUXDB_ADMIN_USER=$USER
+#      - INFLUXDB_ADMIN_PASSWORD=$PW_DB
+#      - INFLUX_GRAPHITE_ENABLED='true'
+#      - PRE_CREATE_DB='metrics'
+#      - INFLUXDB_DB='metrics'
+#      - INFLUX_HTTP_AUTH_ENABLED='true'
+#    volumes:
+#      - $DOCKERDIR/dashboards/influxdb/data:/var/lib/influxdb2
+#      - $DOCKERDIR/dashboards/influxdb/config:/etc/influxdb2
+#      - /etc/timezone:/etc/timezone:ro
+#      - /etc/localtime:/etc/localtime:ro
+#    ports:
+#      - 8086:8086
+#    labels:
+#      caddy: http://influxb.o
+#      caddy.reverse_proxy: "{{upstreams 8086}}"
+#      plugsy.name: InfluxDB
+#      plugsy.link: http://influxdb.o/
+#      plugsy.category: System Monitoring
 ##_____________________ Telegraf [Dashboards/Monitoring/Metrics]
-  telegraf:
-    container_name: dash-telegraf  # Required to run the following command before starting this container.. sudo chmod -R a+rx /sys/devices/virtual/powercap/intel-rapl/
-    image: telegraf
-    depends_on:
-      - influxdb
-    networks:
-      - net-influxdb
-    cap_add:            
-      - SYS_RAWIO 
-    privileged: true
-    user: "1000:0"
-    environment:
-      - INFLUXDB_ADMIN_USER=$USER
-      - INFLUXDB_ADMIN_PASSWORD=$PW_DB
-      - INFLUX_GRAPHITE_ENABLED='true'
-      - PRE_CREATE_DB='metrics'
-      - INFLUXDB_DB='metrics'
-      - INFLUX_HTTP_AUTH_ENABLED='true'
-   # volumes:
-   #   - $DOCKERDIR/dashboards/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    labels:
-      plugsy.name: Telegraf metrics [Unbound]
-      plugsy.parents: InfluxDB [Adguard Home]
+#  telegraf:
+#    container_name: dash-telegraf  # Required to run the following command before starting this container.. sudo chmod -R a+rx /sys/devices/virtual/powercap/intel-rapl/
+#    image: telegraf
+#    depends_on:
+#      - influxdb
+#    networks:
+#      - net-influxdb
+#    cap_add:            
+#      - SYS_RAWIO 
+#    privileged: true
+#    user: "1000:0"
+#    environment:
+#      - INFLUXDB_ADMIN_USER=$USER
+#      - INFLUXDB_ADMIN_PASSWORD=$PW_DB
+#      - INFLUX_GRAPHITE_ENABLED='true'
+#      - PRE_CREATE_DB='metrics'
+#      - INFLUXDB_DB='metrics'
+#      - INFLUX_HTTP_AUTH_ENABLED='true'
+#    volumes:
+#      - $DOCKERDIR/dashboards/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+#    labels:
+#      plugsy.name: Telegraf metrics [Unbound]
+#      plugsy.parents: InfluxDB [Adguard Home]
 ##
 ##_______NETWORKING SERVICES________
 ##
@@ -160,7 +160,7 @@ services:
     environment:
       TZ: $TZ
     volumes: 
-      - $DOCKERDIR/networking/dns-unbound:/etc/unbound/custom.conf.d
+      - $DOCKERDIR/networking/dns-unbound:/etc/unbound
     #volumes: 
     #  - $DOCKERDIR/networking/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
     #  - $DOCKERDIR/networking/unbound/root.hints:/usr/local/unbound/root.hints:rw
@@ -193,7 +193,7 @@ services:
     restart: "no"
     network_mode: host
     volumes:
-      - $DOCKERDIR/networking/unifi-wifi:/config
+      - $DOCKERDIR/networking/unifi-wifi:/unifi
     environment:
       TZ: $TZ
       PUID: 1000
@@ -218,7 +218,7 @@ services:
       WGUI_USERNAME: $USER
       WGUI_PASSWORD: $PW
       WGUI_CONFIG_FILE_PATH: /etc/wireguard/wg0.conf
-      WGUI_ENDPOINT_ADDRESS: $DOMAIN
+      WGUI_ENDPOINT_ADDRESS: http://vpn.o
       WGUI_DNS: $WGIP
       WGUI_PERSISTENT_KEEPALIVE: 25
       WGUI_SERVER_INTERFACE_ADDRESSES: $WGIP/24
