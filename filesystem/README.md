@@ -41,7 +41,7 @@ sudo blkdiscard /dev/nvme0n2 -v
 *Note from now on, all example commands are shown with SATA device paths. You can simply change it to your situation, whether NVME or SATA*
 ### 2. Create Partition Tables
 It is highly recommended to do this via `parted`, instead of a graphical utility, to ensure it is done correctly.  \
-Run the command `parted /dev/sda`, then `mklabel gpt`, then `mkpart primary btrfs 4MiB 100%`, then `print`, then `quit`.  \
+Run the command `sudo parted /dev/sda`, then `mklabel gpt`, then `mkpart primary btrfs 4MiB 100%`, then `print`, then `quit`.  \
 See example below, ***do this for each drive.***
 ```
 # parted /dev/sda
