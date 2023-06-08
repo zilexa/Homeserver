@@ -78,11 +78,11 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
   - `backup1, backup2`: backup drives for the above. 
   - Optional: `parity1, parity2`drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
   - Optional: `cache`: only when using MergerFS Tiered Caching. 
-3. Create the filesystems:
+3. Create the filesystems for each drive: 
 - For [Option 1](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): Create individual filesystems per drive:  \
     ```sudo mkfs.btrfs -m dup -L users /dev/sda1```  \
-    ```sudo mkfs.btrfs -m dup -L media /dev/sdb1```
-
+    ```sudo mkfs.btrfs -m dup -L media /dev/sdb1```  \
+Also use these commands for your backup drives. 
 - For [Option 2](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk): the same as above but use labels like "data0", "data1", "data2" etc instead of "users" or "media", because the drives will be pooled via MergerFS.
 
 - [Option 3](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication): BTRFS RAID1, for example a RAID1 array for Users and one for Media, each with 2 drives:  \
