@@ -88,9 +88,10 @@ _Note_
 
 ### Step 2 - Filesystems and Folderstructure
 This is the most time-consuming and complex part of creating your homeserver as there are many choices to be made, not just for your filesystem but also folderstructure. 
-1. First learn about [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md) and decide what is best for your situation, then:
-2. [Step 2 Filesystems & Folderstructure](https://github.com/zilexa/Homeserver/tree/master/filesystem). Understand your goal, make sane choices. 
-Optionally, consider reading [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md) to learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure for Users data and for Media downloads. 
+1. Check the [Filesystem Options](https://github.com/zilexa/Homeserver/tree/master/Filesystems-options.md). Decide what is best for you. 
+2. Follow the [Filesystems Guide](https://github.com/zilexa/Homeserver/tree/master/Filesystems-guide)
+
+***
 
 ### Step 3. Data Migration
 [Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) - Move files to your server data pool.
@@ -119,8 +120,9 @@ The overview of Docker applications below will contain some foldable sections wi
 ***
 
 ### Step 7 - Configure & run Backups
-Decide what will be your [Backup Strategy](https://github.com/zilexa/Homeserver/blob/master/backup-strategy/backupstrategy.md) and use the [Server Backup Guide](https://github.com/zilexa/Homeserver/tree/master/backup-strategy) to leverage the BTRFS filesystem to backup your @, @home, @docker subvolumes and your data subvolumes easily, while also having a timeline/timemachine snapshots of your data. 
+Critical to enjoy the benefits of hosting your own server is the reliability of data storage and the ability to quickly recover a system (simply using your docker folder containing the folders you mount into containers). Follow the Backup Guide](https://github.com/zilexa/Homeserver/tree/master/Filesystems-guide).
 
-### Step 8 - Maintenance Tasks & Scheduling
-Nightly [maintenance](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks) of your server such as cleanup, backup and disks protection tasks. 
+***
 
+### Step 8 - Automatic Maintenance and optional manual maintenance
+To keep your server purring quietly, without having to spend much or any time keeping it running, follow the [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/Maintenance-guide) for regular cleanup, updates of server and docker images and filesystem/drive maintenance. 
