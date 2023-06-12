@@ -13,13 +13,13 @@ By creating backups, you double the amount of drives you need for your server. [
 
 
 ### Prequisities
-- [Step 1B:Install Essentials](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools) via prep-server.sh, this has been done: installed btrbk, downloaded the configuration files from this repository to `$HOME/docker/HOST/btrbk/`, configured the system with your SMTP account to sent emails using command `mail -s`. Added a manual mountpoint to fstab for your systemdrive and (can be mounted via `mount /mnt/drives/system` and created a folder `/mnt/drives/system/snapshots` for your docker subvolume snapshots. 
+- [Step 1B:Install Essentials](https://github.com/zilexa/Homeserver#step-1b-how-to-properly-install-docker-and-essential-tools) via prep-server.sh, this has been done: installed btrbk, downloaded the configuration files from this repository to [$HOME/docker/HOST/btrbk/](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/btrbk), configured the system with your SMTP account to sent emails using command `mail -s`. Added a manual mountpoint to fstab for your systemdrive and (can be mounted via `mount /mnt/drives/system` and created a folder `/mnt/drives/system/snapshots` for your docker subvolume snapshots. 
 
 ### 1. prepare
 - As root, create a folder `snapshots` in the root of each filesystem (for example `/mnt/pool/users/snapshots` or if you use MergerFS `/mnt/drives/data1` etc). 
 - Give it limited permissions. Without root, you want read access to this folder, that way, you can easily restore from a snapshot: `sudo chmod 655 /mnt/pool/users/snapshots`.
 - Mount your internal backup drive `sudo mount /mnt/drives/backup1` and create a folder `system` and a folder `users`. 
-- Edit the file `$HOME/docker/HOST/btrbk/btrbk.conf`, ensure all paths are correct. If you use MergerFS, you need a section for each underlying drive. The config is ready to go if you want to backup your `docker` subvolume and the subvolumes of each user, stored on a BTRFS filesystem (single or multiple underlying drives). 
+- Edit the file [$HOME/docker/HOST/btrbk/](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/btrbk), ensure all paths are correct. If you use MergerFS, you need a section for each underlying drive. The config is ready to go if you want to backup your `docker` subvolume and the subvolumes of each user, stored on a BTRFS filesystem (single or multiple underlying drives). 
 - Ensure the retention policy for snapshots, backups and USB archive are OK for you.  
 
 
@@ -35,7 +35,7 @@ sudo btrbk run --progress
 Notice you can also run btrbk for a group (as set in the conf file), for example: `btrbk run users --progress `. 
 
 ### 3. Schedulings
-Btrbk provides a script that can mount your backup drives, run backups and send email notifications. The original file has been slightly modified. For example, your containers will be stopped, before backups are created.
+Btrbk provides a script [$HOME/docker/HOST/btrbk/btrbk-mail.sh](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/btrbk) that can mount your backup drives, run backups and send email notifications. The original file has been slightly modified. For example, your containers will be stopped, before backups are created.
 1. Check the mounts at the beginning of the file, ensure all your required mounts to run backups are there. 
 2. Run the script manually to test: `sudo bash $HOME/docker/HOST/btrbk/btrbk-mail.sh`
 3. See the [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks), to schedule the backup run. 
