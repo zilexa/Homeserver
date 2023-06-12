@@ -22,6 +22,7 @@ Technologies used:
 
 
 ## Option 1: all your data easily fits on a single disk
+- Easiest solution! 
 - If your data does not fill much more than half of a single drive and the data does not grow fast, there is no need for RAID or data pooling. 
 - Also no need for RAID or MergerFS pooling if you can clearly seperate data per drive and the data will never exceed the size of the drive, for example: media downloads on drive 0, personal files of users A and B on drive 1 and personal files of users C and D on drive 2. 
 - In addition to the single data drive, you would want at least 1 backup drives inside your system. Also see [Step 7. Configure & Run Backups](https://github.com/zilexa/Homeserver#step-7---configure--run-backups). 
@@ -49,6 +50,10 @@ Reasons to use MergerFS:
 - You choose whether data is balanced over the disks (writing data to disks with most free space) or stored linearly: fill up 1 disk before using the next. 
 - Protecting against drive failure (like with raid1) can be done through SnapRAID! This will only cost you 1 disk per 4 disks. 
 
+### Downsides of MergerFS
+- This is basically an application in user-space. It is not a filesystem-level solution, instead runs on top of existing filesystems. This adds a layer of complexion and will affect read/write performance. 
+- Creating backups of the drives is a bit more complicated, as you can only backup individual drives, but a folder could span across multiple drives. 
+
 ## Option 3: Use Btrfs data duplication?
 BtrFS offers 3 ways to create a single fileystem across multiple devices, I only mention 2 here: 
 - **BtrFS Single**: data is allocated to disks linearly, metadata is duplicated (`mkfs.btrfs -d single /dev/sda /dev/sdb /dev/sdc /dev/sdd`)
@@ -67,31 +72,32 @@ BtrFS offers 3 ways to create a single fileystem across multiple devices, I only
   - Cons
     - Expensive: you need twice the disks to get same amount as storage as Btrfs Single. 
     - Requirements around disk sizes because of duplication. 
-    - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. 
+    - All disks will be spinning for file access/write and because of duplication, disks can wear out at the same pace, which means if 1 fails it is statistically likely a second one will fail soon. You should ensure you have backups. See the Backups Guide. 
 
 &nbsp;
 
 ## What should you choose? 
-- it all depends on your personal situation. By default, decide if Option 1 applies, otherwise move on to drive pooling through MergerFS or consider the less economical BTRFS-RAID1, wich is still handy especially if your total storage space is >2.5x your storage needs. 
+- Option 1 is definitely recommended. If you have too much data, consider Option 3 (simpler, but can be more expensive). 
 - As a best practice your precious personal data (documents, photos, videos, music albums) should be on seperate drives from your downloaded media/download drive. 
-- Note SnapRAID is only useful if you have more than 1 drive with data. 
 
 ### About snapraid/snapraid-btrfs
 - Protection against disk failure [see backup subguide](https://github.com/zilexa/Homeserver/tree/master/maintenance) with dedicated parity disk(s) for scheduled parity, the disk will be less active than data disks, **extending its lifecycle** compared to the realtime duplication of Raid1.
 - **For benefits of SnapRAID versus RAID1:** [please read the first 5 SnapRAID FAQ](https://www.snapraid.it/faq#whatisit) and note by using _snapraid-btrfs_ we overcome the single major [disadvantage of snapraid itself](https://github.com/automorphism88/snapraid-btrfs#q-why-use-snapraid-btrfs) (versus BtrFS-Raid1). Because these tools exist, I really recommend no realtime duplication for home use. 
+- Note SnapRAID is only useful if you have more than 1 drive with data. 
+
 
 ### MergerFS BONUS: SSD tiered caching
-Optional read: [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching).  
-Short version: 
+This is NOT USEFUL if your datadrives are already SATA SSDs, since SATA SSDs are plenty fast for a NAS/homeserver  \
+Optional read: [MergerFS Tiered Caching](https://github.com/trapexit/mergerfs#tiered-caching).  \
+Short version:  \
 MergerFS runs on top of the BTRFS disks in "user-space". It's flexible, you maintain direct disk access. We setup 2 disk pools: 1 with and 1 without the SSD. You will only use the first one. The 2nd is only used by the system to offload cache to the disks. 
 - New files will be created on the SSD cache location (dedicated SSD or system SSD folder) but only if certain conditions are met (such as free space). 
 - Files that haven't been modified for X days will be moved from the SSD to the disks within the pool. 
 - In most cases, you won't hear your disks spinning the entire day, since everything you use frequently is on the SSD. 
 - This CAN be used in combination with Raid1. 
-- This is NOT USEFUL if your datadrives are already SATA SSDs, since SATA SSDs are plenty fast for a NAS/homeserver. 
 
 We use this solution because it is extremely easy to understand, to setup and to use and very safe! There is an alternative: bcache, which is a more advanced caching solution but comes with caveats. 
 
 &nbsp;
 
-Continue to the Filesystem Guide. 
+Continue to the [Filesystems Guide](https://github.com/zilexa/Homeserver/tree/master/Filesystems-guide).
