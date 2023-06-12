@@ -2,7 +2,7 @@
 Your docker subvolume folder (`mnt/drives/system/@docker`, mounted to `$HOME/docker`) and the subvolumes inside your `users` filesystem (mounted to `/mnt/pool/users`) or the underlying MergerFS drives contain essential data, critical for your server to run and for your users to stay happy. BTRFS allows you to create instant-snapshots of these subvolumes. Initially this will cost 0 extra space, until you start making changes in the original subvolume. 
 Snapshots read-only by default, you can make them writeable via the `btrfs` command. Instead, best practice when you need to restore a subvolume is to simply create writeable snapshot of the read-only snapshot. To be able to do so, the tool btrbk is used to create snapshots, backups, archives and manage your retention policy. 
 
-By creating backups, you double the amount of drives you need for your server. [Alternatively, look at Parity-based backups](https://github.com/zilexa/Homeserver/blob/master/backups-guide/parity-backups.md).
+By creating backups, you double the amount of drives you need for your server. [Alternatively, look at Parity-based backups](https://github.com/zilexa/Homeserver/blob/master/Backups-guide/parity-backups.md).
 
 ## Timeline backups & offline archiving
 [btrbk](https://digint.ch/btrbk) is the de-facto tool for backups of BTRFS subvolumes. It uses BTRFS native filesystem-level data replication and snapshot features. This means it is extremely fast and reliable. It supports everything from scheduled snapshotting, backing up to local or networked locations and archiving to local, networked or USB drives. 
