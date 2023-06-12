@@ -38,7 +38,7 @@ Notice you can also run btrbk for a group (as set in the conf file), for example
 Btrbk provides a script [$HOME/docker/HOST/btrbk/btrbk-mail.sh](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/btrbk) that can mount your backup drives, run backups and send email notifications. The original file has been slightly modified. For example, your containers will be stopped, before backups are created.
 1. Check the mounts at the beginning of the file, ensure all your required mounts to run backups are there. 
 2. Run the script manually to test: `sudo bash $HOME/docker/HOST/btrbk/btrbk-mail.sh`
-3. See the [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/maintenance-tasks), to schedule the backup run. 
+3. See the [Maintenance Guide](https://github.com/zilexa/Homeserver/tree/master/Maintenance-guide), to schedule the backup run. 
 
 
 &nbsp;
