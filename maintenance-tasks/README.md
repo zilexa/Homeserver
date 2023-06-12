@@ -52,6 +52,8 @@ This cron means:
 
 Congratulations, you finished this Guide ! 
 
+&nbsp;
+
 ***
 ### Manual Maintenance
 Only required if:
@@ -64,6 +66,7 @@ Only required if:
 
 ***
 
+&nbsp;
 
 ### OPTIONAL TASKS: Nightly maintenance
 The Nightly script contains tasks only relevant if you need to perform several tasks every night. For example  1) use MerferFS with caching, 2) use parity based backups 3) modify user files outside of FileRun realm: 
