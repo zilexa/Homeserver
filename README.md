@@ -120,7 +120,7 @@ The overview of Docker applications below will contain some foldable sections wi
 ***
 
 ### Step 7 - Configure & run Backups
-Critical to enjoy the benefits of hosting your own server is the reliability of data storage and the ability to quickly recover a system (simply using your docker folder containing the folders you mount into containers). Follow the Backup Guide](https://github.com/zilexa/Homeserver/tree/master/Filesystems-guide).
+Critical to enjoy the benefits of hosting your own server is the reliability of data storage and the ability to quickly recover a system (simply using your docker folder containing the folders you mount into containers). Follow the [Backup Guide](https://github.com/zilexa/Homeserver/tree/master/Backups-guide).
 
 ***
 
