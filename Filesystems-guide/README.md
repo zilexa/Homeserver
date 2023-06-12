@@ -79,12 +79,12 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
   - Optional: `parity1, parity2`drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
   - Optional: `cache`: only when using MergerFS Tiered Caching. 
 3. Create the filesystems for each drive: 
-- For a single filesystem per drive (backup drives and [Option 1](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md#option-1-all-your-data-easily-fits-on-a-single-disk)): Create individual filesystems per drive using the correct label per device (you choose):  \
+- For a single filesystem per drive (backup drives and [Option 1: single drive BTRFS filesystem](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md#option-1-all-your-data-easily-fits-on-a-single-disk)): Create individual filesystems per drive using the correct label per device (you choose):  \
     ```sudo mkfs.btrfs -m dup -L users /dev/sda1```  \
     ```sudo mkfs.btrfs -m dup -L media /dev/sdb1```  \
     ```sudo mkfs.btrfs -m dup -L backup1 /dev/sdc1```  
 
-- For a filesystem spanning multiple drives [(Option 3: BTRFS RAID1)](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md#option-3-use-btrfs-data-duplication) for Users and a filesystem spanning multiple drives for Media, each with 2 drives:  \
+- For a filesystem spanning multiple drives [(Option 3: multiple drives BTRFS filesystem (btrfs-raid1))](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md#option-3-use-btrfs-data-duplication) for Users and a filesystem spanning multiple drives for Media, each with 2 drives:  \
     ```sudo mkfs.btrfs -L users -d raid1 /dev/sda1 /dev/sdb1```  \
     ```sudo mkfs.btrfs -L media -d raid1 /dev/sdc1 /dev/sdd1```  
     
