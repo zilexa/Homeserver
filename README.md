@@ -94,7 +94,7 @@ This is the most time-consuming and complex part of creating your homeserver as 
 ***
 
 ### Step 3. Data Migration
-[Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) - Move files to your server data pool.
+[Data Migration](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Data-Migration.md) - Move files to your server data pool.
 
 ***
 
