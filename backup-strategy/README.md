@@ -19,7 +19,7 @@ By creating backups, you double the amount of drives you need for your server. [
 - As root, create a folder `snapshots` in the root of each filesystem (for example `/mnt/pool/users/snapshots` or if you use MergerFS `/mnt/drives/data1` etc). 
 - Give it limited permissions. Without root, you want read access to this folder, that way, you can easily restore from a snapshot: `sudo chmod 655 /mnt/pool/users/snapshots`.
 - Mount your internal backup drive `sudo mount /mnt/drives/backup1` and create a folder `system` and a folder `users`. 
-- Edit the file [$HOME/docker/HOST/btrbk/](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/btrbk), ensure all paths are correct. If you use MergerFS, you need a section for each underlying drive. The config is ready to go if you want to backup your `docker` subvolume and the subvolumes of each user, stored on a BTRFS filesystem (single or multiple underlying drives). 
+- Edit the file [$HOME/docker/HOST/btrbk/btrbk.conf](https://github.com/zilexa/Homeserver/tree/master/docker/HOST/btrbk), ensure all paths are correct. If you use MergerFS, you need a section for each underlying drive. The config is ready to go if you want to backup your `docker` subvolume and the subvolumes of each user, stored on a BTRFS filesystem (single or multiple underlying drives). 
 - Ensure the retention policy for snapshots, backups and USB archive are OK for you.  
 
 
