@@ -1,6 +1,6 @@
 # Step 2: Filesystems & Folderstructure
 
-# Recommended read: [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md)
+# Recommended read: [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md)
 _3 options for filesystems are explained, choose which one is best for you before continuing with step 2.2 below._
 
 ## Requirements: 
@@ -16,7 +16,7 @@ _3 options for filesystems are explained, choose which one is best for you befor
 - To actually use drives, they need to be mounted to a folder you have created, *you cannot use the device path `/dev/`*. 
 - USB connected drives are automatically mounted to `/media/...`, especially USB drives. To permanently mount your drives, we will use `/mnt/` instead. 
 - The system file `/etc/fstab` is a register of all your mounts, this file is used at boot to determine which partitions to mount, and where to mount them.
-  - You can edit this file easily, [example here](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab). Follow it!
+  - You can edit this file easily, [example here](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/fstab-example). Follow it!
   - `/etc/stab` should not contain `/dev/` paths, instead the partition/filesystem UUID is used. This ID is persistent unless you remove its filesystem.
   - If you make typos or mistakes in `/etc/fstab`, you mess up your systems ability to boot. The system will boot to terminal and you can then easily edit fstab and reboot, using `sudo nano /etc/fstab`. Alternatively, you can simply restore fstab from the backup (created during step 4): `sudo mv /etc/fstabbackup /etc/fstab` and reboot again.
 
@@ -70,7 +70,7 @@ Note each drive now has a partition (sda has sda1, etc): `sudo lsblk -f` and see
 ## STEP 2.2: Create filesystems 
 Make sure you have the correct device path for each drive when you use this command!
 Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and keep out of scope. 
-1. Decide the purpose of each of your drives! You want at least a filesystem for *Media* and one for *Users*. That could be a single drive for each ([Filesystem Option 1](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md)) or a filesystem spanning across multiple drives [(Filesystem Option 2: BTRFS-RAID1)](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md) or multiple single drives with individual filesystems, pooled with MergerFS. 
+1. Decide the purpose of each of your drives! You want at least a filesystem for *Media* and one for *Users*. That could be a single drive for each ([Filesystem Option 1](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md)) or a filesystem spanning across multiple drives [(Filesystem Option 2: BTRFS-RAID1)](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md) or multiple single drives with individual filesystems, pooled with MergerFS. 
 2. The following drive labels make sense:
   - `users` for the filesystem containing users personal data.
   - `media` for the filesystem containing media downloads.
@@ -79,16 +79,16 @@ Your OS drive should be on an NVME drive (`/dev/nvmen0p1`), easy to identify and
   - Optional: `parity1, parity2`drive for parity, only when using SnapRAID (read the Filesystem Synopsis). 
   - Optional: `cache`: only when using MergerFS Tiered Caching. 
 3. Create the filesystems for each drive: 
-- For a single filesystem per drive (backup drives and [Option 1](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk)): Create individual filesystems per drive using the correct label per device (you choose):  \
+- For a single filesystem per drive (backup drives and [Option 1](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md#option-1-all-your-data-easily-fits-on-a-single-disk)): Create individual filesystems per drive using the correct label per device (you choose):  \
     ```sudo mkfs.btrfs -m dup -L users /dev/sda1```  \
     ```sudo mkfs.btrfs -m dup -L media /dev/sdb1```  \
     ```sudo mkfs.btrfs -m dup -L backup1 /dev/sdc1```  
 
-- For a filesystem spanning multiple drives [(Option 3: BTRFS RAID1)](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-3-use-btrfs-data-duplication) for Users and a filesystem spanning multiple drives for Media, each with 2 drives:  \
+- For a filesystem spanning multiple drives [(Option 3: BTRFS RAID1)](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md#option-3-use-btrfs-data-duplication) for Users and a filesystem spanning multiple drives for Media, each with 2 drives:  \
     ```sudo mkfs.btrfs -L users -d raid1 /dev/sda1 /dev/sdb1```  \
     ```sudo mkfs.btrfs -L media -d raid1 /dev/sdc1 /dev/sdd1```  
     
-- for [Option 2: MergerFS](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-EXPLAINED.md#option-1-all-your-data-easily-fits-on-a-single-disk) simply create the single filesystem per drive, but use labels like "data0", "data1", "data2" etc instead of "users" or "media", because the drives will be pooled via MergerFS.  
+- for [Option 2: MergerFS](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md#option-1-all-your-data-easily-fits-on-a-single-disk) simply create the single filesystem per drive, but use labels like "data0", "data1", "data2" etc instead of "users" or "media", because the drives will be pooled via MergerFS.  
 
 Optional: create filesystem for your SnapRAID drive (should be EXT4 with these options):     ```sudo mkfs.ext4 -L parity1  -m 0 -i 67108864 -J size=4 /dev/sda```
 
@@ -98,8 +98,8 @@ Now that each drive has a filesystem (or in case of BTRFS RAID1: is part of a fi
 1. Open the folder `/mnt` in your file manager, right click and *open with root*.
 2. Create the mountpoints for your drives, at least 3 mountpoints: 
   - 1 for each backup drive: `/mnt/drives/backup1`
-  - 1 for the Users datapool: `/mnt/pool/Users` for your ***filesystem*** used for storing users personal data (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
-  - 1 for the Media datapool: `/mnt/pool/Media`, for your ***filesystem*** used for storing downloaded media (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/filesystem/FILESYSTEM-OPTIONS.md). 
+  - 1 for the Users datapool: `/mnt/pool/Users` for your ***filesystem*** used for storing users personal data (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md). 
+  - 1 for the Media datapool: `/mnt/pool/Media`, for your ***filesystem*** used for storing downloaded media (could be 1 drive or multiple using either btrfs-raid1 or MergerFS, see [Filesystem Options](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/Filesystems-options.md). 
   - Only if you use MergerFS: 
     - `mnt/drives/data0`, `/mnt/drives/data1`, `/mnt/drives/data2` etc.
       - Only if you will use MergerFS with a cache drive: `/mnt/drives/cache` and `/mnt/pool-nocache` this way you can easily offload the cache (`/mnt/drives/cache`) to this mountpoint, which will be a MergerFS mount without the cache drive.  
@@ -114,7 +114,7 @@ This step is prone to errors. Prepare first.
 3. Create a backup of fstab: `sudo cp /etc/fstab /etc/fstabbackup`
 4. Run `sudo lsblk -f` for an overview, also have Disk Utility open next to it. 
 5. Now open your fstab in the nice graphical texteditor Pluma, with elevated rights to be able to edit: `sudo dbus-launch pluma /etc/fstab`
-6. Open [the example fstab](https://github.com/zilexa/Homeserver/blob/master/filesystem/fstab), *note all UUIDs are missing in this example. Use the partition UUIDs you see in terminal/disk utility*. 
+6. Open [the example fstab](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/fstab-example), *note all UUIDs are missing in this example. Use the partition UUIDs you see in terminal/disk utility*. 
 
 ### _Steps to add drives_ 
 1. Go through the example, add the lines you are missing under "AUTO-MOUNTED AT BOOT". 
