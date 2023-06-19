@@ -186,10 +186,11 @@ You can do the same with your Documents, Pictures, Desktop:
 ```
 ln -s /mnt/pool/users/User1/Documentsss $HOME/Documents
 ```
-To update an existing symlink, simply delete the symlink (`$HOME/Media`) in the filemanager and then create a new one or use this command: 
+To update an existing symlink, simply delete the symlink via filemanager or terminal and then create a new one. A faster option is this command: 
 ```
 ln -fns /mnt/pool/users/User1/Documents $HOME/Documents
 ```
-- If you want to replace the default `Desktop` folder, you must rename that folder first, create the symlink, then edit the file `/home/asterix/.config/user-dirs.dirs` This file is required for the Operating System. Make sure the paths in this file are correct. 
+Notes: 
+- If you want to replace the default `Desktop` folder, you must rename that folder first, create the symlink, then edit the file `/home/asterix/.config/user-dirs.dirs` This file is required for the Operating System. Make sure the paths in this file are correct. It also contains a path for "Public", I would recommend to change its path to $HOME/Downloads. 
 - Notice the folder `$HOME/Templates` you might want to move it to Documents. Don't delete it, it contains the actions of "Create new Document" in your context menu.
-- $HOME/Downloads should be considered a temporary folder, no need to have it in your pool. Make sure this folder is a subvolume. 
+- ` $HOME/Downloads` should be considered a temporary folder, no need to have it in your pool. Make sure this folder is a subvolume. 
