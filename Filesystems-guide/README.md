@@ -185,6 +185,7 @@ ln -s /mnt/pool/media $HOME/Media
 You can do the same with your Documents, Pictures, Desktop: 
 ```
 ln -s /mnt/pool/users/User1/Documentsss $HOME/Documents
+```
 To update an existing symlink, simply delete the symlink (`$HOME/Media`) in the filemanager and then create a new one or use this command: 
 ```
 ln -fns /mnt/pool/users/User1/Documents $HOME/Documents
