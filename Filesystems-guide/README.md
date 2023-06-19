@@ -175,6 +175,6 @@ Congratulations! Your filestems/drives are now individually accessible and you h
 
 
 TIP: ***Physically label your drives!***
-If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? `data0`, `data1`, `backup1`? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint, this way when the server is turned off, you still know which drive is what :)
+If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? `users`, `media`, `backup1`? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint, this way when the server is turned off, you still know which drive is what :)
 
 
