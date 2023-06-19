@@ -130,10 +130,10 @@ This step is prone to errors. Prepare first.
 8. Do a reboot just to test all is working fine. If you do not boot to the user interface, simply edit fstab (`sudo nano /etc/fstab`) and add a "#" to comment out the drives that gave an error, or fix the typo that you see. 
 
 &nbsp;
-
+***
 TIP: ***Physically label your drives!***
 If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? `users`, `media`, `backup1`? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint, this way when the server is turned off, you still know which drive is what :)
-
+***
 &nbsp;
 
 ## Step 3.1 Create subvolumes
