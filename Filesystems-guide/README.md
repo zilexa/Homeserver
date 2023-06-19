@@ -177,4 +177,18 @@ Congratulations! Your filestems/drives are now individually accessible and you h
 TIP: ***Physically label your drives!***
 If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? `users`, `media`, `backup1`? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint, this way when the server is turned off, you still know which drive is what :)
 
-
+TIP: ***Create symlinks to your home folder***
+Linux supports symlinks, similar to shortcuts, with the difference that a symlink acts just like a _real_ folder, but in reality links to the already existing folder. You could symlink `mnt/pool/media` to $HOME to have quick access. Note the existing folders need to be renamed or deleted since you cannot have 2 folders with the same name. 
+```
+ln -s /mnt/pool/media $HOME/Media
+```
+You can do the same with your Documents, Pictures, Desktop: 
+```
+ln -s /mnt/pool/users/User1/Documentsss $HOME/Documents
+To update an existing symlink, simply delete the symlink (`$HOME/Media`) in the filemanager and then create a new one or use this command: 
+```
+ln -fns /mnt/pool/users/User1/Documents $HOME/Documents
+```
+- If you want to replace the default `Desktop` folder, you must rename that folder first, create the symlink, then edit the file `/home/asterix/.config/user-dirs.dirs` This file is required for the Operating System. Make sure the paths in this file are correct. 
+- Notice the folder `$HOME/Templates` you might want to move it to Documents. Don't delete it, it contains the actions of "Create new Document" in your context menu.
+- $HOME/Downloads should be considered a temporary folder, no need to have it in your pool. Make sure this folder is a subvolume. 
