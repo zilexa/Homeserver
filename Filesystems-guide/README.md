@@ -136,7 +136,7 @@ If a drive stops working, you turn off your system and remove that drive. How wi
 ***
 &nbsp;
 
-## Step 3.1 Create subvolumes
+## Step 2.5 Create subvolumes
 Optionally read [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/folderstructure-recommendations.md).  \
 **Users**: Each user should have its own subvolume. Consider this subvolume to be each users virtual drive. Users will be individually snapshotted and backupped, allowing you to easily restore individual users storage when needed. You could even simply mount their snapshot into this folder to give them access to their timeline backups. 
 **Media**: Create a subvolume for Shows, Movies, Music and incoming. This gives you flexibility in the future when you need to move these folders to other drives. Remember, btrfs send/receive is the fastest way to copy/move folders, since it will happen on a filesystem-level, with a metadata (checksum) aware filesystem. Alternatives like rsync need to calculate checksums for each file, slowing down the process greatly. 
@@ -158,7 +158,7 @@ For Media, to ensure the best practice/recommended setup for apps/services that 
 - `/mnt/pool/users/incoming` --> Also create a folder (not subvolume) `complete` inside this folder. 
 - `/mnt/pool/users/incoming/incomplete` --> yes, this should be a subvolume within a subvolume (nested). This is your temporary download folder. Files will be moved to their permanent location when finished downloading. By using a nested subvol for downloads, you ensure 0 fragmentation, since files will be moved as a whole to their permanent location (Movies, Shows, Music, Books or incoming/complete for manual downloads). 
 
-## Step 3.2 set ownership and permissions
+## Step 2.5 set ownership and permissions
 Subvolumes were probably created with sudo. Because the root folders /mnt/pool is owned by root (which is fine, you want to limit the ability for someone with inherited regular user rights to delete folders). But to be able to use the subvolumes you just created, you should set ownership and permissions. 
 
 Set ownership (always use the username you logged in with): 
@@ -174,7 +174,7 @@ sudo chmod -R 775 /mnt/pool/media
 
 &nbsp;
 
-## Step 3.3 (optional): Create symlinks to your home folder
+## Step 2.6 (optional): Create symlinks to your home folder
 Linux supports symlinks, similar to shortcuts, with the difference that a symlink acts just like a _real_ folder, but in reality links to the already existing folder. You could symlink `mnt/pool/media` to $HOME to have quick access. Note the existing folders need to be renamed or deleted since you cannot have 2 folders with the same name. 
 ```
 ln -s /mnt/pool/media $HOME/Media
