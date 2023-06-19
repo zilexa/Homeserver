@@ -174,15 +174,7 @@ sudo chmod -R 775 /mnt/pool/media
 
 &nbsp;
 
-***
-
-Congratulations! Your filestems/drives are now individually accessible and you have a basic folderstructure. time to use your data storage pools! Go to [Step 3. Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) to learn how to properly copy your data, verify copies are bit-for-bit perfect and fix ownership and permissions.
-
-***
-
-&nbsp;
-
-TIP: ***Create symlinks to your home folder***
+OPTIONAL Step 3.3: _Create symlinks to your home folder_
 Linux supports symlinks, similar to shortcuts, with the difference that a symlink acts just like a _real_ folder, but in reality links to the already existing folder. You could symlink `mnt/pool/media` to $HOME to have quick access. Note the existing folders need to be renamed or deleted since you cannot have 2 folders with the same name. 
 ```
 ln -s /mnt/pool/media $HOME/Media
@@ -198,4 +190,14 @@ ln -fns /mnt/pool/users/User1/Documents $HOME/Documents
 Notes: 
 - If you want to replace the default `Desktop` folder, you must rename that folder first, create the symlink, then edit the file `/home/asterix/.config/user-dirs.dirs` This file is required for the Operating System. Make sure the paths in this file are correct. It also contains a path for "Public", I would recommend to change its path to $HOME/Downloads. 
 - Notice the folder `$HOME/Templates` you might want to move it to Documents. Don't delete it, it contains the actions of "Create new Document" in your context menu.
-- ` $HOME/Downloads` should be considered a temporary folder, no need to have it in your pool. Make sure this folder is a subvolume. 
+- ` $HOME/Downloads` should be considered a temporary folder, no need to have it in your pool. Make sure this folder is a subvolume.
+- 
+***
+
+Congratulations! Your filestems/drives are now individually accessible and you have a basic folderstructure. time to use your data storage pools! Go to [Step 3. Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) to learn how to properly copy your data, verify copies are bit-for-bit perfect and fix ownership and permissions.
+
+***
+
+&nbsp;
+
+
