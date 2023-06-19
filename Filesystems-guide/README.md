@@ -126,20 +126,55 @@ This step is prone to errors. Prepare first.
     - *Ensure you did not make any mistakes. Double check!*
 5. Make your file look nice and readible, like the example, use as much comments/descriptions as you need! 
 6. Save the file. Run `sudo systemctl daemon-reload` to load the changes. Run `sudo mount -a` to mount all auto-mounted filesystems. 
-7. If there are errors, unmount the drives before editing the file again. If not, verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`. 
+7. If there are errors, unmount the drives before editing the file again. If not, verify your disks are mounted at the right paths via `sudo lsblk` or `sudo mount -l`.
+8. Do a reboot just to test all is working fine. If you do not boot to the user interface, simply edit fstab (`sudo nano /etc/fstab`) and add a "#" to comment out the drives that gave an error, or fix the typo that you see. 
 
 &nbsp;
 
+## Step 2.5 Create the subvolumes
+Optionally read [Folderstructure Recommendations](https://github.com/zilexa/Homeserver/blob/master/Filesystems-guide/folderstructure-recommendations.md).  \
+**Users**: Each user should have its own subvolume. Consider this subvolume to be each users virtual drive. Users will be individually snapshotted and backupped, allowing you to easily restore individual users storage when needed. You could even simply mount their snapshot into this folder to give them access to their timeline backups. 
+**Media**: Create a subvolume for Shows, Movies, Music and incoming. This gives you flexibility in the future when you need to move these folders to other drives. Remember, btrfs send/receive is the fastest way to copy/move folders, since it will happen on a filesystem-level, with a metadata (checksum) aware filesystem. Alternatives like rsync need to calculate checksums for each file, slowing down the process greatly. 
+
+### _Steps to create a subvolume_
+This can only be done through the terminal. For example: 
+```
+sudo btrfs create subvolume /mnt/pool/users/User1
+```
+Do this for all mentioned folders. You should end up with the following: 
+- `/mnt/pool/users/User1`
+- `/mnt/pool/users/User2`
+- etc..
+For Media, to ensure the best practice/recommended setup for apps/services that automatically manage the downloads of your shows like Sonarr and other *arr apps, use the following folder structure, these should all be created using the command above: 
+- `/mnt/pool/media/Movies`
+- `/mnt/pool/users/Shows`
+- `/mnt/pool/users/Books`
+- `/mnt/pool/users/Music`
+- `/mnt/pool/users/incoming` --> Also create a folder (not subvolume) `complete` inside this folder. 
+- `/mnt/pool/users/incoming/incomplete` --> yes, this should be a subvolume within a subvolume (nested). This is your temporary download folder. Files will be moved to their permanent location when finished downloading. By using a nested subvol for downloads, you ensure 0 fragmentation, since files will be moved as a whole to their permanent location (Movies, Shows, Music, Books or incoming/complete for manual downloads). 
+
+## Step 2.6 set ownership and permissions
+Subvolumes were probably created with sudo. Because the root folders /mnt/pool is owned by root (which is fine, you want to limit the ability for someone with inherited regular user rights to delete folders). But to be able to use the subvolumes you just created, you should set ownership and permissions. 
+
+Set ownership (always use the username you logged in with): 
+```
+sudo chown -R username:username /mnt/pool/users
+sudo chown -R username:username /mnt/pool/media
+```
+Set permissions: 
+```
+sudo chmod -R 775 /mnt/pool/users
+sudo chmod -R 775 /mnt/pool/media
+```
+
+***
+
+Congratulations! Your filestems/drives are now individually accessible and you have a basic folderstructure. time to use your data storage pools! Go to [Step 3. Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) to learn how to properly copy your data, verify copies are bit-for-bit perfect and fix ownership and permissions.
+
+***
+
+
 TIP: ***Physically label your drives!***
 If a drive stops working, you turn off your system and remove that drive. How will you know which one to remove? `data0`, `data1`, `backup1`? You would need to use the `fdisk -l` command to get the actual serial number and read the numbers of each drive. This is a big hassle. Instead, make sure you properly sticker your drives with the label/mountpoint, this way when the server is turned off, you still know which drive is what :)
-
-***
-
-Congratulations! Your filestems/drives are now individually accessible. 
-
-If you haven't done so already, [learn about Linux system folderstructure, standard subvolumes and tips for your folderstructure](https://github.com/zilexa/Homeserver/blob/master/filesystem/folderstructure-recommendations.md).  \
-Next, it is time to use your data storage pools! Go to [Step 3. Data Migration](https://github.com/zilexa/Homeserver/blob/master/filesystem/data-migration.md) to learn how to properly copy your data, verify copies are bit-for-bit perfectand fix ownership and permissions.
-
-***
 
 
