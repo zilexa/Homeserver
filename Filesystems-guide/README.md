@@ -174,7 +174,7 @@ sudo chmod -R 775 /mnt/pool/media
 
 &nbsp;
 
-## Step 3.3 (optional): _Create symlinks to your home folder_
+## Step 3.3 (optional): Create symlinks to your home folder
 Linux supports symlinks, similar to shortcuts, with the difference that a symlink acts just like a _real_ folder, but in reality links to the already existing folder. You could symlink `mnt/pool/media` to $HOME to have quick access. Note the existing folders need to be renamed or deleted since you cannot have 2 folders with the same name. 
 ```
 ln -s /mnt/pool/media $HOME/Media
