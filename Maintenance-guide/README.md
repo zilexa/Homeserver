@@ -35,8 +35,8 @@ Copy & paste the below, For run-if-today to know what weekday you want to run it
 
 ```
 MAILTO="youremail" #will only be used if crontab itself has an error
-30 5 * * * /usr/bin/bash /home/$LOGUSER/docker/HOST/btrbk/btrbk-mail.sh          
-50 5 * * 7 run-if-today L su && /usr/bin/bash /home/$LOGUSER/docker/HOST/monthly.sh
+30 5 * * * /usr/bin/bash /home/${LOGUSER}/docker/HOST/btrbk/btrbk-mail.sh          
+50 5 * * 7 run-if-today L su && /usr/bin/bash /home/${LOGUSER}/docker/HOST/monthly.sh
 */5 * * * * su -l ${LOGUSER} -c 'docker exec -w /var/www/html/cron filerun php email_notifications.php drive.mydomain.com'
 ```
 Hit CTRL+S to save and CTRL+X to exit.
