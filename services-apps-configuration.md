@@ -89,7 +89,7 @@ _Server configuration_
 _Client configuration_ 
 - Wireguard apps are available for all systems. For Linux, install `wireguard-tools` and use the command `wg-quick up wg0` after you have put the client conf file (accessible via the VPN-Portal) in `/etc/wireguard/`. More user-friendly, Linux with Gnome UI support Wireguard out-of-the box via Settings > Network. 
 - You can easily ensure Android devices are always using your server DNS (and have access to all local non-exposed services!) by installing [WG-Tunnel](https://play.google.com/store/apps/details?id=com.zaneschepke.wireguardautotunnel), adding the configuration through QR code or file, which you can share via the `VPN-Portal` via email to your devices Portal. [WG-Tunnel](https://github.com/zaneschepke/wgtunnel) is amazing. It uses the same base as the official Wireguard app, but allows you to automatically connect to your VPN (DNS-traffic only) when you leave your home WiFi and disconnect when you are back home! Set up once and forget!
-
+- WG Tunnel also works on AndroidTV, allowing you to share your Nexflix subscription through your VPN server, by simply having them install the app on their AndroidTV. After importing the client config file all they have to do is go into its settings ("edit") and apply the tunnel to "included apps" only, selecting Netflix. Easy!
 
 ### _Remote Admin Access_ via RDP and SSH
 > You can manage your server remotely, within LAN or, when not at home via VPN. This can be done through the terminal or simply by accessing the desktop, by sharing the desktop through RDP. 
