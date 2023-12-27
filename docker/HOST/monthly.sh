@@ -39,28 +39,29 @@ rm ${SCRIPTDIR}/logs/bleachbit.tmp
 #rm ${SCRIPTDIR}/logs/bleachbit.tmp
 
 
-# DOCKER - cleanup
+# DOCKER - CLEANUP
 # ----------------------------------------
 echo -e "\n____________DOCKER CLEANUP____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 echo -e "\n CLEANUP Remove all unused containers, networks and dangling or unreferenced images and volumes: \n" >> ${SCRIPTDIR}/logs/monthly.tmp
 docker system prune --all --volumes -f |& tee >(tail -n 1 >> ${SCRIPTDIR}/logs/monthly.tmp)
 
-# DOCKER - updates
+# DOCKER - UPDATES
 echo -e "\n____________DOCKER UPDATES____________\n" >> ${SCRIPTDIR}/logs/monthly.tmp
 # --------------------------------------------------------------
-# Save old image creation date
-docker images --format "table {{.Repository}}\t{{.CreatedAt}}" > /tmp/img1.txt 
 # Get latest images
 su -l ${LOGUSER} -c 'docker-compose pull'
-# Save image creation date
-docker images --format "table {{.Repository}}\t{{.CreatedAt}}" > /tmp/img2.txt 
-# Now create nice list of updated images
-comm -13 <(sort /tmp/img1.txt) <(sort /tmp/img2.txt) > /tmp/img3.txt
+
+# Get list of newly downloaded images, to provide info about which have been updated:
+runningImages=$(docker ps -a --format "< {{.Image}} >" && docker ps -a --format "< {{.Image}}:latest >") # Latter command is to include images without any tags determined
+if [ -z "$runningImages" ]; then # Necessary when no container is running
+    runningImages="< >"
+fi
+updatedImages=$(docker images --format 'table {{.Repository}}\t{{.CreatedAt}}>\t< {{.ID}} >\t' | grep -v "$runningImages")
 echo -e "\nUPDATED the following docker images: \n" >> ${SCRIPTDIR}/logs/monthly.tmp
-cut -d ' ' -f 1 < /tmp/img3.txt > /tmp/result.txt >> ${SCRIPTDIR}/logs/monthly.tmp
-rm /tmp/img*.txt /tmp/result.txt
-# Now recreate containers with new images, remove orphans
-su -l ${LOGUSER} -c 'docker-compose up -d --remove-orphans' >> ${SCRIPTDIR}/logs/monthly.tmp # not adding to email body as it would be a lot
+echo "$updatedImages" | awk '{print $1,$2}' | cut -d/ -f2- | column -t >> ${SCRIPTDIR}/logs/monthly.tmp
+
+# Now update the services by recreating the containers based on the newly downloaded images. 
+su -l ${LOGUSER} -c 'docker-compose up -d --remove-orphans' # not adding to email body as it would be a lot
 echo -e "\nDocker updates finished. \n" >> ${SCRIPTDIR}/logs/monthly.tmp
 
 
