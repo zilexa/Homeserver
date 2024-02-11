@@ -1,4 +1,4 @@
-## UPDATED: 2023-06-08
+## UPDATED: 2024-02-11
 # changelog: https://github.com/zilexa/Homeserver/blob/master/docker/changelog.txt
 ##
 ## COMMON COMMANDS:
@@ -599,6 +599,26 @@ services:
       plugsy.name: Search [Prowlarr]
       plugsy.link: http://torrents.o/
       plugsy.category: TV
+##____________________ Flaresolverr [MEDIA/Cloudflare protection solver for torrent-proxy]
+  tv-flaresolverr:
+    container_name: tv-flaresolverr
+    image: ghcr.io/flaresolverr/flaresolverr
+    networks:
+      - web-proxy
+    restart: always
+    environment:
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      TZ: $TZ
+    ports:
+      - 8191:8191
+    labels:
+      caddy: http://solverr.o
+      caddy.reverse_proxy: "{{upstreams 8191}}"
+      plugsy.name: Search [Solverr]
+      plugsy.link: http://solverr.o/
+      plugsy.category: Media
 ##
 ##____________________ Transmission [TV/torrent-download-client]
   qbittorrent:
