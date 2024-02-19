@@ -88,8 +88,7 @@ _Note_
 
 ### Step 2 - Filesystems and Folderstructure
 This is the most time-consuming and complex part of creating your homeserver as there are many choices to be made, not just for your filesystem but also folderstructure. 
-1. Check the [Filesystem Options](https://github.com/zilexa/Homeserver/tree/master/Filesystems-options.md). Decide what is best for you. 
-2. Follow the [Filesystems Guide](https://github.com/zilexa/Homeserver/tree/master/Filesystems-guide)
+Follow the [Filesystems Guide](https://github.com/zilexa/Homeserver/tree/master/Filesystems-guide)
 
 ***
 
