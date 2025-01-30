@@ -1,3 +1,6 @@
+# Switching to Bluefin OS (Fedora Silverblue based), attempting to use podman instead of docker
+# So far, after a clean install, these are the required steps
+
 # Change hostname
 sudo hostnamectl hostname obelix.o
 
@@ -14,7 +17,7 @@ sudo setsebool -P container_use_dri_devices 1
 # Add registry for docker images
 ❯ cp /etc/containers/registries.conf $HOME/.config/containers/
 
-# Temp solution: lower priv ports
+# Temp solution: lower priv ports. A better solution would be to use firewall rules - to figure out later. First want to get the containers up and running again
 sudo nano /etc/sysctl.d/podman-privileged-ports.conf
 # add net.ipv4.ip_unprivileged_port_start=80 to this file
 # Apply change:
