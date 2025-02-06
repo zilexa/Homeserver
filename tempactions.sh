@@ -8,8 +8,12 @@ sudo hostnamectl hostname obelix.o
 ctl enable-linger $USER
 
 # Install required system apps
-rpm-ostree install podman-compose cockpit-podman
-ujust cockpit
+rpm-ostree install podman-compose cockpit-system cockpit-ws cockpit-files cockpit-networkmanager cockpit-ostree cockpit-podman cockpit-selinux cockpit-storaged
+sudo systemctl enable --now cockpit.socket
+sudo firewall-cmd --add-service=cockpit
+sudo firewall-cmd --add-service=cockpit --permanent
+
+DO NOT USE ujust cockpit
 
 # Allow containers to access GPU directly for hardware acceleration (required for Jellyfin)
 sudo setsebool -P container_use_dri_devices 1
