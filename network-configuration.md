@@ -36,7 +36,7 @@ Consider if you really need direct access to SSH, RDP but also download tools an
 
 1. Configure port forwarding in your router, Wireguard VPN needs a UDP port, for example 51820. 
 2. Finish [Step 5. Docker Compose Guide](https://github.com/zilexa/Homeserver#step-5---docker-compose-guide---customisation-and-personalisation) making sure the containers and  are up and running. 
-3. Finish [Step 6. Services & Apps Configuration](https://github.com/zilexa/Homeserver#step-6---configure-your-apps--services) for [Adguard Home](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md#safe-browsing-ad--and-malware-free-via-adguardhome---documentation) and [VPN-portal](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md#vpn-portal-via-wireguard-ui---documentation).
+3. Finish [Step 6. Services & Apps Configuration](https://github.com/zilexa/Homeserver#step-6---configure-your-apps--services) for [Adguard Home](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#safe-browsing-ad--and-malware-free-via-adguardhome---documentation) and [VPN-portal](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#vpn-portal-via-wireguard-ui---documentation).
 
 ***
 
@@ -46,7 +46,7 @@ This address will work within your home network AND when connected to VPN while 
 1. Go to _AdGuard Home (serverip:3000 or https://localhost:3000) > Settings > DNS rewrite_ 
 2. Add a new rule, fill in a domain name for example `myserver.o` and the local IP of your server. 
 3. go to http://myserver.o:9000, Portainer should open. Also, AdGuard Home is now accessible via http://myserver.o:3000. 
-4. For further instructions how to access specific services without having to type port numbers, see [Step 6. Services & Apps Configuration](https://github.com/zilexa/Homeserver#step-6---configure-your-apps--services), specifically the instructions for [Caddy](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md#secure-web-proxy-via-caddy-docker-proxy---documentation) and [Adguard Home](https://github.com/zilexa/Homeserver/blob/master/Applications-Overview.md#safe-browsing-ad--and-malware-free-via-adguardhome---documentation).
+4. For further instructions how to access specific services without having to type port numbers, see [Step 6. Services & Apps Configuration](https://github.com/zilexa/Homeserver#step-6---configure-your-apps--services), specifically the instructions for [Caddy](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#secure-web-proxy-via-caddy-docker-proxy---documentation) and [Adguard Home](https://github.com/zilexa/Homeserver/blob/master/services-apps-configuration.md#safe-browsing-ad--and-malware-free-via-adguardhome---documentation).
 
 ***
 
