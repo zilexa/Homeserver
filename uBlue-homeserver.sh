@@ -1,7 +1,41 @@
 # Switching to Bluefin OS (Fedora Silverblue based), attempting to use podman instead of docker
 # So far, after a clean install, these are the required steps
 
-# Change hostname
+# Change hostname, note you can also just do this in Settings
+
+Basics after a new laptop/pc install (Gnome based Linux): 
+
+1. Go to Settings > System > Region
+   > Change Formats to your region. 
+2. Settings > System > About 
+   > Change your device name
+3. Settings > System > Remote Desktop
+   > Enable Desktop Sharing & Remote Control
+   > Set a password you remember
+4. Settings System > SSH
+   > Enable SSH
+5. Settings > Power 
+   > Disable Suspend when plugged in if this is a device that will be running 24x7
+6. Close Settings and go to Apps > Extensions
+   > Find TailscaleQS
+   > Hit the tiny arrow at the right to see its description.
+   > Note it says to run a command first.
+   > Open Terminal app, type over that command and run it. 
+7. > Now you can run `tailscale up` and it will give you an URL to login. When done:
+   > Go to the system tray, hit the arrow next to Tailscale > Settings. 
+   > Enable "Allow LAN Access". The rest disabled. 
+
+8. Tailscale Exit Node: If this is your homeserver/nas that will be running 24x7, you can use it as a Tailscale Exit Node, and optionally allow other devices to tunnel
+   their traffic through this server (for example: to share Netflix). This turns your system into a VPN Tunnel endpoint (like a paid VPN service does). 
+   This is NOT needed for other devices to access services running on this server. But its a nice to have option:
+   > run: tailscale set --advertise-exit-node
+   > go on the web to tailscale.com and login to admin console, there you can Approve your device as exit node. 
+   > You need to also run: tailscale set --advertise-routes=192.168.1.0/24
+   > and probably accept this in the webUI. 
+   > Now go to the system tray, make sure "Allow LAN Access" and "Accept Routes" are enabled. Make sure "Allow DNS" is disabled since you don't need adfiltering. 
+   Note: "Accept Routes" only needs to be enabled if you set this device up as Exit Node. Otherwise leave it disabled.
+   
+
 sudo hostnamectl hostname obelix.o
 
 # Allow services running under current user to linger after logout
