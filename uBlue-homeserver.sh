@@ -37,8 +37,9 @@ Now set up Tailscale, make sure you are logged into Tailscale in the browser alr
    This is NOT needed for other devices to access services running on this server. But its a nice to have option:
    > run: tailscale set --advertise-exit-node
    > go on the web to tailscale.com and login to admin console, there you can Approve your device as exit node. 
-   > You need to also run: tailscale set --advertise-routes=192.168.1.0/24
-   > and probably accept this in the webUI. 
+   > You need to also run: tailscale set --advertise-routes=192.168.1.0/24 
+   > if your router uses a different IP address range, you need to adjust this command accordingly (for example my system has address 192.168.1.xxx )
+   > go to Tailscale web admin and check this device, you may need to approve something again.  
    > Now go to the system tray, make sure "Allow LAN Access" and "Accept Routes" are enabled. Make sure "Allow DNS" is disabled since you dont need adfiltering. 
    Note: "Accept Routes" only needs to be enabled if you set this device up as Exit Node. Otherwise leave it disabled.
 
