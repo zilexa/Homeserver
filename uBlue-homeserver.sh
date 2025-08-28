@@ -6,8 +6,8 @@
 Basics after a new laptop/pc install (Gnome based Linux): 
 
 1. After setup is completed, dont do anything else but this first:
-https://github.com/zilexa/Bluefin-Gnome-Intuitive follow the instructions. 
-Reboot afterwards!
+https://github.com/zilexa/Bluefin-Gnome-Intuitive 
+follow the instructions. REBOOT afterwards!
 
 After the reboot, do the bare basics:
 2. Go to Settings > System > Region
