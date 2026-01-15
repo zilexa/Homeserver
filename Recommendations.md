@@ -65,7 +65,7 @@ A PicoPSU (as small as the motherboard power plug itself) is the king of PSUs up
 - PicoPSU 90: This one comes with P4 cable.
 - PicoPSU 160XT: for systems with more harddisks. Less efficient than the PicoPSU 80. 
 
-There is a great difference in power adapters when it comes to efficiency and overhead, and it varies depending on the power demand of the sysyem. All of the following options are great choices. A great, in-depth review can be found [here](https://mrmrmr.tweakblogs.net/blog/19706/efficiency-tests-van-12v-adapters-voor-zuinige-servers), English version [here](https://mrmrmr-tweakblogs-net.translate.goog/blog/19706/efficiency-tests-van-12v-adapters-voor-zuinige-servers?_x_tr_sl=nl&_x_tr_tl=en&_x_tr_hl=nl&_x_tr_pto=wapp). 
+There is a great difference in power adapters when it comes to efficiency and overhead, and it varies depending on the power demand of the sysyem. All of the following options are great choices. A great, in-depth review can be found [here](https://web.archive.org/web/20230106015410/https://mrmrmr.tweakblogs.net/blog/19706/efficiency-tests-van-12v-adapters-voor-zuinige-servers). 
 - Highest efficiency/lowest overhead when idle consumption is below 10W: 
   - 96W: FSP FSP096-AHAN3 
   - 120W: XP Power VES120PS (price is 2x the Leicke adapter)
